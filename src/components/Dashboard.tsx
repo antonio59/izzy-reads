@@ -166,43 +166,56 @@ const Dashboard: React.FC = () => {
         <div className="bg-white rounded-xl shadow-lg p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Quick Actions</h2>
           
-          <div className="space-y-4">
+          <div className="space-y-3">
             <Link
               to="/bookshelf"
-              className="flex items-center space-x-3 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200"
+              className="flex items-center space-x-3 p-4 bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 rounded-lg transition-all duration-200 border border-blue-200 hover:shadow-md"
             >
-              <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center shadow-md">
                 <BookOpen className="h-6 w-6 text-white" />
               </div>
-              <div>
-                <h3 className="font-semibold text-blue-800">Add a Book</h3>
-                <p className="text-sm text-blue-600">Log a book you've read</p>
+              <div className="flex-1">
+                <h3 className="font-semibold text-blue-900">📚 Add a Book</h3>
+                <p className="text-sm text-blue-600">Search and add books you've read</p>
               </div>
             </Link>
 
             <Link
-              to="/wishlist"
-              className="flex items-center space-x-3 p-4 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors duration-200"
+              to="/poems"
+              className="flex items-center space-x-3 p-4 bg-gradient-to-r from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 rounded-lg transition-all duration-200 border border-purple-200 hover:shadow-md"
             >
-              <div className="w-12 h-12 bg-pink-500 rounded-lg flex items-center justify-center">
-                <Heart className="h-6 w-6 text-white" />
+              <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center shadow-md">
+                <PenTool className="h-6 w-6 text-white" />
               </div>
-              <div>
-                <h3 className="font-semibold text-pink-800">Update Wishlist</h3>
-                <p className="text-sm text-pink-600">Add books you want to read</p>
+              <div className="flex-1">
+                <h3 className="font-semibold text-purple-900">✍️ Write a Poem</h3>
+                <p className="text-sm text-purple-600">Create poetry with fun templates</p>
               </div>
             </Link>
 
             <Link
               to="/blog"
-              className="flex items-center space-x-3 p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors duration-200"
+              className="flex items-center space-x-3 p-4 bg-gradient-to-r from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 rounded-lg transition-all duration-200 border border-green-200 hover:shadow-md"
             >
-              <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center shadow-md">
                 <PenTool className="h-6 w-6 text-white" />
               </div>
-              <div>
-                <h3 className="font-semibold text-green-800">Write a Review</h3>
-                <p className="text-sm text-green-600">Share your thoughts about a book</p>
+              <div className="flex-1">
+                <h3 className="font-semibold text-green-900">📝 Write a Blog Post</h3>
+                <p className="text-sm text-green-600">Share your reading adventures</p>
+              </div>
+            </Link>
+
+            <Link
+              to="/wishlist"
+              className="flex items-center space-x-3 p-4 bg-gradient-to-r from-pink-50 to-pink-100 hover:from-pink-100 hover:to-pink-200 rounded-lg transition-all duration-200 border border-pink-200 hover:shadow-md"
+            >
+              <div className="w-12 h-12 bg-pink-500 rounded-lg flex items-center justify-center shadow-md">
+                <Heart className="h-6 w-6 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-pink-900">💖 Update Wishlist</h3>
+                <p className="text-sm text-pink-600">Add books you want to read</p>
               </div>
             </Link>
           </div>
