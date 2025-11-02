@@ -1,7 +1,8 @@
 import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { BookOpen, Heart, PenTool, Home, Settings, Shield, Feather } from 'lucide-react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { BookOpen, Heart, PenTool, Home, Settings, Shield, Feather, LogOut } from 'lucide-react'
 import { useUser } from '../contexts/UserContext'
+import { useAuth } from '../contexts/AuthContext'
 
 interface NavigationProps {
   isParentMode: boolean
@@ -10,10 +11,17 @@ interface NavigationProps {
 
 const Navigation: React.FC<NavigationProps> = ({ isParentMode, setIsParentMode }) => {
   const location = useLocation()
+  const navigate = useNavigate()
   const { user } = useUser()
+  const { signOut } = useAuth()
+
+  const handleLogout = async () => {
+    await signOut()
+    navigate('/')
+  }
 
   const navItems = [
-    { path: '/', icon: Home, label: 'Dashboard', color: 'bg-purple-500' },
+    { path: '/dashboard', icon: Home, label: 'Dashboard', color: 'bg-purple-500' },
     { path: '/bookshelf', icon: BookOpen, label: 'My Books', color: 'bg-blue-500' },
     { path: '/wishlist', icon: Heart, label: 'Wishlist', color: 'bg-pink-500' },
     { path: '/poems', icon: Feather, label: 'My Poems', color: 'bg-yellow-500' },
@@ -83,6 +91,14 @@ const Navigation: React.FC<NavigationProps> = ({ isParentMode, setIsParentMode }
                 <span className="text-sm font-medium">Parent Dashboard</span>
               </Link>
             )}
+
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-2 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="text-sm font-medium">Logout</span>
+            </button>
           </div>
         </div>
 
