@@ -27,7 +27,7 @@ const Navigation: React.FC<NavigationProps> = ({ isParentMode, setIsParentMode }
           {/* Logo */}
           <div className="flex items-center space-x-2">
             <BookOpen className="h-8 w-8 text-purple-600" />
-            <h1 className="text-2xl font-bold text-purple-600">Isabella Reads</h1>
+            <h1 className="text-2xl font-bold text-purple-600">Izzy Reads</h1>
           </div>
 
           {/* Navigation Items */}
