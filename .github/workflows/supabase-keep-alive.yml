@@ -1,0 +1,78 @@
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Run every 6 hours to keep Supabase active
+  workflow_dispatch: # Allows manual triggering
+
+permissions: {}
+
+jobs:
+  keep_alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check environment variables
+        id: check_env
+        run: |
+          if [ -z "${{ secrets.VITE_SUPABASE_URL }}" ] || [ -z "${{ secrets.VITE_SUPABASE_ANON_KEY }}" ]; then
+            echo "::warning::Supabase URL or Anon Key is not set as GitHub secrets."
+            echo "Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your repository secrets."
+            exit 1
+          fi
+          echo "SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}" >> $GITHUB_ENV
+          echo "SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
+
+      - name: Ping Supabase REST API
+        if: steps.check_env.outcome == 'success'
+        env:
+          SUPABASE_URL: ${{ env.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
+        run: |
+          echo "Pinging Supabase REST API at ${SUPABASE_URL}"
+          response=$(curl --request GET \
+            --url "${SUPABASE_URL}/rest/v1/" \
+            --header "apikey: ${SUPABASE_ANON_KEY}" \
+            --header "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+            --max-time 30 \
+            --retry 2 \
+            --write-out "\n%{http_code}" \
+            --silent --show-error)
+          
+          http_code=$(echo "$response" | tail -n1)
+          if [ "$http_code" -ge 200 ] && [ "$http_code" -lt 400 ]; then
+            echo "✅ REST API ping successful (HTTP $http_code)"
+          else
+            echo "⚠️ REST API ping returned HTTP $http_code, but continuing..."
+          fi
+
+      - name: Keep database active with simple query
+        if: steps.check_env.outcome == 'success'
+        env:
+          SUPABASE_URL: ${{ env.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
+        run: |
+          echo "Executing keep-alive query on Supabase"
+          
+          # Try to query books table (or any table you have)
+          response=$(curl --request GET \
+            --url "${SUPABASE_URL}/rest/v1/books?select=id&limit=1" \
+            --header "apikey: ${SUPABASE_ANON_KEY}" \
+            --header "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+            --header "Content-Type: application/json" \
+            --max-time 30 \
+            --retry 3 \
+            --write-out "\n%{http_code}" \
+            --silent --show-error)
+          
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | head -n -1)
+          
+          echo "Response: $body"
+          
+          if [ "$http_code" -ge 200 ] && [ "$http_code" -lt 400 ]; then
+            echo "✅ Database query successful (HTTP $http_code)"
+            echo "✅ Supabase database kept alive"
+          else
+            echo "⚠️ Database query returned HTTP $http_code"
+            echo "This is normal if tables don't exist yet. Supabase is still kept alive."
+          fi

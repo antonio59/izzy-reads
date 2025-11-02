@@ -1,16 +1,18 @@
-# Isabella Reads - Young Reader's Book Tracker
+# Izzy Reads - Young Reader's Book Tracker
 
-A delightful, child-friendly web application designed for young readers (ages 8-12) to track their reading journey, discover new books, and share their thoughts in a safe, supervised environment.
+A delightful, child-friendly web application designed for young readers (ages 8-12) to track their reading journey, discover new books, write poems, and share their thoughts in a safe, supervised environment.
 
 ## 🌟 Features
 
 ### For Young Readers
-- **📚 Virtual Bookshelf**: Visual representation of read books with colorful covers
-- **💖 Wishlist Management**: Track books they want to read with priority levels
-- **✍️ Reading Blog**: Write book reviews and thoughts with guided templates
-- **🎯 Reading Challenges**: Gamified reading goals with progress tracking
+- **📚 3D Bookshelf**: Colorful book spines that look like a real bookshelf!
+- **🔍 Book Search**: Search 20M+ books from Open Library with beautiful covers
+- **✍️ Poetry Corner**: Write poems with fun templates (Haiku, Acrostic, Free Verse, Rhyming)
+- **💖 Wishlist Management**: Track books to read next
+- **📖 Reading Blog**: Write book reviews with guided templates
+- **🐛 Bookworm Character**: Grows as you read more books!
 - **📊 Reading Stats**: Visual progress tracking and achievements
-- **🎨 Child-Friendly Design**: Bright colors, fun animations, and intuitive interface
+- **🎨 Child-Friendly Design**: Bright gradients, emojis, fun animations
 
 ### For Parents
 - **🛡️ Parental Dashboard**: Monitor and manage child's reading activity
@@ -24,6 +26,7 @@ A delightful, child-friendly web application designed for young readers (ages 8-
 ### Prerequisites
 - Node.js (v16 or higher)
 - npm or yarn
+- Supabase account (free tier works great!)
 
 ### Installation
 
@@ -38,12 +41,32 @@ cd isabella-reads
 npm install
 ```
 
-3. Start the development server:
+3. Set up Supabase:
+   - Go to [supabase.com](https://supabase.com) and create a new project
+   - Copy your project URL and anon key
+   - Create a `.env` file in the project root:
+   ```bash
+   VITE_SUPABASE_URL=your-project-url
+   VITE_SUPABASE_ANON_KEY=your-anon-key
+   ```
+
+4. Start the development server:
 ```bash
 npm run dev
 ```
 
-4. Open your browser and navigate to `http://localhost:5173`
+5. Open your browser and navigate to `http://localhost:5173`
+
+### Setting Up Keep-Alive (Prevent Supabase from Pausing)
+
+Supabase free tier pauses projects after 7 days of inactivity. To prevent this:
+
+1. Go to your GitHub repository settings
+2. Add these secrets (Settings → Secrets and variables → Actions):
+   - `VITE_SUPABASE_URL`: Your Supabase project URL
+   - `VITE_SUPABASE_ANON_KEY`: Your Supabase anon key
+
+3. The GitHub Actions workflow will automatically ping Supabase every 6 hours to keep it active!
 
 ## 🏗️ Tech Stack
 
