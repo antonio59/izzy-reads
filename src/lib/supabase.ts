@@ -18,10 +18,11 @@ if (import.meta.env.DEV && supabaseUrl && supabaseAnonKey) {
     .from('_test')
     .select('*')
     .limit(1)
-    .then(() => {
-      console.log('✅ Supabase connected successfully')
-    })
-    .catch((error) => {
-      console.warn('⚠️ Supabase connection test failed:', error.message)
+    .then((result) => {
+      if (result.error) {
+        console.warn('⚠️ Supabase connection test failed:', result.error.message)
+      } else {
+        console.log('✅ Supabase connected successfully')
+      }
     })
 }
