@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { BookOpen, Target, Star, TrendingUp, Heart, PenTool } from 'lucide-react'
 import { useBooks } from '../contexts/BookContext'
 import { useUser } from '../contexts/UserContext'
+import { getWeeklyQuote } from '../utils/readingQuotes'
 
 const Dashboard: React.FC = () => {
   const { books, wishlist, readingChallenges, readingStats } = useBooks()
@@ -208,13 +209,14 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Motivational Quote */}
+      {/* Weekly Reading Quote */}
       <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl shadow-lg p-6 text-white text-center">
-        <h3 className="text-xl font-bold mb-2">📖 Reading Quote of the Day</h3>
+        <h3 className="text-xl font-bold mb-2">{getWeeklyQuote().emoji} Weekly Reading Quote</h3>
         <p className="text-lg italic">
-          "The more that you read, the more things you will know. The more that you learn, the more places you'll go."
+          "{getWeeklyQuote().text}"
         </p>
-        <p className="text-sm mt-2 opacity-90">- Dr. Seuss</p>
+        <p className="text-sm mt-2 opacity-90">- {getWeeklyQuote().author}</p>
+        <p className="text-xs mt-2 opacity-75">✨ Updates every Sunday</p>
       </div>
     </div>
   )
