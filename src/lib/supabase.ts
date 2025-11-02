@@ -3,17 +3,25 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Supabase credentials not found. Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your .env file.')
+// Check if valid Supabase credentials are provided
+const hasValidCredentials = 
+  supabaseUrl && 
+  supabaseAnonKey && 
+  supabaseUrl !== 'your-project-url-here' &&
+  (supabaseUrl.startsWith('http://') || supabaseUrl.startsWith('https://'))
+
+if (!hasValidCredentials) {
+  console.warn('⚠️ Supabase not configured. Using mock client. Add real credentials to .env for authentication.')
 }
 
+// Create Supabase client with fallback to dummy URL
 export const supabase = createClient(
-  supabaseUrl || '',
-  supabaseAnonKey || ''
+  hasValidCredentials ? supabaseUrl : 'https://placeholder.supabase.co',
+  hasValidCredentials ? supabaseAnonKey : 'placeholder-key'
 )
 
-// Test connection (only in development)
-if (import.meta.env.DEV && supabaseUrl && supabaseAnonKey) {
+// Test connection (only in development and if valid credentials)
+if (import.meta.env.DEV && hasValidCredentials) {
   supabase
     .from('_test')
     .select('*')
