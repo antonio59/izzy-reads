@@ -12,108 +12,85 @@ const PublicPortfolio = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
-      {/* Hero Section */}
-      <header className="relative bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 text-white py-24 overflow-hidden">
-        {/* Animated background pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-            backgroundSize: '50px 50px'
-          }}></div>
-        </div>
-        
-        {/* Admin Login Button - Positioned in header */}
-        <div className="absolute top-6 right-6 z-20">
-          <Link
-            to="/login"
-            className="flex items-center gap-2 px-5 py-2.5 bg-white/20 backdrop-blur-md text-white rounded-full hover:bg-white/30 transition-all shadow-xl border border-white/30 hover:scale-105 transform duration-200"
-          >
-            <LogIn className="w-4 h-4" />
-            <span className="font-semibold">Admin Login</span>
-          </Link>
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center max-w-5xl mx-auto">
-            {/* Avatar */}
-            <div className="mb-8 flex justify-center">
-              <div className="relative">
-                <div className="w-40 h-40 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border-4 border-white/40 shadow-2xl">
-                  <span className="text-7xl animate-bounce" style={{ animationDuration: '3s' }}>📚</span>
-                </div>
-                <div className="absolute -bottom-2 -right-2 bg-yellow-400 text-white p-3 rounded-full shadow-lg border-4 border-white">
-                  <Star className="w-6 h-6 fill-white" />
-                </div>
+      {/* Compact Header Navigation */}
+      <header className="bg-white shadow-md sticky top-0 z-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo/Title */}
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-md">
+                <span className="text-2xl">📚</span>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  Izzy's Reading Corner
+                </h1>
+                <p className="text-xs text-gray-500">Young Author & Book Lover</p>
               </div>
             </div>
-            
-            {/* Title */}
-            <h1 className="text-6xl md:text-7xl font-bold mb-4 drop-shadow-2xl animate-fadeIn">
-              Izzy's Reading Corner
-            </h1>
-            <p className="text-2xl md:text-3xl mb-10 text-white/95 font-medium drop-shadow-lg">
-              ✨ Young Author • Book Lover • Poet ✨
-            </p>
-            
-            {/* Stats */}
-            <div className="flex flex-wrap gap-4 justify-center text-lg max-w-3xl mx-auto">
-              <div className="group bg-white/20 backdrop-blur-md px-8 py-4 rounded-2xl border-2 border-white/40 shadow-xl hover:bg-white/30 transition-all hover:scale-110 transform duration-200">
-                <div className="text-3xl font-bold mb-1">{readBooks.length}</div>
-                <div className="text-sm font-medium opacity-90">📖 Books Read</div>
+
+            {/* Stats - Desktop */}
+            <div className="hidden md:flex items-center gap-4">
+              <div className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full">
+                <BookOpen className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-semibold text-blue-700">{readBooks.length} Books</span>
               </div>
-              <div className="group bg-white/20 backdrop-blur-md px-8 py-4 rounded-2xl border-2 border-white/40 shadow-xl hover:bg-white/30 transition-all hover:scale-110 transform duration-200">
-                <div className="text-3xl font-bold mb-1">{poems.length}</div>
-                <div className="text-sm font-medium opacity-90">✍️ Poems Written</div>
+              <div className="flex items-center gap-2 bg-purple-50 px-4 py-2 rounded-full">
+                <Feather className="w-4 h-4 text-purple-600" />
+                <span className="text-sm font-semibold text-purple-700">{poems.length} Poems</span>
               </div>
-              <div className="group bg-white/20 backdrop-blur-md px-8 py-4 rounded-2xl border-2 border-white/40 shadow-xl hover:bg-white/30 transition-all hover:scale-110 transform duration-200">
-                <div className="text-3xl font-bold mb-1">{publishedPosts.length}</div>
-                <div className="text-sm font-medium opacity-90">📝 Blog Posts</div>
+              <div className="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full">
+                <PenTool className="w-4 h-4 text-green-600" />
+                <span className="text-sm font-semibold text-green-700">{publishedPosts.length} Posts</span>
               </div>
             </div>
+
+            {/* Admin Login Button */}
+            <Link
+              to="/login"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full hover:from-purple-700 hover:to-pink-700 transition-all shadow-md hover:shadow-lg transform hover:scale-105"
+            >
+              <LogIn className="w-4 h-4" />
+              <span className="font-semibold hidden sm:inline">Admin Login</span>
+            </Link>
           </div>
         </div>
-        
-        {/* Decorative floating elements */}
-        <div className="absolute top-20 left-10 text-6xl opacity-30 animate-bounce">✨</div>
-        <div className="absolute bottom-20 right-10 text-6xl opacity-30 animate-bounce" style={{ animationDelay: '0.5s' }}>🌟</div>
-        <div className="absolute top-1/2 left-20 text-5xl opacity-20 animate-pulse">📖</div>
-        <div className="absolute top-1/3 right-32 text-5xl opacity-20 animate-pulse" style={{ animationDelay: '1s' }}>💫</div>
       </header>
 
       {/* Tab Navigation */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-center gap-4 mb-12">
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex justify-center gap-3 mb-8">
           <button
             onClick={() => setActiveTab('books')}
-            className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-lg transition-all ${
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all ${
               activeTab === 'books'
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl transform scale-105'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg transform scale-105'
                 : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
             }`}
           >
-            <BookOpen className="w-6 h-6" />
+            <BookOpen className="w-5 h-5" />
             My Books
           </button>
           <button
             onClick={() => setActiveTab('poems')}
-            className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-lg transition-all ${
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all ${
               activeTab === 'poems'
-                ? 'bg-gradient-to-r from-pink-500 to-orange-500 text-white shadow-xl transform scale-105'
+                ? 'bg-gradient-to-r from-pink-500 to-orange-500 text-white shadow-lg transform scale-105'
                 : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
             }`}
           >
-            <Feather className="w-6 h-6" />
+            <Feather className="w-5 h-5" />
             My Poems
           </button>
           <button
             onClick={() => setActiveTab('blog')}
-            className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-lg transition-all ${
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all ${
               activeTab === 'blog'
-                ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white shadow-xl transform scale-105'
+                ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white shadow-lg transform scale-105'
                 : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
             }`}
           >
-            <PenTool className="w-6 h-6" />
+            <PenTool className="w-5 h-5" />
             My Blog
           </button>
         </div>
