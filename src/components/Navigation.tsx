@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { BookOpen, Heart, PenTool, Home, Settings, Shield, Feather, LogOut } from 'lucide-react'
-import { useUser } from '../contexts/UserContext'
 import { useAuth } from '../contexts/AuthContext'
 
 interface NavigationProps {
