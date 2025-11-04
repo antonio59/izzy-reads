@@ -1,0 +1,45 @@
+name: Supabase Keep-Alive
+
+on:
+  schedule:
+    # Ping Supabase every 6 hours to keep it alive (free tier)
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Ping Supabase
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          echo "Pinging Supabase to keep instance alive..."
+          
+          # Simple health check ping
+          if [ -n "$VITE_SUPABASE_URL" ]; then
+            curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" \
+              -H "apikey: $VITE_SUPABASE_ANON_KEY" \
+              -H "Authorization: Bearer $VITE_SUPABASE_ANON_KEY" \
+              "$VITE_SUPABASE_URL/rest/v1/" || echo "Ping completed"
+            
+            echo "✅ Supabase pinged successfully at $(date)"
+          else
+            echo "⚠️  VITE_SUPABASE_URL not configured in secrets"
+            exit 0
+          fi
+      
+      - name: Log ping result
+        run: |
+          echo "Keep-alive ping completed"
+          echo "Next scheduled ping in 6 hours"

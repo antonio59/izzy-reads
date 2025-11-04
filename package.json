@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "ping-supabase": "node scripts/ping-supabase.js",
+    "security-audit": "npm audit --audit-level=moderate",
+    "update-deps": "npm update && npm audit fix"
   },
   "dependencies": {
     "@rollup/rollup-darwin-arm64": "^4.41.1",
@@ -24,6 +27,7 @@
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.21",
+    "dotenv": "^17.2.3",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",

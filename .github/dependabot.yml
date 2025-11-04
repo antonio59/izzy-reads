@@ -1,0 +1,77 @@
+version: 2
+
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 10
+    versioning-strategy: increase
+    labels:
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    reviewers:
+      - "antonio59"
+    assignees:
+      - "antonio59"
+    
+    # Group dependency updates
+    groups:
+      # Group all React-related updates together
+      react:
+        patterns:
+          - "react*"
+          - "@types/react*"
+      
+      # Group all Vite-related updates together
+      vite:
+        patterns:
+          - "vite*"
+          - "@vitejs/*"
+      
+      # Group all TypeScript updates together
+      typescript:
+        patterns:
+          - "typescript"
+          - "@typescript-eslint/*"
+      
+      # Group all testing utilities together
+      testing:
+        patterns:
+          - "@testing-library/*"
+          - "vitest"
+          - "jest"
+      
+      # Group all Supabase updates together
+      supabase:
+        patterns:
+          - "@supabase/*"
+      
+      # Group all Tailwind updates together
+      tailwind:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
+          - "autoprefixer"
+          - "postcss"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    labels:
+      - "github-actions"
+      - "automated"
+    commit-message:
+      prefix: "ci"
