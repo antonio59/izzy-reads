@@ -58,7 +58,7 @@ const PublicPortfolio = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
-      {/* Compact Header Navigation */}
+      {/* Compact Header with Logo and Login */}
       <header className="bg-white shadow-md sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
@@ -75,26 +75,6 @@ const PublicPortfolio = () => {
               </div>
             </div>
 
-            {/* Stats - Desktop */}
-            <div className="hidden md:flex items-center gap-3">
-              <div className="flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-full">
-                <BookOpen className="w-4 h-4 text-blue-600" />
-                <span className="text-sm font-semibold text-blue-700">{readBooks.length}</span>
-              </div>
-              <div className="flex items-center gap-2 bg-purple-50 px-3 py-1.5 rounded-full">
-                <Feather className="w-4 h-4 text-purple-600" />
-                <span className="text-sm font-semibold text-purple-700">{poems.length}</span>
-              </div>
-              <div className="flex items-center gap-2 bg-green-50 px-3 py-1.5 rounded-full">
-                <PenTool className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-semibold text-green-700">{publishedPosts.length}</span>
-              </div>
-              <div className="flex items-center gap-2 bg-orange-50 px-3 py-1.5 rounded-full">
-                <Gift className="w-4 h-4 text-orange-600" />
-                <span className="text-sm font-semibold text-orange-700">{wishlist.length}</span>
-              </div>
-            </div>
-
             {/* Admin Login Button */}
             <Link
               to="/login"
@@ -107,52 +87,80 @@ const PublicPortfolio = () => {
         </div>
       </header>
 
-      {/* Tab Navigation */}
+      {/* Unified Navigation with Counts */}
       <div className="container mx-auto px-4 py-6">
-        <div className="flex justify-center gap-3 mb-8">
+        <div className="flex flex-wrap justify-center gap-3 mb-8">
           <button
             onClick={() => setActiveTab('books')}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all ${
+            className={`relative flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all ${
               activeTab === 'books'
                 ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg transform scale-105'
-                : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
+                : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md hover:shadow-lg'
             }`}
           >
             <BookOpen className="w-5 h-5" />
-            My Books
+            <span>My Books</span>
+            <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-bold ${
+              activeTab === 'books' 
+                ? 'bg-white/30 text-white' 
+                : 'bg-blue-100 text-blue-700'
+            }`}>
+              {readBooks.length}
+            </span>
           </button>
           <button
             onClick={() => setActiveTab('poems')}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all ${
+            className={`relative flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all ${
               activeTab === 'poems'
                 ? 'bg-gradient-to-r from-pink-500 to-orange-500 text-white shadow-lg transform scale-105'
-                : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
+                : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md hover:shadow-lg'
             }`}
           >
             <Feather className="w-5 h-5" />
-            My Poems
+            <span>My Poems</span>
+            <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-bold ${
+              activeTab === 'poems' 
+                ? 'bg-white/30 text-white' 
+                : 'bg-purple-100 text-purple-700'
+            }`}>
+              {poems.length}
+            </span>
           </button>
           <button
             onClick={() => setActiveTab('blog')}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all ${
+            className={`relative flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all ${
               activeTab === 'blog'
                 ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white shadow-lg transform scale-105'
-                : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
+                : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md hover:shadow-lg'
             }`}
           >
             <PenTool className="w-5 h-5" />
-            My Blog
+            <span>My Blog</span>
+            <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-bold ${
+              activeTab === 'blog' 
+                ? 'bg-white/30 text-white' 
+                : 'bg-green-100 text-green-700'
+            }`}>
+              {publishedPosts.length}
+            </span>
           </button>
           <button
             onClick={() => setActiveTab('wishlist')}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all ${
+            className={`relative flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all ${
               activeTab === 'wishlist'
                 ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg transform scale-105'
-                : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
+                : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md hover:shadow-lg'
             }`}
           >
             <Gift className="w-5 h-5" />
-            Wishlist
+            <span>Wishlist</span>
+            <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-bold ${
+              activeTab === 'wishlist' 
+                ? 'bg-white/30 text-white' 
+                : 'bg-orange-100 text-orange-700'
+            }`}>
+              {wishlist.length}
+            </span>
           </button>
         </div>
 
