@@ -179,3 +179,43 @@ Track your progress and earn badges! 🏆
 ---
 
 *New quote every Sunday to inspire your reading!*
+
+---
+
+## 🎁 Setting Up an Amazon Wishlist for Gifts
+
+Want friends and family to send you books as gifts? Here's how to set it up!
+
+### Step 1: Create Amazon Wishlist
+1. Go to Amazon.co.uk
+2. Sign in to your account
+3. Click "Accounts & Lists" → "Create a List"
+4. Choose "Wishlist"
+5. Name it (e.g., "Izzy's Reading Wishlist")
+
+### Step 2: Add Books from Your App
+1. Look at your Wishlist tab on your public page
+2. For each book you want, click the Amazon link
+3. On Amazon, click "Add to List"
+4. Choose your wishlist
+
+### Step 3: Set Your Shipping Address
+1. Go to your wishlist on Amazon
+2. Click "Manage List" → "List Settings"
+3. Add your shipping address
+4. Set list privacy to "Shared" (so others can see it)
+
+### Step 4: Share Your Wishlist
+1. On your wishlist page, click "Send list to others"
+2. Copy the link
+3. Share with friends and family!
+
+### What Happens:
+- Friends click your wishlist link
+- They see all the books you want
+- They can buy directly from the list
+- Books ship straight to YOUR address! 📦
+- You get a surprise when they arrive! 🎉
+
+**Note:** You won't see who bought what - it's a surprise!
+
