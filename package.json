@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@rollup/rollup-darwin-arm64": "^4.41.1",
-    "@supabase/supabase-js": "^2.49.8",
+    "@supabase/supabase-js": "^2.79.0",
     "@types/node": "^22.15.24",
     "lucide-react": "^0.511.0",
     "react": "^19.1.0",
