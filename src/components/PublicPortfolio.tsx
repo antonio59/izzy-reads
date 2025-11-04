@@ -1,13 +1,43 @@
 import { useState } from 'react'
-import { BookOpen, Feather, PenTool, Heart, Star, Calendar, User as UserIcon, Share2, ExternalLink, Gift } from 'lucide-react'
+import { BookOpen, Feather, PenTool, Heart, Star, Calendar, User as UserIcon, Share2, ExternalLink, Gift, User } from 'lucide-react'
 import { useBooks } from '../contexts/BookContext'
+import AboutMe from './AboutMe'
 
 const PublicPortfolio = () => {
   const { books, poems, blogPosts, wishlist, updatePoem } = useBooks()
-  const [activeTab, setActiveTab] = useState<'books' | 'poems' | 'blog' | 'wishlist'>('books')
+  const [activeTab, setActiveTab] = useState<'books' | 'poems' | 'blog' | 'wishlist' | 'about'>('books')
 
   const readBooks = books.filter(book => book.isRead)
   const publishedPosts = blogPosts.filter(post => post.status === 'published')
+  
+  // Sample About Me data - this would come from BookContext in full implementation
+  const aboutData = {
+    isPublished: true,
+    bio: "Hi! I'm Izzy, and I absolutely LOVE reading! Books take me on amazing adventures to magical worlds, help me meet incredible characters, and teach me new things every day. Reading is my superpower!",
+    favoriteGenres: ['Fantasy', 'Adventure', 'Mystery', 'Realistic Fiction'],
+    favoriteAuthors: ['J.K. Rowling', 'R.J. Palacio', 'Roald Dahl', 'Rick Riordan'],
+    whyIRead: "I read because every book is a new adventure! Reading helps me imagine amazing worlds, understand different people, and learn about things I've never experienced. Plus, it's really fun!",
+    funFacts: [
+      'I can finish a 300-page book in one weekend!',
+      'My favorite reading spot is curled up on the couch with my dog',
+      'I've read the entire Harry Potter series 3 times',
+      'I love recommending books to my friends'
+    ],
+    currentlyReading: 'Percy Jackson & The Lightning Thief by Rick Riordan',
+    readingGoals: [
+      'Read 50 books this year',
+      'Try a new genre every month',
+      'Start a book club with my friends',
+      'Write reviews for every book I read'
+    ],
+    achievements: [
+      'Read 100 books',
+      'Finished a series in one week',
+      'Poetry Contest Winner',
+      'Book Club Leader',
+      '500 Pages in One Day'
+    ]
+  }
   
   // Handle poem likes
   const handleLikePoem = (poemId: string) => {
@@ -146,6 +176,17 @@ const PublicPortfolio = () => {
             }`}>
               {wishlist.length}
             </span>
+          </button>
+          <button
+            onClick={() => setActiveTab('about')}
+            className={`relative flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all ${
+              activeTab === 'about'
+                ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg transform scale-105'
+                : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md hover:shadow-lg'
+            }`}
+          >
+            <User className="w-5 h-5" />
+            <span>About Me</span>
           </button>
           </div>
         </div>
@@ -550,6 +591,11 @@ const PublicPortfolio = () => {
               </div>
             )}
           </div>
+        )}
+
+        {/* About Me Section */}
+        {activeTab === 'about' && (
+          <AboutMe aboutData={aboutData} />
         )}
       </div>
 
