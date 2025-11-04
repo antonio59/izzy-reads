@@ -61,6 +61,7 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
         id: '1',
         title: 'Harry Potter and the Sorcerer\'s Stone',
         author: 'J.K. Rowling',
+        coverUrl: 'https://covers.openlibrary.org/b/id/10521270-L.jpg',
         genre: 'Fantasy',
         ageRating: '8+',
         dateAdded: '2024-01-15',
@@ -68,20 +69,21 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
         rating: 5,
         isRead: true,
         pageCount: 309,
-        notes: 'Amazing magical adventure!'
+        notes: 'Amazing magical adventure! I loved learning about Hogwarts and meeting Harry, Ron, and Hermione.'
       },
       {
         id: '2',
         title: 'Wonder',
         author: 'R.J. Palacio',
+        coverUrl: 'https://covers.openlibrary.org/b/id/7896186-L.jpg',
         genre: 'Fiction',
         ageRating: '8+',
         dateAdded: '2024-02-01',
         dateRead: '2024-02-05',
-        rating: 4,
+        rating: 5,
         isRead: true,
         pageCount: 315,
-        notes: 'Very touching story about kindness.'
+        notes: 'Very touching story about kindness. Auggie is so brave and this book made me think about being kind to everyone.'
       }
     ]
 
