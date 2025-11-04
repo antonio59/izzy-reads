@@ -22,7 +22,7 @@ const PublicPortfolio = () => {
     funFacts: [
       'I can finish a 300-page book in one weekend!',
       'My favorite reading spot is curled up on the couch with my dog',
-      'I've read the entire Harry Potter series 3 times',
+      "I've read the entire Harry Potter series 3 times",
       'I love recommending books to my friends'
     ],
     currentlyReading: 'Percy Jackson & The Lightning Thief by Rick Riordan',
