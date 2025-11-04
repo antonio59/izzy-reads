@@ -26,10 +26,9 @@ const PublicPortfolio = () => {
     return {
       bookshop: `https://bookshop.org/search?keywords=${searchQuery}`,
       amazon: isbn 
-        ? `https://www.amazon.com/dp/${isbn}` 
-        : `https://www.amazon.com/s?k=${searchQuery}`,
+        ? `https://www.amazon.co.uk/dp/${isbn}` 
+        : `https://www.amazon.co.uk/s?k=${searchQuery}`,
       worldOfBooks: `https://www.worldofbooks.com/en-gb/search?term=${searchQuery}`,
-      barnesNoble: `https://www.barnesandnoble.com/s/${searchQuery}`,
     }
   }
 
@@ -450,8 +449,11 @@ const PublicPortfolio = () => {
               <span className="text-5xl">🎁</span>
               Books I Want to Read
             </h2>
-            <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
-              Help support my reading journey! These are books I'd love to read. Click on any retailer link to purchase. 📚
+            <p className="text-center text-gray-600 mb-3 max-w-2xl mx-auto">
+              Help support my reading journey! These are books I'd love to read. 📚
+            </p>
+            <p className="text-center text-sm text-gray-500 mb-8 max-w-2xl mx-auto italic">
+              💡 Tip: For direct gift shipping, you can add these books to an Amazon Wishlist and share the link with friends and family!
             </p>
             
             {wishlist.length > 0 ? (
@@ -526,18 +528,8 @@ const PublicPortfolio = () => {
                             rel="noopener noreferrer"
                             className="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 rounded-lg transition-all group"
                           >
-                            <span className="text-sm font-medium text-green-700">World of Books</span>
+                            <span className="text-sm font-medium text-green-700">World of Books (UK)</span>
                             <ExternalLink className="w-4 h-4 text-green-600 group-hover:translate-x-1 transition-transform" />
-                          </a>
-                          
-                          <a
-                            href={links.barnesNoble}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 rounded-lg transition-all group"
-                          >
-                            <span className="text-sm font-medium text-purple-700">Barnes & Noble</span>
-                            <ExternalLink className="w-4 h-4 text-purple-600 group-hover:translate-x-1 transition-transform" />
                           </a>
                         </div>
                         
