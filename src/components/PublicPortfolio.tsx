@@ -1,14 +1,61 @@
 import { useState } from 'react'
-import { BookOpen, Feather, PenTool, Heart, Star, Calendar, User as UserIcon, LogIn } from 'lucide-react'
+import { BookOpen, Feather, PenTool, Heart, Star, Calendar, User as UserIcon, LogIn, Share2, ExternalLink, Gift } from 'lucide-react'
 import { useBooks } from '../contexts/BookContext'
 import { Link } from 'react-router-dom'
 
 const PublicPortfolio = () => {
-  const { books, poems, blogPosts } = useBooks()
-  const [activeTab, setActiveTab] = useState<'books' | 'poems' | 'blog'>('books')
+  const { books, poems, blogPosts, wishlist, updatePoem } = useBooks()
+  const [activeTab, setActiveTab] = useState<'books' | 'poems' | 'blog' | 'wishlist'>('books')
 
   const readBooks = books.filter(book => book.isRead)
   const publishedPosts = blogPosts.filter(post => post.status === 'published')
+  
+  // Handle poem likes
+  const handleLikePoem = (poemId: string) => {
+    const poem = poems.find(p => p.id === poemId)
+    if (poem) {
+      updatePoem(poemId, { likes: (poem.likes || 0) + 1 })
+    }
+  }
+
+  // Generate purchase links for a book
+  const getPurchaseLinks = (book: { isbn?: string; title: string; author: string }) => {
+    const searchQuery = encodeURIComponent(`${book.title} ${book.author}`)
+    const isbn = book.isbn || ''
+    
+    return {
+      bookshop: `https://bookshop.org/search?keywords=${searchQuery}`,
+      amazon: isbn 
+        ? `https://www.amazon.com/dp/${isbn}` 
+        : `https://www.amazon.com/s?k=${searchQuery}`,
+      worldOfBooks: `https://www.worldofbooks.com/en-gb/search?term=${searchQuery}`,
+      barnesNoble: `https://www.barnesandnoble.com/s/${searchQuery}`,
+    }
+  }
+
+  // Share functionality
+  const handleShare = async (type: 'poem' | 'blog', title: string, id: string) => {
+    const url = `${window.location.origin}/#${type}-${id}`
+    const text = type === 'poem' 
+      ? `Check out this poem by Izzy: "${title}"`
+      : `Read Izzy's blog post: "${title}"`
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text, url })
+      } catch (err) {
+        // User cancelled or share failed
+        copyToClipboard(url)
+      }
+    } else {
+      copyToClipboard(url)
+    }
+  }
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text)
+    alert('Link copied to clipboard!')
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
@@ -30,18 +77,22 @@ const PublicPortfolio = () => {
             </div>
 
             {/* Stats - Desktop */}
-            <div className="hidden md:flex items-center gap-4">
-              <div className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full">
+            <div className="hidden md:flex items-center gap-3">
+              <div className="flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-full">
                 <BookOpen className="w-4 h-4 text-blue-600" />
-                <span className="text-sm font-semibold text-blue-700">{readBooks.length} Books</span>
+                <span className="text-sm font-semibold text-blue-700">{readBooks.length}</span>
               </div>
-              <div className="flex items-center gap-2 bg-purple-50 px-4 py-2 rounded-full">
+              <div className="flex items-center gap-2 bg-purple-50 px-3 py-1.5 rounded-full">
                 <Feather className="w-4 h-4 text-purple-600" />
-                <span className="text-sm font-semibold text-purple-700">{poems.length} Poems</span>
+                <span className="text-sm font-semibold text-purple-700">{poems.length}</span>
               </div>
-              <div className="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full">
+              <div className="flex items-center gap-2 bg-green-50 px-3 py-1.5 rounded-full">
                 <PenTool className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-semibold text-green-700">{publishedPosts.length} Posts</span>
+                <span className="text-sm font-semibold text-green-700">{publishedPosts.length}</span>
+              </div>
+              <div className="flex items-center gap-2 bg-orange-50 px-3 py-1.5 rounded-full">
+                <Gift className="w-4 h-4 text-orange-600" />
+                <span className="text-sm font-semibold text-orange-700">{wishlist.length}</span>
               </div>
             </div>
 
@@ -92,6 +143,17 @@ const PublicPortfolio = () => {
           >
             <PenTool className="w-5 h-5" />
             My Blog
+          </button>
+          <button
+            onClick={() => setActiveTab('wishlist')}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all ${
+              activeTab === 'wishlist'
+                ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg transform scale-105'
+                : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
+            }`}
+          >
+            <Gift className="w-5 h-5" />
+            Wishlist
           </button>
         </div>
 
@@ -247,9 +309,21 @@ const PublicPortfolio = () => {
                           
                           {/* Footer */}
                           <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
-                            <div className="flex items-center gap-2">
-                              <Heart className="w-5 h-5 text-pink-500 fill-pink-500" />
-                              <span className="text-sm font-medium text-gray-700">{poem.likes} likes</span>
+                            <div className="flex items-center gap-3">
+                              <button
+                                onClick={() => handleLikePoem(poem.id)}
+                                className="flex items-center gap-2 px-3 py-1.5 bg-pink-50 hover:bg-pink-100 rounded-full transition-colors group"
+                              >
+                                <Heart className="w-4 h-4 text-pink-500 group-hover:fill-pink-500 transition-all" />
+                                <span className="text-sm font-medium text-pink-700">{poem.likes} likes</span>
+                              </button>
+                              <button
+                                onClick={() => handleShare('poem', poem.title, poem.id)}
+                                className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors"
+                              >
+                                <Share2 className="w-4 h-4 text-blue-600" />
+                                <span className="text-sm font-medium text-blue-700">Share</span>
+                              </button>
                             </div>
                             {poem.template && (
                               <span className="text-xs bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 px-3 py-1 rounded-full font-medium">
@@ -327,19 +401,33 @@ const PublicPortfolio = () => {
                       </p>
                     </div>
                     
-                    {/* Tags */}
-                    {post.tags && post.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-8 pt-6 border-t-2 border-gray-100">
-                        {post.tags.map((tag, idx) => (
-                          <span
-                            key={idx}
-                            className="px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 rounded-full text-sm font-medium hover:from-purple-200 hover:to-pink-200 transition-all"
-                          >
-                            #{tag}
-                          </span>
-                        ))}
+                    {/* Tags and Share */}
+                    <div className="mt-8 pt-6 border-t-2 border-gray-100">
+                      <div className="flex items-center justify-between flex-wrap gap-4">
+                        {/* Tags */}
+                        {post.tags && post.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-2">
+                            {post.tags.map((tag, idx) => (
+                              <span
+                                key={idx}
+                                className="px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 rounded-full text-sm font-medium hover:from-purple-200 hover:to-pink-200 transition-all"
+                              >
+                                #{tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        
+                        {/* Share Button */}
+                        <button
+                          onClick={() => handleShare('blog', post.title, post.id)}
+                          className="flex items-center gap-2 px-4 py-2 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors"
+                        >
+                          <Share2 className="w-4 h-4 text-blue-600" />
+                          <span className="text-sm font-medium text-blue-700">Share</span>
+                        </button>
                       </div>
-                    )}
+                    </div>
                   </article>
                 ))}
               </div>
@@ -350,6 +438,129 @@ const PublicPortfolio = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-gray-700 mb-2">No Blog Posts Yet!</h3>
                 <p className="text-gray-500 text-lg">Check back soon for book reviews and reading adventures! 📝</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Wishlist Section */}
+        {activeTab === 'wishlist' && (
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl font-bold text-gray-800 mb-4 text-center flex items-center justify-center gap-3">
+              <span className="text-5xl">🎁</span>
+              Books I Want to Read
+            </h2>
+            <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+              Help support my reading journey! These are books I'd love to read. Click on any retailer link to purchase. 📚
+            </p>
+            
+            {wishlist.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {wishlist.map((book) => {
+                  const links = getPurchaseLinks(book)
+                  return (
+                    <div
+                      key={book.id}
+                      className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300"
+                    >
+                      {/* Book Cover */}
+                      <div className="relative overflow-hidden aspect-[2/3]">
+                        {book.coverUrl ? (
+                          <img
+                            src={book.coverUrl}
+                            alt={book.title}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const target = e.currentTarget
+                              target.style.display = 'none'
+                              if (target.nextElementSibling) {
+                                (target.nextElementSibling as HTMLElement).style.display = 'flex'
+                              }
+                            }}
+                          />
+                        ) : null}
+                        <div 
+                          className={`w-full h-full bg-gradient-to-br from-orange-400 via-red-400 to-pink-400 flex flex-col items-center justify-center p-4 ${book.coverUrl ? 'hidden' : 'flex'}`}
+                        >
+                          <Gift className="w-16 h-16 text-white mb-3 opacity-80" />
+                          <p className="text-white text-center font-bold text-sm line-clamp-3 drop-shadow-md">
+                            {book.title}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {/* Book Info */}
+                      <div className="p-4">
+                        <h3 className="font-bold text-gray-800 mb-1 line-clamp-2 text-sm leading-tight">
+                          {book.title}
+                        </h3>
+                        <p className="text-xs text-gray-600 mb-3 line-clamp-1">{book.author}</p>
+                        
+                        {/* Purchase Links */}
+                        <div className="space-y-2">
+                          <p className="text-xs font-semibold text-gray-700 mb-2">Buy from:</p>
+                          
+                          <a
+                            href={links.bookshop}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 rounded-lg transition-all group"
+                          >
+                            <span className="text-sm font-medium text-blue-700">Bookshop.org</span>
+                            <ExternalLink className="w-4 h-4 text-blue-600 group-hover:translate-x-1 transition-transform" />
+                          </a>
+                          
+                          <a
+                            href={links.amazon}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-orange-50 to-yellow-50 hover:from-orange-100 hover:to-yellow-100 rounded-lg transition-all group"
+                          >
+                            <span className="text-sm font-medium text-orange-700">Amazon</span>
+                            <ExternalLink className="w-4 h-4 text-orange-600 group-hover:translate-x-1 transition-transform" />
+                          </a>
+                          
+                          <a
+                            href={links.worldOfBooks}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 rounded-lg transition-all group"
+                          >
+                            <span className="text-sm font-medium text-green-700">World of Books</span>
+                            <ExternalLink className="w-4 h-4 text-green-600 group-hover:translate-x-1 transition-transform" />
+                          </a>
+                          
+                          <a
+                            href={links.barnesNoble}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 rounded-lg transition-all group"
+                          >
+                            <span className="text-sm font-medium text-purple-700">Barnes & Noble</span>
+                            <ExternalLink className="w-4 h-4 text-purple-600 group-hover:translate-x-1 transition-transform" />
+                          </a>
+                        </div>
+                        
+                        {/* Genre badge */}
+                        {book.genre && (
+                          <div className="mt-3">
+                            <span className="inline-block px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">
+                              {book.genre}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-20 bg-white rounded-3xl shadow-lg">
+                <div className="bg-gradient-to-br from-orange-100 to-red-100 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Gift className="w-16 h-16 text-orange-500" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-700 mb-2">Wishlist is Empty!</h3>
+                <p className="text-gray-500 text-lg">Check back soon for books Izzy wants to read! 📚</p>
               </div>
             )}
           </div>
