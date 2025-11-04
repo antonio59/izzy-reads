@@ -5,7 +5,7 @@ interface BookRecommendationsProps {
   books: Book[]
 }
 
-const BookRecommendations: React.FC<BookRecommendationsProps> = ({ books }) => {
+const BookRecommendations = ({ books }: BookRecommendationsProps) => {
   // Filter to only highly-rated books (4+ stars) for recommendations
   const recommendedBooks = books.filter(book => book.isRead && book.rating && book.rating >= 4).slice(0, 6)
 

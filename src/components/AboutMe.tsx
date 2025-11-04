@@ -15,7 +15,7 @@ interface AboutMeProps {
   }
 }
 
-const AboutMe: React.FC<AboutMeProps> = ({ aboutData }) => {
+const AboutMe = ({ aboutData }: AboutMeProps) => {
   if (!aboutData.isPublished) {
     return (
       <div className="max-w-4xl mx-auto">

@@ -12,7 +12,7 @@ interface ReadingStatsProps {
   }
 }
 
-const ReadingStats: React.FC<ReadingStatsProps> = ({ stats }) => {
+const ReadingStats = ({ stats }: ReadingStatsProps) => {
   return (
     <div className="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-3xl p-8 text-white shadow-2xl mb-8">
       <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
