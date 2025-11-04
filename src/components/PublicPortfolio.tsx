@@ -202,7 +202,11 @@ const PublicPortfolio = () => {
           totalPages: readBooks.reduce((sum, book) => sum + (book.pageCount || 0), 0),
           booksThisYear: 2,
           booksThisMonth: 1,
-          averageRating: readBooks.filter(b => b.rating).reduce((sum, b) => sum + (b.rating || 0), 0) / readBooks.filter(b => b.rating).length || 0,
+          averageRating: (() => {
+            const ratedBooks = readBooks.filter(b => b.rating)
+            if (ratedBooks.length === 0) return 0
+            return ratedBooks.reduce((sum, b) => sum + (b.rating || 0), 0) / ratedBooks.length
+          })(),
           favoriteGenre: 'Fantasy',
           readingStreak: 12
         }} />
