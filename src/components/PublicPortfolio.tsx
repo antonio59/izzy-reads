@@ -3,6 +3,7 @@ import { BookOpen, Feather, PenTool, Heart, Star, Calendar, User as UserIcon, Sh
 import { useBooks } from '../contexts/BookContext'
 import AboutMe from './AboutMe'
 import ReadingStats from './ReadingStats'
+import BookRecommendations from './BookRecommendations'
 
 const PublicPortfolio = () => {
   const { books, poems, blogPosts, wishlist, updatePoem } = useBooks()
@@ -205,6 +206,9 @@ const PublicPortfolio = () => {
           favoriteGenre: 'Fantasy',
           readingStreak: 12
         }} />
+
+        {/* Izzy's Recommendations - Show only highly-rated books */}
+        <BookRecommendations books={books} />
 
         {/* Books Section */}
         {activeTab === 'books' && (
