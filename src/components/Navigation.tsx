@@ -12,7 +12,6 @@ interface NavigationProps {
 const Navigation: React.FC<NavigationProps> = ({ isParentMode, setIsParentMode }) => {
   const location = useLocation()
   const navigate = useNavigate()
-  const { user } = useUser()
   const { signOut } = useAuth()
 
   const handleLogout = async () => {
