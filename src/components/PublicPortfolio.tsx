@@ -449,11 +449,8 @@ const PublicPortfolio = () => {
               <span className="text-5xl">🎁</span>
               Books I Want to Read
             </h2>
-            <p className="text-center text-gray-600 mb-3 max-w-2xl mx-auto">
-              Help support my reading journey! These are books I'd love to read. 📚
-            </p>
-            <p className="text-center text-sm text-gray-500 mb-8 max-w-2xl mx-auto italic">
-              💡 Tip: For direct gift shipping, you can add these books to an Amazon Wishlist and share the link with friends and family!
+            <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+              Help support my reading journey! These are books I'd love to read. Click any link below to find and purchase. 📚
             </p>
             
             {wishlist.length > 0 ? (
