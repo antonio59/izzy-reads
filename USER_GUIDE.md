@@ -1,4 +1,4 @@
-# Isabella-Reads User Guide
+# Izzy-Reads User Guide
 
 ## Welcome! 📚
 

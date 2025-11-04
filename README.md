@@ -1,4 +1,4 @@
-# 📚 Isabella-Reads
+# 📚 Izzy-Reads
 
 A beautiful reading tracker and public portfolio for young book lovers. Track your reading journey, write poetry, publish blog posts, and share your love of books with the world!
 
@@ -59,8 +59,8 @@ Auto-calculated statistics displayed beautifully:
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/YOUR_USERNAME/isabella-reads.git
-cd isabella-reads
+git clone https://github.com/YOUR_USERNAME/izzy-reads.git
+cd izzy-reads
 ```
 
 2. **Install dependencies**
@@ -88,7 +88,7 @@ Navigate to `http://localhost:5173`
 ## 📁 Project Structure
 
 ```
-isabella-reads/
+izzy-reads/
 ├── src/
 │   ├── components/
 │   │   ├── AboutMe.tsx              # About Me profile page

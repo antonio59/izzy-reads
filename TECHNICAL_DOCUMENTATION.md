@@ -1,7 +1,7 @@
-# Isabella-Reads Technical Documentation
+# Izzy-Reads Technical Documentation
 
 ## Overview
-Isabella-Reads is a reading tracker and public portfolio for a 10-year-old book lover. It combines private reading tracking with a beautiful public showcase.
+Izzy-Reads is a reading tracker and public portfolio for a 10-year-old book lover. It combines private reading tracking with a beautiful public showcase.
 
 ## Architecture
 
