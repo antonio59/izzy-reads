@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { BookOpen, Feather, PenTool, Heart, Star, Calendar, User as UserIcon, Share2, ExternalLink, Gift, User } from 'lucide-react'
 import { useBooks } from '../contexts/BookContext'
 import AboutMe from './AboutMe'
+import ReadingStats from './ReadingStats'
 
 const PublicPortfolio = () => {
   const { books, poems, blogPosts, wishlist, updatePoem } = useBooks()
@@ -194,6 +195,17 @@ const PublicPortfolio = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
+        {/* Reading Stats - Show on all tabs */}
+        <ReadingStats stats={{
+          totalBooks: readBooks.length,
+          totalPages: readBooks.reduce((sum, book) => sum + (book.pageCount || 0), 0),
+          booksThisYear: 2,
+          booksThisMonth: 1,
+          averageRating: readBooks.filter(b => b.rating).reduce((sum, b) => sum + (b.rating || 0), 0) / readBooks.filter(b => b.rating).length || 0,
+          favoriteGenre: 'Fantasy',
+          readingStreak: 12
+        }} />
+
         {/* Books Section */}
         {activeTab === 'books' && (
           <div className="max-w-7xl mx-auto">
