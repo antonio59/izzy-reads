@@ -1,221 +1,296 @@
-# 📚 Izzy's Reading Corner - How to Use This App!
+# Isabella-Reads User Guide
 
-## Welcome to Your Reading Adventure! 🌟
+## Welcome! 📚
 
-This is YOUR special place to keep track of all the awesome books you read, write cool poems, and share your thoughts about stories!
-
----
-
-## 🏠 Your Dashboard (Home Page)
-
-When you log in, you'll see your **Dashboard** - this is like your reading command center!
-
-### What You Can Do:
-- ✅ See how many books you've read
-- ✅ Check your reading challenges
-- ✅ Get a cool reading quote every week
-- ✅ Quick buttons to add books, write poems, or blog posts
+This is your personal reading tracker and public portfolio! Share your love of books with friends and family.
 
 ---
 
-## 📖 Adding Books You've Read
+## Getting Started
 
-### Step 1: Click "Add a Book"
-From your dashboard, click the blue **📚 Add a Book** button
+### Viewing Your Portfolio
+1. Open your browser
+2. Go to: `http://localhost:5173` (or your deployed URL)
+3. Explore your 5 tabs!
 
-### Step 2: Search for Your Book
-1. Click the **"Find Books"** button
-2. Type the book title (like "Harry Potter" or "Wonder")
-3. You'll see results with book covers!
+### Tabs Overview
 
-### Step 3: Add the Book
-1. Click on the book you read
-2. Add your rating (⭐⭐⭐⭐⭐)
-3. Write what you thought about it!
-4. Click "Add to Bookshelf"
+#### 📚 My Books
+See all the books you've read with:
+- Book covers
+- Ratings (1-5 stars)
+- Your reviews
+- Genre tags
 
-**That's it!** Your book will now show up with its cover on your public page!
+#### ✍️ My Poems
+Share your creative writing:
+- Beautiful poetry cards
+- Like counter (visitors can like your poems!)
+- Share button to send to friends
 
----
+#### 📝 My Blog
+Write about books you love:
+- Full blog posts
+- Publish when ready
+- Share with friends
 
-## ✍️ Writing Poems
+#### 🎁 Wishlist
+Books you want to read:
+- Share with family for gift ideas!
+- Links to buy from 3 UK stores:
+  - Bookshop.org (supports independent bookstores)
+  - Amazon.co.uk
+  - World of Books (used books)
 
-### Choose Your Style:
-We have 4 fun templates to help you write poems:
+**Tip**: You can create an Amazon Wishlist and share the link with family so they can ship gifts directly to you!
 
-1. **🌸 Haiku** - Short and sweet (5-7-5 syllables)
-2. **🔤 Acrostic** - First letters spell a word
-3. **✨ Free Verse** - Write whatever you feel!
-4. **🎵 Rhyming Couplets** - Make your lines rhyme
-
-### How to Write a Poem:
-1. Click **✍️ Write a Poem** from your dashboard
-2. Click **"New Poem"**
-3. Pick a template
-4. Choose a fun emoji for your poem
-5. Write your poem!
-6. Click **"Publish Poem"**
-
-Your poem will appear on your public page in a beautiful colorful card!
-
----
-
-## 📝 Writing Blog Posts
-
-### Blog Templates:
-1. **Book Review** - Tell everyone about a book you read
-2. **Character Analysis** - Write about your favorite character
-3. **Reading Adventure** - Share your reading journey
-4. **Free Writing** - Write about anything!
-
-### How to Write a Blog Post:
-1. Click **📝 Write a Blog Post**
-2. Click **"+ New Post"**
-3. Choose a template
-4. Pick a fun emoji
-5. Write your post!
-6. Add tags (like #Fantasy #Adventure)
-7. Submit for approval
-
-**Note:** Your parent/guardian needs to approve blog posts before they appear on your public page!
+#### 👤 About Me
+Your reading profile (NEW!):
+- Your photo and bio
+- Favorite genres & authors
+- Why you love reading
+- Fun facts about you
+- Reading goals
+- Achievements you've earned
 
 ---
 
-## 💖 Your Wishlist
+## Using the Dashboard (Admin)
 
-This is where you keep books you want to read!
+### Logging In
+1. Bookmark: `http://localhost:5173/login`
+2. Enter your email and password
+3. Access your private dashboard
 
-### Adding to Wishlist:
-1. Search for a book
-2. Click "Add to Wishlist" instead of "Add to Bookshelf"
-3. When you finish reading it, move it to your bookshelf!
+**Note**: There's no public login button - keep your admin link private!
 
----
+### Adding Books
+1. Go to Dashboard
+2. Click "Add Book"
+3. Enter book details:
+   - Title
+   - Author
+   - ISBN (for cover image)
+   - Genre
+   - Page count
+4. Mark as "Read" when finished
+5. Add your rating (1-5 stars)
+6. Write your review!
 
-## 🌍 Your Public Portfolio
+### Writing Poems
+1. Go to Dashboard → Poems
+2. Click "New Poem"
+3. Write your poem
+4. Add an emoji (optional)
+5. Publish to your portfolio!
 
-This is the page your friends and family can see!
+### Writing Blog Posts
+1. Go to Dashboard → Blog
+2. Click "New Post"
+3. Write about a book you loved
+4. Add tags
+5. Publish when ready!
 
-**What They Can See:**
-- All the books you've read (with cool covers!)
-- All your published poems
-- Your approved blog posts
+### Managing Your Wishlist
+1. Add books you want to read
+2. They'll appear in your public Wishlist tab
+3. Share the link with family!
 
-**What They CAN'T See:**
-- Your wishlist (that's private!)
-- Draft blog posts
-- Your dashboard
-
-**Share your portfolio with:**
-- Friends at school
-- Grandparents
-- Teachers
-- Anyone who wants to see what you're reading!
-
----
-
-## 🎯 Reading Challenges
-
-Set goals for yourself!
-
-**Examples:**
-- Read 10 books this month
-- Read 500 pages this week
-- Try 3 different genres
-
-Track your progress and earn badges! 🏆
-
----
-
-## 💡 Tips & Tricks
-
-### Writing Great Book Reviews:
-- What was your favorite part?
-- Who was your favorite character?
-- Would you recommend it to a friend?
-- What did you learn from the book?
-
-### Finding Books:
-- Search by title: "Harry Potter"
-- Search by author: "Roald Dahl"
-- Ask for recommendations from friends!
-
-### Writing Poems:
-- Don't worry about being perfect
-- Write what you feel
-- Read it out loud
-- Have fun with words!
+### Editing About Me
+(Coming soon in dashboard)
+1. Toggle "Publish" to make it visible
+2. Upload a profile photo
+3. Edit your bio
+4. Add/remove favorite genres
+5. Update fun facts
+6. Set reading goals
 
 ---
 
-## 🆘 Need Help?
+## Features Explained
 
-### Can't Find a Book?
-- Try searching just the first word of the title
-- Try the author's name
-- Make sure you spelled it correctly
+### Reading Stats
+Shows automatically on every page:
+- **Total Books**: How many books you've finished
+- **Total Pages**: All the pages you've read!
+- **Books This Year**: Your yearly progress
+- **Books This Month**: Current month's reading
+- **Average Rating**: Your average star rating
+- **Favorite Genre**: The genre you read most
+- **Reading Streak**: Days in a row you've read 🔥
 
-### Want to Delete Something?
-- Go to My Books/My Poems/My Blog
-- Find what you want to delete
-- Click the trash icon 🗑️
+### Izzy's Picks
+Your top recommendations appear automatically:
+- Only shows books you rated 4-5 stars
+- Top 6 favorites displayed
+- Shows your review quotes
+- Helps friends find great books!
 
-### Forgot Your Password?
-- Ask your parent/guardian to help you reset it
-- They can do this in the parent dashboard
+### Like & Share
+**Poems**:
+- Visitors can "like" your poems (heart button)
+- Like count shows publicly
+- Share button sends poem to friends
+
+**Blog Posts**:
+- Share button for social media
+- Copy link to clipboard
+- Send to friends and family
+
+### Book Covers
+Covers load automatically from Open Library:
+- Enter the book's ISBN when adding
+- Cover appears automatically!
+- No need to upload images
 
 ---
 
-## 🌟 Remember!
+## Sharing Your Portfolio
 
-- ✅ Have fun reading!
-- ✅ Be creative with your writing
-- ✅ Share your love of books
-- ✅ Keep exploring new stories
-- ✅ There's no wrong way to enjoy reading!
+### With Friends
+1. Copy your portfolio URL
+2. Send via text/email
+3. They can browse your books, poems, and blog!
 
-**Happy Reading!** 📚✨
+### On Social Media
+- Share individual poems/posts using share button
+- Link to your full portfolio in bio
+- Screenshot your reading stats to post!
+
+### With Family (Wishlist)
+1. Go to Wishlist tab
+2. Click any book's purchase links
+3. Family can buy books for you!
+
+**Pro Tip**: Create an Amazon Wishlist:
+1. Add your wishlist books to Amazon
+2. Create a wishlist on Amazon.co.uk
+3. Share the wishlist link with family
+4. They can ship gifts directly to you!
 
 ---
 
-*New quote every Sunday to inspire your reading!*
+## Tips & Tricks
+
+### Get More Recommendations
+- Rate every book you read
+- Give 4-5 stars to favorites
+- They'll appear in "Izzy's Picks" automatically!
+
+### Build Your Reading Streak
+- Read every day
+- Your streak counter increases
+- Show off your dedication! 🔥
+
+### Make About Me Special
+- Add fun facts people don't know
+- Share what inspires you to read
+- Update your currently reading book
+- List reading goals to track progress
+
+### Grow Your Achievements
+Keep track of milestones:
+- "Read 100 Books"
+- "Finished a series in one week"
+- "500 Pages in One Day"
+- Add new ones as you achieve them!
+
+### Write Great Reviews
+Help others find good books:
+- Say what you loved (or didn't love)
+- Mention who would enjoy it
+- Keep it honest!
+- Your quotes appear in recommendations
 
 ---
 
-## 🎁 Setting Up an Amazon Wishlist for Gifts
+## Frequently Asked Questions
 
-Want friends and family to send you books as gifts? Here's how to set it up!
+### How do I change my About Me?
+In the dashboard (coming soon), you can edit all sections and toggle publish on/off.
 
-### Step 1: Create Amazon Wishlist
-1. Go to Amazon.co.uk
-2. Sign in to your account
-3. Click "Accounts & Lists" → "Create a List"
-4. Choose "Wishlist"
-5. Name it (e.g., "Izzy's Reading Wishlist")
+### Can I remove the About Me tab?
+Yes! Set `isPublished: false` and it will show "Coming Soon" instead.
 
-### Step 2: Add Books from Your App
-1. Look at your Wishlist tab on your public page
-2. For each book you want, click the Amazon link
-3. On Amazon, click "Add to List"
-4. Choose your wishlist
+### How do covers appear automatically?
+When you add a book's ISBN, we fetch the cover from Open Library's free database!
 
-### Step 3: Set Your Shipping Address
-1. Go to your wishlist on Amazon
-2. Click "Manage List" → "List Settings"
-3. Add your shipping address
-4. Set list privacy to "Shared" (so others can see it)
+### What if a cover doesn't load?
+A colorful gradient placeholder appears instead. Still looks great!
 
-### Step 4: Share Your Wishlist
-1. On your wishlist page, click "Send list to others"
-2. Copy the link
-3. Share with friends and family!
+### Can visitors leave comments?
+Not yet - this keeps your portfolio spam-free and safe. You can add comments later if you want!
 
-### What Happens:
-- Friends click your wishlist link
-- They see all the books you want
-- They can buy directly from the list
-- Books ship straight to YOUR address! 📦
-- You get a surprise when they arrive! 🎉
+### How do I hide the admin login?
+It's already hidden! Only you know the `/login` URL.
 
-**Note:** You won't see who bought what - it's a surprise!
+### Can I customize colors?
+Yes! Ask a developer to help change the color themes in the code.
 
+### How many books can I add?
+Unlimited! Add as many as you want.
+
+### Can I track book series?
+Coming soon! Series tracker is on the roadmap.
+
+### Can I filter books by genre?
+Coming soon! Tag and filter system is being built.
+
+---
+
+## Privacy & Safety
+
+### What's Public?
+- Books you've marked as read
+- Published poems
+- Published blog posts
+- Your wishlist
+- About Me (if published)
+- Reading stats
+
+### What's Private?
+- Your email and password
+- Dashboard access
+- Unpublished drafts
+- Books not marked as read
+- Admin features
+
+### Staying Safe
+- Never share your login password
+- Keep your `/login` URL private
+- Review posts before publishing
+- Ask a parent before sharing personal info
+
+---
+
+## Getting Help
+
+### Something Not Working?
+1. Refresh the page
+2. Check your internet connection
+3. Ask a parent or developer for help
+
+### Want to Add Features?
+Ideas for future updates:
+- Series tracker
+- Book tags and filters
+- Reading journey timeline
+- Friend recommendations
+- Book club features
+
+---
+
+## Have Fun Reading! 📖
+
+Remember:
+- Share books you love
+- Write honest reviews
+- Track your progress
+- Celebrate milestones
+- Inspire others to read!
+
+**Your reading journey is amazing - share it with the world!** 🌟
+
+---
+
+*Built with ❤️ for book lovers everywhere*
