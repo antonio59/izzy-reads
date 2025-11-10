@@ -13,7 +13,7 @@
     "update-deps": "npm update && npm audit fix"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.49.8",
+    "@supabase/supabase-js": "^2.80.0",
     "@types/node": "^22.15.24",
     "lucide-react": "^0.511.0",
     "react": "^19.1.0",
