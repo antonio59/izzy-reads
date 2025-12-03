@@ -22,34 +22,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '18'
-          cache: 'npm'
+          bun-version: latest
       
       - name: Install dependencies
-        run: npm install --no-optional || npm ci --no-optional || npm install
+        run: bun install
       
-      - name: Run npm audit
-        run: npm audit --audit-level=moderate
+      - name: Run bun audit
+        run: bun audit
         continue-on-error: true
-      
-      - name: Run npm audit (strict)
-        run: npm audit
-        continue-on-error: true
-      
-      - name: Upload audit results
-        if: always()
-        run: npm audit --json > audit-results.json || true
-      
-      - name: Archive audit results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: security-audit-results
-          path: audit-results.json
-          retention-days: 30
 
   dependency-review:
     runs-on: ubuntu-latest

@@ -8,6 +8,7 @@
     "dev:frontend": "vite",
     "dev:backend": "convex dev",
     "build": "convex deploy --cmd 'tsc -b && vite build'",
+    "build:frontend": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "security-audit": "bun audit --audit-level=moderate",

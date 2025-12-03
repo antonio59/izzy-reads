@@ -20,22 +20,19 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '18'
-          cache: 'npm'
+          bun-version: latest
       
       - name: Install dependencies
-        run: npm install --no-optional || npm ci --no-optional || npm install
+        run: bun install
       
       - name: Update dependencies
-        run: |
-          npm update
-          npm audit fix
+        run: bun update
       
-      - name: Run tests
-        run: npm run build
+      - name: Run build
+        run: bun run build:frontend
       
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
@@ -46,11 +43,10 @@ jobs:
           body: |
             ## 🔄 Automated Dependency Updates
             
-            This PR updates npm dependencies to their latest versions.
+            This PR updates dependencies to their latest versions.
             
             ### Changes:
-            - Updated npm packages to latest compatible versions
-            - Ran `npm audit fix` to address security vulnerabilities
+            - Updated packages to latest compatible versions
             - Build tested successfully
             
             ### Review Checklist:
