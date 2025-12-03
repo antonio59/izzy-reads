@@ -3,9 +3,10 @@
 A beautiful reading tracker and public portfolio for young book lovers. Track your reading journey, write poetry, publish blog posts, and share your love of books with the world!
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![React](https://img.shields.io/badge/React-18.3-61dafb.svg)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6.svg)
+![React](https://img.shields.io/badge/React-19-61dafb.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178c6.svg)
 ![Tailwind](https://img.shields.io/badge/Tailwind-3.4-38bdf8.svg)
+![Convex](https://img.shields.io/badge/Convex-1.30-ff6b6b.svg)
 
 ---
 
@@ -52,8 +53,8 @@ Auto-calculated statistics displayed beautifully:
 
 ### Prerequisites
 - Node.js 18+ 
-- npm or yarn
-- Supabase account (for auth and database)
+- Bun (recommended) or npm
+- Convex account (for backend and database)
 
 ### Installation
 
@@ -65,19 +66,18 @@ cd izzy-reads
 
 2. **Install dependencies**
 ```bash
-npm install
+bun install
 ```
 
-3. **Set up environment variables**
-Create a `.env` file in the root directory:
-```env
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_anon_key
+3. **Set up Convex**
+```bash
+bunx convex dev
 ```
+This will prompt you to create a Convex project and automatically create `.env.local` with your deployment URL.
 
 4. **Run development server**
 ```bash
-npm run dev
+bun run dev
 ```
 
 5. **Open in browser**
@@ -140,14 +140,14 @@ Access via `/login` (bookmark this - no public link):
 ## 🛠️ Technology Stack
 
 ### Frontend
-- **React 18** - UI framework
+- **React 19** - UI framework
 - **TypeScript** - Type safety
 - **Vite** - Build tool and dev server
 - **Tailwind CSS** - Styling
 - **Lucide React** - Icon library
 
 ### Backend
-- **Supabase** - Authentication and database
+- **Convex** - Real-time database and backend functions
 - **Open Library API** - Book cover images
 
 ### Design
@@ -229,24 +229,28 @@ Stats auto-calculate but can be customized in `PublicPortfolio.tsx`
 
 ### Build for Production
 ```bash
-npm run build
+bun run build
 ```
 
 ### Preview Production Build
 ```bash
-npm run preview
+bun run preview
+```
+
+### Deploy to Production
+First, create a production Convex deployment:
+```bash
+bunx convex deploy
 ```
 
 ### Deploy Options
+- **Netlify** - Continuous deployment (recommended)
 - **Vercel** - Automatic deployment from GitHub
-- **Netlify** - Continuous deployment
 - **GitHub Pages** - Static hosting
-- **Supabase Hosting** - Integrated solution
 
 ### Environment Variables for Production
-Set these in your hosting platform:
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY`
+Set this in your hosting platform (e.g., Netlify):
+- `VITE_CONVEX_URL` - Your production Convex URL (e.g., `https://your-project.convex.cloud`)
 
 ---
 
@@ -278,7 +282,7 @@ MIT License - feel free to use this for your own reading tracker!
 - [React](https://react.dev/) - UI Framework
 - [Vite](https://vitejs.dev/) - Build Tool
 - [Tailwind CSS](https://tailwindcss.com/) - Styling
-- [Supabase](https://supabase.com/) - Backend
+- [Convex](https://convex.dev/) - Backend
 - [Open Library](https://openlibrary.org/) - Book Data
 - [Lucide](https://lucide.dev/) - Icons
 
@@ -298,7 +302,7 @@ Built for young readers who love books and want to share their reading journey w
 - Refresh the page
 - Check browser console for errors
 - Verify environment variables are set
-- Ensure Supabase is configured correctly
+- Ensure Convex is configured correctly (`bunx convex dev`)
 
 ---
 
