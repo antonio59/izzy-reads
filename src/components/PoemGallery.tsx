@@ -1,15 +1,8 @@
 import { useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import { Feather, Heart, Sparkles, Plus, Edit, Trash2 } from 'lucide-react'
-
-export interface Poem {
-  id: string
-  title: string
-  content: string
-  emoji?: string
-  dateCreated: string
-  likes: number
-  template?: string
-}
+import PoetryEditor from './PoetryEditor'
+import type { Poem } from '../types'
 
 interface PoemGalleryProps {
   poems: Poem[]
@@ -18,105 +11,44 @@ interface PoemGalleryProps {
   onDeletePoem: (id: string) => void
 }
 
-const POEM_TEMPLATES = [
-  {
-    name: 'Haiku',
-    description: '5-7-5 syllable pattern',
-    emoji: '🌸',
-    template: '_____ (5 syllables)\n_______ (7 syllables)\n_____ (5 syllables)'
-  },
-  {
-    name: 'Acrostic',
-    description: 'First letter of each line spells a word',
-    emoji: '🔤',
-    template: 'Choose a word and make each line start with those letters!'
-  },
-  {
-    name: 'Free Verse',
-    description: 'No rules, just your creativity!',
-    emoji: '✨',
-    template: 'Write whatever comes to your heart...'
-  },
-  {
-    name: 'Rhyming Couplets',
-    description: 'Two lines that rhyme',
-    emoji: '🎵',
-    template: 'Line 1 (rhymes with line 2)\nLine 2 (rhymes with line 1)'
-  }
-]
-
 const BACKGROUND_PATTERNS = [
-  'bg-gradient-to-br from-pink-100 to-purple-100',
+  'bg-gradient-to-br from-accent-100 to-primary-100',
   'bg-gradient-to-br from-blue-100 to-cyan-100',
-  'bg-gradient-to-br from-yellow-100 to-orange-100',
+  'bg-gradient-to-br from-amber-100 to-orange-100',
   'bg-gradient-to-br from-green-100 to-emerald-100',
-  'bg-gradient-to-br from-purple-100 to-pink-100',
+  'bg-gradient-to-br from-primary-100 to-accent-100',
   'bg-gradient-to-br from-indigo-100 to-blue-100',
 ]
 
 const PoemGallery: React.FC<PoemGalleryProps> = ({ poems, onAddPoem, onEditPoem, onDeletePoem }) => {
   const [showEditor, setShowEditor] = useState(false)
-  const [showTemplates, setShowTemplates] = useState(false)
   const [editingPoem, setEditingPoem] = useState<Poem | null>(null)
   const [selectedPoem, setSelectedPoem] = useState<Poem | null>(null)
-  
-  // Editor state
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const [emoji, setEmoji] = useState('✨')
-  const [selectedTemplate, setSelectedTemplate] = useState('')
-
-  const EMOJIS = ['✨', '🌟', '💫', '🌸', '🌺', '🌻', '🌹', '🦋', '🐝', '🌈', '☀️', '🌙', '⭐', '💖', '💕']
 
   const handleStartNew = () => {
     setEditingPoem(null)
-    setTitle('')
-    setContent('')
-    setEmoji('✨')
-    setSelectedTemplate('')
-    setShowTemplates(true)
-  }
-
-  const handleSelectTemplate = (template: typeof POEM_TEMPLATES[0]) => {
-    setSelectedTemplate(template.name)
-    setEmoji(template.emoji)
-    setContent(template.template)
-    setShowTemplates(false)
     setShowEditor(true)
-  }
-
-  const handleSavePoem = () => {
-    if (!title.trim() || !content.trim()) return
-
-    if (editingPoem) {
-      onEditPoem(editingPoem.id, { title, content, emoji })
-    } else {
-      const newPoem: Poem = {
-        id: crypto.randomUUID(),
-        title,
-        content,
-        emoji,
-        dateCreated: new Date().toISOString(),
-        likes: 0,
-        template: selectedTemplate
-      }
-      onAddPoem(newPoem)
-    }
-
-    setShowEditor(false)
-    setTitle('')
-    setContent('')
-    setEmoji('✨')
-    setSelectedTemplate('')
   }
 
   const handleEdit = (poem: Poem) => {
     setEditingPoem(poem)
-    setTitle(poem.title)
-    setContent(poem.content)
-    setEmoji(poem.emoji || '✨')
-    setSelectedTemplate(poem.template || '')
     setShowEditor(true)
+  }
+
+  const handleSavePoem = (poemData: Omit<Poem, 'id' | 'dateCreated' | 'likes'>) => {
+    if (editingPoem) {
+      onEditPoem(editingPoem.id, poemData)
+    } else {
+      const newPoem: Poem = {
+        id: crypto.randomUUID(),
+        ...poemData,
+        dateCreated: new Date().toISOString(),
+        likes: 0,
+      }
+      onAddPoem(newPoem)
+    }
+    setShowEditor(false)
+    setEditingPoem(null)
   }
 
   const handleLike = (poemId: string) => {
@@ -129,128 +61,39 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({ poems, onAddPoem, onEditPoem,
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 rounded-2xl p-6 text-white">
-        <div className="flex items-center justify-between">
+      <div className="bg-gradient-to-r from-primary-500 via-accent-500 to-amber-500 rounded-3xl p-8 text-white relative overflow-hidden shadow-soft-lg">
+        <div className="absolute top-0 right-0 p-12 bg-white/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
           <div>
-            <h2 className="text-3xl font-bold flex items-center gap-3 mb-2">
-              <Feather className="w-8 h-8" />
+            <h2 className="text-4xl font-display font-bold flex items-center gap-3 mb-3">
+              <Feather className="w-10 h-10" />
               My Poetry Corner
             </h2>
-            <p className="text-white/90">Express yourself through the magic of words! ✨</p>
+            <p className="text-white/90 text-lg">Express yourself through the magic of words! ✨</p>
           </div>
           <button
             onClick={handleStartNew}
-            className="bg-white text-purple-600 px-6 py-3 rounded-full font-bold hover:bg-purple-50 transition-all flex items-center gap-2 shadow-lg"
+            className="bg-white text-primary-600 px-6 py-3 rounded-2xl font-bold hover:bg-primary-50 transition-all flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
           >
             <Plus className="w-5 h-5" />
-            New Poem
+            Create Poem
           </button>
         </div>
       </div>
 
-      {/* Template Selector Modal */}
-      {showTemplates && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6">Choose a Poetry Style</h3>
-            <div className="grid grid-cols-2 gap-4">
-              {POEM_TEMPLATES.map((template) => (
-                <button
-                  key={template.name}
-                  onClick={() => handleSelectTemplate(template)}
-                  className="p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl hover:from-purple-100 hover:to-pink-100 transition-all text-left border-2 border-transparent hover:border-purple-300"
-                >
-                  <div className="text-4xl mb-2">{template.emoji}</div>
-                  <h4 className="font-bold text-lg text-gray-800">{template.name}</h4>
-                  <p className="text-sm text-gray-600 mt-1">{template.description}</p>
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={() => setShowTemplates(false)}
-              className="mt-6 w-full bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition-colors"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Poem Editor Modal */}
-      {showEditor && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6">
-              {editingPoem ? 'Edit Your Poem' : 'Write Your Poem'}
-            </h3>
-
-            {/* Emoji Selector */}
-            <div className="mb-4">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Choose an emoji:
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {EMOJIS.map((e) => (
-                  <button
-                    key={e}
-                    onClick={() => setEmoji(e)}
-                    className={`text-2xl p-2 rounded-lg transition-all ${
-                      emoji === e ? 'bg-purple-100 ring-2 ring-purple-500 scale-110' : 'bg-gray-100 hover:bg-gray-200'
-                    }`}
-                  >
-                    {e}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Title Input */}
-            <div className="mb-4">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Poem Title:
-              </label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Give your poem a title..."
-                className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none"
-              />
-            </div>
-
-            {/* Content Textarea */}
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Your Poem:
-              </label>
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Let your creativity flow..."
-                rows={10}
-                className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none font-serif"
-              />
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-3">
-              <button
-                onClick={handleSavePoem}
-                disabled={!title.trim() || !content.trim()}
-                className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-bold hover:from-purple-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {editingPoem ? 'Save Changes' : 'Publish Poem'}
-              </button>
-              <button
-                onClick={() => setShowEditor(false)}
-                className="px-6 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Poetry Editor */}
+      <AnimatePresence>
+        {showEditor && (
+          <PoetryEditor
+            poem={editingPoem}
+            onSave={handleSavePoem}
+            onClose={() => {
+              setShowEditor(false)
+              setEditingPoem(null)
+            }}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Poems Grid */}
       {poems.length > 0 ? (
@@ -259,101 +102,149 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({ poems, onAddPoem, onEditPoem,
             <div
               key={poem.id}
               onClick={() => setSelectedPoem(poem)}
-              className={`${BACKGROUND_PATTERNS[index % BACKGROUND_PATTERNS.length]} p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all cursor-pointer transform hover:scale-105`}
+              className="bg-white rounded-3xl shadow-soft hover:shadow-soft-lg transition-all cursor-pointer group border border-gray-100 overflow-hidden"
             >
-              <div className="flex justify-between items-start mb-3">
-                <span className="text-4xl">{poem.emoji || '✨'}</span>
-                <div className="flex gap-2">
+              {/* Card Header (or Image) */}
+              <div className={`
+                h-48 relative overflow-hidden flex items-center justify-center
+                ${poem.imageUrl ? 'bg-gray-100' : BACKGROUND_PATTERNS[index % BACKGROUND_PATTERNS.length]}
+              `}>
+                {poem.imageUrl ? (
+                  <img src={poem.imageUrl} alt={poem.title} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-6xl transform group-hover:scale-110 transition-transform duration-500">
+                    {poem.emoji || '✨'}
+                  </span>
+                )}
+                <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
                       handleEdit(poem)
                     }}
-                    className="p-2 bg-white/50 rounded-lg hover:bg-white/80 transition-colors"
+                    className="p-2 bg-white/90 backdrop-blur rounded-lg hover:bg-white text-primary-600 shadow-sm"
                   >
-                    <Edit className="w-4 h-4 text-gray-700" />
+                    <Edit className="w-4 h-4" />
                   </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
                       onDeletePoem(poem.id)
                     }}
-                    className="p-2 bg-white/50 rounded-lg hover:bg-white/80 transition-colors"
+                    className="p-2 bg-white/90 backdrop-blur rounded-lg hover:bg-white text-red-500 shadow-sm"
                   >
-                    <Trash2 className="w-4 h-4 text-red-500" />
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>
 
-              <h3 className="text-xl font-bold text-gray-800 mb-3">{poem.title}</h3>
-              
-              <div className="bg-white/50 rounded-lg p-4 mb-3">
-                <p className="text-gray-700 font-serif text-sm whitespace-pre-wrap line-clamp-4">
+              {/* Card Content */}
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1">{poem.title}</h3>
+                <p className="text-gray-500 text-sm mb-4 line-clamp-2 font-serif italic">
                   {poem.content}
                 </p>
-              </div>
 
-              <div className="flex justify-between items-center text-sm text-gray-600">
-                <span>{new Date(poem.dateCreated).toLocaleDateString()}</span>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleLike(poem.id)
-                  }}
-                  className="flex items-center gap-1 hover:text-pink-500 transition-colors"
-                >
-                  <Heart className="w-4 h-4 fill-pink-400 text-pink-400" />
-                  <span>{poem.likes}</span>
-                </button>
+                <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+                  <span className="text-xs text-gray-400 font-medium bg-gray-50 px-2 py-1 rounded-md">
+                    {new Date(poem.dateCreated).toLocaleDateString()}
+                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleLike(poem.id)
+                    }}
+                    className="flex items-center gap-1.5 text-gray-400 hover:text-accent-500 transition-colors group/like"
+                  >
+                    <Heart className={`w-4 h-4 ${poem.likes > 0 ? 'fill-accent-500 text-accent-500' : 'group-hover/like:text-accent-500'}`} />
+                    <span className="text-sm font-medium">{poem.likes}</span>
+                  </button>
+                </div>
               </div>
             </div>
           ))}
         </div>
       ) : (
-        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-12 text-center">
-          <Sparkles className="w-16 h-16 text-purple-300 mx-auto mb-4" />
-          <p className="text-gray-500 text-lg mb-2">No poems yet!</p>
-          <p className="text-gray-400 text-sm">Start writing your first poem to share your creativity!</p>
+        <div className="bg-white rounded-3xl p-16 text-center border-2 border-dashed border-primary-100">
+          <div className="w-20 h-20 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Feather className="w-10 h-10 text-primary-400" />
+          </div>
+          <p className="text-gray-900 text-xl font-bold mb-2">No poems created yet</p>
+          <p className="text-gray-500 mb-6 max-w-sm mx-auto">Start your collection by writing a new poem or uploading a picture of your handwritten work!</p>
+          <button
+            onClick={handleStartNew}
+            className="inline-flex items-center gap-2 text-primary-600 font-bold hover:text-primary-700"
+          >
+            Create your first poem <Sparkles className="w-4 h-4" />
+          </button>
         </div>
       )}
 
       {/* Poem Detail Modal */}
       {selectedPoem && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedPoem(null)}
         >
           <div
-            className={`${BACKGROUND_PATTERNS[poems.indexOf(selectedPoem) % BACKGROUND_PATTERNS.length]} rounded-2xl shadow-2xl max-w-2xl w-full p-8`}
+            className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col md:flex-row"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-white/80 backdrop-blur rounded-xl p-6">
-              <div className="flex justify-between items-start mb-4">
-                <span className="text-6xl">{selectedPoem.emoji || '✨'}</span>
+            {/* Visual Side */}
+            <div className={`
+              md:w-1/2 min-h-[300px] md:min-h-full relative flex items-center justify-center
+              ${selectedPoem.imageUrl ? 'bg-black' : BACKGROUND_PATTERNS[poems.indexOf(selectedPoem) % BACKGROUND_PATTERNS.length]}
+            `}>
+              {selectedPoem.imageUrl ? (
+                <img src={selectedPoem.imageUrl} alt={selectedPoem.title} className="max-w-full max-h-full object-contain" />
+              ) : (
+                <span className="text-9xl filter drop-shadow-xl animate-float">{selectedPoem.emoji || '✨'}</span>
+              )}
+            </div>
+
+            {/* Content Side */}
+            <div className="md:w-1/2 p-8 md:p-12 overflow-y-auto bg-white flex flex-col">
+              <div className="flex justify-between items-start mb-8">
+                <div>
+                  <h3 className="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-2">{selectedPoem.title}</h3>
+                  <p className="text-gray-500 font-medium">
+                    {new Date(selectedPoem.dateCreated).toLocaleDateString(undefined, {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </p>
+                </div>
                 <button
                   onClick={() => setSelectedPoem(null)}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
                 >
+                  <span className="sr-only">Close</span>
                   ✕
                 </button>
               </div>
 
-              <h3 className="text-3xl font-bold text-gray-800 mb-4">{selectedPoem.title}</h3>
-              
-              <div className="bg-white rounded-lg p-6 mb-4">
-                <p className="text-gray-700 font-serif text-lg whitespace-pre-wrap leading-relaxed">
+              <div className="flex-1">
+                <p className="text-gray-800 font-serif text-xl leading-loose whitespace-pre-wrap">
                   {selectedPoem.content}
                 </p>
               </div>
 
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">
-                  Written on {new Date(selectedPoem.dateCreated).toLocaleDateString()}
-                </span>
-                <div className="flex items-center gap-2">
-                  <Heart className="w-5 h-5 fill-pink-400 text-pink-400" />
-                  <span className="text-lg font-bold text-gray-700">{selectedPoem.likes}</span>
+              <div className="pt-8 mt-8 border-t border-gray-100 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-accent-400 flex items-center justify-center text-white font-bold">
+                    I
+                  </div>
+                  <span className="font-bold text-gray-900">Izzy</span>
                 </div>
+                <button
+                  onClick={() => handleLike(selectedPoem.id)}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-500 rounded-full hover:bg-red-100 transition-colors font-bold"
+                >
+                  <Heart className={`w-5 h-5 ${selectedPoem.likes > 0 ? 'fill-current' : ''}`} />
+                  {selectedPoem.likes} Likes
+                </button>
               </div>
             </div>
           </div>

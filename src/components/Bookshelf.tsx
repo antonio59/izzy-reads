@@ -10,7 +10,7 @@ const Bookshelf: React.FC = () => {
   const [selectedGenre, setSelectedGenre] = useState<string>('All')
 
   const genres = ['All', ...Array.from(new Set(books.map(book => book.genre)))]
-  const filteredBooks = selectedGenre === 'All' 
+  const filteredBooks = selectedGenre === 'All'
     ? books.filter(book => book.isRead)
     : books.filter(book => book.isRead && book.genre === selectedGenre)
 
@@ -60,18 +60,17 @@ const Bookshelf: React.FC = () => {
     }
   }
 
-  const StarRating = ({ rating, onRatingChange, readonly = false }: { 
-    rating: number, 
+  const StarRating = ({ rating, onRatingChange, readonly = false }: {
+    rating: number,
     onRatingChange?: (rating: number) => void,
-    readonly?: boolean 
+    readonly?: boolean
   }) => (
     <div className="flex items-center space-x-1">
       {[1, 2, 3, 4, 5].map((star) => (
         <Star
           key={star}
-          className={`h-5 w-5 cursor-pointer transition-colors ${
-            star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-          }`}
+          className={`h-5 w-5 cursor-pointer transition-colors ${star <= rating ? 'text-amber-400 fill-current' : 'text-gray-300'
+            }`}
           onClick={() => !readonly && onRatingChange && onRatingChange(star)}
         />
       ))}
@@ -83,7 +82,7 @@ const Bookshelf: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-purple-600 flex items-center">
+          <h1 className="text-3xl font-bold text-primary-600 flex items-center">
             <BookOpen className="h-8 w-8 mr-3" />
             My Bookshelf
           </h1>
@@ -91,7 +90,7 @@ const Bookshelf: React.FC = () => {
         </div>
         <button
           onClick={() => setShowAddForm(true)}
-          className="flex items-center space-x-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors duration-200"
+          className="flex items-center space-x-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors duration-200"
         >
           <Plus className="h-5 w-5" />
           <span>Add Book</span>
@@ -104,11 +103,10 @@ const Bookshelf: React.FC = () => {
           <button
             key={genre}
             onClick={() => setSelectedGenre(genre)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
-              selectedGenre === genre
-                ? 'bg-purple-600 text-white'
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${selectedGenre === genre
+                ? 'bg-primary-600 text-white'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
+              }`}
           >
             {genre}
           </button>
@@ -120,18 +118,20 @@ const Bookshelf: React.FC = () => {
         {filteredBooks.map((book) => (
           <div key={book.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
             {/* Book Cover */}
-            <div className="h-48 bg-gradient-to-br from-purple-400 via-pink-400 to-blue-400 flex items-center justify-center relative">
+            <div className="h-48 bg-gradient-to-br from-primary-400 via-accent-400 to-primary-300 flex items-center justify-center relative">
               <BookOpen className="h-16 w-16 text-white" />
               <div className="absolute top-2 right-2 flex space-x-1">
                 <button
                   onClick={() => setEditingBook(book)}
                   className="p-1 bg-white bg-opacity-20 rounded-full hover:bg-opacity-30 transition-all"
+                  aria-label={`Edit ${book.title}`}
                 >
                   <Edit className="h-4 w-4 text-white" />
                 </button>
                 <button
                   onClick={() => deleteBook(book.id)}
                   className="p-1 bg-white bg-opacity-20 rounded-full hover:bg-opacity-30 transition-all"
+                  aria-label={`Delete ${book.title}`}
                 >
                   <Trash2 className="h-4 w-4 text-white" />
                 </button>
@@ -145,9 +145,9 @@ const Bookshelf: React.FC = () => {
                 <User className="h-4 w-4 mr-1" />
                 {book.author}
               </p>
-              
+
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
+                <span className="text-xs bg-primary-100 text-primary-800 px-2 py-1 rounded-full">
                   {book.genre}
                 </span>
                 <span className="text-xs text-gray-500 flex items-center">
@@ -181,7 +181,7 @@ const Bookshelf: React.FC = () => {
           <p className="text-gray-500 mb-4">Start building your amazing bookshelf!</p>
           <button
             onClick={() => setShowAddForm(true)}
-            className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors duration-200"
+            className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors duration-200"
           >
             Add Your First Book
           </button>
@@ -193,7 +193,7 @@ const Bookshelf: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">Add New Book</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
@@ -201,7 +201,7 @@ const Bookshelf: React.FC = () => {
                   type="text"
                   value={newBook.title}
                   onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="Enter book title"
                 />
               </div>
@@ -212,7 +212,7 @@ const Bookshelf: React.FC = () => {
                   type="text"
                   value={newBook.author}
                   onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="Enter author name"
                 />
               </div>
@@ -222,7 +222,7 @@ const Bookshelf: React.FC = () => {
                 <select
                   value={newBook.genre}
                   onChange={(e) => setNewBook({ ...newBook, genre: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   <option value="Fiction">Fiction</option>
                   <option value="Fantasy">Fantasy</option>
@@ -239,15 +239,15 @@ const Bookshelf: React.FC = () => {
                   type="number"
                   value={newBook.pageCount}
                   onChange={(e) => setNewBook({ ...newBook, pageCount: parseInt(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="Number of pages"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Rating</label>
-                <StarRating 
-                  rating={newBook.rating || 0} 
+                <StarRating
+                  rating={newBook.rating || 0}
                   onRatingChange={(rating) => setNewBook({ ...newBook, rating })}
                 />
               </div>
@@ -257,7 +257,7 @@ const Bookshelf: React.FC = () => {
                 <textarea
                   value={newBook.notes}
                   onChange={(e) => setNewBook({ ...newBook, notes: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   rows={3}
                   placeholder="What did you think about this book?"
                 />
@@ -267,7 +267,7 @@ const Bookshelf: React.FC = () => {
             <div className="flex space-x-3 mt-6">
               <button
                 onClick={handleAddBook}
-                className="flex-1 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors duration-200"
+                className="flex-1 bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700 transition-colors duration-200"
               >
                 Add Book
               </button>
@@ -287,7 +287,7 @@ const Bookshelf: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">Edit Book</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
@@ -295,7 +295,7 @@ const Bookshelf: React.FC = () => {
                   type="text"
                   value={editingBook.title}
                   onChange={(e) => setEditingBook({ ...editingBook, title: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
 
@@ -305,14 +305,14 @@ const Bookshelf: React.FC = () => {
                   type="text"
                   value={editingBook.author}
                   onChange={(e) => setEditingBook({ ...editingBook, author: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Rating</label>
-                <StarRating 
-                  rating={editingBook.rating || 0} 
+                <StarRating
+                  rating={editingBook.rating || 0}
                   onRatingChange={(rating) => setEditingBook({ ...editingBook, rating })}
                 />
               </div>
@@ -322,7 +322,7 @@ const Bookshelf: React.FC = () => {
                 <textarea
                   value={editingBook.notes}
                   onChange={(e) => setEditingBook({ ...editingBook, notes: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   rows={3}
                 />
               </div>
@@ -331,7 +331,7 @@ const Bookshelf: React.FC = () => {
             <div className="flex space-x-3 mt-6">
               <button
                 onClick={handleUpdateBook}
-                className="flex-1 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors duration-200"
+                className="flex-1 bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700 transition-colors duration-200"
               >
                 Update Book
               </button>

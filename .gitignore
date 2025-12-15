@@ -7,23 +7,56 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+
+# Build outputs
 dist
 dist-ssr
 *.local
 
-# Environment variables
+# Environment variables (NEVER commit these!)
 .env
 .env.local
 .env.production
+.env*.local
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Replit specific
+.replit
+replit.md
+.local/
+.cache/
+.upm/
+
+# Convex
+.convex/
+
+# Testing
+coverage/
+*.lcov
+
+# Debug
+.pnp
+.pnp.js
+
+# TypeScript
+*.tsbuildinfo

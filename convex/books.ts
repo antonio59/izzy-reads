@@ -59,7 +59,7 @@ export const update = mutation({
   handler: async (ctx, args) => {
     const { id, ...updates } = args;
     const filteredUpdates = Object.fromEntries(
-      Object.entries(updates).filter(([, value]) => value !== undefined)
+      Object.entries(updates).filter(([, value]) => value !== undefined),
     );
     await ctx.db.patch(id, filteredUpdates);
   },
@@ -69,5 +69,40 @@ export const remove = mutation({
   args: { id: v.id("books") },
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id);
+  },
+});
+
+// Bulk add books - useful for seeding data
+export const bulkAdd = mutation({
+  args: {
+    userId: v.id("users"),
+    books: v.array(
+      v.object({
+        title: v.string(),
+        author: v.string(),
+        coverUrl: v.optional(v.string()),
+        isbn: v.optional(v.string()),
+        genre: v.string(),
+        pageCount: v.optional(v.number()),
+        description: v.optional(v.string()),
+        ageRating: v.string(),
+        dateAdded: v.string(),
+        dateRead: v.optional(v.string()),
+        rating: v.optional(v.number()),
+        isRead: v.boolean(),
+        notes: v.optional(v.string()),
+      }),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const insertedIds = [];
+    for (const book of args.books) {
+      const id = await ctx.db.insert("books", {
+        userId: args.userId,
+        ...book,
+      });
+      insertedIds.push(id);
+    }
+    return insertedIds;
   },
 });

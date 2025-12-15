@@ -1,127 +1,264 @@
-import { useState } from 'react'
-import { BookOpen, Library, Search as SearchIcon } from 'lucide-react'
-import { useBooks } from '../contexts/BookContext'
-import BookSearch from './BookSearch'
-import FunBookshelf from './FunBookshelf'
-import type { Book } from '../types'
+import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
+import {
+  Library,
+  Search as SearchIcon,
+  Grid,
+  Layers,
+  LayoutGrid,
+} from "lucide-react";
+import { useBooks } from "../contexts/BookContext";
+import BookSearch from "./BookSearch";
+import FunBookshelf from "./FunBookshelf";
+import BookshelfFilters from "./BookshelfFilters";
+import { EmptyBooks, EmptySearch } from "./ui/EmptyState";
+import { BookGrid } from "./BookGrid";
+import { BookDetailModal } from "./BookDetailModal";
+import type { Book } from "../types";
 
 const EnhancedBookshelf: React.FC = () => {
-  const { books, addBook } = useBooks()
-  const [showSearch, setShowSearch] = useState(false)
-  const [, setSelectedBook] = useState<Book | null>(null)
-  const [viewMode, setViewMode] = useState<'shelf' | 'grid'>('shelf')
+  const { books, addBook } = useBooks();
+  const [showSearch, setShowSearch] = useState(false);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [viewMode, setViewMode] = useState<"shelf" | "grid" | "cards">("cards");
 
-  const readBooks = books.filter(book => book.isRead)
+  // Filter state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [selectedRating, setSelectedRating] = useState<number | null>(null);
+  const [sortBy, setSortBy] = useState<
+    "title" | "author" | "dateRead" | "rating" | "dateAdded"
+  >("dateRead");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+
+  const readBooks = books.filter((book) => book.isRead);
+
+  // Get available genres from books
+  const availableGenres = useMemo(() => {
+    const genres = new Set(readBooks.map((b) => b.genre).filter(Boolean));
+    return Array.from(genres).sort();
+  }, [readBooks]);
+
+  // Filter and sort books
+  const filteredBooks = useMemo(() => {
+    let result = [...readBooks];
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (book) =>
+          book.title.toLowerCase().includes(query) ||
+          book.author.toLowerCase().includes(query),
+      );
+    }
+
+    // Genre filter
+    if (selectedGenres.length > 0) {
+      result = result.filter((book) => selectedGenres.includes(book.genre));
+    }
+
+    // Rating filter
+    if (selectedRating !== null) {
+      result = result.filter((book) => (book.rating || 0) >= selectedRating);
+    }
+
+    // Sort
+    result.sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortBy) {
+        case "title":
+          comparison = a.title.localeCompare(b.title);
+          break;
+        case "author":
+          comparison = a.author.localeCompare(b.author);
+          break;
+        case "dateRead":
+          comparison =
+            new Date(a.dateRead || 0).getTime() -
+            new Date(b.dateRead || 0).getTime();
+          break;
+        case "dateAdded":
+          comparison =
+            new Date(a.dateAdded || 0).getTime() -
+            new Date(b.dateAdded || 0).getTime();
+          break;
+        case "rating":
+          comparison = (a.rating || 0) - (b.rating || 0);
+          break;
+      }
+
+      return sortOrder === "desc" ? -comparison : comparison;
+    });
+
+    return result;
+  }, [
+    readBooks,
+    searchQuery,
+    selectedGenres,
+    selectedRating,
+    sortBy,
+    sortOrder,
+  ]);
 
   const handleAddBook = (book: Book) => {
-    addBook(book)
-    setShowSearch(false)
-  }
+    addBook(book);
+    setShowSearch(false);
+  };
+
+  const hasActiveFilters =
+    searchQuery || selectedGenres.length > 0 || selectedRating !== null;
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl p-6 text-white">
-        <div className="flex justify-between items-center">
+      <motion.div
+        className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl p-6 text-white relative overflow-hidden"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-4xl font-bold flex items-center gap-3 mb-2">
-              <Library className="w-10 h-10" />
+            <h1 className="text-3xl md:text-4xl font-display font-bold flex items-center gap-3 mb-2">
+              <Library className="w-8 md:w-10 h-8 md:h-10" />
               My Magical Bookshelf
             </h1>
             <p className="text-white/90 text-lg">
-              {readBooks.length === 0 
+              {readBooks.length === 0
                 ? "Start your reading adventure!"
-                : `You've read ${readBooks.length} amazing ${readBooks.length === 1 ? 'book' : 'books'}! 📚✨`}
+                : `You've read ${readBooks.length} amazing ${readBooks.length === 1 ? "book" : "books"}! 📚✨`}
             </p>
           </div>
-          <button
+          <motion.button
             onClick={() => setShowSearch(true)}
-            className="bg-white text-purple-600 px-6 py-3 rounded-full font-bold hover:bg-purple-50 transition-all flex items-center gap-2 shadow-lg transform hover:scale-105"
+            className="bg-white text-purple-600 px-6 py-3 rounded-full font-bold hover:bg-purple-50 transition-all flex items-center gap-2 shadow-lg"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <SearchIcon className="w-5 h-5" />
             Find Books
-          </button>
+          </motion.button>
         </div>
-      </div>
+
+        {/* Decorative elements */}
+        <motion.span
+          className="absolute top-4 right-32 text-4xl opacity-20"
+          animate={{ rotate: [0, 10, -10, 0], y: [0, -5, 0] }}
+          transition={{ duration: 4, repeat: Infinity }}
+        >
+          📚
+        </motion.span>
+        <motion.span
+          className="absolute bottom-4 right-16 text-3xl opacity-20"
+          animate={{ scale: [1, 1.1, 1] }}
+          transition={{ duration: 3, repeat: Infinity }}
+        >
+          ✨
+        </motion.span>
+      </motion.div>
+
+      {/* Search and Filters */}
+      {readBooks.length > 0 && (
+        <BookshelfFilters
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          selectedGenres={selectedGenres}
+          onGenreChange={setSelectedGenres}
+          selectedRating={selectedRating}
+          onRatingChange={setSelectedRating}
+          sortBy={sortBy}
+          onSortByChange={setSortBy}
+          sortOrder={sortOrder}
+          onSortOrderChange={setSortOrder}
+          availableGenres={availableGenres}
+        />
+      )}
 
       {/* View Toggle */}
-      <div className="flex justify-center gap-2 p-2 bg-white rounded-full w-fit mx-auto shadow-md">
+      <div className="flex justify-center gap-1 p-1.5 bg-white rounded-2xl w-fit mx-auto shadow-lg border border-gray-100">
         <button
-          onClick={() => setViewMode('shelf')}
-          className={`px-6 py-2 rounded-full font-semibold transition-all ${
-            viewMode === 'shelf'
-              ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-              : 'text-gray-600 hover:bg-gray-100'
+          onClick={() => setViewMode("cards")}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold transition-all ${
+            viewMode === "cards"
+              ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md"
+              : "text-gray-600 hover:bg-gray-50"
           }`}
         >
-          📚 Bookshelf View
+          <LayoutGrid className="w-4 h-4" />
+          Cards
         </button>
         <button
-          onClick={() => setViewMode('grid')}
-          className={`px-6 py-2 rounded-full font-semibold transition-all ${
-            viewMode === 'grid'
-              ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-              : 'text-gray-600 hover:bg-gray-100'
+          onClick={() => setViewMode("shelf")}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold transition-all ${
+            viewMode === "shelf"
+              ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md"
+              : "text-gray-600 hover:bg-gray-50"
           }`}
         >
-          📖 Cover View
+          <Layers className="w-4 h-4" />
+          Shelf
+        </button>
+        <button
+          onClick={() => setViewMode("grid")}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold transition-all ${
+            viewMode === "grid"
+              ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md"
+              : "text-gray-600 hover:bg-gray-50"
+          }`}
+        >
+          <Grid className="w-4 h-4" />
+          Covers
         </button>
       </div>
 
-      {/* Fun Bookshelf or Grid View */}
-      {viewMode === 'shelf' ? (
-        <FunBookshelf books={readBooks} onSelectBook={setSelectedBook} />
+      {/* Results count */}
+      {hasActiveFilters && filteredBooks.length !== readBooks.length && (
+        <p className="text-center text-gray-500 text-sm">
+          Showing {filteredBooks.length} of {readBooks.length} books
+        </p>
+      )}
+
+      {/* Books Display */}
+      {readBooks.length === 0 ? (
+        <EmptyBooks onAction={() => setShowSearch(true)} />
+      ) : filteredBooks.length === 0 && hasActiveFilters ? (
+        <EmptySearch query={searchQuery || "your filters"} />
+      ) : viewMode === "shelf" ? (
+        <FunBookshelf books={filteredBooks} onSelectBook={setSelectedBook} />
+      ) : viewMode === "cards" ? (
+        <BookGrid
+          books={filteredBooks}
+          onBookClick={setSelectedBook}
+          size="lg"
+          columns={5}
+        />
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {readBooks.length > 0 ? (
-            readBooks.map((book) => (
-              <div
-                key={book.id}
-                onClick={() => setSelectedBook(book)}
-                className="cursor-pointer group"
-              >
-                <div className="relative overflow-hidden rounded-lg shadow-lg group-hover:shadow-2xl transition-all transform group-hover:scale-105">
-                  {book.coverUrl ? (
-                    <img
-                      src={book.coverUrl}
-                      alt={book.title}
-                      className="w-full h-72 object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src = '/placeholder-book-cover.png'
-                      }}
-                    />
-                  ) : (
-                    <div className="w-full h-72 bg-gradient-to-br from-purple-200 to-pink-200 flex items-center justify-center">
-                      <BookOpen className="w-12 h-12 text-purple-500" />
-                    </div>
-                  )}
-                  
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-                    <p className="text-white font-bold text-sm line-clamp-2">{book.title}</p>
-                    <p className="text-white/80 text-xs line-clamp-1">{book.author}</p>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="col-span-full bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-12 text-center">
-              <BookOpen className="w-16 h-16 text-purple-300 mx-auto mb-4" />
-              <p className="text-gray-500 text-lg">No books yet!</p>
-              <p className="text-gray-400 text-sm mt-2">Click "Find Books" to start adding books to your shelf</p>
-            </div>
-          )}
-        </div>
+        <BookGrid
+          books={filteredBooks}
+          onBookClick={setSelectedBook}
+          size="md"
+          columns={6}
+        />
       )}
 
       {/* Book Search Modal */}
       {showSearch && (
-        <BookSearch 
-          onAddBook={handleAddBook} 
-          onClose={() => setShowSearch(false)} 
+        <BookSearch
+          onAddBook={handleAddBook}
+          onClose={() => setShowSearch(false)}
         />
       )}
-    </div>
-  )
-}
 
-export default EnhancedBookshelf
+      {/* Book Detail Modal */}
+      <BookDetailModal
+        book={selectedBook!}
+        isOpen={!!selectedBook}
+        onClose={() => setSelectedBook(null)}
+        showActions={false}
+      />
+    </div>
+  );
+};
+
+export default EnhancedBookshelf;

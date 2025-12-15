@@ -4,10 +4,10 @@
 
 We actively maintain and support the following versions:
 
-| Version | Supported          |
-| ------- | ------------------ |
-| Latest  | :white_check_mark: |
-| < Latest| :x:                |
+| Version  | Supported          |
+| -------- | ------------------ |
+| Latest   | :white_check_mark: |
+| < Latest | :x:                |
 
 ## Reporting a Vulnerability
 
@@ -17,11 +17,12 @@ We take the security of Izzy-Reads seriously. If you discover a security vulnera
 
 Please do not report security vulnerabilities through public GitHub issues.
 
-### 2. Report via Email
+### 2. Report via GitHub
 
-Send details to: **[Your Email Address]**
+Use [GitHub Security Advisories](../../security/advisories/new) to privately report vulnerabilities.
 
 Include:
+
 - Description of the vulnerability
 - Steps to reproduce
 - Potential impact
@@ -40,6 +41,7 @@ Include:
 ### 4. Responsible Disclosure
 
 We request that you:
+
 - Give us reasonable time to fix the issue before public disclosure
 - Do not exploit the vulnerability
 - Do not access or modify user data
@@ -49,6 +51,7 @@ We request that you:
 ### Automated Security
 
 This project uses:
+
 - **Dependabot**: Automated dependency updates
 - **CodeQL**: Code security analysis
 - **npm audit**: Regular vulnerability scanning
@@ -143,13 +146,14 @@ This project uses:
 
 ## Contact
 
-For security concerns: **[Your Email Address]**
+For security concerns: Use [GitHub Security Advisories](../../security/advisories/new)
 
 For general issues: Use GitHub Issues
 
 ## Recognition
 
 We appreciate security researchers who responsibly disclose vulnerabilities. With your permission, we'll acknowledge your contribution in:
+
 - CHANGELOG.md
 - GitHub release notes
 - Security Hall of Fame (coming soon)

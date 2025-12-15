@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Search, BookOpen, Plus, Loader2 } from 'lucide-react'
-import { searchBooks, convertToBookFormat, getBookDescription, determineAgeRating, suggestGenre, type BookDetails, type OpenLibraryBook } from '../services/openLibraryApi'
+import { searchBooks, suggestGenre, determineAgeRating, type UnifiedBook } from '../services/bookApi'
 import type { Book } from '../types'
 
 interface BookSearchProps {
@@ -10,9 +10,9 @@ interface BookSearchProps {
 
 const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
   const [query, setQuery] = useState('')
-  const [results, setResults] = useState<OpenLibraryBook[]>([])
+  const [results, setResults] = useState<UnifiedBook[]>([])
   const [loading, setLoading] = useState(false)
-  const [selectedBook, setSelectedBook] = useState<BookDetails | null>(null)
+  const [selectedBook, setSelectedBook] = useState<UnifiedBook | null>(null)
 
   const handleSearch = async () => {
     if (!query.trim()) return
@@ -34,18 +34,8 @@ const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
     }
   }
 
-  const handleSelectBook = async (book: OpenLibraryBook) => {
-    const bookDetails = convertToBookFormat(book)
-    
-    // Try to get description if work key is available
-    if (book.key) {
-      const description = await getBookDescription(book.key.replace('/works/', ''))
-      if (description) {
-        bookDetails.description = description
-      }
-    }
-    
-    setSelectedBook(bookDetails)
+  const handleSelectBook = (book: UnifiedBook) => {
+    setSelectedBook(book)
   }
 
   const handleAddToBookshelf = () => {
@@ -57,10 +47,10 @@ const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
       author: selectedBook.author,
       coverUrl: selectedBook.coverUrl,
       isbn: selectedBook.isbn,
-      genre: suggestGenre(selectedBook.subjects),
+      genre: suggestGenre(selectedBook),
       pageCount: selectedBook.pageCount,
       description: selectedBook.description,
-      ageRating: determineAgeRating(selectedBook.subjects),
+      ageRating: determineAgeRating(selectedBook),
       dateAdded: new Date().toISOString().split('T')[0],
       isRead: false
     }
@@ -164,6 +154,9 @@ const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
                         🏢 {selectedBook.publisher}
                       </span>
                     )}
+                    <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
+                      via {selectedBook.source === 'google' ? 'Google Books' : 'Open Library'}
+                    </span>
                   </div>
 
                   {selectedBook.description && (
@@ -205,33 +198,30 @@ const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
           ) : results.length > 0 ? (
             // Search Results Grid
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {results.map((book, index) => {
-                const bookDetails = convertToBookFormat(book)
-                return (
-                  <div
-                    key={index}
-                    onClick={() => handleSelectBook(book)}
-                    className="cursor-pointer group"
-                  >
-                    <div className="relative overflow-hidden rounded-lg shadow-md group-hover:shadow-xl transition-all transform group-hover:scale-105">
-                      <img
-                        src={bookDetails.coverUrl}
-                        alt={book.title}
-                        className="w-full h-64 object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = '/placeholder-book-cover.png'
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-                        <div className="text-white text-sm">
-                          <p className="font-bold truncate">{book.title}</p>
-                          <p className="text-xs truncate">{bookDetails.author}</p>
-                        </div>
+              {results.map((book) => (
+                <div
+                  key={book.id}
+                  onClick={() => handleSelectBook(book)}
+                  className="cursor-pointer group"
+                >
+                  <div className="relative overflow-hidden rounded-lg shadow-md group-hover:shadow-xl transition-all transform group-hover:scale-105">
+                    <img
+                      src={book.coverUrl || '/placeholder-book-cover.png'}
+                      alt={book.title}
+                      className="w-full h-64 object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = '/placeholder-book-cover.png'
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
+                      <div className="text-white text-sm">
+                        <p className="font-bold truncate">{book.title}</p>
+                        <p className="text-xs truncate">{book.author}</p>
                       </div>
                     </div>
                   </div>
-                )
-              })}
+                </div>
+              ))}
             </div>
           ) : (
             // Empty State

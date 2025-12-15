@@ -1,0 +1,175 @@
+/* Design Tokens for Izzy Reads */
+/* Magical, Cozy Reading Nook Design System */
+
+:root {
+  /* ===== SPACING SCALE ===== */
+  --space-0: 0;
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-8: 2rem; /* 32px */
+  --space-10: 2.5rem; /* 40px */
+  --space-12: 3rem; /* 48px */
+  --space-16: 4rem; /* 64px */
+  --space-20: 5rem; /* 80px */
+
+  /* ===== IZZY'S MAGICAL PALETTE ===== */
+  /*
+   * 5-color system with clear roles:
+   * 1. Primary Berry - CTAs, active states, key links
+   * 2. Secondary Teal - badges, chips, secondary highlights  
+   * 3. Golden Star - ratings only (keeps stars special)
+   * 4. Cream Paper - cozy background
+   * 5. Warm Stone - text and neutrals
+   *
+   * All colors WCAG AA compliant
+   */
+
+  /* PRIMARY - Rich Berry (buttons, CTAs, active nav, key links) */
+  --color-primary-50: #fdf2f8;
+  --color-primary-100: #fce7f3;
+  --color-primary-200: #fbcfe8;
+  --color-primary-300: #f9a8d4;
+  --color-primary-400: #f472b6;
+  --color-primary-500: #d946a8; /* Main berry - vibrant but not harsh */
+  --color-primary-600: #be3590; /* Hover state - AA compliant on white */
+  --color-primary-700: #9d2d77; /* Active/pressed */
+  --color-primary-800: #831d5e;
+  --color-primary-900: #6b1a4a;
+
+  /* SECONDARY - Soft Teal (badges, chips, genre tags, secondary actions) */
+  --color-accent-50: #f0fdfa;
+  --color-accent-100: #ccfbf1;
+  --color-accent-200: #99f6e4;
+  --color-accent-300: #5eead4;
+  --color-accent-400: #2dd4bf;
+  --color-accent-500: #0d9488; /* Main teal - calming, bookish */
+  --color-accent-600: #0a7a70; /* Hover state */
+  --color-accent-700: #0f5e57;
+  --color-accent-800: #115e59;
+  --color-accent-900: #134e4a;
+
+  /* GOLDEN STAR - Reserved ONLY for ratings/favorites (keeps it special) */
+  --color-star: #f59e0b;
+  --color-star-light: #fef3c7;
+  --color-star-muted: #d4a012;
+
+  /* Success */
+  --color-success-50: #f0fdf4;
+  --color-success-100: #dcfce7;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  --color-success-700: #15803d;
+
+  /* Error */
+  --color-error-50: #fef2f2;
+  --color-error-100: #fee2e2;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+  --color-error-700: #b91c1c;
+
+  /* WARM STONE - Text and neutral elements */
+  --color-white: #ffffff;
+  --color-black: #1a1614;
+  --color-gray-50: #faf9f7;
+  --color-gray-100: #f5f3f0;
+  --color-gray-200: #e8e4df;
+  --color-gray-300: #d4cfc8;
+  --color-gray-400: #a39e96;
+  --color-gray-500: #736d65; /* Body text on cream - AA compliant */
+  --color-gray-600: #5c564f;
+  --color-gray-700: #454039; /* Headings on cream - AAA compliant */
+  --color-gray-800: #2d2925;
+  --color-gray-900: #1a1614;
+
+  /* ===== BACKGROUNDS ===== */
+  /* Cozy "paper" backgrounds - feels like a reading nook */
+  --bg-page: #fbf8f3; /* Warm cream - main page background */
+  --bg-surface: #ffffff; /* White cards on cream */
+  --bg-elevated: #ffffff; /* Modals, dropdowns */
+  --bg-muted: #f5f1ea; /* Subtle sections, alternate rows */
+
+  /* ===== TYPOGRAPHY ===== */
+  --font-display: "Nunito", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-accent: "Fredoka", system-ui, sans-serif;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+
+  /* Line Heights */
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  /* Font Weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* ===== SHADOWS ===== */
+  /* Subtle, modern shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Subtle colored shadows for interactive elements */
+  --shadow-primary: 0 4px 14px rgba(168, 85, 247, 0.2);
+  --shadow-accent: 0 4px 14px rgba(244, 63, 94, 0.2);
+
+  /* ===== BORDER RADIUS ===== */
+  --radius-sm: 0.375rem;
+  --radius: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-full: 9999px;
+
+  /* ===== BORDERS ===== */
+  --border-color: var(--color-gray-200);
+  --border-color-hover: var(--color-gray-300);
+
+  /* ===== TRANSITIONS ===== */
+  --transition-fast: 150ms;
+  --transition-base: 200ms;
+  --transition-slow: 300ms;
+
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* ===== Z-INDEX ===== */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 600;
+  --z-tooltip: 700;
+
+  /* ===== LAYOUT ===== */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+}

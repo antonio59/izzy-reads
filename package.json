@@ -1,7 +1,7 @@
 {
   "name": "izzy-reads",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "convex dev & vite",
@@ -10,35 +10,53 @@
     "build": "convex deploy --cmd 'tsc -b && vite build'",
     "build:frontend": "tsc -b && vite build",
     "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "preview": "vite preview",
-    "security-audit": "bun audit --audit-level=moderate",
+    "security-audit": "bun audit",
     "update-deps": "bun update"
   },
   "dependencies": {
-    "@types/node": "^24.10.1",
+    "@auth/core": "0.37.2",
+    "@convex-dev/auth": "^0.0.90",
+    "@emoji-mart/data": "^1.2.1",
+    "@emoji-mart/react": "^1.1.1",
+    "@giphy/js-fetch-api": "^5.7.0",
+    "@giphy/react-components": "^10.1.0",
     "convex": "^1.30.0",
+    "framer-motion": "^12.23.25",
     "lucide-react": "^0.555.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-router-dom": "^7.10.0"
+    "react-router-dom": "^7.10.0",
+    "recharts": "^3.5.1"
   },
   "devDependencies": {
-    "@esbuild/darwin-arm64": "0.25.12",
+    "@esbuild/darwin-arm64": "^0.25.4",
     "@eslint/js": "^9.39.1",
-    "@rollup/rollup-darwin-arm64": "4.53.3",
+    "@rollup/rollup-darwin-arm64": "^4.53.3",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^22.0.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.22",
-    "dotenv": "^17.2.3",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "jsdom": "^27.3.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.48.1",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vitest": "^4.0.15"
+  },
+  "overrides": {
+    "esbuild": "0.25.4",
+    "@esbuild/darwin-arm64": "0.25.4"
   }
 }

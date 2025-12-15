@@ -10,6 +10,7 @@ interface FloatingElement {
   duration: number
 }
 
+// Simplified: Only 4 subtle elements at low opacity
 const FloatingDecorations = () => {
   const [elements, setElements] = useState<FloatingElement[]>([])
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
@@ -17,11 +18,11 @@ const FloatingDecorations = () => {
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     setPrefersReducedMotion(mediaQuery.matches)
-    
+
     const handleChange = (e: MediaQueryListEvent) => {
       setPrefersReducedMotion(e.matches)
     }
-    
+
     mediaQuery.addEventListener('change', handleChange)
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
@@ -31,19 +32,22 @@ const FloatingDecorations = () => {
       setElements([])
       return
     }
-    
-    const emojis = ['✨', '⭐', '💫', '🌟', '💖', '📚', '🦋', '🌸']
+
+    // Reduced to just 4 subtle book-related emojis
+    const emojis = ['📚', '✨', '⭐', '📖']
     const newElements: FloatingElement[] = []
-    
-    for (let i = 0; i < 12; i++) {
+
+    // Only 4 elements for subtle decoration
+    for (let i = 0; i < 4; i++) {
       newElements.push({
         id: i,
-        emoji: emojis[Math.floor(Math.random() * emojis.length)],
-        left: Math.random() * 100,
-        top: Math.random() * 100,
-        size: 14 + Math.random() * 18,
-        delay: Math.random() * 5,
-        duration: 4 + Math.random() * 4,
+        emoji: emojis[i],
+        // Position in corners to avoid content interference
+        left: i < 2 ? 5 + Math.random() * 10 : 85 + Math.random() * 10,
+        top: i % 2 === 0 ? 10 + Math.random() * 20 : 70 + Math.random() * 20,
+        size: 16 + Math.random() * 8, // Smaller size range
+        delay: i * 2, // Staggered delays
+        duration: 8 + Math.random() * 4, // Slower, more subtle movement
       })
     }
     setElements(newElements)
@@ -58,12 +62,12 @@ const FloatingDecorations = () => {
       {elements.map((el) => (
         <div
           key={el.id}
-          className="absolute opacity-20 select-none"
+          className="absolute opacity-[0.08] select-none" // Much lower opacity
           style={{
             left: `${el.left}%`,
             top: `${el.top}%`,
             fontSize: `${el.size}px`,
-            animation: `float ${el.duration}s ease-in-out infinite`,
+            animation: `subtle-float ${el.duration}s ease-in-out infinite`,
             animationDelay: `${el.delay}s`,
           }}
         >

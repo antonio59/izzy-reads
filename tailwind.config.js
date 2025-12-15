@@ -1,63 +1,109 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       fontFamily: {
-        'fun': ['Fredoka', 'Comic Neue', 'sans-serif'],
-        'comic': ['Comic Neue', 'cursive'],
+        display: ["Nunito", "system-ui", "sans-serif"],
+        body: ["Inter", "system-ui", "sans-serif"],
+        accent: ["Fredoka", "system-ui", "sans-serif"],
       },
       colors: {
+        /*
+         * IZZY'S MAGICAL PALETTE
+         * 5-color system with clear roles:
+         * 1. Primary Berry - CTAs, active states, key links
+         * 2. Accent Teal - badges, chips, secondary highlights
+         * 3. Star Gold - ratings ONLY (keeps stars special)
+         * 4. Cream - cozy paper background
+         * 5. Stone - warm neutrals for text
+         */
+
+        // PRIMARY - Rich Berry (buttons, CTAs, active nav, key links)
         primary: {
-          DEFAULT: '#9333ea',
-          dark: '#7e22ce',
+          50: "#fdf2f8",
+          100: "#fce7f3",
+          200: "#fbcfe8",
+          300: "#f9a8d4",
+          400: "#f472b6",
+          500: "#D946A8", // Main berry
+          600: "#be3590", // Hover - AA on white
+          700: "#9d2d77", // Active/pressed
+          800: "#831d5e",
+          900: "#6b1a4a",
         },
-        candy: {
-          pink: '#ff6b9d',
-          purple: '#c084fc',
-          blue: '#60a5fa',
-          mint: '#34d399',
-          yellow: '#fbbf24',
-          orange: '#fb923c',
-          coral: '#f87171',
+        // ACCENT - Soft Teal (badges, chips, genre tags, secondary)
+        accent: {
+          50: "#f0fdfa",
+          100: "#ccfbf1",
+          200: "#99f6e4",
+          300: "#5eead4",
+          400: "#2dd4bf",
+          500: "#0D9488", // Main teal
+          600: "#0a7a70", // Hover
+          700: "#0f5e57",
+          800: "#115e59",
+          900: "#134e4a",
         },
-        magic: {
-          light: '#fdf4ff',
-          sparkle: '#f5d0fe',
-          glow: '#e879f9',
-          deep: '#a855f7',
-        }
+        // STAR - Reserved for ratings only
+        star: {
+          DEFAULT: "#F59E0B",
+          light: "#FEF3C7",
+          muted: "#D4A012",
+        },
+        // CREAM - Cozy paper backgrounds
+        cream: {
+          50: "#FDFCFA",
+          100: "#FBF8F3", // Main page bg
+          200: "#F5F1EA", // Muted sections
+          300: "#EDE7DB", // Borders
+        },
+        // STONE - Warm neutrals (text, borders)
+        stone: {
+          50: "#faf9f7",
+          100: "#f5f3f0",
+          200: "#e8e4df",
+          300: "#d4cfc8",
+          400: "#a39e96",
+          500: "#736d65", // Body text - AA on cream
+          600: "#5c564f",
+          700: "#454039", // Headings - AAA on cream
+          800: "#2d2925",
+          900: "#1a1614",
+        },
+        // Success/Error (keep for forms)
+        success: {
+          50: "#f0fdf4",
+          100: "#dcfce7",
+          500: "#22c55e",
+          600: "#16a34a",
+        },
+        error: {
+          50: "#fef2f2",
+          100: "#fee2e2",
+          500: "#ef4444",
+          600: "#dc2626",
+        },
       },
       animation: {
-        'float': 'float 3s ease-in-out infinite',
-        'bounce-slow': 'bounce 2s infinite',
-        'wiggle': 'wiggle 1s ease-in-out infinite',
-        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
-        'star-spin': 'star-spin 4s linear infinite',
-        'twinkle': 'twinkle 1.5s ease-in-out infinite',
-        'heart-beat': 'heart-beat 1s ease-in-out infinite',
-        'slide-up': 'slide-up 0.5s ease-out',
-        'pop': 'pop 0.3s ease-out',
-        'confetti': 'confetti-fall 3s linear forwards',
+        "fade-in": "fade-in 0.3s ease-out",
+        "slide-up": "slide-up 0.4s ease-out",
+        "scale-in": "scale-in 0.2s ease-out",
+        "subtle-float": "subtle-float 6s ease-in-out infinite",
       },
       boxShadow: {
-        'magical': '0 10px 40px -10px rgba(168, 85, 247, 0.5)',
-        'candy': '0 10px 40px -10px rgba(236, 72, 153, 0.5)',
-        'rainbow': '0 0 20px rgba(236, 72, 153, 0.3), 0 0 40px rgba(168, 85, 247, 0.2), 0 0 60px rgba(96, 165, 250, 0.1)',
-      },
-      backgroundImage: {
-        'rainbow-gradient': 'linear-gradient(90deg, #ff6b9d, #c084fc, #60a5fa, #34d399, #fbbf24)',
-        'candy-gradient': 'linear-gradient(135deg, #ff6b9d 0%, #c084fc 50%, #60a5fa 100%)',
-        'magic-gradient': 'linear-gradient(135deg, #fdf4ff 0%, #fae8ff 25%, #e0f2fe 50%, #fef3c7 75%, #fce7f3 100%)',
-        'sparkle-gradient': 'linear-gradient(135deg, #f5d0fe 0%, #fbcfe8 50%, #fce7f3 100%)',
+        soft: "0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)",
+        "soft-md":
+          "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        "soft-lg":
+          "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+        primary: "0 4px 14px rgba(168, 85, 247, 0.15)",
+        accent: "0 4px 14px rgba(244, 63, 94, 0.15)",
       },
       borderRadius: {
-        'blob': '60% 40% 30% 70% / 60% 30% 70% 40%',
-      }
+        "4xl": "2rem",
+      },
     },
   },
   plugins: [],
-}
+};

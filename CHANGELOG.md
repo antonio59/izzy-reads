@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated README.md with Coolify deployment instructions
 - Archived netlify.toml configuration (moved to git history)
 
+### Fixed
+
+- Fixed Dockerfile to use correct lockfile name (`bun.lock` instead of `bun.lockb`)
+- Fixed .dockerignore to not exclude the lockfile needed for builds
+
 ### Infrastructure
 
 - Docker-based deployment using multi-stage builds (Bun + nginx)
