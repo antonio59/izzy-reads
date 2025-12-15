@@ -24,7 +24,7 @@ import {
 import { useBooks } from "../contexts/BookContext";
 import { Card } from "./ui/Card";
 import { Badge } from "./ui/Badge";
-import type { Book, ReviewReactions, BookReactions } from "../types";
+import type { ReviewReactions, BookReactions } from "../types";
 
 // Reaction display config
 const BOOK_REACTIONS = [
