@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM oven/bun:1.1.0 AS builder
+FROM oven/bun:latest AS builder
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package.json bun.lock ./
 
 # Install dependencies
-RUN bun install --frozen-lockfile
+RUN bun install
 
 # Copy source code
 COPY . .
