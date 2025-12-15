@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+bun.lockb
+
+# Build output
+dist/
+.vite/
+
+# Development files
+.env.local
+.env*.local
+
+# Git
+.git/
+.gitignore
+.github/
+
+# Documentation
+*.md
+!README.md
+CHANGELOG.md
+docs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+.nyc_output/
+
+# Netlify (no longer needed)
+netlify.toml
+.netlify/
+
+# Misc
+*.local
