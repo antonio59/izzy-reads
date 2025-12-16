@@ -1,0 +1,90 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ production ]
+
+jobs:
+  deploy-production:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+        
+    - name: Install dependencies
+      run: bun install
+      
+    - name: Run tests
+      run: bun run test
+      
+    - name: Run linting
+      run: bun run lint
+      
+    - name: Build for production
+      run: bun run build
+      
+    - name: Deploy to Convex production
+      env:
+        CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_PROD_DEPLOY_KEY }}
+      run: |
+        # Deploy to production
+        bunx convex deploy -y --cmd 'echo "Backend deployed to production"'
+        
+    - name: Build Docker image
+      run: |
+        # Copy files for deployment
+        mkdir -p deploy-production
+        cp -r dist/* deploy-production/
+        cp Dockerfile deploy-production/
+        cp nginx.conf deploy-production/
+        
+        # Create deployment info
+        echo '{
+          "deployedAt": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'",
+          "branch": "'${GITHUB_REF#refs/heads/}'",
+          "commit": "'$GITHUB_SHA'",
+          "environment": "production",
+          "domain": "your-production-domain.com",
+          "workflow": "'$GITHUB_WORKFLOW'",
+          "runId": "'$GITHUB_RUN_ID'"
+        }' > deploy-production/deploy-info.json
+        
+    - name: Deploy to Production Hosting
+      if: github.ref == 'refs/heads/production'
+      env:
+        PROD_API_KEY: ${{ secrets.PRODUCTION_API_KEY }}
+        PROD_APP_ID: ${{ secrets.PRODUCTION_APP_ID }}
+      run: |
+        # This step assumes you have production hosting API access
+        # Replace with your actual production deployment method
+        echo "🚀 Deploying to production environment..."
+        
+        if [ -n "$PROD_API_KEY" ] && [ -n "$PROD_APP_ID" ]; then
+          echo "Triggering production deployment..."
+          # Add your production deployment command here
+        else
+          echo "⚠️  Production API credentials not configured"
+          echo "Please configure PROD_API_KEY and PROD_APP_ID secrets"
+        fi
+        
+    - name: Deployment Summary
+      run: |
+        echo "## 🚀 Production Deployment Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Environment:** Production" >> $GITHUB_STEP_SUMMARY
+        echo "**Domain:** https://your-production-domain.com" >> $GITHUB_STEP_SUMMARY
+        echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Deployed at:** $(date -u)" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📋 Next Steps" >> $GITHUB_STEP_SUMMARY
+        echo "1. If automatic deployment failed, manually upload the \`deploy-production/\` directory" >> $GITHUB_STEP_SUMMARY
+        echo "2. Ensure these environment variables are set in production:" >> $GITHUB_STEP_SUMMARY
+        echo "   - \`CONVEX_PRODUCTION_URL\`" >> $GITHUB_STEP_SUMMARY
+        echo "   - \`GIPHY_API_KEY\`" >> $GITHUB_STEP_SUMMARY

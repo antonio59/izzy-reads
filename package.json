@@ -10,6 +10,7 @@
     "build": "tsc -b && vite build",
     "build:staging": "NODE_ENV=staging tsc -b && vite build",
     "deploy:staging": "./scripts/deploy-staging.sh",
+    "deploy:production": "./scripts/deploy-production.sh",
     "deploy:convex:staging": "CONVEX_DEPLOYMENT=staging convex deploy",
     "build:frontend": "tsc -b && vite build",
     "lint": "eslint .",
