@@ -26,9 +26,9 @@ echo "✅ Pre-flight checks passed"
 echo "📦 Building application..."
 bun run build
 
-# Deploy to Convex (using dev deployment for now)
-echo "🔄 Deploying to Convex..."
-bunx convex deploy --cmd 'echo "Frontend built successfully"'
+# Deploy to Convex (using dev deployment for staging)
+echo "🔄 Deploying to Convex (dev deployment for staging)..."
+CONVEX_DEPLOYMENT=impressive-elk-411 bunx convex deploy -y --cmd 'echo "Frontend built successfully"'
 
 # Create deployment directory
 DEPLOY_DIR="./dist-staging"
