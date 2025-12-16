@@ -4,6 +4,11 @@ on:
   push:
     branches: [ production ]
 
+permissions:
+  contents: read
+  id-token: write
+  actions: read
+
 jobs:
   deploy-production:
     runs-on: ubuntu-latest

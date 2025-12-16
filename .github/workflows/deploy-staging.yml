@@ -5,6 +5,11 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  id-token: write
+  actions: read
+
 jobs:
   deploy-staging:
     runs-on: ubuntu-latest
