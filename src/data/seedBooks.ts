@@ -11,6 +11,8 @@ export interface SeedBook {
   genre: string;
   ageRating: string;
   pageCount?: number;
+  isbn?: string;
+  coverUrl?: string;
   isRead: boolean;
   dateAdded: string;
   dateRead?: string;
@@ -87,6 +89,8 @@ export const izzyBooks: SeedBook[] = [
     genre: "Fiction",
     ageRating: "7-10",
     pageCount: 208,
+    isbn: "9781788451420",
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9781788451420-L.jpg",
     isRead: true,
     dateAdded: today,
   },
@@ -98,6 +102,8 @@ export const izzyBooks: SeedBook[] = [
     genre: "Fiction",
     ageRating: "9-12",
     pageCount: 282,
+    isbn: "9781847387127",
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9781847387127-L.jpg",
     isRead: true,
     dateAdded: today,
   },
@@ -120,6 +126,8 @@ export const izzyBooks: SeedBook[] = [
     genre: "Fiction",
     ageRating: "10-14",
     pageCount: 320,
+    isbn: "9780192794252",
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9780192794252-L.jpg",
     isRead: true,
     dateAdded: today,
   },
@@ -173,13 +181,17 @@ export const izzyBooks: SeedBook[] = [
 
   // Marcus Rashford
   {
-    title: "You Are a Champion: How to Be the Best You Can Be",
+    title: "You Are a Champion",
     author: "Marcus Rashford",
     genre: "Non-Fiction",
     ageRating: "8-12",
     pageCount: 192,
+    isbn: "9781529068177",
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9781529068177-L.jpg",
     isRead: true,
     dateAdded: today,
+    rating: 5,
+    notes: "Such an inspiring book! Marcus Rashford is a great role model.",
   },
 
   // Treehouse Series - Andy Griffiths & Terry Denton
@@ -189,6 +201,8 @@ export const izzyBooks: SeedBook[] = [
     genre: "Fiction",
     ageRating: "7-10",
     pageCount: 240,
+    isbn: "9781407143231",
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9781407143231-L.jpg",
     isRead: true,
     dateAdded: today,
   },
@@ -198,6 +212,8 @@ export const izzyBooks: SeedBook[] = [
     genre: "Fiction",
     ageRating: "7-10",
     pageCount: 288,
+    isbn: "9781407148328",
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9781407148328-L.jpg",
     isRead: true,
     dateAdded: today,
   },
@@ -207,6 +223,8 @@ export const izzyBooks: SeedBook[] = [
     genre: "Fiction",
     ageRating: "7-10",
     pageCount: 384,
+    isbn: "9781407144385",
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9781407144385-L.jpg",
     isRead: true,
     dateAdded: today,
   },
@@ -216,6 +234,8 @@ export const izzyBooks: SeedBook[] = [
     genre: "Fiction",
     ageRating: "7-10",
     pageCount: 384,
+    isbn: "9781407146399",
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9781407146399-L.jpg",
     isRead: true,
     dateAdded: today,
   },
@@ -223,10 +243,12 @@ export const izzyBooks: SeedBook[] = [
   // Fairy Tales
   {
     title: "Fairy Tales",
-    author: "Various Authors",
+    author: "Hans Christian Andersen",
     genre: "Fantasy",
     ageRating: "All Ages",
     pageCount: 200,
+    isbn: "9780141329017",
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9780141329017-L.jpg",
     isRead: true,
     dateAdded: today,
   },
