@@ -14,15 +14,26 @@ export const seedDatabase = mutation({
 
     console.log("Seeding database with Izzy's books...");
     
-    // Get first user (or create one)
-    const existingUser = await ctx.db.query("users").first();
-    if (!existingUser) {
-      throw new Error("No user found. Please create a user first.");
-    }
+    // For seeding, we need to skip authentication and use a system approach
+    // This creates both the auth user and profile
+    const newUserId = await ctx.db.insert("users", {
+      email: "izzy@izzyreads.com",
+    });
+
+    // Create profile for the user
+    await ctx.db.insert("userProfiles", {
+      userId: newUserId,
+      name: "Izzy",
+      age: 10,
+      isParent: false,
+      theme: "colorful",
+    });
+    
+    console.log("Created user with ID:", newUserId);
 
     // Transform seed data to match Convex schema
     const booksForConvex = izzyBooks.map(book => ({
-      userId: existingUser._id,
+      userId: newUserId,
       title: book.title,
       author: book.author,
       genre: book.genre,
