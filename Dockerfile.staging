@@ -20,10 +20,11 @@ ENV VITE_CONVEX_URL=$VITE_CONVEX_URL
 ENV NODE_ENV=$BUILD_ENV
 
 # Build application based on environment
-RUN if [ "$BUILD_ENV" = "staging" ]; then \
-        bun run build:staging; \
+RUN echo "Building with BUILD_ENV=$BUILD_ENV and VITE_CONVEX_URL=$VITE_CONVEX_URL" && \
+    if [ "$BUILD_ENV" = "staging" ]; then \
+        echo "🚀 Running STAGING build" && bun run build:staging; \
     else \
-        bun run build:frontend; \
+        echo "🚀 Running PRODUCTION build" && bun run build:frontend; \
     fi
 
 # Stage 2: Serve with nginx
