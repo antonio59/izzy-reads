@@ -39,8 +39,8 @@ jobs:
       env:
         CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_STAGING_DEPLOY_KEY }}
       run: |
-        # Deploy to staging using preview deployment
-        bunx convex deploy --preview-create staging --cmd 'echo "Backend deployed to staging"'
+        # Deploy to dedicated staging project
+        bunx convex deploy --cmd 'echo "Backend deployed to staging"'
         
     - name: Build Docker image
       run: |
