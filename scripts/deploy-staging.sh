@@ -28,7 +28,7 @@ bun run build
 
 # Deploy to Convex staging (using preview deployment)
 echo "🔄 Deploying to Convex staging..."
-CONVEX_DEPLOY_KEY=preview:antonio-smith-92336:izzy-reads\|eyJ2MiI6Ijk3Zjc3NjA4MDJkZTRmYjNiZGVkZGZkOTVlMDliZTYyIn0= bunx convex deploy -y --preview-create staging --cmd 'echo "Frontend built successfully"'
+CONVEX_DEPLOY_KEY=preview:antonio-smith-92336:izzy-reads\|eyJ2MiI6Ijk3Zjc3NjA4MDJkZTRmYjNiZGVkZGZkOTVlMDliZTYyIn0= bunx convex deploy -y --cmd 'echo "Frontend built successfully"' --preview-create staging
 
 # Create deployment directory
 DEPLOY_DIR="./dist-staging"
@@ -46,7 +46,7 @@ cp nginx.conf "$DEPLOY_DIR/"
 cat > "$DEPLOY_DIR/.env.staging" << EOF
 # Staging Environment Variables
 NODE_ENV=production
-VITE_CONVEX_URL=\$CONVEX_STAGING_URL
+VITE_CONVEX_URL=https://perfect-elk-539.convex.cloud
 VITE_GIPHY_API_KEY=\$GIPHY_API_KEY
 EOF
 
