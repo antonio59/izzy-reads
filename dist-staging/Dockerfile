@@ -1,4 +1,4 @@
-# Stage 1: Build application
+# Stage 1: Build the application
 FROM oven/bun:latest AS builder
 
 WORKDIR /app
@@ -12,21 +12,12 @@ RUN bun install
 # Copy source code
 COPY . .
 
-# Build arguments for environment
+# Build argument for Convex URL
 ARG VITE_CONVEX_URL
-ARG BUILD_ENV
+ENV VITE_CONVEX_URL=$VITE_CONVEX_URL
 
-# Force staging to use persistent dev deployment
-ENV VITE_CONVEX_URL=${VITE_CONVEX_URL:-https://impressive-elk-411.convex.cloud}
-ENV NODE_ENV=$BUILD_ENV
-
-# Build application based on environment
-RUN echo "Building with BUILD_ENV=$BUILD_ENV and VITE_CONVEX_URL=$VITE_CONVEX_URL" && \
-    if [ "$BUILD_ENV" = "staging" ]; then \
-        echo "🚀 Running STAGING build" && bun run build:staging; \
-    else \
-        echo "🚀 Running PRODUCTION build" && bun run build:frontend; \
-    fi
+# Build the application (frontend only - Convex is already deployed)
+RUN bun run build:frontend
 
 # Stage 2: Serve with nginx
 FROM nginx:alpine

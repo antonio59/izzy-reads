@@ -72,18 +72,10 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
     booksThisYear: 0,
   });
 
-  // Initialize with sample data
+  // Load data from Convex backend (removed sample data for clean environments)
   useEffect(() => {
-    // Generate recent dates for sample data
-    const today = new Date();
-    const oneWeekAgo = new Date(today);
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    const twoWeeksAgo = new Date(today);
-    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-    const threeWeeksAgo = new Date(today);
-    threeWeeksAgo.setDate(threeWeeksAgo.getDate() - 21);
-
-    const formatDate = (date: Date) => date.toISOString().split("T")[0];
+    // No hardcoded data - load from Convex instead
+    // Each environment will have its own clean database
 
     // Izzy's actual book collection with cover images from Open Library
     // Covers use Open Library's ISBN-based URLs: https://covers.openlibrary.org/b/isbn/{ISBN}-L.jpg

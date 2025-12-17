@@ -26,9 +26,9 @@ echo "✅ Pre-flight checks passed"
 echo "📦 Building application..."
 bun run build
 
-# Deploy to Convex staging (using preview deployment)
+# Deploy to Convex staging (using persistent dev deployment)
 echo "🔄 Deploying to Convex staging..."
-CONVEX_DEPLOY_KEY=preview:antonio-smith-92336:izzy-reads\|eyJ2MiI6Ijk3Zjc3NjA4MDJkZTRmYjNiZGVkZGZkOTVlMDliZTYyIn0= bunx convex deploy -y --cmd 'echo "Frontend built successfully"' --preview-create staging
+bunx convex deploy -y --cmd 'echo "Frontend built successfully"'
 
 # Create deployment directory
 DEPLOY_DIR="./dist-staging"

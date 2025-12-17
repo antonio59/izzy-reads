@@ -15,6 +15,7 @@ import type * as books from "../books.js";
 import type * as http from "../http.js";
 import type * as poems from "../poems.js";
 import type * as readingChallenges from "../readingChallenges.js";
+import type * as seed from "../seed.js";
 import type * as users from "../users.js";
 import type * as wishlist from "../wishlist.js";
 
@@ -32,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   poems: typeof poems;
   readingChallenges: typeof readingChallenges;
+  seed: typeof seed;
   users: typeof users;
   wishlist: typeof wishlist;
 }>;
