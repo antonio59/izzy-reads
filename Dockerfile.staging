@@ -16,7 +16,8 @@ COPY . .
 ARG VITE_CONVEX_URL
 ARG BUILD_ENV
 
-ENV VITE_CONVEX_URL=$VITE_CONVEX_URL
+# Force correct staging URL if not provided
+ENV VITE_CONVEX_URL=${VITE_CONVEX_URL:-https://perfect-elk-539.convex.cloud}
 ENV NODE_ENV=$BUILD_ENV
 
 # Build application based on environment
