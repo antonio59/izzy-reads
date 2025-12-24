@@ -1,9 +1,47 @@
 # Changelog
 
-All notable changes to Izzy Reads will be documented in this file.
+All notable changes to Izzy's Bookshelf will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.1.0] - 2025-12-24
+
+### Changed
+
+- **Rebranded from "Izzy Reads" to "Izzy's Bookshelf"** across all components
+  - Updated manifest.json, index.html, service worker
+  - Updated Login, Signup, Onboarding, Navigation components
+  - Updated ExportData filenames and branding
+  - Updated storage keys for theme and gamification contexts
+- **Updated staging domain** to `izzysbookshelf.antoniosmith.xyz`
+- **Updated production domain** to `izzysbookshelf.com`
+- **Updated Convex staging URL** to `https://aware-gecko-889.convex.cloud`
+- Upgraded GitHub Actions to latest versions:
+  - `actions/checkout` v4 → v6
+  - `oven-sh/setup-bun` v1 → v2
+
+### Security
+
+- **Fixed insecure randomness vulnerability** - Replaced `Math.random()` with `crypto.randomUUID()` in Toast component for secure ID generation
+- Updated dependencies to latest secure versions:
+  - `convex` 1.31.0 → 1.31.2
+  - `typescript` 5.8.3 → 5.9.3
+  - `@eslint/js` 9.39.1 → 9.39.2
+  - `framer-motion` 12.23.25 → 12.23.26
+  - `recharts` 3.5.1 → 3.6.0
+
+### Infrastructure
+
+- **Added staging/production separation** with dedicated Coolify projects
+- Configured Coolify webhook deployments for automated CI/CD
+- Updated deployment workflows to use webhook triggers
+- Separated Convex deployments for staging and production environments
+
+### Fixed
+
+- Fixed parsing error in migrate-izzy-books.js (unterminated template literal)
+- Fixed TypeScript error in ReviewAnalytics.tsx with recharts Formatter type
 
 ## [1.0.2] - 2025-12-15
 
@@ -60,7 +98,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial release of Izzy Reads
+- Initial release of Izzy's Bookshelf
 - Public portfolio with 5 themed tabs (Books, Poetry, Blog, Wishlist, About)
 - Private dashboard for managing content
 - Convex Auth for secure authentication
