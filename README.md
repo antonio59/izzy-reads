@@ -7,6 +7,7 @@ A beautiful, magical reading tracker and public portfolio for young book lovers.
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178c6.svg)
 ![Tailwind](https://img.shields.io/badge/Tailwind-3.4-38bdf8.svg)
 ![Convex](https://img.shields.io/badge/Convex-1.31-ff6b6b.svg)
+![Netlify](https://img.shields.io/badge/Netlify-deployed-00C7B7.svg)
 
 ---
 
@@ -118,6 +119,7 @@ izzy-reads/
 ├── .github/
 │   ├── workflows/            # CI/CD automation
 │   └── SECURITY.md           # Security policy
+├── netlify.toml              # Netlify deployment config
 └── public/                   # Static assets
 ```
 
@@ -133,7 +135,7 @@ izzy-reads/
 | **Book Data**  | Open Library API (free cover images)    |
 | **Icons**      | Lucide React                            |
 | **Routing**    | React Router 7                          |
-| **Deployment** | Coolify (Docker + nginx)                |
+| **Deployment** | Netlify                                 |
 
 ---
 
@@ -192,11 +194,17 @@ VITE_CONVEX_URL=your-convex-deployment-url
 - Wishlist: Orange/Red gradient
 - About Me: Indigo/Purple gradient
 
-**About Me Content** - Edit `aboutData` in `PublicPortfolio.tsx`
-
 ---
 
 ## 📦 Build & Deploy
+
+### Local Development
+
+```bash
+bun run dev          # Start dev server + Convex
+bun run dev:frontend # Frontend only
+bun run dev:backend  # Convex only
+```
 
 ### Production Build
 
@@ -210,45 +218,27 @@ bun run build
 bun run build:staging
 ```
 
-### Preview Build
+### Deployment with Netlify
 
-```bash
-bun run preview
-```
+This project uses Netlify with automatic branch deploys:
 
-### Deploy to Convex
+| Branch       | Environment | Convex           | Auto-deploy |
+| ------------ | ----------- | ---------------- | ----------- |
+| `production` | Production  | loyal-vulture-39 | ✅          |
+| `main`       | Staging     | aware-gecko-889  | ✅          |
+| PR branches  | Preview     | aware-gecko-889  | ✅          |
 
-```bash
-# Production
-CONVEX_DEPLOY_KEY=your-prod-key bunx convex deploy
+**Configuration is in `netlify.toml`** - no manual setup required.
 
-# Staging
-CONVEX_DEPLOY_KEY=your-staging-key bunx convex deploy
-```
+**To deploy:**
 
-### Deployment with Coolify
+1. Push to `main` → Staging deploys automatically
+2. Merge to `production` → Production deploys automatically
 
-This project uses a two-environment setup with Coolify:
+**Custom Domains:**
 
-| Environment | Domain                          | Branch       | Convex           |
-| ----------- | ------------------------------- | ------------ | ---------------- |
-| Staging     | izzysbookshelf.antoniosmith.xyz | `main`       | aware-gecko-889  |
-| Production  | izzysbookshelf.com              | `production` | loyal-vulture-39 |
-
-**Coolify Setup:**
-
-1. Create two projects in Coolify (staging + production)
-2. Connect each to the GitHub repository
-3. Set the appropriate branch for each project
-4. Configure environment variables:
-   - `VITE_CONVEX_URL` - The Convex deployment URL
-   - `BUILD_ENV` - `staging` or `production`
-5. Use `Dockerfile.staging` for staging, `Dockerfile` for production
-
-**GitHub Actions:**
-
-- Push to `main` → Deploys to staging automatically
-- Push to `production` → Deploys to production automatically
+- Production: `izzysbookshelf.com`
+- Staging: `izzysbookshelf.antoniosmith.xyz` (branch subdomain)
 
 ---
 
@@ -268,7 +258,7 @@ This project uses a two-environment setup with Coolify:
 - ✅ Input validation on all forms
 - ✅ Protected routes with authentication
 - ✅ Regular dependency updates
-- ✅ Webhook URLs stored in GitHub Secrets
+- ✅ Security headers via Netlify
 
 ### Run Security Audit
 
@@ -308,7 +298,6 @@ bun run security-audit
 - [ ] Series Tracker - Track progress through book series
 - [ ] Book Tags & Filters - Browse by mood, genre, custom tags
 - [ ] Reading Journey Timeline - Visual timeline of milestones
-- [ ] Export Reading History - Download data as CSV/PDF
 
 ### Future Ideas
 
@@ -351,7 +340,7 @@ Built with amazing open-source tools:
 - [Convex](https://convex.dev/) - Backend
 - [Open Library](https://openlibrary.org/) - Book Data
 - [Lucide](https://lucide.dev/) - Icons
-- [Coolify](https://coolify.io/) - Self-hosted deployment
+- [Netlify](https://netlify.com/) - Hosting
 
 ---
 
@@ -378,11 +367,6 @@ Built with amazing open-source tools:
 rm -rf node_modules bun.lock
 bun install
 ```
-
-**404 errors on staging/production?**
-
-- Ensure Convex schema is deployed to the correct environment
-- Check that the `VITE_CONVEX_URL` matches the environment
 
 ---
 

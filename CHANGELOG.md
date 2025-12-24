@@ -5,6 +5,33 @@ All notable changes to Izzy's Bookshelf will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-12-24
+
+### Changed
+
+- **Migrated from Coolify to Netlify** for simpler, more reliable deployments
+- Removed all Docker/Coolify configuration files
+- Added `netlify.toml` with branch-based deployment configuration
+- Simplified CI/CD pipeline - Netlify handles all deployments automatically
+
+### Removed
+
+- Dockerfile and Dockerfile.staging
+- nginx.conf
+- deploy-staging.sh and deploy-production.sh scripts
+- .dockerignore
+- GitHub Actions workflows for Coolify (deploy-staging.yml, deploy-production.yml)
+
+### Infrastructure
+
+- **Netlify branch deploys:**
+  - `production` branch → izzysbookshelf.com (production Convex)
+  - `main` branch → staging URL (staging Convex)
+  - PR branches → preview deployments (staging Convex)
+- Automatic SSL certificates via Netlify
+- Security headers configured in netlify.toml
+- SPA routing with redirects
+
 ## [1.1.0] - 2025-12-24
 
 ### Changed
@@ -30,13 +57,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `@eslint/js` 9.39.1 → 9.39.2
   - `framer-motion` 12.23.25 → 12.23.26
   - `recharts` 3.5.1 → 3.6.0
-
-### Infrastructure
-
-- **Added staging/production separation** with dedicated Coolify projects
-- Configured Coolify webhook deployments for automated CI/CD
-- Updated deployment workflows to use webhook triggers
-- Separated Convex deployments for staging and production environments
 
 ### Fixed
 
