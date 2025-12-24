@@ -5,7 +5,7 @@
 
 set -e
 
-echo "🚀 Starting staging deployment to izzy.antoniosmith.xyz..."
+echo "🚀 Starting staging deployment to izzysbookshelf.antoniosmith.xyz..."
 
 # Check if we're on the main branch
 CURRENT_BRANCH=$(git branch --show-current)
@@ -47,7 +47,7 @@ cp nginx.conf "$DEPLOY_DIR/"
 cat > "$DEPLOY_DIR/.env.staging" << EOF
 # Staging Environment Variables
 NODE_ENV=production
-VITE_CONVEX_URL=https://perfect-elk-539.convex.cloud
+VITE_CONVEX_URL=https://aware-gecko-889.convex.cloud
 VITE_GIPHY_API_KEY=\$GIPHY_API_KEY
 EOF
 
@@ -60,7 +60,7 @@ cat > "$DEPLOY_DIR/deploy-info.json" << EOF
   "branch": "$CURRENT_BRANCH",
   "commit": "$(git rev-parse HEAD)",
   "environment": "staging",
-  "domain": "izzy.antoniosmith.xyz"
+  "domain": "izzysbookshelf.antoniosmith.xyz"
 }
 EOF
 

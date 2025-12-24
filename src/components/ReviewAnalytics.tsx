@@ -471,8 +471,8 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                         borderRadius: "8px",
                         boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                       }}
-                      formatter={(value: number) => [
-                        `${value} stars`,
+                      formatter={(value) => [
+                        `${value ?? 0} stars`,
                         "Avg Rating",
                       ]}
                     />

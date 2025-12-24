@@ -2,7 +2,9 @@
 console.log("📚 Izzy's Books Migration Script");
 console.log("");
 console.log("🔍 Instructions:");
-console.log("1. Go to your staging site: https://izzy.antoniosmith.xyz");
+console.log(
+  "1. Go to your staging site: https://izzysbookshelf.antoniosmith.xyz",
+);
 console.log("2. Sign in with email: izzy@izzyreads.com");
 console.log("3. Open browser console and copy-paste this entire script");
 console.log("");
@@ -20,10 +22,10 @@ const izzyBooks = [
     isRead: true,
     dateAdded: "2024-01-01",
     rating: 4,
-    notes: "Greg is so funny! I love his drawings."
+    notes: "Greg is so funny! I love his drawings.",
   },
   {
-    title: "Diary of a Wimpy Kid: Rodrick Rules", 
+    title: "Diary of a Wimpy Kid: Rodrick Rules",
     author: "Jeff Kinney",
     genre: "Fiction",
     ageRating: "8-12",
@@ -32,13 +34,13 @@ const izzyBooks = [
     coverUrl: "https://covers.openlibrary.org/b/isbn/9780141324913-L.jpg",
     isRead: true,
     dateAdded: "2024-01-01",
-    rating: 4
+    rating: 4,
   },
   {
     title: "Geekhood: Close Encounters of the Girl Kind",
     author: "Andy Robb",
     genre: "Fiction",
-    ageRating: "10-14", 
+    ageRating: "10-14",
     pageCount: 320,
     isbn: "9780192794252",
     coverUrl: "https://covers.openlibrary.org/b/isbn/9780192794252-L.jpg",
@@ -48,7 +50,7 @@ const izzyBooks = [
   },
   {
     title: "Bunny vs Monkey",
-    author: "Jamie Smart", 
+    author: "Jamie Smart",
     genre: "Fiction",
     ageRating: "7-10",
     pageCount: 208,
@@ -68,7 +70,7 @@ const izzyBooks = [
     isRead: true,
     dateAdded: "2024-01-01",
     rating: 5,
-    notes: "So funny! I love Nikki and her diary entries."
+    notes: "So funny! I love Nikki and her diary entries.",
   },
   {
     title: "You Are a Champion",
@@ -81,30 +83,31 @@ const izzyBooks = [
     isRead: true,
     dateAdded: "2024-01-01",
     rating: 5,
-    notes: "Such an inspiring book! Marcus Rashford is a great role model."
-  }
+    notes: "Such an inspiring book! Marcus Rashford is a great role model.",
+  },
 ];
 
 // Migration function
 async function migrateBooks() {
   console.log(`📚 Starting migration of ${izzyBooks.length} books...`);
-  
+
   try {
     let successCount = 0;
     for (const book of izzyBooks) {
       try {
-        await window.convex.mutation('books:add', book);
+        await window.convex.mutation("books:add", book);
         console.log(`✅ Added: ${book.title}`);
         successCount++;
         // Rate limiting - wait between books
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
       } catch (error) {
         console.error(`❌ Failed to add ${book.title}:`, error);
       }
     }
-    
-    console.log(`🎉 Migration complete! Added ${successCount} of ${izzyBooks.length} books`);
-    
+
+    console.log(
+      `🎉 Migration complete! Added ${successCount} of ${izzyBooks.length} books`,
+    );
   } catch (error) {
     console.error("❌ Migration failed:", error);
   }

@@ -1,127 +1,134 @@
-import { createContext, useContext, useState, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { CheckCircle, AlertCircle, Info, X, AlertTriangle } from 'lucide-react'
+import { createContext, useContext, useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { CheckCircle, AlertCircle, Info, X, AlertTriangle } from "lucide-react";
 
-type ToastType = 'success' | 'error' | 'warning' | 'info'
+type ToastType = "success" | "error" | "warning" | "info";
 
 interface Toast {
-  id: string
-  type: ToastType
-  title: string
-  message?: string
-  duration?: number
+  id: string;
+  type: ToastType;
+  title: string;
+  message?: string;
+  duration?: number;
 }
 
 interface ToastContextType {
-  toasts: Toast[]
-  addToast: (toast: Omit<Toast, 'id'>) => void
-  removeToast: (id: string) => void
+  toasts: Toast[];
+  addToast: (toast: Omit<Toast, "id">) => void;
+  removeToast: (id: string) => void;
 }
 
-const ToastContext = createContext<ToastContextType | null>(null)
+const ToastContext = createContext<ToastContextType | null>(null);
 
 export function useToast() {
-  const context = useContext(ToastContext)
+  const context = useContext(ToastContext);
   if (!context) {
-    throw new Error('useToast must be used within a ToastProvider')
+    throw new Error("useToast must be used within a ToastProvider");
   }
-  return context
+  return context;
 }
 
 // Simplified hook for common toast patterns
 export function useToastActions() {
-  const { addToast } = useToast()
+  const { addToast } = useToast();
 
   return {
     success: (title: string, message?: string) =>
-      addToast({ type: 'success', title, message }),
+      addToast({ type: "success", title, message }),
     error: (title: string, message?: string) =>
-      addToast({ type: 'error', title, message }),
+      addToast({ type: "error", title, message }),
     warning: (title: string, message?: string) =>
-      addToast({ type: 'warning', title, message }),
+      addToast({ type: "warning", title, message }),
     info: (title: string, message?: string) =>
-      addToast({ type: 'info', title, message }),
-  }
+      addToast({ type: "info", title, message }),
+  };
 }
 
 interface ToastProviderProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export function ToastProvider({ children }: ToastProviderProps) {
-  const [toasts, setToasts] = useState<Toast[]>([])
+  const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const addToast = useCallback((toast: Omit<Toast, 'id'>) => {
-    const id = Math.random().toString(36).substring(2, 9)
-    const newToast = { ...toast, id }
+  const addToast = useCallback((toast: Omit<Toast, "id">) => {
+    const id = crypto.randomUUID();
+    const newToast = { ...toast, id };
 
-    setToasts((prev) => [...prev, newToast])
+    setToasts((prev) => [...prev, newToast]);
 
     // Auto remove after duration (default 5s)
-    const duration = toast.duration ?? 5000
+    const duration = toast.duration ?? 5000;
     if (duration > 0) {
       setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== id))
-      }, duration)
+        setToasts((prev) => prev.filter((t) => t.id !== id));
+      }, duration);
     }
-  }, [])
+  }, []);
 
   const removeToast = useCallback((id: string) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id))
-  }, [])
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
 
   return (
     <ToastContext.Provider value={{ toasts, addToast, removeToast }}>
       {children}
       <ToastContainer />
     </ToastContext.Provider>
-  )
+  );
 }
 
 function ToastContainer() {
-  const { toasts, removeToast } = useToast()
+  const { toasts, removeToast } = useToast();
 
   return (
     <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-2 max-w-sm w-full">
       <AnimatePresence mode="popLayout">
         {toasts.map((toast) => (
-          <ToastItem key={toast.id} toast={toast} onClose={() => removeToast(toast.id)} />
+          <ToastItem
+            key={toast.id}
+            toast={toast}
+            onClose={() => removeToast(toast.id)}
+          />
         ))}
       </AnimatePresence>
     </div>
-  )
+  );
 }
 
 interface ToastItemProps {
-  toast: Toast
-  onClose: () => void
+  toast: Toast;
+  onClose: () => void;
 }
 
-const toastStyles: Record<ToastType, { bg: string; icon: React.ReactNode; iconBg: string }> = {
+const toastStyles: Record<
+  ToastType,
+  { bg: string; icon: React.ReactNode; iconBg: string }
+> = {
   success: {
-    bg: 'bg-white border-sage-200',
+    bg: "bg-white border-sage-200",
     icon: <CheckCircle className="w-5 h-5 text-sage-500" />,
-    iconBg: 'bg-sage-50',
+    iconBg: "bg-sage-50",
   },
   error: {
-    bg: 'bg-white border-red-200',
+    bg: "bg-white border-red-200",
     icon: <AlertCircle className="w-5 h-5 text-red-500" />,
-    iconBg: 'bg-red-50',
+    iconBg: "bg-red-50",
   },
   warning: {
-    bg: 'bg-white border-amber-200',
+    bg: "bg-white border-amber-200",
     icon: <AlertTriangle className="w-5 h-5 text-amber-500" />,
-    iconBg: 'bg-amber-50',
+    iconBg: "bg-amber-50",
   },
   info: {
-    bg: 'bg-white border-iris-200',
+    bg: "bg-white border-iris-200",
     icon: <Info className="w-5 h-5 text-iris-500" />,
-    iconBg: 'bg-iris-50',
+    iconBg: "bg-iris-50",
   },
-}
+};
 
 function ToastItem({ toast, onClose }: ToastItemProps) {
-  const styles = toastStyles[toast.type]
+  const styles = toastStyles[toast.type];
 
   return (
     <motion.div
@@ -129,15 +136,13 @@ function ToastItem({ toast, onClose }: ToastItemProps) {
       initial={{ opacity: 0, y: -20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, x: 100, scale: 0.95 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
       className={`
         flex items-start gap-3 p-4 rounded-xl border shadow-soft-lg
         ${styles.bg}
       `}
     >
-      <div className={`p-1.5 rounded-lg ${styles.iconBg}`}>
-        {styles.icon}
-      </div>
+      <div className={`p-1.5 rounded-lg ${styles.iconBg}`}>{styles.icon}</div>
       <div className="flex-1 min-w-0">
         <p className="font-medium text-gray-900">{toast.title}</p>
         {toast.message && (
@@ -151,7 +156,7 @@ function ToastItem({ toast, onClose }: ToastItemProps) {
         <X className="w-4 h-4" />
       </button>
     </motion.div>
-  )
+  );
 }
 
-export default ToastProvider
+export default ToastProvider;

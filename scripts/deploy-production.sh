@@ -67,7 +67,7 @@ cat > "$DEPLOY_DIR/deploy-info.json" << EOF
   "branch": "$CURRENT_BRANCH",
   "commit": "$(git rev-parse HEAD)",
   "environment": "production",
-  "domain": "your-production-domain.com"
+  "domain": "izzysbookshelf.com"
 }
 EOF
 

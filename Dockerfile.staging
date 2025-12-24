@@ -17,7 +17,7 @@ ARG VITE_CONVEX_URL
 ARG BUILD_ENV
 
 # Force staging to use persistent dev deployment
-ENV VITE_CONVEX_URL=${VITE_CONVEX_URL:-https://impressive-elk-411.convex.cloud}
+ENV VITE_CONVEX_URL=${VITE_CONVEX_URL:-https://aware-gecko-889.convex.cloud}
 ENV NODE_ENV=$BUILD_ENV
 
 # Build application based on environment

@@ -2,7 +2,7 @@ name: Deploy to Staging
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -13,89 +13,93 @@ permissions:
 jobs:
   deploy-staging:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v1
-      with:
-        bun-version: latest
-        
-    - name: Install dependencies
-      run: bun install
-      
-    - name: Run tests
-      run: bun run test
-      
-    - name: Run linting
-      run: bun run lint
-      
-    - name: Build for staging
-      run: bun run build:staging
-      
-    - name: Deploy to Convex staging
-      env:
-        CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_STAGING_DEPLOY_KEY }}
-      run: |
-        # Deploy to dedicated staging project
-        bunx convex deploy --cmd 'echo "Backend deployed to staging"'
-        
-    - name: Build Docker image
-      run: |
-        # Copy files for deployment
-        mkdir -p deploy-staging
-        cp -r dist/* deploy-staging/
-        cp Dockerfile deploy-staging/
-        cp nginx.conf deploy-staging/
-        
-        # Create deployment info
-        echo '{
-          "deployedAt": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'",
-          "branch": "'${GITHUB_REF#refs/heads/}'",
-          "commit": "'$GITHUB_SHA'",
-          "environment": "staging",
-          "domain": "izzy.antoniosmith.xyz",
-          "workflow": "'$GITHUB_WORKFLOW'",
-          "runId": "'$GITHUB_RUN_ID'"
-        }' > deploy-staging/deploy-info.json
-        
-    - name: Deploy to Coolify
-      if: github.ref == 'refs/heads/main'
-      env:
-        COOLIFY_API_KEY: ${{ secrets.COOLIFY_API_KEY }}
-        COOLIFY_APP_ID: ${{ secrets.COOLIFY_STAGING_APP_ID }}
-      run: |
-        # This step assumes you have Coolify CLI or API access
-        # Replace with your actual deployment method to Coolify
-        echo "🚀 Deploying to Coolify staging environment..."
-        
-        # Example using curl to Coolify API (adjust based on your setup)
-        if [ -n "$COOLIFY_API_KEY" ] && [ -n "$COOLIFY_APP_ID" ]; then
-          echo "Triggering Coolify deployment..."
-          # Add your Coolify deployment command here
-          # curl -X POST "https://your-coolify-instance.com/api/v1/apps/$COOLIFY_APP_ID/deploy" \
-          #   -H "Authorization: Bearer $COOLIFY_API_KEY" \
-          #   -H "Content-Type: application/json"
-        else
-          echo "⚠️  Coolify API credentials not configured"
-          echo "Please configure COOLIFY_API_KEY and COOLIFY_STAGING_APP_ID secrets"
-          echo "Or manually upload the deploy-staging/ directory to your Coolify instance"
-        fi
-        
-    - name: Deployment Summary
-      run: |
-        echo "## 🚀 Staging Deployment Summary" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "**Environment:** Staging" >> $GITHUB_STEP_SUMMARY
-        echo "**Domain:** https://izzy.antoniosmith.xyz" >> $GITHUB_STEP_SUMMARY
-        echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-        echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-        echo "**Deployed at:** $(date -u)" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### 📋 Next Steps" >> $GITHUB_STEP_SUMMARY
-        echo "1. If automatic deployment failed, manually upload the \`deploy-staging/\` directory to Coolify" >> $GITHUB_STEP_SUMMARY
-        echo "2. Ensure these environment variables are set in Coolify:" >> $GITHUB_STEP_SUMMARY
-        echo "   - \`CONVEX_STAGING_URL\`" >> $GITHUB_STEP_SUMMARY
-        echo "   - \`GIPHY_API_KEY\`" >> $GITHUB_STEP_SUMMARY
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run tests
+        run: bun run test
+
+      - name: Run linting
+        run: bun run lint
+
+      - name: Build for staging
+        run: bun run build:staging
+
+      - name: Deploy to Convex staging
+        env:
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_STAGING_DEPLOY_KEY }}
+        run: |
+          # Deploy to dedicated staging project
+          bunx convex deploy --cmd 'echo "Backend deployed to staging"'
+
+      - name: Build Docker image
+        run: |
+          # Copy files for deployment
+          mkdir -p deploy-staging
+          cp -r dist/* deploy-staging/
+          cp Dockerfile deploy-staging/
+          cp nginx.conf deploy-staging/
+
+          # Create deployment info
+          echo '{
+            "deployedAt": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'",
+            "branch": "'${GITHUB_REF#refs/heads/}'",
+            "commit": "'$GITHUB_SHA'",
+            "environment": "staging",
+            "domain": "izzysbookshelf.antoniosmith.xyz",
+            "workflow": "'$GITHUB_WORKFLOW'",
+            "runId": "'$GITHUB_RUN_ID'"
+          }' > deploy-staging/deploy-info.json
+
+      - name: Deploy to Coolify Staging
+        if: github.ref == 'refs/heads/main'
+        env:
+          COOLIFY_API_KEY: ${{ secrets.COOLIFY_API_KEY }}
+          COOLIFY_APP_ID: ${{ secrets.COOLIFY_STAGING_APP_ID }}
+          COOLIFY_WEBHOOK: ${{ secrets.COOLIFY_STAGING_WEBHOOK }}
+        run: |
+          echo "🚀 Deploying to Coolify staging environment..."
+
+          # Method 1: Use webhook (simplest - set up in Coolify app settings)
+          if [ -n "$COOLIFY_WEBHOOK" ]; then
+            echo "Triggering deployment via webhook..."
+            curl -X GET "$COOLIFY_WEBHOOK" || echo "Webhook trigger completed"
+          # Method 2: Use API (requires API key and app UUID)
+          elif [ -n "$COOLIFY_API_KEY" ] && [ -n "$COOLIFY_APP_ID" ]; then
+            echo "Triggering deployment via API..."
+            curl -X POST "${{ secrets.COOLIFY_BASE_URL }}/api/v1/applications/$COOLIFY_APP_ID/restart" \
+              -H "Authorization: Bearer $COOLIFY_API_KEY" \
+              -H "Content-Type: application/json" \
+              --fail-with-body || echo "API trigger completed"
+          else
+            echo "⚠️  Coolify credentials not configured"
+            echo "Please configure one of the following in GitHub secrets:"
+            echo "  Option 1: COOLIFY_STAGING_WEBHOOK (easiest)"
+            echo "  Option 2: COOLIFY_API_KEY + COOLIFY_STAGING_APP_ID + COOLIFY_BASE_URL"
+          fi
+
+      - name: Deployment Summary
+        run: |
+          echo "## 🚀 Staging Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** Staging" >> $GITHUB_STEP_SUMMARY
+          echo "**Domain:** https://izzysbookshelf.antoniosmith.xyz" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Deployed at:** $(date -u)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📋 Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "1. If automatic deployment failed, manually upload the \`deploy-staging/\` directory to Coolify" >> $GITHUB_STEP_SUMMARY
+          echo "2. Ensure these environment variables are set in Coolify:" >> $GITHUB_STEP_SUMMARY
+          echo "   - \`CONVEX_STAGING_URL\`" >> $GITHUB_STEP_SUMMARY
+          echo "   - \`GIPHY_API_KEY\`" >> $GITHUB_STEP_SUMMARY

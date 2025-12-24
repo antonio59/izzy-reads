@@ -4,7 +4,7 @@
 echo "📚 Seeding staging database with Izzy's books..."
 
 # Use the correct staging URL
-STAGING_URL="https://perfect-elk-539.convex.cloud"
+STAGING_URL="https://aware-gecko-889.convex.cloud"
 
 echo "🔍 Staging URL: $STAGING_URL"
 echo ""
@@ -21,7 +21,7 @@ curl -s -X POST "$STAGING_URL/api/books/getAll" \
 
 echo ""
 echo "👤 If you want to create a user manually:"
-echo "   1. Go to: https://izzy.antoniosmith.xyz"
+echo "   1. Go to: https://izzysbookshelf.antoniosmith.xyz"
 echo "   2. Sign up with: izzy@izzyreads.com"
 echo "   3. Set password: temp12345"
 echo ""
