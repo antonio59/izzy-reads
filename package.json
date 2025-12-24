@@ -28,7 +28,7 @@
     "@emoji-mart/react": "^1.1.1",
     "@giphy/js-fetch-api": "^5.7.0",
     "@giphy/react-components": "^10.1.0",
-    "convex": "^1.31.0",
+    "convex": "^1.31.2",
     "framer-motion": "^12.23.26",
     "lucide-react": "^0.561.0",
     "react": "^19.2.0",
