@@ -155,7 +155,7 @@ const ExportData: React.FC = () => {
             .join("")}
           
           <div class="footer">
-            <p>Izzy Reads - Reading is an Adventure!</p>
+            <p>Izzy's Bookshelf - Reading is an Adventure!</p>
           </div>
         </body>
       </html>
@@ -175,12 +175,12 @@ const ExportData: React.FC = () => {
     switch (format) {
       case "json":
         content = generateJSON();
-        filename = `izzy-reads-backup-${new Date().toISOString().split("T")[0]}.json`;
+        filename = `izzys-bookshelf-backup-${new Date().toISOString().split("T")[0]}.json`;
         mimeType = "application/json";
         break;
       case "csv":
         content = generateCSV();
-        filename = `izzy-reads-books-${new Date().toISOString().split("T")[0]}.csv`;
+        filename = `izzys-bookshelf-books-${new Date().toISOString().split("T")[0]}.csv`;
         mimeType = "text/csv";
         break;
       case "pdf": {

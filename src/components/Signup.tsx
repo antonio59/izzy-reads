@@ -81,7 +81,7 @@ const Signup = () => {
               <BookOpen className="w-10 h-10 text-white" />
             </motion.div>
             <h1 className="text-4xl font-display font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Izzy Reads
+              Izzy's Bookshelf
             </h1>
           </Link>
           <p className="text-gray-600 mt-2">Join the reading adventure!</p>

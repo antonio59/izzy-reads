@@ -1,6 +1,6 @@
 {
-  "name": "Izzy Reads",
-  "short_name": "Izzy Reads",
+  "name": "Izzy's Bookshelf",
+  "short_name": "Izzy's Bookshelf",
   "description": "A magical reading portfolio and tracker for young book lovers",
   "start_url": "/",
   "display": "standalone",

@@ -64,7 +64,7 @@ interface GamificationProviderProps {
   children: ReactNode;
 }
 
-const STORAGE_KEY = "izzy-reads-gamification";
+const STORAGE_KEY = "izzys-bookshelf-gamification";
 
 export const GamificationProvider: React.FC<GamificationProviderProps> = ({
   children,

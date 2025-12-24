@@ -1,8 +1,8 @@
-// UI Components - Modern Design System for Izzy Reads
+// UI Components - Modern Design System for Izzy's Bookshelf
 
 // Button components
-export { Button, IconButton } from './Button'
-export type { ButtonVariant, ButtonSize } from './Button'
+export { Button, IconButton } from "./Button";
+export type { ButtonVariant, ButtonSize } from "./Button";
 
 // Card components
 export {
@@ -13,17 +13,12 @@ export {
   CardContent,
   CardFooter,
   StatCard,
-} from './Card'
-export type { CardVariant, CardPadding } from './Card'
+} from "./Card";
+export type { CardVariant, CardPadding } from "./Card";
 
 // Badge components
-export {
-  Badge,
-  AchievementBadge,
-  LevelBadge,
-  StreakBadge,
-} from './Badge'
-export type { BadgeVariant, BadgeSize } from './Badge'
+export { Badge, AchievementBadge, LevelBadge, StreakBadge } from "./Badge";
+export type { BadgeVariant, BadgeSize } from "./Badge";
 
 // Progress components
 export {
@@ -31,17 +26,13 @@ export {
   CircularProgress,
   ChallengeProgress,
   XPProgress,
-} from './Progress'
+} from "./Progress";
 
 // Modal components
-export { Modal, ModalFooter, ConfirmModal } from './Modal'
+export { Modal, ModalFooter, ConfirmModal } from "./Modal";
 
 // Tab components
-export { Tabs, TabContent, ControlledTabs } from './Tabs'
+export { Tabs, TabContent, ControlledTabs } from "./Tabs";
 
 // Toast components
-export {
-  ToastProvider,
-  useToast,
-  useToastActions,
-} from './Toast'
+export { ToastProvider, useToast, useToastActions } from "./Toast";

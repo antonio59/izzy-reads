@@ -188,7 +188,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                 </motion.div>
 
                 <h1 className="text-4xl font-display font-bold text-gray-900 mb-4">
-                  Welcome to Izzy Reads!
+                  Welcome to Izzy's Bookshelf!
                 </h1>
                 <p className="text-xl text-gray-600 mb-8">
                   Your magical reading adventure starts here. Let's set up your

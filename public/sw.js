@@ -1,6 +1,6 @@
-const CACHE_NAME = "izzy-reads-v1";
-const STATIC_CACHE = "izzy-reads-static-v1";
-const DYNAMIC_CACHE = "izzy-reads-dynamic-v1";
+const CACHE_NAME = "izzys-bookshelf-v1";
+const STATIC_CACHE = "izzys-bookshelf-static-v1";
+const DYNAMIC_CACHE = "izzys-bookshelf-dynamic-v1";
 
 // Static assets to cache
 const STATIC_ASSETS = ["/", "/index.html", "/manifest.json"];

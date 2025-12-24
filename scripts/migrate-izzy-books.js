@@ -2,7 +2,9 @@
 console.log("📚 Izzy's Book Migration Script");
 console.log("");
 console.log("🔍 Instructions:");
-console.log("1. Go to your staging site: https://izzysbookshelf.antoniosmith.xyz");
+console.log(
+  "1. Go to your staging site: https://izzysbookshelf.antoniosmith.xyz",
+);
 console.log("2. Sign up with email: izzy@izzyreads.com");
 console.log("3. After signing in, copy and paste this into browser console:");
 console.log("");
@@ -87,9 +89,10 @@ console.log(`
 })();
 `);
 
-console.log("💡 This will add all of Izzy's favorite books with proper covers!");
+console.log(
+  "💡 This will add all of Izzy's favorite books with proper covers!",
+);
 console.log("");
-console.log("🌐 After running this, refresh the page to see the books in your database!");
-`);
-
-module.exports = {};
+console.log(
+  "🌐 After running this, refresh the page to see the books in your database!",
+);

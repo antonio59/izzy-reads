@@ -81,14 +81,14 @@ const Navigation: React.FC<NavigationProps> = ({
             <Link
               to="/dashboard"
               className="flex items-center gap-2 group"
-              aria-label="Izzy Reads Dashboard"
+              aria-label="Izzy's Bookshelf Dashboard"
             >
               <div className="relative">
                 <BookOpen className="h-8 w-8 text-primary-500" />
                 <Sparkles className="absolute -top-1 -right-1 h-3 w-3 text-accent-400 opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
               <span className="text-xl font-display font-bold text-gray-900">
-                Izzy Reads
+                Izzy's Bookshelf
               </span>
               {/* Level indicator */}
               <div className="hidden lg:flex items-center gap-1 ml-2 px-2 py-1 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full">

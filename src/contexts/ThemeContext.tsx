@@ -24,7 +24,7 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
-const STORAGE_KEY = "izzy-reads-theme";
+const STORAGE_KEY = "izzys-bookshelf-theme";
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [theme, setThemeState] = useState<Theme>("colorful");
