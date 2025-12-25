@@ -87,12 +87,12 @@ export interface ParentalControls {
 export interface ReadingChallenge {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   target: number;
   current: number;
   type: "books" | "pages" | "genres";
   startDate: string;
-  endDate: string;
+  endDate?: string;
   completed: boolean;
   badge?: string;
 }

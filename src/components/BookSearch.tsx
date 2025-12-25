@@ -1,48 +1,53 @@
-import { useState } from 'react'
-import { Search, BookOpen, Plus, Loader2 } from 'lucide-react'
-import { searchBooks, suggestGenre, determineAgeRating, type UnifiedBook } from '../services/bookApi'
-import type { Book } from '../types'
+import { useState } from "react";
+import { Search, BookOpen, Plus, Loader2 } from "lucide-react";
+import {
+  searchBooks,
+  suggestGenre,
+  determineAgeRating,
+  type UnifiedBook,
+} from "../services/bookApi";
+import type { Book } from "../types";
 
 interface BookSearchProps {
-  onAddBook: (book: Book) => void
-  onClose: () => void
+  onAddBook: (book: Book) => void;
+  onClose: () => void;
 }
 
 const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
-  const [query, setQuery] = useState('')
-  const [results, setResults] = useState<UnifiedBook[]>([])
-  const [loading, setLoading] = useState(false)
-  const [selectedBook, setSelectedBook] = useState<UnifiedBook | null>(null)
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<UnifiedBook[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedBook, setSelectedBook] = useState<UnifiedBook | null>(null);
 
   const handleSearch = async () => {
-    if (!query.trim()) return
+    if (!query.trim()) return;
 
-    setLoading(true)
+    setLoading(true);
     try {
-      const books = await searchBooks(query, 12)
-      setResults(books)
+      const books = await searchBooks(query, 12);
+      setResults(books);
     } catch (error) {
-      console.error('Search failed:', error)
+      console.error("Search failed:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearch()
+    if (e.key === "Enter") {
+      handleSearch();
     }
-  }
+  };
 
   const handleSelectBook = (book: UnifiedBook) => {
-    setSelectedBook(book)
-  }
+    setSelectedBook(book);
+  };
 
   const handleAddToBookshelf = () => {
-    if (!selectedBook) return
+    if (!selectedBook) return;
 
     const newBook: Book = {
-      id: crypto.randomUUID(),
+      id: crypto.randomUUID(), // Temporary ID, will be replaced by Convex
       title: selectedBook.title,
       author: selectedBook.author,
       coverUrl: selectedBook.coverUrl,
@@ -51,13 +56,15 @@ const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
       pageCount: selectedBook.pageCount,
       description: selectedBook.description,
       ageRating: determineAgeRating(selectedBook),
-      dateAdded: new Date().toISOString().split('T')[0],
-      isRead: false
-    }
+      dateAdded: new Date().toISOString().split("T")[0],
+      isRead: false,
+    };
 
-    onAddBook(newBook)
-    onClose()
-  }
+    // onAddBook is now async but we don't need to await here
+    // The parent component handles the async operation
+    onAddBook(newBook);
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -111,7 +118,10 @@ const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
         </div>
 
         {/* Results */}
-        <div className="p-6 overflow-y-auto" style={{ maxHeight: 'calc(90vh - 200px)' }}>
+        <div
+          className="p-6 overflow-y-auto"
+          style={{ maxHeight: "calc(90vh - 200px)" }}
+        >
           {selectedBook ? (
             // Book Details View
             <div className="space-y-6">
@@ -128,14 +138,18 @@ const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
                   alt={selectedBook.title}
                   className="w-48 h-72 object-cover rounded-lg shadow-lg"
                   onError={(e) => {
-                    e.currentTarget.src = '/placeholder-book-cover.png'
+                    e.currentTarget.src = "/placeholder-book-cover.png";
                   }}
                 />
 
                 <div className="flex-1 space-y-4">
                   <div>
-                    <h3 className="text-3xl font-bold text-gray-800 mb-2">{selectedBook.title}</h3>
-                    <p className="text-xl text-gray-600">by {selectedBook.author}</p>
+                    <h3 className="text-3xl font-bold text-gray-800 mb-2">
+                      {selectedBook.title}
+                    </h3>
+                    <p className="text-xl text-gray-600">
+                      by {selectedBook.author}
+                    </p>
                   </div>
 
                   <div className="flex flex-wrap gap-3">
@@ -155,7 +169,10 @@ const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
                       </span>
                     )}
                     <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
-                      via {selectedBook.source === 'google' ? 'Google Books' : 'Open Library'}
+                      via{" "}
+                      {selectedBook.source === "google"
+                        ? "Google Books"
+                        : "Open Library"}
                     </span>
                   </div>
 
@@ -164,26 +181,29 @@ const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
                       <h4 className="font-semibold mb-2">Description:</h4>
                       <p className="text-gray-700 text-sm leading-relaxed">
                         {selectedBook.description.slice(0, 300)}
-                        {selectedBook.description.length > 300 && '...'}
+                        {selectedBook.description.length > 300 && "..."}
                       </p>
                     </div>
                   )}
 
-                  {selectedBook.subjects && selectedBook.subjects.length > 0 && (
-                    <div>
-                      <h4 className="font-semibold mb-2">Subjects:</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedBook.subjects.slice(0, 5).map((subject, index) => (
-                          <span
-                            key={index}
-                            className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs"
-                          >
-                            {subject}
-                          </span>
-                        ))}
+                  {selectedBook.subjects &&
+                    selectedBook.subjects.length > 0 && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Subjects:</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedBook.subjects
+                            .slice(0, 5)
+                            .map((subject, index) => (
+                              <span
+                                key={index}
+                                className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs"
+                              >
+                                {subject}
+                              </span>
+                            ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
                   <button
                     onClick={handleAddToBookshelf}
@@ -206,11 +226,11 @@ const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
                 >
                   <div className="relative overflow-hidden rounded-lg shadow-md group-hover:shadow-xl transition-all transform group-hover:scale-105">
                     <img
-                      src={book.coverUrl || '/placeholder-book-cover.png'}
+                      src={book.coverUrl || "/placeholder-book-cover.png"}
                       alt={book.title}
                       className="w-full h-64 object-cover"
                       onError={(e) => {
-                        e.currentTarget.src = '/placeholder-book-cover.png'
+                        e.currentTarget.src = "/placeholder-book-cover.png";
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
@@ -228,7 +248,9 @@ const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
             <div className="text-center py-12">
               <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500 text-lg">
-                {loading ? 'Searching...' : 'Search for books to add to your collection!'}
+                {loading
+                  ? "Searching..."
+                  : "Search for books to add to your collection!"}
               </p>
               <p className="text-gray-400 text-sm mt-2">
                 Try searching for your favorite book or author
@@ -238,7 +260,7 @@ const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BookSearch
+export default BookSearch;

@@ -102,9 +102,13 @@ const EnhancedBookshelf: React.FC = () => {
     sortOrder,
   ]);
 
-  const handleAddBook = (book: Book) => {
-    addBook(book);
-    setShowSearch(false);
+  const handleAddBook = async (book: Book) => {
+    try {
+      await addBook(book);
+      setShowSearch(false);
+    } catch (error) {
+      console.error("Failed to add book:", error);
+    }
   };
 
   const hasActiveFilters =

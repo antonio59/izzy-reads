@@ -1,5 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useMemo } from "react";
 import type { ReactNode } from "react";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
+import { useAuth } from "./AuthContext";
 import type {
   Book,
   BlogPost,
@@ -9,6 +12,7 @@ import type {
   BookReactions,
   ReviewReactions,
 } from "../types";
+import type { Id, Doc } from "../../convex/_generated/dataModel";
 
 interface BookContextType {
   books: Book[];
@@ -17,20 +21,20 @@ interface BookContextType {
   poems: Poem[];
   readingChallenges: ReadingChallenge[];
   readingStats: ReadingStats;
-  addBook: (book: Book) => void;
-  bulkAddBooks: (books: Omit<Book, "id">[]) => void;
-  updateBook: (id: string, updates: Partial<Book>) => void;
-  deleteBook: (id: string) => void;
-  addToWishlist: (book: Book) => void;
-  removeFromWishlist: (id: string) => void;
-  moveToBookshelf: (id: string) => void;
-  addBlogPost: (post: BlogPost) => void;
-  updateBlogPost: (id: string, updates: Partial<BlogPost>) => void;
-  deleteBlogPost: (id: string) => void;
-  addPoem: (poem: Poem) => void;
-  updatePoem: (id: string, updates: Partial<Poem>) => void;
-  deletePoem: (id: string) => void;
-  updateReadingStats: () => void;
+  isLoading: boolean;
+  addBook: (book: Omit<Book, "id">) => Promise<void>;
+  bulkAddBooks: (books: Omit<Book, "id">[]) => Promise<void>;
+  updateBook: (id: string, updates: Partial<Book>) => Promise<void>;
+  deleteBook: (id: string) => Promise<void>;
+  addToWishlist: (book: Omit<Book, "id">) => Promise<void>;
+  removeFromWishlist: (id: string) => Promise<void>;
+  moveToBookshelf: (id: string) => Promise<void>;
+  addBlogPost: (post: Omit<BlogPost, "id">) => Promise<void>;
+  updateBlogPost: (id: string, updates: Partial<BlogPost>) => Promise<void>;
+  deleteBlogPost: (id: string) => Promise<void>;
+  addPoem: (poem: Omit<Poem, "id">) => Promise<void>;
+  updatePoem: (id: string, updates: Partial<Poem>) => Promise<void>;
+  deletePoem: (id: string) => Promise<void>;
   addReaction: (bookId: string, reactionType: keyof BookReactions) => void;
   addReviewReaction: (
     bookId: string,
@@ -54,243 +58,153 @@ interface BookProviderProps {
   children: ReactNode;
 }
 
+// Helper to convert Convex doc to Book type
+function convexBookToBook(doc: Doc<"books">): Book {
+  return {
+    id: doc._id,
+    title: doc.title,
+    author: doc.author,
+    coverUrl: doc.coverUrl,
+    isbn: doc.isbn,
+    genre: doc.genre,
+    pageCount: doc.pageCount,
+    description: doc.description,
+    ageRating: doc.ageRating,
+    dateAdded: doc.dateAdded,
+    dateRead: doc.dateRead,
+    rating: doc.rating,
+    isRead: doc.isRead,
+    notes: doc.notes,
+  };
+}
+
+function convexWishlistToBook(doc: Doc<"wishlist">): Book {
+  return {
+    id: doc._id,
+    title: doc.title,
+    author: doc.author,
+    coverUrl: doc.coverUrl,
+    isbn: doc.isbn,
+    genre: doc.genre,
+    pageCount: doc.pageCount,
+    description: doc.description,
+    ageRating: doc.ageRating,
+    dateAdded: doc.dateAdded,
+    isRead: false,
+  };
+}
+
+function convexPoemToPoem(doc: Doc<"poems">): Poem {
+  return {
+    id: doc._id,
+    title: doc.title,
+    content: doc.content,
+    emoji: doc.emoji,
+    dateCreated: doc.dateCreated,
+    likes: doc.likes,
+    template: doc.template,
+  };
+}
+
+function convexBlogPostToBlogPost(doc: Doc<"blogPosts">): BlogPost {
+  return {
+    id: doc._id,
+    title: doc.title,
+    content: doc.content,
+    bookId: doc.bookId as string | undefined,
+    dateCreated: doc.dateCreated,
+    dateModified: doc.dateModified,
+    status: doc.status,
+    parentApproved: doc.parentApproved,
+    tags: doc.tags,
+    emoji: doc.emoji,
+  };
+}
+
+function convexChallengeToChallenge(
+  doc: Doc<"readingChallenges">,
+): ReadingChallenge {
+  return {
+    id: doc._id,
+    title: doc.title,
+    description: doc.description,
+    target: doc.target,
+    current: doc.current,
+    type: doc.type,
+    startDate: doc.startDate,
+    endDate: doc.endDate,
+    completed: doc.completed,
+    badge: doc.badge,
+  };
+}
+
 export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [wishlist, setWishlist] = useState<Book[]>([]);
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [poems, setPoems] = useState<Poem[]>([]);
-  const [readingChallenges, setReadingChallenges] = useState<
-    ReadingChallenge[]
-  >([]);
-  const [readingStats, setReadingStats] = useState<ReadingStats>({
-    totalBooks: 0,
-    totalPages: 0,
-    favoriteGenre: "",
-    readingStreak: 0,
-    averageRating: 0,
-    booksThisMonth: 0,
-    booksThisYear: 0,
-  });
+  const { convexUserId } = useAuth();
 
-  // Load data from Convex backend (removed sample data for clean environments)
-  useEffect(() => {
-    // No hardcoded data - load from Convex instead
-    // Each environment will have its own clean database
-  }, [books, setBooks, wishlist, setWishlist, blogPosts, setBlogPosts, poems, setPoems, readingChallenges, setReadingChallenges, readingStats, setReadingStats]);
+  // Convex queries - only run when we have a user ID
+  const booksData = useQuery(
+    api.books.getByUser,
+    convexUserId ? { userId: convexUserId } : "skip",
+  );
+  const wishlistData = useQuery(
+    api.wishlist.getByUser,
+    convexUserId ? { userId: convexUserId } : "skip",
+  );
+  const poemsData = useQuery(
+    api.poems.getByUser,
+    convexUserId ? { userId: convexUserId } : "skip",
+  );
+  const blogPostsData = useQuery(
+    api.blogPosts.getByUser,
+    convexUserId ? { userId: convexUserId } : "skip",
+  );
+  const challengesData = useQuery(
+    api.readingChallenges.getByUser,
+    convexUserId ? { userId: convexUserId } : "skip",
+  );
 
-  const addBook = (book: Book) => {
-    setBooks((prev) => [...prev, book]);
-    updateReadingStats();
-  };
+  // Convex mutations
+  const addBookMutation = useMutation(api.books.add);
+  const bulkAddBooksMutation = useMutation(api.books.bulkAdd);
+  const updateBookMutation = useMutation(api.books.update);
+  const removeBookMutation = useMutation(api.books.remove);
 
-  // Bulk add books - useful for seeding data
-  const bulkAddBooks = (newBooks: Omit<Book, "id">[]) => {
-    const booksWithIds = newBooks.map((book, index) => ({
-      ...book,
-      id: `bulk-${Date.now()}-${index}`,
-    }));
-    setBooks((prev) => [...prev, ...booksWithIds]);
-    updateReadingStats();
-  };
+  const addWishlistMutation = useMutation(api.wishlist.add);
+  const removeWishlistMutation = useMutation(api.wishlist.remove);
 
-  const updateBook = (id: string, updates: Partial<Book>) => {
-    setBooks((prev) =>
-      prev.map((book) => (book.id === id ? { ...book, ...updates } : book)),
-    );
-    updateReadingStats();
-  };
+  const addPoemMutation = useMutation(api.poems.add);
+  const updatePoemMutation = useMutation(api.poems.update);
+  const removePoemMutation = useMutation(api.poems.remove);
 
-  const deleteBook = (id: string) => {
-    setBooks((prev) => prev.filter((book) => book.id !== id));
-    updateReadingStats();
-  };
+  const addBlogPostMutation = useMutation(api.blogPosts.add);
+  const updateBlogPostMutation = useMutation(api.blogPosts.update);
+  const removeBlogPostMutation = useMutation(api.blogPosts.remove);
 
-  const addToWishlist = (book: Book) => {
-    setWishlist((prev) => [...prev, book]);
-  };
+  // Convert Convex data to our types
+  const books = useMemo(() => {
+    return (booksData || []).map(convexBookToBook);
+  }, [booksData]);
 
-  const removeFromWishlist = (id: string) => {
-    setWishlist((prev) => prev.filter((book) => book.id !== id));
-  };
+  const wishlist = useMemo(() => {
+    return (wishlistData || []).map(convexWishlistToBook);
+  }, [wishlistData]);
 
-  const moveToBookshelf = (id: string) => {
-    const book = wishlist.find((b) => b.id === id);
-    if (book) {
-      removeFromWishlist(id);
-      addBook({
-        ...book,
-        isRead: true,
-        dateRead: new Date().toISOString().split("T")[0],
-      });
-    }
-  };
+  const poems = useMemo(() => {
+    return (poemsData || []).map(convexPoemToPoem);
+  }, [poemsData]);
 
-  const addBlogPost = (post: BlogPost) => {
-    setBlogPosts((prev) => [...prev, post]);
-  };
+  const blogPosts = useMemo(() => {
+    return (blogPostsData || []).map(convexBlogPostToBlogPost);
+  }, [blogPostsData]);
 
-  const updateBlogPost = (id: string, updates: Partial<BlogPost>) => {
-    setBlogPosts((prev) =>
-      prev.map((post) => (post.id === id ? { ...post, ...updates } : post)),
-    );
-  };
+  const readingChallenges = useMemo(() => {
+    return (challengesData || []).map(convexChallengeToChallenge);
+  }, [challengesData]);
 
-  const deleteBlogPost = (id: string) => {
-    setBlogPosts((prev) => prev.filter((post) => post.id !== id));
-  };
+  const isLoading = booksData === undefined || wishlistData === undefined;
 
-  const addPoem = (poem: Poem) => {
-    setPoems((prev) => [...prev, poem]);
-  };
-
-  const updatePoem = (id: string, updates: Partial<Poem>) => {
-    setPoems((prev) =>
-      prev.map((poem) => (poem.id === id ? { ...poem, ...updates } : poem)),
-    );
-  };
-
-  const deletePoem = (id: string) => {
-    setPoems((prev) => prev.filter((poem) => poem.id !== id));
-  };
-
-  // Add a reaction to a book (about the book itself)
-  const addReaction = (bookId: string, reactionType: keyof BookReactions) => {
-    setBooks((prev) =>
-      prev.map((book) => {
-        if (book.id === bookId) {
-          const currentReactions: BookReactions = book.reactions || {
-            love: 0,
-            amazing: 0,
-            mustRead: 0,
-            soGood: 0,
-            notForMe: 0,
-          };
-          return {
-            ...book,
-            reactions: {
-              ...currentReactions,
-              [reactionType]: currentReactions[reactionType] + 1,
-            },
-          };
-        }
-        return book;
-      }),
-    );
-  };
-
-  // Add a reaction to a review (about Izzy's review quality)
-  const addReviewReaction = (
-    bookId: string,
-    reactionType: keyof ReviewReactions,
-  ) => {
-    setBooks((prev) =>
-      prev.map((book) => {
-        if (book.id === bookId) {
-          const currentReactions: ReviewReactions = book.reviewReactions || {
-            helpful: 0,
-            greatReview: 0,
-            agree: 0,
-            funny: 0,
-            insightful: 0,
-          };
-          return {
-            ...book,
-            reviewReactions: {
-              ...currentReactions,
-              [reactionType]: currentReactions[reactionType] + 1,
-            },
-          };
-        }
-        return book;
-      }),
-    );
-  };
-
-  // Get total reaction count for a book
-  const getBookReactionCount = (book: Book): number => {
-    if (!book.reactions) return 0;
-    return (
-      book.reactions.love +
-      book.reactions.amazing +
-      book.reactions.mustRead +
-      book.reactions.soGood
-    );
-  };
-
-  // Get books sorted by most reactions
-  const getMostLovedBooks = (): Book[] => {
-    return [...books]
-      .filter((book) => book.isRead && getBookReactionCount(book) > 0)
-      .sort((a, b) => getBookReactionCount(b) - getBookReactionCount(a));
-  };
-
-  // Calculate reading streak based on consecutive weeks with reading activity
-  const calculateReadingStreak = (readBooks: Book[]): number => {
-    if (readBooks.length === 0) return 0;
-
-    // Get books with valid read dates, sorted by date descending
-    const booksWithDates = readBooks
-      .filter((book) => book.dateRead)
-      .sort(
-        (a, b) =>
-          new Date(b.dateRead!).getTime() - new Date(a.dateRead!).getTime(),
-      );
-
-    if (booksWithDates.length === 0) return 0;
-
-    // Get the week number for a date (ISO week)
-    const getWeekNumber = (date: Date): string => {
-      const d = new Date(date);
-      d.setHours(0, 0, 0, 0);
-      d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-      const yearStart = new Date(d.getFullYear(), 0, 1);
-      const weekNum = Math.ceil(
-        ((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7,
-      );
-      return `${d.getFullYear()}-W${weekNum}`;
-    };
-
-    // Create a set of weeks with reading activity
-    const activeWeeks = new Set<string>();
-    booksWithDates.forEach((book) => {
-      const date = new Date(book.dateRead!);
-      activeWeeks.add(getWeekNumber(date));
-    });
-
-    // Count consecutive weeks from current week backwards
-    const today = new Date();
-    let currentWeek = getWeekNumber(today);
-    let streak = 0;
-
-    // Check if there's activity in the current week
-    if (!activeWeeks.has(currentWeek)) {
-      // Check last week instead (grace period)
-      const lastWeek = new Date(today);
-      lastWeek.setDate(lastWeek.getDate() - 7);
-      currentWeek = getWeekNumber(lastWeek);
-      if (!activeWeeks.has(currentWeek)) {
-        return 0; // No recent activity
-      }
-    }
-
-    // Count consecutive weeks
-    while (activeWeeks.has(currentWeek)) {
-      streak++;
-      // Move to previous week
-      const [year, week] = currentWeek.split("-W").map(Number);
-      let prevWeek = week - 1;
-      let prevYear = year;
-      if (prevWeek < 1) {
-        prevYear--;
-        prevWeek = 52; // Approximate, but good enough for streak counting
-      }
-      currentWeek = `${prevYear}-W${prevWeek}`;
-    }
-
-    return streak;
-  };
-
-  const updateReadingStats = () => {
+  // Calculate reading stats
+  const readingStats = useMemo((): ReadingStats => {
     const readBooks = books.filter((book) => book.isRead);
     const totalPages = readBooks.reduce(
       (sum, book) => sum + (book.pageCount || 0),
@@ -328,18 +242,212 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
         new Date(book.dateRead).getMonth() === currentMonth,
     ).length;
 
-    // Calculate reading streak
-    const readingStreak = calculateReadingStreak(readBooks);
-
-    setReadingStats({
+    return {
       totalBooks: readBooks.length,
       totalPages,
       favoriteGenre,
-      readingStreak,
+      readingStreak: 0, // TODO: Calculate properly
       averageRating,
       booksThisMonth,
       booksThisYear,
+    };
+  }, [books]);
+
+  // Book operations
+  const addBook = async (book: Omit<Book, "id">) => {
+    if (!convexUserId) throw new Error("Not authenticated");
+    await addBookMutation({
+      userId: convexUserId,
+      title: book.title,
+      author: book.author,
+      coverUrl: book.coverUrl,
+      isbn: book.isbn,
+      genre: book.genre,
+      pageCount: book.pageCount,
+      description: book.description,
+      ageRating: book.ageRating || "8+",
+      dateAdded: book.dateAdded || new Date().toISOString().split("T")[0],
+      dateRead: book.dateRead,
+      rating: book.rating,
+      isRead: book.isRead,
+      notes: book.notes,
     });
+  };
+
+  const bulkAddBooks = async (newBooks: Omit<Book, "id">[]) => {
+    if (!convexUserId) throw new Error("Not authenticated");
+    await bulkAddBooksMutation({
+      userId: convexUserId,
+      books: newBooks.map((book) => ({
+        title: book.title,
+        author: book.author,
+        coverUrl: book.coverUrl,
+        isbn: book.isbn,
+        genre: book.genre,
+        pageCount: book.pageCount,
+        description: book.description,
+        ageRating: book.ageRating || "8+",
+        dateAdded: book.dateAdded || new Date().toISOString().split("T")[0],
+        dateRead: book.dateRead,
+        rating: book.rating,
+        isRead: book.isRead,
+        notes: book.notes,
+      })),
+    });
+  };
+
+  const updateBook = async (id: string, updates: Partial<Book>) => {
+    const { id: _id, ...rest } = updates;
+    await updateBookMutation({
+      id: id as Id<"books">,
+      title: rest.title,
+      author: rest.author,
+      coverUrl: rest.coverUrl,
+      isbn: rest.isbn,
+      genre: rest.genre,
+      pageCount: rest.pageCount,
+      description: rest.description,
+      ageRating: rest.ageRating,
+      dateRead: rest.dateRead,
+      rating: rest.rating,
+      isRead: rest.isRead,
+      notes: rest.notes,
+    });
+  };
+
+  const deleteBook = async (id: string) => {
+    await removeBookMutation({ id: id as Id<"books"> });
+  };
+
+  // Wishlist operations
+  const addToWishlist = async (book: Omit<Book, "id">) => {
+    if (!convexUserId) throw new Error("Not authenticated");
+    await addWishlistMutation({
+      userId: convexUserId,
+      title: book.title,
+      author: book.author,
+      coverUrl: book.coverUrl,
+      isbn: book.isbn,
+      genre: book.genre,
+      pageCount: book.pageCount,
+      description: book.description,
+      ageRating: book.ageRating || "8+",
+      dateAdded: book.dateAdded || new Date().toISOString().split("T")[0],
+    });
+  };
+
+  const removeFromWishlist = async (id: string) => {
+    await removeWishlistMutation({ id: id as Id<"wishlist"> });
+  };
+
+  const moveToBookshelf = async (id: string) => {
+    const book = wishlist.find((b) => b.id === id);
+    if (book) {
+      await removeFromWishlist(id);
+      await addBook({
+        ...book,
+        isRead: true,
+        dateRead: new Date().toISOString().split("T")[0],
+      });
+    }
+  };
+
+  // Blog post operations
+  const addBlogPost = async (post: Omit<BlogPost, "id">) => {
+    if (!convexUserId) throw new Error("Not authenticated");
+    await addBlogPostMutation({
+      userId: convexUserId,
+      title: post.title,
+      content: post.content,
+      bookId: post.bookId as Id<"books"> | undefined,
+      dateCreated: post.dateCreated,
+      dateModified: post.dateModified,
+      status: post.status,
+      parentApproved: post.parentApproved,
+      tags: post.tags,
+      emoji: post.emoji,
+    });
+  };
+
+  const updateBlogPost = async (id: string, updates: Partial<BlogPost>) => {
+    const { id: _id, ...rest } = updates;
+    await updateBlogPostMutation({
+      id: id as Id<"blogPosts">,
+      title: rest.title,
+      content: rest.content,
+      bookId: rest.bookId as Id<"books"> | undefined,
+      dateModified: rest.dateModified || new Date().toISOString(),
+      status: rest.status,
+      parentApproved: rest.parentApproved,
+      tags: rest.tags,
+      emoji: rest.emoji,
+    });
+  };
+
+  const deleteBlogPost = async (id: string) => {
+    await removeBlogPostMutation({ id: id as Id<"blogPosts"> });
+  };
+
+  // Poem operations
+  const addPoem = async (poem: Omit<Poem, "id">) => {
+    if (!convexUserId) throw new Error("Not authenticated");
+    await addPoemMutation({
+      userId: convexUserId,
+      title: poem.title,
+      content: poem.content,
+      emoji: poem.emoji,
+      dateCreated: poem.dateCreated,
+      likes: poem.likes || 0,
+      template: poem.template,
+    });
+  };
+
+  const updatePoem = async (id: string, updates: Partial<Poem>) => {
+    const { id: _id, ...rest } = updates;
+    await updatePoemMutation({
+      id: id as Id<"poems">,
+      title: rest.title,
+      content: rest.content,
+      emoji: rest.emoji,
+      likes: rest.likes,
+      template: rest.template,
+    });
+  };
+
+  const deletePoem = async (id: string) => {
+    await removePoemMutation({ id: id as Id<"poems"> });
+  };
+
+  // Reaction operations (local for now - TODO: add to Convex)
+  const addReaction = (bookId: string, reactionType: keyof BookReactions) => {
+    console.log("TODO: Implement reactions in Convex", bookId, reactionType);
+  };
+
+  const addReviewReaction = (
+    bookId: string,
+    reactionType: keyof ReviewReactions,
+  ) => {
+    console.log(
+      "TODO: Implement review reactions in Convex",
+      bookId,
+      reactionType,
+    );
+  };
+
+  const getBookReactionCount = (book: Book): number => {
+    if (!book.reactions) return 0;
+    return (
+      book.reactions.love +
+      book.reactions.amazing +
+      book.reactions.mustRead +
+      book.reactions.soGood
+    );
+  };
+
+  const getMostLovedBooks = (): Book[] => {
+    return [...books]
+      .filter((book) => book.isRead && getBookReactionCount(book) > 0)
+      .sort((a, b) => getBookReactionCount(b) - getBookReactionCount(a));
   };
 
   const value = {
@@ -349,6 +457,7 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
     poems,
     readingChallenges,
     readingStats,
+    isLoading,
     addBook,
     bulkAddBooks,
     updateBook,
@@ -362,7 +471,6 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
     addPoem,
     updatePoem,
     deletePoem,
-    updateReadingStats,
     addReaction,
     addReviewReaction,
     getBookReactionCount,

@@ -24,7 +24,6 @@ import {
   determineAgeRating,
   type UnifiedBook,
 } from "../services/bookApi";
-import type { Book } from "../types";
 import type { Id } from "../../convex/_generated/dataModel";
 
 const Wishlist: React.FC = () => {
@@ -100,28 +99,30 @@ const Wishlist: React.FC = () => {
     }
   };
 
-  const handleAddToWishlist = () => {
+  const handleAddToWishlist = async () => {
     if (!selectedBook) return;
 
-    const book: Book = {
-      id: crypto.randomUUID(),
-      title: selectedBook.title,
-      author: selectedBook.author,
-      coverUrl: selectedBook.coverUrl,
-      isbn: selectedBook.isbn,
-      genre: suggestGenre(selectedBook),
-      pageCount: selectedBook.pageCount,
-      description: selectedBook.description,
-      ageRating: determineAgeRating(selectedBook),
-      dateAdded: new Date().toISOString().split("T")[0],
-      isRead: false,
-    };
+    try {
+      await addToWishlist({
+        title: selectedBook.title,
+        author: selectedBook.author,
+        coverUrl: selectedBook.coverUrl,
+        isbn: selectedBook.isbn,
+        genre: suggestGenre(selectedBook),
+        pageCount: selectedBook.pageCount,
+        description: selectedBook.description,
+        ageRating: determineAgeRating(selectedBook),
+        dateAdded: new Date().toISOString().split("T")[0],
+        isRead: false,
+      });
 
-    addToWishlist(book);
-    setSelectedBook(null);
-    setSearchQuery("");
-    setSearchResults([]);
-    setShowAddForm(false);
+      setSelectedBook(null);
+      setSearchQuery("");
+      setSearchResults([]);
+      setShowAddForm(false);
+    } catch (error) {
+      console.error("Failed to add to wishlist:", error);
+    }
   };
 
   const handleCloseModal = () => {
@@ -131,8 +132,12 @@ const Wishlist: React.FC = () => {
     setSelectedBook(null);
   };
 
-  const handleMoveToBookshelf = (bookId: string) => {
-    moveToBookshelf(bookId);
+  const handleMoveToBookshelf = async (bookId: string) => {
+    try {
+      await moveToBookshelf(bookId);
+    } catch (error) {
+      console.error("Failed to move to bookshelf:", error);
+    }
   };
 
   const PriorityHeart = ({ priority }: { priority: number }) => {
