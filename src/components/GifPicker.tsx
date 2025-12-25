@@ -113,10 +113,6 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
     "wow",
   ];
 
-  if (!giphyAvailable) {
-    return null; // Don't render if Giphy is not configured
-  }
-
   return (
     <div ref={containerRef} className="relative inline-block">
       <button
@@ -129,7 +125,33 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
       </button>
 
       <AnimatePresence>
-        {isOpen && (
+        {isOpen && !giphyAvailable && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            transition={{ duration: 0.15 }}
+            className="absolute z-50 top-full mt-2 right-0 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden p-4"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-bold text-gray-800 flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-primary-500" />
+                GIFs
+              </h3>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+              >
+                <X className="w-4 h-4 text-gray-500" />
+              </button>
+            </div>
+            <p className="text-sm text-gray-500">
+              GIF support is not configured yet. Ask the admin to add a Giphy
+              API key!
+            </p>
+          </motion.div>
+        )}
+        {isOpen && giphyAvailable && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
