@@ -3,22 +3,16 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BookOpen,
-  Heart,
   PenTool,
   Home,
   Settings,
   Shield,
-  Feather,
   LogOut,
   Sparkles,
-  Star,
   Trophy,
-  Target,
-  Library,
-  Download,
-  ChevronDown,
-  MoreHorizontal,
   Globe,
+  Menu,
+  X,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useGamification } from "../contexts/GamificationContext";
@@ -28,29 +22,12 @@ interface NavigationProps {
   setIsParentMode: (mode: boolean) => void;
 }
 
+// Simplified to 4 core navigation items
 const mainNavItems = [
-  { path: "/dashboard", icon: Home, label: "Dashboard" },
-  { path: "/bookshelf", icon: BookOpen, label: "My Books" },
-  { path: "/poems", icon: Feather, label: "Poems" },
-  { path: "/blog", icon: PenTool, label: "Blog" },
-];
-
-const moreNavItems = [
-  { path: "/wishlist", icon: Heart, label: "Wishlist" },
-  { path: "/reviews", icon: Star, label: "Reviews" },
-  { path: "/achievements", icon: Trophy, label: "Achievements" },
-  { path: "/goals", icon: Target, label: "Goals" },
-  { path: "/series", icon: Library, label: "Series" },
-  { path: "/export", icon: Download, label: "Export" },
-  { path: "/", icon: Globe, label: "Public Site" },
-];
-
-// Combined for mobile - show most important
-const mobileNavItems = [
   { path: "/dashboard", icon: Home, label: "Home" },
-  { path: "/bookshelf", icon: BookOpen, label: "Books" },
-  { path: "/achievements", icon: Trophy, label: "Awards" },
-  { path: "/poems", icon: Feather, label: "Poems" },
+  { path: "/books", icon: BookOpen, label: "My Books" },
+  { path: "/create", icon: PenTool, label: "Create" },
+  { path: "/progress", icon: Trophy, label: "Progress" },
 ];
 
 const Navigation: React.FC<NavigationProps> = ({
@@ -61,17 +38,18 @@ const Navigation: React.FC<NavigationProps> = ({
   const navigate = useNavigate();
   const { signOut } = useAuth();
   const { level } = useGamification();
-  const [showMoreMenu, setShowMoreMenu] = useState(false);
-  const [showMobileMore, setShowMobileMore] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const handleLogout = async () => {
     await signOut();
     navigate("/");
   };
 
-  const isMoreActive = moreNavItems.some(
-    (item) => location.pathname === item.path,
-  );
+  // Check if current path matches nav item (including sub-paths)
+  const isActivePath = (path: string) => {
+    if (path === "/dashboard") return location.pathname === "/dashboard";
+    return location.pathname.startsWith(path);
+  };
 
   return (
     <>
@@ -101,15 +79,15 @@ const Navigation: React.FC<NavigationProps> = ({
               </div>
             </Link>
 
-            {/* Main Navigation */}
+            {/* Main Navigation - Simplified to 4 items */}
             <div className="flex items-center bg-gray-50 rounded-xl p-1">
               {mainNavItems.map((item) => {
-                const isActive = location.pathname === item.path;
+                const isActive = isActivePath(item.path);
                 return (
                   <Link
                     key={item.path}
                     to={item.path}
-                    className="relative px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    className="relative px-5 py-2.5 rounded-lg text-sm font-medium transition-colors"
                   >
                     {isActive && (
                       <motion.div
@@ -135,67 +113,6 @@ const Navigation: React.FC<NavigationProps> = ({
                   </Link>
                 );
               })}
-
-              {/* More dropdown */}
-              <div className="relative">
-                <button
-                  onClick={() => setShowMoreMenu(!showMoreMenu)}
-                  className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
-                    isMoreActive
-                      ? "text-primary-600"
-                      : "text-gray-500 hover:text-gray-900"
-                  }`}
-                >
-                  {isMoreActive && (
-                    <motion.div
-                      layoutId="navIndicator"
-                      className="absolute inset-0 bg-white shadow-soft rounded-lg"
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 30,
-                      }}
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center gap-1">
-                    More
-                    <ChevronDown
-                      className={`h-4 w-4 transition-transform ${showMoreMenu ? "rotate-180" : ""}`}
-                    />
-                  </span>
-                </button>
-
-                <AnimatePresence>
-                  {showMoreMenu && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50"
-                      onMouseLeave={() => setShowMoreMenu(false)}
-                    >
-                      {moreNavItems.map((item) => {
-                        const isActive = location.pathname === item.path;
-                        return (
-                          <Link
-                            key={item.path}
-                            to={item.path}
-                            onClick={() => setShowMoreMenu(false)}
-                            className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
-                              isActive
-                                ? "bg-primary-50 text-primary-600"
-                                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                            }`}
-                          >
-                            <item.icon className="h-4 w-4" />
-                            {item.label}
-                          </Link>
-                        );
-                      })}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
             </div>
 
             {/* User Actions */}
@@ -207,7 +124,7 @@ const Navigation: React.FC<NavigationProps> = ({
                 title="View your public portfolio"
               >
                 <Globe className="h-4 w-4" />
-                <span className="hidden lg:inline">Public Site</span>
+                <span className="hidden lg:inline">My Portfolio</span>
               </Link>
 
               {/* Parent Mode Toggle */}
@@ -273,16 +190,16 @@ const Navigation: React.FC<NavigationProps> = ({
         </div>
       </nav>
 
-      {/* Mobile Bottom Navigation */}
+      {/* Mobile Bottom Navigation - Simplified */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-100 safe-area-inset-bottom">
         <div className="flex items-center justify-around px-2 py-2">
-          {mobileNavItems.map((item) => {
-            const isActive = location.pathname === item.path;
+          {mainNavItems.map((item) => {
+            const isActive = isActivePath(item.path);
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                className="relative flex flex-col items-center py-1 px-3"
+                className="relative flex flex-col items-center py-1 px-3 min-w-[60px]"
               >
                 {isActive && (
                   <motion.div
@@ -305,41 +222,98 @@ const Navigation: React.FC<NavigationProps> = ({
             );
           })}
 
-          {/* More menu on mobile */}
+          {/* Menu button for settings/logout */}
           <button
-            onClick={() => setShowMobileMore(!showMobileMore)}
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
             className="relative flex flex-col items-center py-1 px-3 text-gray-400"
           >
-            <MoreHorizontal className="h-5 w-5" />
-            <span className="text-xs mt-1">More</span>
+            <Menu className="h-5 w-5" />
+            <span className="text-xs mt-1">Menu</span>
           </button>
         </div>
 
-        {/* Mobile More Menu */}
+        {/* Mobile Menu Overlay */}
         <AnimatePresence>
-          {showMobileMore && (
+          {showMobileMenu && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="absolute bottom-full left-0 right-0 bg-white border-t border-gray-100 shadow-lg"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-50"
+              onClick={() => setShowMobileMenu(false)}
             >
-              <div className="grid grid-cols-3 gap-2 p-4">
-                {[
-                  ...moreNavItems,
-                  { path: "/parent", icon: Shield, label: "Parent" },
-                ].map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setShowMobileMore(false)}
-                    className="flex flex-col items-center gap-1 p-3 rounded-xl hover:bg-gray-50 transition-colors"
+              <motion.div
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-6"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="text-lg font-bold text-gray-900">Menu</h3>
+                  <button
+                    onClick={() => setShowMobileMenu(false)}
+                    className="p-2 rounded-full hover:bg-gray-100"
                   >
-                    <item.icon className="h-6 w-6 text-gray-600" />
-                    <span className="text-xs text-gray-600">{item.label}</span>
+                    <X className="h-5 w-5 text-gray-500" />
+                  </button>
+                </div>
+
+                <div className="space-y-2">
+                  <Link
+                    to="/"
+                    onClick={() => setShowMobileMenu(false)}
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                  >
+                    <Globe className="h-5 w-5 text-primary-500" />
+                    <span className="font-medium text-gray-700">
+                      My Public Portfolio
+                    </span>
                   </Link>
-                ))}
-              </div>
+
+                  <button
+                    onClick={() => {
+                      setIsParentMode(!isParentMode);
+                      setShowMobileMenu(false);
+                    }}
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors w-full"
+                  >
+                    <Shield
+                      className={`h-5 w-5 ${isParentMode ? "text-accent-500" : "text-gray-400"}`}
+                    />
+                    <span className="font-medium text-gray-700">
+                      {isParentMode ? "Exit Parent Mode" : "Parent Mode"}
+                    </span>
+                  </button>
+
+                  {isParentMode && (
+                    <Link
+                      to="/parent"
+                      onClick={() => setShowMobileMenu(false)}
+                      className="flex items-center gap-3 p-3 rounded-xl bg-accent-50 transition-colors"
+                    >
+                      <Settings className="h-5 w-5 text-accent-600" />
+                      <span className="font-medium text-accent-700">
+                        Parent Dashboard
+                      </span>
+                    </Link>
+                  )}
+
+                  <hr className="my-4 border-gray-100" />
+
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setShowMobileMenu(false);
+                    }}
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-red-50 transition-colors w-full text-red-600"
+                  >
+                    <LogOut className="h-5 w-5" />
+                    <span className="font-medium">Log Out</span>
+                  </button>
+                </div>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>

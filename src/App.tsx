@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { lazy, Suspense } from "react";
 import "./App.css";
 
@@ -21,19 +26,17 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 const Login = lazy(() => import("./components/Login"));
 const Signup = lazy(() => import("./components/Signup"));
 
-// Lazy load admin/protected pages
+// Lazy load admin/protected pages - NEW SIMPLIFIED STRUCTURE
 const Dashboard = lazy(() => import("./components/Dashboard"));
-const EnhancedBookshelf = lazy(() => import("./components/EnhancedBookshelf"));
-const Wishlist = lazy(() => import("./components/Wishlist"));
-const Poems = lazy(() => import("./components/Poems"));
-const Blog = lazy(() => import("./components/Blog"));
-const BookReviews = lazy(() => import("./components/BookReviews"));
+const MyBooks = lazy(() => import("./components/MyBooks"));
+const Create = lazy(() => import("./components/Create"));
+const Progress = lazy(() => import("./components/Progress"));
 const ParentDashboard = lazy(() => import("./components/ParentDashboard"));
-const AchievementsPage = lazy(() => import("./components/AchievementsPage"));
-const ReadingGoals = lazy(() => import("./components/ReadingGoals"));
+const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
+
+// Legacy routes kept for direct access
 const SeriesTracker = lazy(() => import("./components/SeriesTracker"));
 const ExportData = lazy(() => import("./components/ExportData"));
-const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 
 // Loading spinner for lazy-loaded components
 const PageLoader = () => (
@@ -160,7 +163,7 @@ function App() {
                       }
                     />
 
-                    {/* Protected Routes */}
+                    {/* NEW SIMPLIFIED PROTECTED ROUTES */}
                     <Route
                       path="/dashboard"
                       element={
@@ -174,60 +177,36 @@ function App() {
                       }
                     />
                     <Route
-                      path="/bookshelf"
+                      path="/books"
                       element={
                         <Suspense fallback={<PageLoader />}>
                           <ProtectedRoute>
                             <Layout>
-                              <EnhancedBookshelf />
+                              <MyBooks />
                             </Layout>
                           </ProtectedRoute>
                         </Suspense>
                       }
                     />
                     <Route
-                      path="/wishlist"
+                      path="/create"
                       element={
                         <Suspense fallback={<PageLoader />}>
                           <ProtectedRoute>
                             <Layout>
-                              <Wishlist />
+                              <Create />
                             </Layout>
                           </ProtectedRoute>
                         </Suspense>
                       }
                     />
                     <Route
-                      path="/poems"
+                      path="/progress"
                       element={
                         <Suspense fallback={<PageLoader />}>
                           <ProtectedRoute>
                             <Layout>
-                              <Poems />
-                            </Layout>
-                          </ProtectedRoute>
-                        </Suspense>
-                      }
-                    />
-                    <Route
-                      path="/reviews"
-                      element={
-                        <Suspense fallback={<PageLoader />}>
-                          <ProtectedRoute>
-                            <Layout>
-                              <BookReviews />
-                            </Layout>
-                          </ProtectedRoute>
-                        </Suspense>
-                      }
-                    />
-                    <Route
-                      path="/blog"
-                      element={
-                        <Suspense fallback={<PageLoader />}>
-                          <ProtectedRoute>
-                            <Layout>
-                              <Blog />
+                              <Progress />
                             </Layout>
                           </ProtectedRoute>
                         </Suspense>
@@ -245,30 +224,34 @@ function App() {
                         </Suspense>
                       }
                     />
+
+                    {/* LEGACY REDIRECTS - keep old URLs working */}
+                    <Route
+                      path="/bookshelf"
+                      element={<Navigate to="/books" replace />}
+                    />
+                    <Route
+                      path="/wishlist"
+                      element={<Navigate to="/books" replace />}
+                    />
+                    <Route
+                      path="/poems"
+                      element={<Navigate to="/create" replace />}
+                    />
+                    <Route
+                      path="/blog"
+                      element={<Navigate to="/create" replace />}
+                    />
                     <Route
                       path="/achievements"
-                      element={
-                        <Suspense fallback={<PageLoader />}>
-                          <ProtectedRoute>
-                            <Layout>
-                              <AchievementsPage />
-                            </Layout>
-                          </ProtectedRoute>
-                        </Suspense>
-                      }
+                      element={<Navigate to="/progress" replace />}
                     />
                     <Route
                       path="/goals"
-                      element={
-                        <Suspense fallback={<PageLoader />}>
-                          <ProtectedRoute>
-                            <Layout>
-                              <ReadingGoals />
-                            </Layout>
-                          </ProtectedRoute>
-                        </Suspense>
-                      }
+                      element={<Navigate to="/progress" replace />}
                     />
+
+                    {/* Keep series and export accessible but not in main nav */}
                     <Route
                       path="/series"
                       element={
