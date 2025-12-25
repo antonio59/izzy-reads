@@ -14,8 +14,6 @@ const BACKGROUND_PATTERNS = [
   "from-lime-100 via-green-50 to-emerald-100",
 ];
 
-const DECORATIVE_ELEMENTS = ["📝", "✨", "💭", "🌟", "📖", "💫", "🎨", "🦋"];
-
 const PublicBlog = () => {
   const { blogPosts } = useBooks();
   const [selectedPost, setSelectedPost] = useState<
@@ -68,61 +66,32 @@ const PublicBlog = () => {
       {/* Navigation */}
       <PublicNav />
 
-      {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden">
-        {/* Floating decorations */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {DECORATIVE_ELEMENTS.map((emoji, i) => (
-            <motion.span
-              key={i}
-              className="absolute text-3xl opacity-20"
-              initial={{
-                x: Math.random() * 100 + "%",
-                y: Math.random() * 100 + "%",
-                scale: 0.5 + Math.random() * 0.5,
-              }}
-              animate={{
-                y: [null, "-20px", "20px", null],
-                rotate: [0, 10, -10, 0],
-              }}
-              transition={{
-                duration: 5 + Math.random() * 3,
-                repeat: Infinity,
-                delay: i * 0.5,
-              }}
-              style={{ left: `${10 + i * 12}%`, top: `${20 + (i % 3) * 25}%` }}
-            >
-              {emoji}
-            </motion.span>
-          ))}
-        </div>
-
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+      {/* Compact Hero Section */}
+      <section className="py-8 bg-gradient-to-r from-rose-50 to-orange-50 border-b border-rose-100">
+        <div className="max-w-6xl mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            className="flex flex-col sm:flex-row items-center justify-between gap-4"
           >
-            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-rose-500 to-orange-500 shadow-2xl shadow-rose-300/50 mb-8">
-              <PenTool className="w-12 h-12 text-white" />
-            </div>
-
-            <h1 className="text-5xl md:text-6xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-pink-600 to-orange-600 mb-6">
-              Izzy's Blog
-            </h1>
-
-            <p className="text-xl text-stone-600 max-w-2xl mx-auto leading-relaxed">
-              Thoughts, adventures, and stories from my reading journey. Join me
-              as I explore new worlds through books!
-            </p>
-
-            <div className="flex items-center justify-center gap-8 mt-10">
-              <div className="text-center">
-                <p className="text-4xl font-bold text-rose-600">
-                  {sortedPosts.length}
-                </p>
-                <p className="text-sm text-stone-500 font-medium">Blog Posts</p>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-orange-500 shadow-lg flex items-center justify-center">
+                <PenTool className="w-6 h-6 text-white" />
               </div>
+              <div>
+                <h1 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800">
+                  Izzy's Blog
+                </h1>
+                <p className="text-sm text-stone-500">
+                  Thoughts & adventures from my reading journey
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
+              <span className="text-2xl font-bold text-rose-600">
+                {sortedPosts.length}
+              </span>
+              <span className="text-sm text-stone-500">posts</span>
             </div>
           </motion.div>
         </div>

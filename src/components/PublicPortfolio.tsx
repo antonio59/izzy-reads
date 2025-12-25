@@ -63,39 +63,34 @@ const PublicPortfolio = () => {
       {/* Navigation */}
       <PublicNav />
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-cream-100 pt-10 pb-16 md:pt-16 md:pb-20">
+      {/* Compact Hero Section */}
+      <section className="relative overflow-hidden bg-cream-100 pt-6 pb-8 md:pt-8 md:pb-10">
         <div className="max-w-5xl mx-auto px-4">
           <motion.div
-            className="bg-white rounded-3xl shadow-lg p-8 md:p-12 border border-cream-300"
-            initial={{ opacity: 0, y: 20 }}
+            className="bg-white rounded-2xl shadow-md p-6 md:p-8 border border-cream-300"
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.4 }}
           >
-            <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="flex flex-col md:flex-row items-center gap-6">
               {/* Avatar */}
               <div className="flex-shrink-0 relative">
-                <div className="w-32 h-32 md:w-40 md:h-40 shadow-xl ring-4 ring-white rounded-full overflow-hidden">
+                <div className="w-20 h-20 md:w-24 md:h-24 shadow-lg ring-2 ring-white rounded-full overflow-hidden">
                   <AvatarPreview config={userAvatar} size="xl" />
                 </div>
               </div>
 
               {/* Hero Content */}
               <div className="flex-1 text-center md:text-left">
-                <p className="text-xs font-medium text-accent-600 uppercase tracking-wide mb-2">
-                  ✍️ All reviews written by Izzy
-                </p>
-                <h1 className="text-4xl md:text-5xl font-display font-extrabold text-stone-800 mb-4">
+                <h1 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800 mb-1">
                   Hi, I'm Izzy! 👋
                 </h1>
-                <p className="text-base text-stone-500 mb-8 leading-relaxed max-w-xl">
+                <p className="text-sm text-stone-500 mb-4 leading-relaxed max-w-xl">
                   Welcome to my bookshelf! I{" "}
-                  <strong className="text-primary-500">absolutely love</strong>{" "}
-                  books. Here you'll find my reviews, poems, and all my bookish
-                  adventures.
+                  <strong className="text-primary-500">love</strong> books. Here
+                  you'll find my reviews, poems, and all my bookish adventures.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
-                  {/* Primary CTA - strongest visual weight */}
+                <div className="flex flex-col sm:flex-row gap-2 justify-center md:justify-start">
                   <button
                     onClick={() => {
                       setActiveTab("reviews");
@@ -105,17 +100,16 @@ const PublicPortfolio = () => {
                           ?.scrollIntoView({ behavior: "smooth" });
                       }, 100);
                     }}
-                    className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary-500 text-white rounded-2xl font-extrabold text-lg shadow-lg shadow-primary-500/25 hover:bg-primary-600 hover:shadow-xl hover:shadow-primary-500/30 hover:-translate-y-0.5 transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary-500 text-white rounded-xl font-bold text-sm shadow-md hover:bg-primary-600 hover:-translate-y-0.5 transition-all"
                   >
-                    <BookOpen className="w-6 h-6" />
+                    <BookOpen className="w-4 h-4" />
                     Read My Reviews
                   </button>
-                  {/* Secondary button - much lighter */}
                   <a
                     href="/about"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-transparent text-stone-500 rounded-2xl font-medium hover:bg-cream-200 hover:text-stone-700 transition-all border border-cream-300"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-transparent text-stone-500 rounded-xl font-medium text-sm hover:bg-cream-200 hover:text-stone-700 transition-all border border-cream-300"
                   >
-                    Learn About Me
+                    About Me
                   </a>
                 </div>
               </div>

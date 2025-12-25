@@ -161,97 +161,56 @@ const PublicWishlist = () => {
     0,
   );
 
-  const genreCount = new Set(wishlist.map((b) => b.genre).filter(Boolean)).size;
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-cream-100 to-accent-50">
       {/* Navigation */}
       <PublicNav />
 
-      {/* Hero Section */}
-      <section className="relative py-16 overflow-hidden">
-        {/* Floating decorations */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {["🎁", "📚", "✨", "💫", "🌟", "📖"].map((emoji, i) => (
-            <motion.span
-              key={i}
-              className="absolute text-3xl opacity-20"
-              initial={{
-                x: Math.random() * 100 + "%",
-                y: Math.random() * 100 + "%",
-                scale: 0.5 + Math.random() * 0.5,
-              }}
-              animate={{
-                y: [null, "-20px", "20px", null],
-                rotate: [0, 10, -10, 0],
-              }}
-              transition={{
-                duration: 5 + Math.random() * 3,
-                repeat: Infinity,
-                delay: i * 0.5,
-              }}
-              style={{ left: `${10 + i * 15}%`, top: `${20 + (i % 3) * 25}%` }}
-            >
-              {emoji}
-            </motion.span>
-          ))}
-        </div>
-
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+      {/* Compact Hero Section */}
+      <section className="py-8 bg-gradient-to-r from-primary-50 to-accent-50 border-b border-primary-100">
+        <div className="max-w-6xl mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            className="flex flex-col sm:flex-row items-center justify-between gap-4"
           >
-            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 shadow-2xl shadow-primary-300/50 mb-8">
-              <Gift className="w-12 h-12 text-white" />
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-400 to-primary-600 shadow-lg flex items-center justify-center">
+                <Gift className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800">
+                  My Reading Wishlist
+                </h1>
+                <p className="text-sm text-stone-500">
+                  Books I can't wait to read!
+                </p>
+              </div>
             </div>
-
-            <h1 className="text-4xl md:text-5xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-primary-500 to-accent-600 mb-6">
-              My Reading Wishlist
-            </h1>
-
-            <p className="text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed">
-              These are all the amazing books I can't wait to read! Each one
-              sounds like a new adventure waiting to happen.
-            </p>
-
-            {/* Stats */}
-            <div className="flex items-center justify-center gap-8 mt-10">
-              <div className="text-center">
-                <p className="text-4xl font-bold text-primary-600">
+            <div className="flex items-center gap-3 flex-wrap justify-center">
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
+                <span className="text-2xl font-bold text-primary-600">
                   {wishlist.length}
-                </p>
-                <p className="text-sm text-stone-500 font-medium">
-                  Books to Read
-                </p>
+                </span>
+                <span className="text-sm text-stone-500">books</span>
               </div>
-              <div className="w-px h-12 bg-stone-200" />
-              <div className="text-center">
-                <p className="text-4xl font-bold text-accent-600">
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
+                <BookOpen className="w-4 h-4 text-accent-600" />
+                <span className="text-lg font-bold text-accent-600">
                   {totalPages.toLocaleString()}
-                </p>
-                <p className="text-sm text-stone-500 font-medium">
-                  Pages Waiting
-                </p>
+                </span>
+                <span className="text-sm text-stone-500">pages</span>
               </div>
-              <div className="w-px h-12 bg-stone-200" />
-              <div className="text-center">
-                <p className="text-4xl font-bold text-star">{genreCount}</p>
-                <p className="text-sm text-stone-500 font-medium">Genres</p>
-              </div>
+              <motion.button
+                onClick={() => setShowSuggestionForm(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-accent-500 to-primary-500 text-white font-bold rounded-full shadow-sm hover:shadow-md transition-all text-sm"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Lightbulb className="w-4 h-4" />
+                Suggest a Book
+              </motion.button>
             </div>
-
-            {/* Suggest a Book Button */}
-            <motion.button
-              onClick={() => setShowSuggestionForm(true)}
-              className="mt-10 inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-accent-500 to-primary-500 text-white font-bold rounded-full shadow-lg hover:shadow-xl transition-all"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Lightbulb className="w-5 h-5" />
-              Suggest a Book for Izzy!
-            </motion.button>
           </motion.div>
         </div>
       </section>

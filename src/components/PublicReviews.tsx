@@ -98,74 +98,46 @@ export function PublicReviews() {
       {/* Navigation */}
       <PublicNav />
 
-      {/* Hero Section */}
-      <section className="relative py-12 bg-gradient-to-br from-primary-50 via-cream-100 to-accent-50 overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {["📝", "⭐", "💭", "📖", "✨"].map((emoji, i) => (
-            <motion.span
-              key={i}
-              className="absolute text-3xl opacity-10"
-              animate={{
-                y: [0, -20, 0],
-                rotate: [0, 10, -10, 0],
-              }}
-              transition={{
-                duration: 4 + i,
-                repeat: Infinity,
-                delay: i * 0.5,
-              }}
-              style={{ left: `${15 + i * 18}%`, top: `${20 + (i % 3) * 25}%` }}
-            >
-              {emoji}
-            </motion.span>
-          ))}
-        </div>
-
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+      {/* Compact Hero Section */}
+      <section className="py-8 bg-gradient-to-r from-primary-50 to-accent-50 border-b border-primary-100">
+        <div className="max-w-6xl mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col sm:flex-row items-center justify-between gap-4"
           >
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 shadow-xl mb-6">
-              <MessageSquare className="w-10 h-10 text-white" />
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-400 to-primary-600 shadow-lg flex items-center justify-center">
+                <MessageSquare className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800">
+                  Izzy's Book Reviews
+                </h1>
+                <p className="text-sm text-stone-500">
+                  Honest thoughts about every book I've read
+                </p>
+              </div>
             </div>
-
-            <h1 className="text-4xl md:text-5xl font-display font-extrabold text-stone-800 mb-4">
-              Izzy's Book Reviews
-            </h1>
-
-            <p className="text-lg text-stone-600 max-w-2xl mx-auto mb-8">
-              Honest thoughts and feelings about every book I've read. Let me
-              know what you think of my reviews!
-            </p>
-
-            {/* Stats */}
-            <div className="flex items-center justify-center gap-6">
-              <div className="text-center">
-                <p className="text-3xl font-bold text-primary-600">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
+                <span className="text-2xl font-bold text-primary-600">
                   {booksWithReviews.length}
-                </p>
-                <p className="text-sm text-stone-500">Reviews</p>
+                </span>
+                <span className="text-sm text-stone-500">reviews</span>
               </div>
               <div className="w-px h-10 bg-stone-200" />
-              <div className="text-center">
-                <p className="text-3xl font-bold text-accent-600">
-                  {genres.length}
-                </p>
-                <p className="text-sm text-stone-500">Genres</p>
-              </div>
-              <div className="w-px h-10 bg-stone-200" />
-              <div className="text-center">
-                <p className="text-3xl font-bold text-amber-500">
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
+                <Star className="w-4 h-4 text-amber-500" />
+                <span className="text-2xl font-bold text-amber-500">
                   {(
                     booksWithReviews.reduce(
                       (sum, b) => sum + (b.rating || 0),
                       0,
                     ) / booksWithReviews.filter((b) => b.rating).length || 0
                   ).toFixed(1)}
-                </p>
-                <p className="text-sm text-stone-500">Avg Rating</p>
+                </span>
+                <span className="text-sm text-stone-500">avg</span>
               </div>
             </div>
           </motion.div>
