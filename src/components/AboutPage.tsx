@@ -4,6 +4,8 @@ import { Card } from "./ui/Card";
 import { Badge } from "./ui/Badge";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
+import { useUser } from "../contexts/UserContext";
+import { AvatarPreview, type AvatarConfig } from "./AvatarCreator";
 
 interface AboutPageProps {
   aboutData: {
@@ -36,6 +38,22 @@ const itemVariants = {
 };
 
 export function AboutPage({ aboutData }: AboutPageProps) {
+  const { user } = useUser();
+
+  // Default avatar config
+  const defaultAvatar: AvatarConfig = {
+    skinTone: "fair",
+    hairStyle: "long",
+    hairColor: "brown",
+    eyeColor: "brown",
+    accessory: "none",
+    background: "pink",
+    outfit: "tshirt",
+    outfitColor: "purple",
+  };
+
+  const userAvatar = user?.avatar || defaultAvatar;
+
   if (!aboutData.isPublished) {
     return (
       <div className="min-h-screen bg-stone-50 py-12 px-4">
@@ -73,19 +91,11 @@ export function AboutPage({ aboutData }: AboutPageProps) {
             <Card className="overflow-hidden">
               <div className="relative p-6 sm:p-8 bg-primary-600">
                 <div className="flex flex-col sm:flex-row items-center gap-6">
-                  {/* Profile Photo */}
+                  {/* Profile Photo / Avatar */}
                   <div className="flex-shrink-0">
-                    {aboutData.profilePhoto ? (
-                      <img
-                        src={aboutData.profilePhoto}
-                        alt="Izzy"
-                        className="w-28 h-28 rounded-full border-4 border-white shadow-lg object-cover"
-                      />
-                    ) : (
-                      <div className="w-28 h-28 rounded-full bg-white/20 backdrop-blur border-4 border-white shadow-lg flex items-center justify-center">
-                        <User className="w-12 h-12 text-white" />
-                      </div>
-                    )}
+                    <div className="w-28 h-28 rounded-full border-4 border-white shadow-lg overflow-hidden bg-white">
+                      <AvatarPreview config={userAvatar} size="xl" />
+                    </div>
                   </div>
 
                   {/* Bio */}

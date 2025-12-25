@@ -63,55 +63,55 @@ const PublicPortfolio = () => {
       {/* Navigation */}
       <PublicNav />
 
-      {/* Compact Hero Section */}
-      <section className="relative overflow-hidden bg-cream-100 pt-6 pb-8 md:pt-8 md:pb-10">
+      {/* Hero Section with Avatar */}
+      <section className="relative overflow-hidden bg-cream-100 pt-6 pb-6 md:pt-8 md:pb-8">
         <div className="max-w-5xl mx-auto px-4">
           <motion.div
-            className="bg-white rounded-2xl shadow-md p-6 md:p-8 border border-cream-300"
+            className="bg-white rounded-2xl shadow-md p-5 md:p-6 border border-cream-300"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <div className="flex flex-col md:flex-row items-center gap-6">
-              {/* Avatar */}
-              <div className="flex-shrink-0 relative">
-                <div className="w-20 h-20 md:w-24 md:h-24 shadow-lg ring-2 ring-white rounded-full overflow-hidden">
+            <div className="flex items-center gap-5">
+              {/* Avatar - properly sized */}
+              <div className="flex-shrink-0">
+                <div className="w-16 h-16 md:w-20 md:h-20 shadow-lg ring-2 ring-primary-100 rounded-full overflow-hidden">
                   <AvatarPreview config={userAvatar} size="xl" />
                 </div>
               </div>
 
               {/* Hero Content */}
-              <div className="flex-1 text-center md:text-left">
-                <h1 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800 mb-1">
+              <div className="flex-1 min-w-0">
+                <h1 className="text-xl md:text-2xl font-display font-extrabold text-stone-800">
                   Hi, I'm Izzy! 👋
                 </h1>
-                <p className="text-sm text-stone-500 mb-4 leading-relaxed max-w-xl">
-                  Welcome to my bookshelf! I{" "}
-                  <strong className="text-primary-500">love</strong> books. Here
-                  you'll find my reviews, poems, and all my bookish adventures.
+                <p className="text-sm text-stone-500 mt-0.5 hidden sm:block">
+                  Welcome to my bookshelf - reviews, poems & bookish adventures
                 </p>
-                <div className="flex flex-col sm:flex-row gap-2 justify-center md:justify-start">
-                  <button
-                    onClick={() => {
-                      setActiveTab("reviews");
-                      setTimeout(() => {
-                        document
-                          .getElementById("reviews-section")
-                          ?.scrollIntoView({ behavior: "smooth" });
-                      }, 100);
-                    }}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary-500 text-white rounded-xl font-bold text-sm shadow-md hover:bg-primary-600 hover:-translate-y-0.5 transition-all"
-                  >
-                    <BookOpen className="w-4 h-4" />
-                    Read My Reviews
-                  </button>
-                  <a
-                    href="/about"
-                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-transparent text-stone-500 rounded-xl font-medium text-sm hover:bg-cream-200 hover:text-stone-700 transition-all border border-cream-300"
-                  >
-                    About Me
-                  </a>
-                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex-shrink-0 hidden md:flex gap-2">
+                <button
+                  onClick={() => {
+                    setActiveTab("reviews");
+                    setTimeout(() => {
+                      document
+                        .getElementById("reviews-section")
+                        ?.scrollIntoView({ behavior: "smooth" });
+                    }, 100);
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-xl font-bold text-sm shadow-md hover:bg-primary-600 transition-all"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  Reviews
+                </button>
+                <a
+                  href="/about"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-stone-500 rounded-xl font-medium text-sm hover:bg-cream-200 transition-all border border-cream-300"
+                >
+                  About Me
+                </a>
               </div>
             </div>
           </motion.div>
