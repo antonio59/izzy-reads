@@ -46,6 +46,7 @@ const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
   const handleAddToBookshelf = () => {
     if (!selectedBook) return;
 
+    const today = new Date().toISOString().split("T")[0];
     const newBook: Book = {
       id: crypto.randomUUID(), // Temporary ID, will be replaced by Convex
       title: selectedBook.title,
@@ -56,8 +57,9 @@ const BookSearch: React.FC<BookSearchProps> = ({ onAddBook, onClose }) => {
       pageCount: selectedBook.pageCount,
       description: selectedBook.description,
       ageRating: determineAgeRating(selectedBook),
-      dateAdded: new Date().toISOString().split("T")[0],
-      isRead: false,
+      dateAdded: today,
+      dateRead: today, // Mark as read today
+      isRead: true, // Adding to bookshelf means you've read it
     };
 
     // onAddBook is now async but we don't need to await here
