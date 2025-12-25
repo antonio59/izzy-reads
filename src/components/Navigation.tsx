@@ -44,7 +44,7 @@ const Navigation: React.FC = () => {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:block sticky top-0 z-40 bg-white/80 backdrop-blur-lg border-b border-gray-100">
+      <nav className="hidden md:block sticky top-0 z-40 bg-white/80 backdrop-blur-lg border-b border-stone-100">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -57,7 +57,7 @@ const Navigation: React.FC = () => {
                 <BookOpen className="h-8 w-8 text-primary-500" />
                 <Sparkles className="absolute -top-1 -right-1 h-3 w-3 text-accent-400 opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
-              <span className="text-xl font-display font-bold text-gray-900">
+              <span className="text-xl font-display font-bold text-stone-900">
                 Izzy's Bookshelf
               </span>
               {/* Level indicator */}
@@ -70,7 +70,7 @@ const Navigation: React.FC = () => {
             </Link>
 
             {/* Main Navigation - Simplified to 4 items */}
-            <div className="flex items-center bg-gray-50 rounded-xl p-1">
+            <div className="flex items-center bg-stone-50 rounded-xl p-1">
               {mainNavItems.map((item) => {
                 const isActive = isActivePath(item.path);
                 return (
@@ -94,7 +94,7 @@ const Navigation: React.FC = () => {
                       className={`relative z-10 flex items-center gap-2 ${
                         isActive
                           ? "text-primary-600"
-                          : "text-gray-500 hover:text-gray-900"
+                          : "text-stone-500 hover:text-stone-900"
                       }`}
                     >
                       <item.icon className="h-4 w-4" />
@@ -110,7 +110,7 @@ const Navigation: React.FC = () => {
               {/* View Public Site */}
               <Link
                 to="/"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-500 hover:text-primary-600 hover:bg-primary-50 transition-colors text-sm font-medium"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-stone-500 hover:text-primary-600 hover:bg-primary-50 transition-colors text-sm font-medium"
                 title="View your public portfolio"
               >
                 <Globe className="h-4 w-4" />
@@ -120,7 +120,7 @@ const Navigation: React.FC = () => {
               {/* Logout */}
               <motion.button
                 onClick={handleLogout}
-                className="p-2.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                className="p-2.5 rounded-lg text-stone-400 hover:text-red-500 hover:bg-red-50 transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 title="Logout"
@@ -134,7 +134,7 @@ const Navigation: React.FC = () => {
       </nav>
 
       {/* Mobile Bottom Navigation - Simplified */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-100 safe-area-inset-bottom">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-stone-100 safe-area-inset-bottom">
         <div className="flex items-center justify-around px-2 py-2">
           {mainNavItems.map((item) => {
             const isActive = isActivePath(item.path);
@@ -152,11 +152,11 @@ const Navigation: React.FC = () => {
                   />
                 )}
                 <item.icon
-                  className={`h-5 w-5 ${isActive ? "text-primary-500" : "text-gray-400"}`}
+                  className={`h-5 w-5 ${isActive ? "text-primary-500" : "text-stone-400"}`}
                 />
                 <span
                   className={`text-xs mt-1 ${
-                    isActive ? "text-primary-600 font-medium" : "text-gray-500"
+                    isActive ? "text-primary-600 font-medium" : "text-stone-500"
                   }`}
                 >
                   {item.label}
@@ -168,7 +168,7 @@ const Navigation: React.FC = () => {
           {/* Menu button for settings/logout */}
           <button
             onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className="relative flex flex-col items-center py-1 px-3 text-gray-400"
+            className="relative flex flex-col items-center py-1 px-3 text-stone-400"
           >
             <Menu className="h-5 w-5" />
             <span className="text-xs mt-1">Menu</span>
@@ -194,12 +194,12 @@ const Navigation: React.FC = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-lg font-bold text-gray-900">Menu</h3>
+                  <h3 className="text-lg font-bold text-stone-900">Menu</h3>
                   <button
                     onClick={() => setShowMobileMenu(false)}
-                    className="p-2 rounded-full hover:bg-gray-100"
+                    className="p-2 rounded-full hover:bg-stone-100"
                   >
-                    <X className="h-5 w-5 text-gray-500" />
+                    <X className="h-5 w-5 text-stone-500" />
                   </button>
                 </div>
 
@@ -207,15 +207,15 @@ const Navigation: React.FC = () => {
                   <Link
                     to="/"
                     onClick={() => setShowMobileMenu(false)}
-                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-stone-50 transition-colors"
                   >
                     <Globe className="h-5 w-5 text-primary-500" />
-                    <span className="font-medium text-gray-700">
+                    <span className="font-medium text-stone-700">
                       My Public Portfolio
                     </span>
                   </Link>
 
-                  <hr className="my-4 border-gray-100" />
+                  <hr className="my-4 border-stone-100" />
 
                   <button
                     onClick={() => {

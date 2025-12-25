@@ -174,7 +174,7 @@ const Blog: React.FC = () => {
     if (status === "published") {
       return <CheckCircle className="h-5 w-5 text-success-500" />;
     } else {
-      return <AlertCircle className="h-5 w-5 text-gray-400" />;
+      return <AlertCircle className="h-5 w-5 text-stone-400" />;
     }
   };
 
@@ -195,7 +195,7 @@ const Blog: React.FC = () => {
             <PenTool className="h-8 w-8 mr-3" />
             My Reading Blog
           </h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-stone-600 mt-1">
             Share your thoughts about the books you love! ✍️
           </p>
         </div>
@@ -213,7 +213,7 @@ const Blog: React.FC = () => {
         <div className="bg-white rounded-xl shadow-lg p-4 border-l-4 border-sage-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Posts</p>
+              <p className="text-sm font-medium text-stone-600">Total Posts</p>
               <p className="text-2xl font-bold text-sage-600">
                 {blogPosts.length}
               </p>
@@ -225,7 +225,7 @@ const Blog: React.FC = () => {
         <div className="bg-white rounded-xl shadow-lg p-4 border-l-4 border-primary-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Published</p>
+              <p className="text-sm font-medium text-stone-600">Published</p>
               <p className="text-2xl font-bold text-primary-600">
                 {blogPosts.filter((post) => post.status === "published").length}
               </p>
@@ -234,15 +234,15 @@ const Blog: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg p-4 border-l-4 border-gray-500">
+        <div className="bg-white rounded-xl shadow-lg p-4 border-l-4 border-stone-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Drafts</p>
-              <p className="text-2xl font-bold text-gray-600">
+              <p className="text-sm font-medium text-stone-600">Drafts</p>
+              <p className="text-2xl font-bold text-stone-600">
                 {blogPosts.filter((post) => post.status === "draft").length}
               </p>
             </div>
-            <Edit className="h-8 w-8 text-gray-500" />
+            <Edit className="h-8 w-8 text-stone-500" />
           </div>
         </div>
       </div>
@@ -269,11 +269,11 @@ const Blog: React.FC = () => {
                     <div className="flex items-center space-x-3">
                       <span className="text-2xl">{post.emoji}</span>
                       <div>
-                        <h3 className="text-xl font-bold text-gray-800">
+                        <h3 className="text-xl font-bold text-stone-800">
                           {post.title}
                         </h3>
                         {relatedBook && (
-                          <p className="text-sm text-gray-600 flex items-center mt-1">
+                          <p className="text-sm text-stone-600 flex items-center mt-1">
                             <BookOpen className="h-4 w-4 mr-1" />
                             About: {relatedBook.title}
                           </p>
@@ -284,14 +284,14 @@ const Blog: React.FC = () => {
                       {getStatusIcon(post.status)}
                       <button
                         onClick={() => setEditingPost(post)}
-                        className="p-1 text-gray-400 hover:text-primary-600 transition-colors"
+                        className="p-1 text-stone-400 hover:text-primary-600 transition-colors"
                         aria-label={`Edit post ${post.title}`}
                       >
                         <Edit className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => deleteBlogPost(post.id)}
-                        className="p-1 text-gray-400 hover:text-red-600 transition-colors"
+                        className="p-1 text-stone-400 hover:text-red-600 transition-colors"
                         aria-label={`Delete post ${post.title}`}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -300,10 +300,10 @@ const Blog: React.FC = () => {
                   </div>
 
                   <div className="prose prose-sm max-w-none mb-4">
-                    <p className="text-gray-700 line-clamp-3">{post.content}</p>
+                    <p className="text-stone-700 line-clamp-3">{post.content}</p>
                   </div>
 
-                  <div className="flex items-center justify-between text-sm text-gray-500">
+                  <div className="flex items-center justify-between text-sm text-stone-500">
                     <span>{getStatusText(post.status)}</span>
                     <span>
                       {post.dateModified !== post.dateCreated
@@ -332,10 +332,10 @@ const Blog: React.FC = () => {
       ) : (
         <div className="text-center py-12">
           <PenTool className="h-24 w-24 text-sage-300 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-600 mb-2">
+          <h3 className="text-xl font-semibold text-stone-600 mb-2">
             No blog posts yet!
           </h3>
-          <p className="text-gray-500 mb-4">
+          <p className="text-stone-500 mb-4">
             Start writing about your reading adventures!
           </p>
           <button
@@ -351,13 +351,13 @@ const Blog: React.FC = () => {
       {showNewPost && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            <h2 className="text-2xl font-bold text-stone-800 mb-4">
               Write a New Post
             </h2>
 
             {/* Template Selection */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-stone-700 mb-2">
                 Choose a template:
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -368,7 +368,7 @@ const Blog: React.FC = () => {
                     className={`p-3 text-left rounded-lg border transition-colors ${
                       selectedTemplate === key
                         ? "border-sage-500 bg-sage-50 text-sage-800"
-                        : "border-gray-300 hover:border-gray-400"
+                        : "border-stone-300 hover:border-stone-400"
                     }`}
                   >
                     <div className="font-medium">{template.title}</div>
@@ -380,7 +380,7 @@ const Blog: React.FC = () => {
             <div className="space-y-4">
               {/* Emoji Selection */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-stone-700 mb-2">
                   Pick a post emoji:
                 </label>
                 <EmojiButton
@@ -390,7 +390,7 @@ const Blog: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-stone-700 mb-1">
                   Title
                 </label>
                 <input
@@ -399,13 +399,13 @@ const Blog: React.FC = () => {
                   onChange={(e) =>
                     setNewPost({ ...newPost, title: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
                   placeholder="Give your post a fun title!"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-stone-700 mb-1">
                   About a book? (optional)
                 </label>
                 <select
@@ -413,7 +413,7 @@ const Blog: React.FC = () => {
                   onChange={(e) =>
                     setNewPost({ ...newPost, bookId: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
                 >
                   <option value="">Not about a specific book</option>
                   {books
@@ -427,7 +427,7 @@ const Blog: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-stone-700 mb-1">
                   Your thoughts:
                 </label>
                 {selectedTemplate !== "free" && (
@@ -445,8 +445,8 @@ const Blog: React.FC = () => {
                   </div>
                 )}
                 {/* Emoji & GIF toolbar */}
-                <div className="flex items-center gap-2 mb-2 p-2 bg-gray-50 rounded-lg border border-gray-200">
-                  <span className="text-xs text-gray-500 mr-1">Add:</span>
+                <div className="flex items-center gap-2 mb-2 p-2 bg-stone-50 rounded-lg border border-stone-200">
+                  <span className="text-xs text-stone-500 mr-1">Add:</span>
                   <EmojiPicker onSelect={handleEmojiInsert} />
                   <GifPicker onSelect={handleGifSelect} />
                 </div>
@@ -456,7 +456,7 @@ const Blog: React.FC = () => {
                   onChange={(e) =>
                     setNewPost({ ...newPost, content: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
                   rows={8}
                   placeholder="Write your thoughts here! Remember to be kind and thoughtful."
                 />
@@ -466,7 +466,7 @@ const Blog: React.FC = () => {
                     <img
                       src={selectedGif}
                       alt="Selected GIF"
-                      className="max-h-32 rounded-lg border border-gray-200"
+                      className="max-h-32 rounded-lg border border-stone-200"
                     />
                     <button
                       type="button"
@@ -489,7 +489,7 @@ const Blog: React.FC = () => {
               </button>
               <button
                 onClick={() => setShowNewPost(false)}
-                className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition-colors duration-200"
+                className="flex-1 bg-stone-300 text-stone-700 py-2 rounded-lg hover:bg-stone-400 transition-colors duration-200"
               >
                 Cancel
               </button>
@@ -502,12 +502,12 @@ const Blog: React.FC = () => {
       {editingPost && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Edit Post</h2>
+            <h2 className="text-2xl font-bold text-stone-800 mb-4">Edit Post</h2>
 
             <div className="space-y-4">
               {/* Post Emoji */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-stone-700 mb-2">
                   Post emoji:
                 </label>
                 <EmojiButton
@@ -519,7 +519,7 @@ const Blog: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-stone-700 mb-1">
                   Title
                 </label>
                 <input
@@ -528,17 +528,17 @@ const Blog: React.FC = () => {
                   onChange={(e) =>
                     setEditingPost({ ...editingPost, title: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-stone-700 mb-1">
                   Content
                 </label>
                 {/* Emoji & GIF toolbar */}
-                <div className="flex items-center gap-2 mb-2 p-2 bg-gray-50 rounded-lg border border-gray-200">
-                  <span className="text-xs text-gray-500 mr-1">Add:</span>
+                <div className="flex items-center gap-2 mb-2 p-2 bg-stone-50 rounded-lg border border-stone-200">
+                  <span className="text-xs text-stone-500 mr-1">Add:</span>
                   <EmojiPicker onSelect={handleEditEmojiInsert} />
                   <GifPicker onSelect={handleEditGifSelect} />
                 </div>
@@ -548,7 +548,7 @@ const Blog: React.FC = () => {
                   onChange={(e) =>
                     setEditingPost({ ...editingPost, content: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
                   rows={8}
                 />
                 {/* GIF Preview */}
@@ -557,7 +557,7 @@ const Blog: React.FC = () => {
                     <img
                       src={editSelectedGif}
                       alt="Selected GIF"
-                      className="max-h-32 rounded-lg border border-gray-200"
+                      className="max-h-32 rounded-lg border border-stone-200"
                     />
                     <button
                       type="button"
@@ -580,7 +580,7 @@ const Blog: React.FC = () => {
               </button>
               <button
                 onClick={() => setEditingPost(null)}
-                className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition-colors duration-200"
+                className="flex-1 bg-stone-300 text-stone-700 py-2 rounded-lg hover:bg-stone-400 transition-colors duration-200"
               >
                 Cancel
               </button>

@@ -98,13 +98,13 @@ const Create: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 bg-gray-100 p-1.5 rounded-xl w-fit">
+      <div className="flex gap-2 bg-stone-100 p-1.5 rounded-xl w-fit">
         <button
           onClick={() => setActiveTab("poems")}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
             activeTab === "poems"
               ? "bg-white text-purple-600 shadow-sm"
-              : "text-gray-600 hover:text-gray-900"
+              : "text-stone-600 hover:text-stone-900"
           }`}
         >
           <Feather className="w-4 h-4" />
@@ -115,7 +115,7 @@ const Create: React.FC = () => {
           className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
             activeTab === "posts"
               ? "bg-white text-pink-600 shadow-sm"
-              : "text-gray-600 hover:text-gray-900"
+              : "text-stone-600 hover:text-stone-900"
           }`}
         >
           <PenTool className="w-4 h-4" />
@@ -205,7 +205,7 @@ const PoemCard: React.FC<PoemCardProps> = ({
 }) => {
   return (
     <motion.div
-      className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group"
+      className="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden group"
       whileHover={{ y: -4 }}
     >
       <div
@@ -215,7 +215,7 @@ const PoemCard: React.FC<PoemCardProps> = ({
         <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={onEdit}
-            className="p-2 bg-white/90 rounded-lg hover:bg-white text-gray-600"
+            className="p-2 bg-white/90 rounded-lg hover:bg-white text-stone-600"
           >
             <Edit className="w-4 h-4" />
           </button>
@@ -228,17 +228,17 @@ const PoemCard: React.FC<PoemCardProps> = ({
         </div>
       </div>
       <div className="p-4">
-        <h3 className="font-bold text-gray-900 mb-2">{poem.title}</h3>
-        <p className="text-gray-500 text-sm line-clamp-3 italic">
+        <h3 className="font-bold text-stone-900 mb-2">{poem.title}</h3>
+        <p className="text-stone-500 text-sm line-clamp-3 italic">
           {poem.content}
         </p>
-        <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
-          <span className="text-xs text-gray-400">
+        <div className="flex items-center justify-between mt-4 pt-3 border-t border-stone-100">
+          <span className="text-xs text-stone-400">
             {new Date(poem.dateCreated).toLocaleDateString()}
           </span>
           <button
             onClick={onLike}
-            className="flex items-center gap-1 text-gray-400 hover:text-pink-500 transition-colors"
+            className="flex items-center gap-1 text-stone-400 hover:text-pink-500 transition-colors"
           >
             <Heart
               className={`w-4 h-4 ${poem.likes > 0 ? "fill-pink-500 text-pink-500" : ""}`}
@@ -261,7 +261,7 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
   return (
     <motion.div
-      className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 group"
+      className="bg-white rounded-2xl shadow-sm border border-stone-100 p-5 group"
       whileHover={{ y: -4 }}
     >
       <div className="flex justify-between items-start mb-3">
@@ -271,7 +271,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
             className={`text-xs px-2 py-1 rounded-full font-medium ${
               post.status === "published"
                 ? "bg-green-100 text-green-700"
-                : "bg-gray-100 text-gray-600"
+                : "bg-stone-100 text-stone-600"
             }`}
           >
             {post.status}
@@ -280,7 +280,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={onEdit}
-            className="p-2 hover:bg-gray-100 rounded-lg text-gray-600"
+            className="p-2 hover:bg-stone-100 rounded-lg text-stone-600"
           >
             <Edit className="w-4 h-4" />
           </button>
@@ -292,10 +292,10 @@ const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
           </button>
         </div>
       </div>
-      <h3 className="font-bold text-gray-900 text-lg mb-2">{post.title}</h3>
-      <p className="text-gray-500 text-sm line-clamp-3">{post.content}</p>
-      <div className="flex items-center gap-2 mt-4 pt-3 border-t border-gray-100">
-        <span className="text-xs text-gray-400">
+      <h3 className="font-bold text-stone-900 text-lg mb-2">{post.title}</h3>
+      <p className="text-stone-500 text-sm line-clamp-3">{post.content}</p>
+      <div className="flex items-center gap-2 mt-4 pt-3 border-t border-stone-100">
+        <span className="text-xs text-stone-400">
           {new Date(post.dateModified).toLocaleDateString()}
         </span>
         {post.tags.length > 0 && (
@@ -333,11 +333,11 @@ const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   return (
     <div className="text-center py-16">
-      <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-        <Icon className="w-10 h-10 text-gray-400" />
+      <div className="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <Icon className="w-10 h-10 text-stone-400" />
       </div>
-      <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
-      <p className="text-gray-500 mb-6">{description}</p>
+      <h3 className="text-xl font-semibold text-stone-900 mb-2">{title}</h3>
+      <p className="text-stone-500 mb-6">{description}</p>
       <button
         onClick={onAction}
         className="bg-purple-600 text-white px-6 py-2.5 rounded-full font-medium hover:bg-purple-700 transition-colors"

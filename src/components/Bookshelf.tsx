@@ -69,7 +69,7 @@ const Bookshelf: React.FC = () => {
       {[1, 2, 3, 4, 5].map((star) => (
         <Star
           key={star}
-          className={`h-5 w-5 cursor-pointer transition-colors ${star <= rating ? 'text-amber-400 fill-current' : 'text-gray-300'
+          className={`h-5 w-5 cursor-pointer transition-colors ${star <= rating ? 'text-amber-400 fill-current' : 'text-stone-300'
             }`}
           onClick={() => !readonly && onRatingChange && onRatingChange(star)}
         />
@@ -86,7 +86,7 @@ const Bookshelf: React.FC = () => {
             <BookOpen className="h-8 w-8 mr-3" />
             My Bookshelf
           </h1>
-          <p className="text-gray-600 mt-1">Your amazing reading collection! 📚</p>
+          <p className="text-stone-600 mt-1">Your amazing reading collection! 📚</p>
         </div>
         <button
           onClick={() => setShowAddForm(true)}
@@ -105,7 +105,7 @@ const Bookshelf: React.FC = () => {
             onClick={() => setSelectedGenre(genre)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${selectedGenre === genre
                 ? 'bg-primary-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                : 'bg-stone-200 text-stone-700 hover:bg-stone-300'
               }`}
           >
             {genre}
@@ -140,8 +140,8 @@ const Bookshelf: React.FC = () => {
 
             {/* Book Info */}
             <div className="p-4">
-              <h3 className="font-bold text-gray-800 text-lg mb-1 line-clamp-2">{book.title}</h3>
-              <p className="text-gray-600 text-sm mb-2 flex items-center">
+              <h3 className="font-bold text-stone-800 text-lg mb-1 line-clamp-2">{book.title}</h3>
+              <p className="text-stone-600 text-sm mb-2 flex items-center">
                 <User className="h-4 w-4 mr-1" />
                 {book.author}
               </p>
@@ -150,7 +150,7 @@ const Bookshelf: React.FC = () => {
                 <span className="text-xs bg-primary-100 text-primary-800 px-2 py-1 rounded-full">
                   {book.genre}
                 </span>
-                <span className="text-xs text-gray-500 flex items-center">
+                <span className="text-xs text-stone-500 flex items-center">
                   <Calendar className="h-3 w-3 mr-1" />
                   {book.dateRead}
                 </span>
@@ -159,13 +159,13 @@ const Bookshelf: React.FC = () => {
               <StarRating rating={book.rating || 0} readonly />
 
               {book.notes && (
-                <p className="text-sm text-gray-600 mt-2 italic line-clamp-2">
+                <p className="text-sm text-stone-600 mt-2 italic line-clamp-2">
                   "{book.notes}"
                 </p>
               )}
 
               {book.pageCount && (
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-stone-500 mt-2">
                   {book.pageCount} pages
                 </p>
               )}
@@ -176,9 +176,9 @@ const Bookshelf: React.FC = () => {
 
       {filteredBooks.length === 0 && (
         <div className="text-center py-12">
-          <BookOpen className="h-24 w-24 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-600 mb-2">No books yet!</h3>
-          <p className="text-gray-500 mb-4">Start building your amazing bookshelf!</p>
+          <BookOpen className="h-24 w-24 text-stone-300 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-stone-600 mb-2">No books yet!</h3>
+          <p className="text-stone-500 mb-4">Start building your amazing bookshelf!</p>
           <button
             onClick={() => setShowAddForm(true)}
             className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors duration-200"
@@ -192,37 +192,37 @@ const Bookshelf: React.FC = () => {
       {showAddForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Add New Book</h2>
+            <h2 className="text-2xl font-bold text-stone-800 mb-4">Add New Book</h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1">Title</label>
                 <input
                   type="text"
                   value={newBook.title}
                   onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="Enter book title"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Author</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1">Author</label>
                 <input
                   type="text"
                   value={newBook.author}
                   onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="Enter author name"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Genre</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1">Genre</label>
                 <select
                   value={newBook.genre}
                   onChange={(e) => setNewBook({ ...newBook, genre: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   <option value="Fiction">Fiction</option>
                   <option value="Fantasy">Fantasy</option>
@@ -234,18 +234,18 @@ const Bookshelf: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Pages</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1">Pages</label>
                 <input
                   type="number"
                   value={newBook.pageCount}
                   onChange={(e) => setNewBook({ ...newBook, pageCount: parseInt(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="Number of pages"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1">Rating</label>
                 <StarRating
                   rating={newBook.rating || 0}
                   onRatingChange={(rating) => setNewBook({ ...newBook, rating })}
@@ -253,11 +253,11 @@ const Bookshelf: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1">Notes</label>
                 <textarea
                   value={newBook.notes}
                   onChange={(e) => setNewBook({ ...newBook, notes: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   rows={3}
                   placeholder="What did you think about this book?"
                 />
@@ -273,7 +273,7 @@ const Bookshelf: React.FC = () => {
               </button>
               <button
                 onClick={() => setShowAddForm(false)}
-                className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition-colors duration-200"
+                className="flex-1 bg-stone-300 text-stone-700 py-2 rounded-lg hover:bg-stone-400 transition-colors duration-200"
               >
                 Cancel
               </button>
@@ -286,31 +286,31 @@ const Bookshelf: React.FC = () => {
       {editingBook && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Edit Book</h2>
+            <h2 className="text-2xl font-bold text-stone-800 mb-4">Edit Book</h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1">Title</label>
                 <input
                   type="text"
                   value={editingBook.title}
                   onChange={(e) => setEditingBook({ ...editingBook, title: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Author</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1">Author</label>
                 <input
                   type="text"
                   value={editingBook.author}
                   onChange={(e) => setEditingBook({ ...editingBook, author: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1">Rating</label>
                 <StarRating
                   rating={editingBook.rating || 0}
                   onRatingChange={(rating) => setEditingBook({ ...editingBook, rating })}
@@ -318,11 +318,11 @@ const Bookshelf: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1">Notes</label>
                 <textarea
                   value={editingBook.notes}
                   onChange={(e) => setEditingBook({ ...editingBook, notes: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   rows={3}
                 />
               </div>
@@ -337,7 +337,7 @@ const Bookshelf: React.FC = () => {
               </button>
               <button
                 onClick={() => setEditingBook(null)}
-                className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition-colors duration-200"
+                className="flex-1 bg-stone-300 text-stone-700 py-2 rounded-lg hover:bg-stone-400 transition-colors duration-200"
               >
                 Cancel
               </button>

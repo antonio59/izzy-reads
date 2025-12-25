@@ -142,10 +142,10 @@ export function BookGridItem({
         className="mt-3 text-center max-w-full px-1"
         animate={{ y: isHovered ? -2 : 0 }}
       >
-        <h4 className="font-semibold text-gray-900 text-sm line-clamp-2 leading-tight group-hover:text-purple-700 transition-colors">
+        <h4 className="font-semibold text-stone-900 text-sm line-clamp-2 leading-tight group-hover:text-purple-700 transition-colors">
           {book.title}
         </h4>
-        <p className="text-gray-500 text-xs mt-1 truncate">{book.author}</p>
+        <p className="text-stone-500 text-xs mt-1 truncate">{book.author}</p>
       </motion.div>
     </motion.div>
   );
@@ -245,10 +245,10 @@ export function FeaturedBook({ book, onClick }: FeaturedBookProps) {
 
         {/* Info */}
         <div className="flex-1 flex flex-col justify-center">
-          <h3 className="font-display font-bold text-2xl text-gray-900 line-clamp-2 group-hover:text-purple-700 transition-colors">
+          <h3 className="font-display font-bold text-2xl text-stone-900 line-clamp-2 group-hover:text-purple-700 transition-colors">
             {book.title}
           </h3>
-          <p className="text-gray-600 mt-1">{book.author}</p>
+          <p className="text-stone-600 mt-1">{book.author}</p>
 
           {/* Rating */}
           {book.rating && book.rating > 0 && (
@@ -259,11 +259,11 @@ export function FeaturedBook({ book, onClick }: FeaturedBookProps) {
                   className={`w-5 h-5 ${
                     i < book.rating!
                       ? "text-amber-400 fill-amber-400"
-                      : "text-gray-200"
+                      : "text-stone-200"
                   }`}
                 />
               ))}
-              <span className="ml-2 text-gray-600 font-medium">
+              <span className="ml-2 text-stone-600 font-medium">
                 {book.rating}/5
               </span>
             </div>
@@ -277,7 +277,7 @@ export function FeaturedBook({ book, onClick }: FeaturedBookProps) {
               </span>
             )}
             {book.pageCount && (
-              <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
+              <span className="px-3 py-1 bg-stone-100 text-stone-600 rounded-full text-sm">
                 {book.pageCount} pages
               </span>
             )}
@@ -285,7 +285,7 @@ export function FeaturedBook({ book, onClick }: FeaturedBookProps) {
 
           {/* Notes Preview */}
           {book.notes && (
-            <p className="text-gray-500 text-sm italic mt-3 line-clamp-2">
+            <p className="text-stone-500 text-sm italic mt-3 line-clamp-2">
               "{book.notes}"
             </p>
           )}

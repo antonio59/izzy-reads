@@ -203,10 +203,10 @@ const SeriesTracker: React.FC = () => {
                   <Library className="w-7 h-7 text-indigo-600" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-display font-bold text-gray-900">
+                  <h1 className="text-3xl font-display font-bold text-stone-900">
                     Series Tracker
                   </h1>
-                  <p className="text-gray-600">
+                  <p className="text-stone-600">
                     Track your progress through book series
                   </p>
                 </div>
@@ -242,19 +242,19 @@ const SeriesTracker: React.FC = () => {
             <p className="text-3xl font-display font-bold text-indigo-600">
               {seriesWithBooks.length}
             </p>
-            <p className="text-sm text-gray-500">Series Tracked</p>
+            <p className="text-sm text-stone-500">Series Tracked</p>
           </Card>
           <Card padding="md" className="text-center">
             <p className="text-3xl font-display font-bold text-purple-600">
               {seriesWithBooks.filter((s) => s.completed).length}
             </p>
-            <p className="text-sm text-gray-500">Completed</p>
+            <p className="text-sm text-stone-500">Completed</p>
           </Card>
           <Card padding="md" className="text-center">
             <p className="text-3xl font-display font-bold text-pink-600">
               {seriesWithBooks.reduce((sum, s) => sum + s.booksRead, 0)}
             </p>
-            <p className="text-sm text-gray-500">Books Read</p>
+            <p className="text-sm text-stone-500">Books Read</p>
           </Card>
         </div>
       </FadeIn>
@@ -264,9 +264,9 @@ const SeriesTracker: React.FC = () => {
         {isLoading ? (
           <Card padding="lg" className="text-center">
             <div className="animate-pulse flex flex-col items-center">
-              <div className="w-16 h-16 bg-gray-200 rounded-full mb-4" />
-              <div className="h-4 bg-gray-200 rounded w-32 mb-2" />
-              <div className="h-3 bg-gray-200 rounded w-48" />
+              <div className="w-16 h-16 bg-stone-200 rounded-full mb-4" />
+              <div className="h-4 bg-stone-200 rounded w-32 mb-2" />
+              <div className="h-3 bg-stone-200 rounded w-48" />
             </div>
           </Card>
         ) : (
@@ -281,7 +281,7 @@ const SeriesTracker: React.FC = () => {
                     {/* Series header */}
                     <button
                       onClick={() => toggleExpanded(s.id)}
-                      className="w-full p-5 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                      className="w-full p-5 flex items-center justify-between hover:bg-stone-50 transition-colors"
                     >
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center text-2xl">
@@ -289,10 +289,10 @@ const SeriesTracker: React.FC = () => {
                             ?.emoji || "📚"}
                         </div>
                         <div className="text-left">
-                          <h3 className="font-display font-bold text-gray-900">
+                          <h3 className="font-display font-bold text-stone-900">
                             {s.name}
                           </h3>
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-stone-500">
                             {s.booksRead} of {s.books.length} books read
                           </p>
                         </div>
@@ -309,7 +309,7 @@ const SeriesTracker: React.FC = () => {
                               size="sm"
                             />
                           </div>
-                          <span className="text-sm font-medium text-gray-600 w-12">
+                          <span className="text-sm font-medium text-stone-600 w-12">
                             {s.progress}%
                           </span>
                         </div>
@@ -324,7 +324,7 @@ const SeriesTracker: React.FC = () => {
                         )}
 
                         <ChevronDown
-                          className={`w-5 h-5 text-gray-400 transition-transform ${
+                          className={`w-5 h-5 text-stone-400 transition-transform ${
                             expandedSeries.includes(s.id) ? "rotate-180" : ""
                           }`}
                         />
@@ -338,9 +338,9 @@ const SeriesTracker: React.FC = () => {
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          className="border-t border-gray-100"
+                          className="border-t border-stone-100"
                         >
-                          <div className="p-5 bg-gray-50">
+                          <div className="p-5 bg-stone-50">
                             {s.books.length > 0 ? (
                               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
                                 {s.books.map((book, index) => (
@@ -349,7 +349,7 @@ const SeriesTracker: React.FC = () => {
                                     className={`relative p-3 rounded-xl text-center transition-all group ${
                                       book.isRead
                                         ? "bg-white shadow-sm"
-                                        : "bg-gray-100 opacity-60"
+                                        : "bg-stone-100 opacity-60"
                                     }`}
                                   >
                                     <button
@@ -364,7 +364,7 @@ const SeriesTracker: React.FC = () => {
                                     >
                                       <X className="w-3 h-3" />
                                     </button>
-                                    <span className="text-xs text-gray-400">
+                                    <span className="text-xs text-stone-400">
                                       Book {index + 1}
                                     </span>
                                     {book.coverUrl ? (
@@ -376,7 +376,7 @@ const SeriesTracker: React.FC = () => {
                                     ) : (
                                       <div className="w-16 h-24 mx-auto my-2 rounded-lg bg-gradient-to-br from-indigo-200 to-purple-200 flex items-center justify-center">
                                         <BookOpen
-                                          className={`w-6 h-6 ${book.isRead ? "text-indigo-600" : "text-gray-400"}`}
+                                          className={`w-6 h-6 ${book.isRead ? "text-indigo-600" : "text-stone-400"}`}
                                         />
                                       </div>
                                     )}
@@ -385,7 +385,7 @@ const SeriesTracker: React.FC = () => {
                                         <Check className="w-3 h-3 text-white" />
                                       </div>
                                     )}
-                                    <p className="text-xs font-medium text-gray-700 truncate">
+                                    <p className="text-xs font-medium text-stone-700 truncate">
                                       {book.title}
                                     </p>
                                   </div>
@@ -393,11 +393,11 @@ const SeriesTracker: React.FC = () => {
                               </div>
                             ) : (
                               <div className="text-center py-8">
-                                <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                                <p className="text-gray-500">
+                                <BookOpen className="w-12 h-12 text-stone-300 mx-auto mb-3" />
+                                <p className="text-stone-500">
                                   No books added yet
                                 </p>
-                                <p className="text-sm text-gray-400">
+                                <p className="text-sm text-stone-400">
                                   Add books from your bookshelf to track
                                   progress
                                 </p>
@@ -405,7 +405,7 @@ const SeriesTracker: React.FC = () => {
                             )}
 
                             {/* Actions */}
-                            <div className="flex justify-between gap-2 mt-4 pt-4 border-t border-gray-200">
+                            <div className="flex justify-between gap-2 mt-4 pt-4 border-t border-stone-200">
                               <button
                                 onClick={() => setShowAddBook(s.id)}
                                 className="flex items-center gap-1 px-3 py-2 text-sm text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
@@ -436,10 +436,10 @@ const SeriesTracker: React.FC = () => {
                 >
                   <span className="text-6xl block mb-4">📚</span>
                 </motion.div>
-                <h3 className="text-xl font-display font-bold text-gray-800 mb-2">
+                <h3 className="text-xl font-display font-bold text-stone-800 mb-2">
                   Start tracking your series!
                 </h3>
-                <p className="text-gray-500 mb-6">
+                <p className="text-stone-500 mb-6">
                   Keep track of which books you've read in your favorite series
                 </p>
                 <motion.button
@@ -474,20 +474,20 @@ const SeriesTracker: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-display font-bold text-gray-900">
+                <h2 className="text-2xl font-display font-bold text-stone-900">
                   Add a Series
                 </h2>
                 <button
                   onClick={() => setShowAddSeries(false)}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="p-2 hover:bg-stone-100 rounded-lg transition-colors"
                 >
-                  <X className="w-5 h-5 text-gray-500" />
+                  <X className="w-5 h-5 text-stone-500" />
                 </button>
               </div>
 
               {/* Custom series input */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-stone-700 mb-2">
                   Series Name
                 </label>
                 <div className="flex gap-2">
@@ -496,7 +496,7 @@ const SeriesTracker: React.FC = () => {
                     value={newSeriesName}
                     onChange={(e) => setNewSeriesName(e.target.value)}
                     placeholder="Enter series name..."
-                    className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="flex-1 px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                   />
                   <motion.button
                     onClick={() => handleAddSeries(newSeriesName)}
@@ -512,10 +512,10 @@ const SeriesTracker: React.FC = () => {
 
               <div className="relative mb-4">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200" />
+                  <div className="w-full border-t border-stone-200" />
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="bg-white px-3 text-sm text-gray-500">
+                  <span className="bg-white px-3 text-sm text-stone-500">
                     or pick a popular series
                   </span>
                 </div>
@@ -523,13 +523,13 @@ const SeriesTracker: React.FC = () => {
 
               {/* Search popular series */}
               <div className="relative mb-4">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search popular series..."
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                 />
               </div>
 
@@ -539,16 +539,16 @@ const SeriesTracker: React.FC = () => {
                   <button
                     key={s.name}
                     onClick={() => handleAddSeries(s.name)}
-                    className="w-full p-4 rounded-xl border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all flex items-center gap-4 text-left"
+                    className="w-full p-4 rounded-xl border border-stone-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all flex items-center gap-4 text-left"
                   >
                     <span className="text-3xl">{s.emoji}</span>
                     <div className="flex-1">
-                      <p className="font-bold text-gray-900">{s.name}</p>
-                      <p className="text-sm text-gray-500">
+                      <p className="font-bold text-stone-900">{s.name}</p>
+                      <p className="text-sm text-stone-500">
                         by {s.author} ({s.totalBooks} books)
                       </p>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-gray-400" />
+                    <ChevronRight className="w-5 h-5 text-stone-400" />
                   </button>
                 ))}
               </div>
@@ -578,7 +578,7 @@ const SeriesTracker: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-display font-bold text-gray-900">
+                <h2 className="text-2xl font-display font-bold text-stone-900">
                   Add Book to Series
                 </h2>
                 <button
@@ -586,21 +586,21 @@ const SeriesTracker: React.FC = () => {
                     setShowAddBook(null);
                     setBookSearchQuery("");
                   }}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="p-2 hover:bg-stone-100 rounded-lg transition-colors"
                 >
-                  <X className="w-5 h-5 text-gray-500" />
+                  <X className="w-5 h-5 text-stone-500" />
                 </button>
               </div>
 
               {/* Search books */}
               <div className="relative mb-4">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
                 <input
                   type="text"
                   value={bookSearchQuery}
                   onChange={(e) => setBookSearchQuery(e.target.value)}
                   placeholder="Search your books..."
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                 />
               </div>
 
@@ -613,7 +613,7 @@ const SeriesTracker: React.FC = () => {
                       onClick={() =>
                         handleAddBookToSeries(showAddBook, book.id)
                       }
-                      className="w-full p-3 rounded-xl border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all flex items-center gap-3 text-left"
+                      className="w-full p-3 rounded-xl border border-stone-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all flex items-center gap-3 text-left"
                     >
                       {book.coverUrl ? (
                         <img
@@ -627,10 +627,10 @@ const SeriesTracker: React.FC = () => {
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 truncate">
+                        <p className="font-medium text-stone-900 truncate">
                           {book.title}
                         </p>
-                        <p className="text-sm text-gray-500 truncate">
+                        <p className="text-sm text-stone-500 truncate">
                           {book.author}
                         </p>
                       </div>
@@ -643,9 +643,9 @@ const SeriesTracker: React.FC = () => {
                   ))
                 ) : (
                   <div className="text-center py-8">
-                    <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                    <p className="text-gray-500">No books available</p>
-                    <p className="text-sm text-gray-400">
+                    <BookOpen className="w-12 h-12 text-stone-300 mx-auto mb-3" />
+                    <p className="text-stone-500">No books available</p>
+                    <p className="text-sm text-stone-400">
                       Add books to your bookshelf first
                     </p>
                   </div>

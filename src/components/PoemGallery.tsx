@@ -110,13 +110,13 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({
             <div
               key={poem.id}
               onClick={() => setSelectedPoem(poem)}
-              className="bg-white rounded-3xl shadow-soft hover:shadow-soft-lg transition-all cursor-pointer group border border-gray-100 overflow-hidden"
+              className="bg-white rounded-3xl shadow-soft hover:shadow-soft-lg transition-all cursor-pointer group border border-stone-100 overflow-hidden"
             >
               {/* Card Header (or Image) */}
               <div
                 className={`
                 h-48 relative overflow-hidden flex items-center justify-center
-                ${poem.imageUrl ? "bg-gray-100" : BACKGROUND_PATTERNS[index % BACKGROUND_PATTERNS.length]}
+                ${poem.imageUrl ? "bg-stone-100" : BACKGROUND_PATTERNS[index % BACKGROUND_PATTERNS.length]}
               `}
               >
                 {poem.imageUrl ? (
@@ -154,15 +154,15 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({
 
               {/* Card Content */}
               <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1">
+                <h3 className="text-xl font-bold text-stone-900 mb-2 line-clamp-1">
                   {poem.title}
                 </h3>
-                <p className="text-gray-500 text-sm mb-4 line-clamp-2 font-serif italic">
+                <p className="text-stone-500 text-sm mb-4 line-clamp-2 font-serif italic">
                   {poem.content}
                 </p>
 
-                <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                  <span className="text-xs text-gray-400 font-medium bg-gray-50 px-2 py-1 rounded-md">
+                <div className="flex items-center justify-between pt-4 border-t border-stone-50">
+                  <span className="text-xs text-stone-400 font-medium bg-stone-50 px-2 py-1 rounded-md">
                     {new Date(poem.dateCreated).toLocaleDateString()}
                   </span>
                   <button
@@ -170,7 +170,7 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({
                       e.stopPropagation();
                       handleLike(poem.id);
                     }}
-                    className="flex items-center gap-1.5 text-gray-400 hover:text-accent-500 transition-colors group/like"
+                    className="flex items-center gap-1.5 text-stone-400 hover:text-accent-500 transition-colors group/like"
                   >
                     <Heart
                       className={`w-4 h-4 ${poem.likes > 0 ? "fill-accent-500 text-accent-500" : "group-hover/like:text-accent-500"}`}
@@ -187,10 +187,10 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({
           <div className="w-20 h-20 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-6">
             <Feather className="w-10 h-10 text-primary-400" />
           </div>
-          <p className="text-gray-900 text-xl font-bold mb-2">
+          <p className="text-stone-900 text-xl font-bold mb-2">
             No poems created yet
           </p>
-          <p className="text-gray-500 mb-6 max-w-sm mx-auto">
+          <p className="text-stone-500 mb-6 max-w-sm mx-auto">
             Start your collection by writing a new poem or uploading a picture
             of your handwritten work!
           </p>
@@ -237,10 +237,10 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({
             <div className="md:w-1/2 p-8 md:p-12 overflow-y-auto bg-white flex flex-col">
               <div className="flex justify-between items-start mb-8">
                 <div>
-                  <h3 className="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-2">
+                  <h3 className="text-3xl md:text-4xl font-display font-bold text-stone-900 mb-2">
                     {selectedPoem.title}
                   </h3>
-                  <p className="text-gray-500 font-medium">
+                  <p className="text-stone-500 font-medium">
                     {new Date(selectedPoem.dateCreated).toLocaleDateString(
                       undefined,
                       {
@@ -254,24 +254,24 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({
                 </div>
                 <button
                   onClick={() => setSelectedPoem(null)}
-                  className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
+                  className="p-2 bg-stone-100 rounded-full hover:bg-stone-200 transition-colors"
                 >
                   <span className="sr-only">Close</span>✕
                 </button>
               </div>
 
               <div className="flex-1">
-                <p className="text-gray-800 font-serif text-xl leading-loose whitespace-pre-wrap">
+                <p className="text-stone-800 font-serif text-xl leading-loose whitespace-pre-wrap">
                   {selectedPoem.content}
                 </p>
               </div>
 
-              <div className="pt-8 mt-8 border-t border-gray-100 flex items-center justify-between">
+              <div className="pt-8 mt-8 border-t border-stone-100 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-accent-400 flex items-center justify-center text-white font-bold">
                     I
                   </div>
-                  <span className="font-bold text-gray-900">Izzy</span>
+                  <span className="font-bold text-stone-900">Izzy</span>
                 </div>
                 <button
                   onClick={() => handleLike(selectedPoem.id)}

@@ -209,7 +209,7 @@ export function AchievementUnlock({
 
               {/* Title */}
               <motion.h2
-                className="text-2xl font-display font-bold text-gray-900 mb-2"
+                className="text-2xl font-display font-bold text-stone-900 mb-2"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.6 }}
@@ -219,7 +219,7 @@ export function AchievementUnlock({
 
               {/* Description */}
               <motion.p
-                className="text-gray-600 mb-4"
+                className="text-stone-600 mb-4"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.7 }}
@@ -244,7 +244,7 @@ export function AchievementUnlock({
 
               {/* Close hint */}
               <motion.p
-                className="text-xs text-gray-400 mt-6"
+                className="text-xs text-stone-400 mt-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.5 }}

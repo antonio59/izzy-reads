@@ -20,7 +20,7 @@ const rarityGradients: Record<AchievementRarity, string> = {
 }
 
 const rarityBorders: Record<AchievementRarity, string> = {
-  common: 'border-gray-300',
+  common: 'border-stone-300',
   rare: 'border-blue-300',
   epic: 'border-iris-400',
   legendary: 'border-amber-400',
@@ -62,7 +62,7 @@ export function AchievementCard({
         ${sizeClasses[size]}
         ${unlocked
           ? `bg-gradient-to-br ${rarityGradients[achievement.rarity]} ${rarityBorders[achievement.rarity]} shadow-lg ${rarityGlow[achievement.rarity]}`
-          : 'bg-gray-50 border-gray-200 opacity-70'
+          : 'bg-stone-50 border-stone-200 opacity-70'
         }
         ${onClick ? 'cursor-pointer hover:scale-[1.02]' : 'cursor-default'}
         ${className}
@@ -72,9 +72,9 @@ export function AchievementCard({
     >
       {/* Locked overlay */}
       {!unlocked && (
-        <div className="absolute inset-0 bg-gray-100/50 backdrop-blur-[1px] flex items-center justify-center">
-          <div className="bg-gray-200 rounded-full p-2">
-            <Lock className="w-4 h-4 text-gray-400" />
+        <div className="absolute inset-0 bg-stone-100/50 backdrop-blur-[1px] flex items-center justify-center">
+          <div className="bg-stone-200 rounded-full p-2">
+            <Lock className="w-4 h-4 text-stone-400" />
           </div>
         </div>
       )}
@@ -94,7 +94,7 @@ export function AchievementCard({
             <h4 className={`
               font-display font-semibold truncate
               ${size === 'lg' ? 'text-lg' : size === 'md' ? 'text-base' : 'text-sm'}
-              ${unlocked ? 'text-gray-900' : 'text-gray-500'}
+              ${unlocked ? 'text-stone-900' : 'text-stone-500'}
             `}>
               {achievement.name}
             </h4>
@@ -110,7 +110,7 @@ export function AchievementCard({
           </div>
 
           <p className={`
-            text-gray-500 mt-0.5
+            text-stone-500 mt-0.5
             ${size === 'lg' ? 'text-sm' : 'text-xs'}
             ${!unlocked ? 'blur-[2px]' : ''}
           `}>
@@ -120,7 +120,7 @@ export function AchievementCard({
           {/* Progress bar for locked achievements */}
           {!unlocked && progress > 0 && (
             <div className="mt-2">
-              <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-1.5 bg-stone-200 rounded-full overflow-hidden">
                 <motion.div
                   className="h-full bg-iris-400"
                   initial={{ width: 0 }}
@@ -128,7 +128,7 @@ export function AchievementCard({
                   transition={{ duration: 0.5 }}
                 />
               </div>
-              <p className="text-[10px] text-gray-400 mt-0.5">
+              <p className="text-[10px] text-stone-400 mt-0.5">
                 {Math.round(progress)}% complete
               </p>
             </div>
@@ -178,7 +178,7 @@ export function AchievementChip({ achievement, unlocked, onClick, className = ''
         border transition-all
         ${unlocked
           ? `bg-gradient-to-r ${rarityGradients[achievement.rarity]} ${rarityBorders[achievement.rarity]}`
-          : 'bg-gray-100 border-gray-200 opacity-60'
+          : 'bg-stone-100 border-stone-200 opacity-60'
         }
         ${onClick ? 'cursor-pointer hover:scale-105' : 'cursor-default'}
         ${className}
@@ -189,10 +189,10 @@ export function AchievementChip({ achievement, unlocked, onClick, className = ''
       <span className={unlocked ? '' : 'grayscale'}>
         {achievement.icon}
       </span>
-      <span className={`text-xs font-medium ${unlocked ? 'text-gray-700' : 'text-gray-400'}`}>
+      <span className={`text-xs font-medium ${unlocked ? 'text-stone-700' : 'text-stone-400'}`}>
         {achievement.name}
       </span>
-      {!unlocked && <Lock className="w-3 h-3 text-gray-400" />}
+      {!unlocked && <Lock className="w-3 h-3 text-stone-400" />}
     </motion.button>
   )
 }
@@ -220,10 +220,10 @@ export function AchievementShowcase({
   return (
     <div className={className}>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-display font-semibold text-gray-900 flex items-center gap-2">
+        <h3 className="font-display font-semibold text-stone-900 flex items-center gap-2">
           <Star className="w-4 h-4 text-coral-500" />
           Achievements
-          <span className="text-sm font-normal text-gray-500">
+          <span className="text-sm font-normal text-stone-500">
             ({unlockedAchievements.length}/{achievements.length})
           </span>
         </h3>
@@ -249,14 +249,14 @@ export function AchievementShowcase({
           {remaining > 0 && (
             <button
               onClick={onViewAll}
-              className="px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-medium hover:bg-gray-200 transition-colors"
+              className="px-3 py-1.5 rounded-full bg-stone-100 text-stone-600 text-xs font-medium hover:bg-stone-200 transition-colors"
             >
               +{remaining} more
             </button>
           )}
         </div>
       ) : (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-stone-500">
           No achievements yet. Start reading to earn badges!
         </p>
       )}

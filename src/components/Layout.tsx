@@ -56,7 +56,7 @@ export function PublicLayout({
     <AccessibleAnnouncerProvider>
       <ToastProvider>
         <div
-          className={`min-h-screen ${showBackground ? "bg-hero" : "bg-gray-50"}`}
+          className={`min-h-screen ${showBackground ? "bg-hero" : "bg-stone-50"}`}
         >
           <SkipToContent />
           <AnimatePresence mode="wait">

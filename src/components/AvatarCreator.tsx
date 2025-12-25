@@ -349,25 +349,25 @@ export default function AvatarCreator({
         exit={{ scale: 0.9, y: 20 }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between p-6 border-b border-stone-100">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-display font-bold text-gray-800">
+              <h2 className="text-xl font-display font-bold text-stone-800">
                 Create Your Avatar
               </h2>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-stone-500">
                 Make it look just like you!
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-stone-100 rounded-full transition-colors"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-stone-500" />
           </button>
         </div>
 
@@ -382,7 +382,7 @@ export default function AvatarCreator({
             >
               <AvatarPreview config={config} size="xl" />
             </motion.div>
-            <p className="mt-4 text-sm text-gray-500 font-medium">
+            <p className="mt-4 text-sm text-stone-500 font-medium">
               Your Avatar
             </p>
           </div>
@@ -398,7 +398,7 @@ export default function AvatarCreator({
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                     activeTab === tab.id
                       ? "bg-violet-100 text-violet-700"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      : "bg-stone-100 text-stone-600 hover:bg-stone-200"
                   }`}
                 >
                   {tab.icon}
@@ -418,7 +418,7 @@ export default function AvatarCreator({
               >
                 {activeTab === "skin" && (
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                    <h3 className="text-sm font-semibold text-stone-700 mb-3">
                       Skin Tone
                     </h3>
                     <div className="flex flex-wrap gap-3">
@@ -442,7 +442,7 @@ export default function AvatarCreator({
                 {activeTab === "hair" && (
                   <>
                     <div>
-                      <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                      <h3 className="text-sm font-semibold text-stone-700 mb-3">
                         Hair Style
                       </h3>
                       <div className="flex flex-wrap gap-2">
@@ -453,7 +453,7 @@ export default function AvatarCreator({
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                               config.hairStyle === style.id
                                 ? "bg-violet-500 text-white"
-                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                : "bg-stone-100 text-stone-700 hover:bg-stone-200"
                             }`}
                           >
                             {style.name}
@@ -462,7 +462,7 @@ export default function AvatarCreator({
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                      <h3 className="text-sm font-semibold text-stone-700 mb-3">
                         Hair Color
                       </h3>
                       <div className="flex flex-wrap gap-3">
@@ -486,7 +486,7 @@ export default function AvatarCreator({
 
                 {activeTab === "eyes" && (
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                    <h3 className="text-sm font-semibold text-stone-700 mb-3">
                       Eye Color
                     </h3>
                     <div className="flex flex-wrap gap-3">
@@ -509,7 +509,7 @@ export default function AvatarCreator({
 
                 {activeTab === "accessories" && (
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                    <h3 className="text-sm font-semibold text-stone-700 mb-3">
                       Accessories
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -520,7 +520,7 @@ export default function AvatarCreator({
                           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
                             config.accessory === acc.id
                               ? "bg-violet-500 text-white"
-                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                              : "bg-stone-100 text-stone-700 hover:bg-stone-200"
                           }`}
                         >
                           {acc.emoji && <span>{acc.emoji}</span>}
@@ -534,7 +534,7 @@ export default function AvatarCreator({
                 {activeTab === "outfit" && (
                   <>
                     <div>
-                      <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                      <h3 className="text-sm font-semibold text-stone-700 mb-3">
                         Outfit Style
                       </h3>
                       <div className="flex flex-wrap gap-2">
@@ -545,7 +545,7 @@ export default function AvatarCreator({
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                               config.outfit === outfit.id
                                 ? "bg-violet-500 text-white"
-                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                : "bg-stone-100 text-stone-700 hover:bg-stone-200"
                             }`}
                           >
                             {outfit.name}
@@ -554,7 +554,7 @@ export default function AvatarCreator({
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                      <h3 className="text-sm font-semibold text-stone-700 mb-3">
                         Outfit Color
                       </h3>
                       <div className="flex flex-wrap gap-3">
@@ -580,7 +580,7 @@ export default function AvatarCreator({
 
                 {activeTab === "background" && (
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                    <h3 className="text-sm font-semibold text-stone-700 mb-3">
                       Background
                     </h3>
                     <div className="flex flex-wrap gap-3">
@@ -605,10 +605,10 @@ export default function AvatarCreator({
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 p-6 border-t border-gray-100 bg-gray-50">
+        <div className="flex justify-end gap-3 p-6 border-t border-stone-100 bg-stone-50">
           <button
             onClick={onClose}
-            className="px-6 py-2 text-gray-600 hover:bg-gray-200 rounded-xl font-medium transition-colors"
+            className="px-6 py-2 text-stone-600 hover:bg-stone-200 rounded-xl font-medium transition-colors"
           >
             Cancel
           </button>

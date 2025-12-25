@@ -123,10 +123,10 @@ const AchievementNotification: React.FC = () => {
 
                 {/* Details */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-display font-bold text-gray-900 text-lg">
+                  <h3 className="font-display font-bold text-stone-900 text-lg">
                     {currentAchievement.name}
                   </h3>
-                  <p className="text-gray-600 text-sm mt-1">
+                  <p className="text-stone-600 text-sm mt-1">
                     {currentAchievement.description}
                   </p>
 
@@ -197,7 +197,7 @@ const AchievementNotification: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              <span className="text-xs text-gray-500 bg-white/80 px-3 py-1 rounded-full">
+              <span className="text-xs text-stone-500 bg-white/80 px-3 py-1 rounded-full">
                 +{queue.length} more achievement{queue.length > 1 ? "s" : ""}
               </span>
             </motion.div>

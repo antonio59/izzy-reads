@@ -132,7 +132,7 @@ const Dashboard: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <Sparkles className="w-5 h-5 text-accent-500" />
-                  <span className="text-sm font-medium text-gray-600">
+                  <span className="text-sm font-medium text-stone-600">
                     {new Date().toLocaleDateString("en-US", {
                       weekday: "long",
                       month: "long",
@@ -140,10 +140,10 @@ const Dashboard: React.FC = () => {
                     })}
                   </span>
                 </div>
-                <h1 className="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-2">
+                <h1 className="text-3xl md:text-4xl font-display font-bold text-stone-900 mb-2">
                   Welcome back, {user?.name || "Reader"}!
                 </h1>
-                <p className="text-gray-600 max-w-md">
+                <p className="text-stone-600 max-w-md">
                   Ready for another reading adventure? You've read{" "}
                   <span className="font-semibold text-primary-600">
                     {readingStats.booksThisMonth} books
@@ -228,10 +228,10 @@ const Dashboard: React.FC = () => {
             <Card padding="lg">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h3 className="font-display font-bold text-gray-900 text-lg">
+                  <h3 className="font-display font-bold text-stone-900 text-lg">
                     Reading Activity
                   </h3>
-                  <p className="text-sm text-gray-500">Books read per month</p>
+                  <p className="text-sm text-stone-500">Books read per month</p>
                 </div>
                 <Badge
                   variant="primary"
@@ -301,7 +301,7 @@ const Dashboard: React.FC = () => {
           <FadeIn delay={0.3}>
             <Card padding="lg">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-display font-bold text-gray-900 text-lg">
+                <h3 className="font-display font-bold text-stone-900 text-lg">
                   Recent Reads
                 </h3>
                 <Link
@@ -325,12 +325,12 @@ const Dashboard: React.FC = () => {
                     animate={{ y: [0, -8, 0] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
-                    <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                    <BookOpen className="w-12 h-12 text-stone-300 mx-auto mb-3" />
                   </motion.div>
-                  <p className="text-gray-500 font-medium">
+                  <p className="text-stone-500 font-medium">
                     No books read yet!
                   </p>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-stone-400">
                     Start your reading journey today
                   </p>
                   <Link
@@ -354,13 +354,13 @@ const Dashboard: React.FC = () => {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <span className="text-2xl">❤️</span>
-                    <h3 className="font-display font-bold text-gray-900 text-lg">
+                    <h3 className="font-display font-bold text-stone-900 text-lg">
                       Most Loved by Readers
                     </h3>
                   </div>
                   <Badge variant="primary">{totalReactions} reactions</Badge>
                 </div>
-                <p className="text-sm text-gray-600 mb-4">
+                <p className="text-sm text-stone-600 mb-4">
                   These books are getting the most love from visitors!
                 </p>
                 <div className="space-y-3">
@@ -384,10 +384,10 @@ const Dashboard: React.FC = () => {
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 truncate">
+                        <p className="font-medium text-stone-900 truncate">
                           {book.title}
                         </p>
-                        <p className="text-sm text-gray-500 truncate">
+                        <p className="text-sm text-stone-500 truncate">
                           {book.author}
                         </p>
                       </div>
@@ -410,7 +410,7 @@ const Dashboard: React.FC = () => {
           {/* Genre Distribution */}
           <FadeIn delay={0.2}>
             <Card padding="lg">
-              <h3 className="font-display font-bold text-gray-900 text-lg mb-4">
+              <h3 className="font-display font-bold text-stone-900 text-lg mb-4">
                 Genre Mix
               </h3>
               {genreData.length > 0 ? (
@@ -461,7 +461,7 @@ const Dashboard: React.FC = () => {
                 </>
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-gray-400 text-sm">
+                  <p className="text-stone-400 text-sm">
                     Read more books to see your genre mix!
                   </p>
                 </div>
@@ -472,7 +472,7 @@ const Dashboard: React.FC = () => {
           {/* Quick Actions */}
           <FadeIn delay={0.3}>
             <Card padding="lg">
-              <h3 className="font-display font-bold text-gray-900 text-lg mb-4">
+              <h3 className="font-display font-bold text-stone-900 text-lg mb-4">
                 Quick Actions
               </h3>
               <div className="space-y-3">
@@ -547,10 +547,10 @@ const Dashboard: React.FC = () => {
               <BarChart3 className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-display font-bold text-gray-900">
+              <h2 className="text-2xl font-display font-bold text-stone-900">
                 Analytics & Insights
               </h2>
-              <p className="text-gray-500">
+              <p className="text-stone-500">
                 See how readers engage with your books and reviews
               </p>
             </div>
@@ -604,15 +604,15 @@ function QuickActionLink({
   return (
     <Link
       to={to}
-      className="group flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors"
+      className="group flex items-center gap-3 p-3 rounded-xl hover:bg-stone-50 transition-colors"
     >
       <div className={`p-2 rounded-lg transition-colors ${colorStyles[color]}`}>
         {icon}
       </div>
-      <span className="font-medium text-gray-700 group-hover:text-gray-900">
+      <span className="font-medium text-stone-700 group-hover:text-stone-900">
         {label}
       </span>
-      <ChevronRight className="w-4 h-4 text-gray-400 ml-auto group-hover:translate-x-1 transition-transform" />
+      <ChevronRight className="w-4 h-4 text-stone-400 ml-auto group-hover:translate-x-1 transition-transform" />
     </Link>
   );
 }
@@ -638,15 +638,15 @@ function QuickActionButton({
   return (
     <button
       onClick={onClick}
-      className="group flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors w-full text-left"
+      className="group flex items-center gap-3 p-3 rounded-xl hover:bg-stone-50 transition-colors w-full text-left"
     >
       <div className={`p-2 rounded-lg transition-colors ${colorStyles[color]}`}>
         {icon}
       </div>
-      <span className="font-medium text-gray-700 group-hover:text-gray-900">
+      <span className="font-medium text-stone-700 group-hover:text-stone-900">
         {label}
       </span>
-      <ChevronRight className="w-4 h-4 text-gray-400 ml-auto group-hover:translate-x-1 transition-transform" />
+      <ChevronRight className="w-4 h-4 text-stone-400 ml-auto group-hover:translate-x-1 transition-transform" />
     </button>
   );
 }

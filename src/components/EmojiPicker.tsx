@@ -59,10 +59,10 @@ export function EmojiPicker({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`p-2 rounded-lg hover:bg-gray-100 transition-colors ${buttonClassName}`}
+        className={`p-2 rounded-lg hover:bg-stone-100 transition-colors ${buttonClassName}`}
         title="Add emoji"
       >
-        <Smile className="w-5 h-5 text-gray-500 hover:text-primary-500" />
+        <Smile className="w-5 h-5 text-stone-500 hover:text-primary-500" />
       </button>
 
       <AnimatePresence>
@@ -77,7 +77,7 @@ export function EmojiPicker({
             <div className="relative">
               <button
                 onClick={() => setIsOpen(false)}
-                className="absolute -top-2 -right-2 z-10 w-6 h-6 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors"
+                className="absolute -top-2 -right-2 z-10 w-6 h-6 bg-stone-800 text-white rounded-full flex items-center justify-center hover:bg-stone-700 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -156,7 +156,7 @@ export function EmojiButton({
       <motion.button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`${sizeStyles[size]} rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors`}
+        className={`${sizeStyles[size]} rounded-xl bg-stone-100 hover:bg-stone-200 flex items-center justify-center transition-colors`}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         title="Choose emoji"
@@ -176,7 +176,7 @@ export function EmojiButton({
             <div className="relative">
               <button
                 onClick={() => setIsOpen(false)}
-                className="absolute -top-2 -right-2 z-10 w-6 h-6 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors"
+                className="absolute -top-2 -right-2 z-10 w-6 h-6 bg-stone-800 text-white rounded-full flex items-center justify-center hover:bg-stone-700 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>

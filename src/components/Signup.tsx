@@ -84,7 +84,7 @@ const Signup = () => {
               Izzy's Bookshelf
             </h1>
           </Link>
-          <p className="text-gray-600 mt-2">Join the reading adventure!</p>
+          <p className="text-stone-600 mt-2">Join the reading adventure!</p>
         </div>
 
         {/* Signup Form */}
@@ -139,18 +139,18 @@ const Signup = () => {
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-stone-700 mb-2"
               >
                 Your Name
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-400" />
                 <input
                   id="name"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-stone-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
                   placeholder="What should we call you?"
                   autoComplete="name"
                 />
@@ -160,19 +160,19 @@ const Signup = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-stone-700 mb-2"
               >
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-400" />
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-stone-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
                   placeholder="you@example.com"
                   autoComplete="email"
                 />
@@ -182,24 +182,24 @@ const Signup = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-stone-700 mb-2"
               >
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-400" />
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-stone-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
                   placeholder="••••••••"
                   autoComplete="new-password"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-stone-500 mt-1">
                 Must be at least 8 characters
               </p>
             </div>
@@ -207,19 +207,19 @@ const Signup = () => {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-stone-700 mb-2"
               >
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-400" />
                 <input
                   id="confirmPassword"
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-stone-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
                   placeholder="••••••••"
                   autoComplete="new-password"
                 />
@@ -250,7 +250,7 @@ const Signup = () => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-gray-600">
+            <p className="text-stone-600">
               Already have an account?{" "}
               <Link
                 to="/login"
@@ -262,7 +262,7 @@ const Signup = () => {
           </div>
 
           <div className="mt-4 text-center">
-            <Link to="/" className="text-sm text-gray-500 hover:text-gray-700">
+            <Link to="/" className="text-sm text-stone-500 hover:text-stone-700">
               ← Back to public portfolio
             </Link>
           </div>
@@ -275,7 +275,7 @@ const Signup = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-stone-500">
             Join other young readers and start tracking your reading adventure!
             📚✨
           </p>

@@ -102,7 +102,7 @@ const Wishlist: React.FC = () => {
 
   const PriorityHeart = ({ priority }: { priority: number }) => {
     const colors = [
-      "text-gray-300",
+      "text-stone-300",
       "text-accent-300",
       "text-accent-400",
       "text-accent-500",
@@ -115,7 +115,7 @@ const Wishlist: React.FC = () => {
         {[1, 2, 3, 4, 5].map((level) => (
           <Heart
             key={level}
-            className={`h-4 w-4 ${level <= priority ? colors[level] + " fill-current" : "text-gray-300"}`}
+            className={`h-4 w-4 ${level <= priority ? colors[level] + " fill-current" : "text-stone-300"}`}
           />
         ))}
       </div>
@@ -131,7 +131,7 @@ const Wishlist: React.FC = () => {
             <Heart className="h-8 w-8 mr-3 fill-current" />
             My Wishlist
           </h1>
-          <p className="text-gray-600 mt-1">Books you can't wait to read!</p>
+          <p className="text-stone-600 mt-1">Books you can't wait to read!</p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
@@ -147,7 +147,7 @@ const Wishlist: React.FC = () => {
         <div className="bg-white rounded-xl shadow-lg p-4 border-l-4 border-accent-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Books to Read</p>
+              <p className="text-sm font-medium text-stone-600">Books to Read</p>
               <p className="text-2xl font-bold text-accent-600">
                 {wishlist.length}
               </p>
@@ -159,7 +159,7 @@ const Wishlist: React.FC = () => {
         <div className="bg-white rounded-xl shadow-lg p-4 border-l-4 border-primary-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Pages</p>
+              <p className="text-sm font-medium text-stone-600">Total Pages</p>
               <p className="text-2xl font-bold text-primary-600">
                 {wishlist.reduce((sum, book) => sum + (book.pageCount || 0), 0)}
               </p>
@@ -171,7 +171,7 @@ const Wishlist: React.FC = () => {
         <div className="bg-white rounded-xl shadow-lg p-4 border-l-4 border-sage-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Genres</p>
+              <p className="text-sm font-medium text-stone-600">Genres</p>
               <p className="text-2xl font-bold text-sage-600">
                 {new Set(wishlist.map((book) => book.genre)).size}
               </p>
@@ -203,31 +203,31 @@ const Wishlist: React.FC = () => {
 
               {/* Book Info */}
               <div className="p-4">
-                <h3 className="font-bold text-gray-800 text-lg mb-1 line-clamp-2">
+                <h3 className="font-bold text-stone-800 text-lg mb-1 line-clamp-2">
                   {book.title}
                 </h3>
-                <p className="text-gray-600 text-sm mb-2">{book.author}</p>
+                <p className="text-stone-600 text-sm mb-2">{book.author}</p>
 
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs bg-accent-100 text-accent-800 px-2 py-1 rounded-full">
                     {book.genre}
                   </span>
                   {book.pageCount && (
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-stone-500">
                       {book.pageCount} pages
                     </span>
                   )}
                 </div>
 
                 {book.description && (
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                  <p className="text-sm text-stone-600 mb-3 line-clamp-2">
                     {book.description}
                   </p>
                 )}
 
                 {/* Priority Level */}
                 <div className="mb-3">
-                  <p className="text-xs text-gray-500 mb-1">
+                  <p className="text-xs text-stone-500 mb-1">
                     How much do you want to read this?
                   </p>
                   <PriorityHeart priority={3} />
@@ -248,10 +248,10 @@ const Wishlist: React.FC = () => {
       ) : (
         <div className="text-center py-12">
           <Heart className="h-24 w-24 text-accent-300 mx-auto mb-4 fill-current" />
-          <h3 className="text-xl font-semibold text-gray-600 mb-2">
+          <h3 className="text-xl font-semibold text-stone-600 mb-2">
             Your wishlist is empty!
           </h3>
-          <p className="text-gray-500 mb-4">
+          <p className="text-stone-500 mb-4">
             Add some books you'd love to read!
           </p>
           <button
@@ -308,11 +308,11 @@ const Wishlist: React.FC = () => {
                 suggestions.map((suggestion) => (
                   <motion.div
                     key={suggestion._id}
-                    className={`bg-white rounded-xl p-4 text-gray-800 ${
+                    className={`bg-white rounded-xl p-4 text-stone-800 ${
                       suggestion.status === "approved"
                         ? "border-2 border-green-400"
                         : suggestion.status === "declined"
-                          ? "border-2 border-gray-300 opacity-60"
+                          ? "border-2 border-stone-300 opacity-60"
                           : ""
                     }`}
                     initial={{ opacity: 0, x: -20 }}
@@ -324,7 +324,7 @@ const Wishlist: React.FC = () => {
                         <h4 className="font-bold text-lg">
                           {suggestion.title}
                         </h4>
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-stone-600 text-sm">
                           by {suggestion.author}
                         </p>
 
@@ -334,15 +334,15 @@ const Wishlist: React.FC = () => {
                               {suggestion.genre}
                             </span>
                           )}
-                          <span className="text-xs text-gray-400">
+                          <span className="text-xs text-stone-400">
                             Suggested by {suggestion.suggestedBy}
                           </span>
                         </div>
 
                         {suggestion.reason && (
-                          <div className="mt-3 flex items-start gap-2 bg-gray-50 rounded-lg p-3">
-                            <MessageCircle className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                            <p className="text-sm text-gray-600 italic">
+                          <div className="mt-3 flex items-start gap-2 bg-stone-50 rounded-lg p-3">
+                            <MessageCircle className="w-4 h-4 text-stone-400 mt-0.5 flex-shrink-0" />
+                            <p className="text-sm text-stone-600 italic">
                               "{suggestion.reason}"
                             </p>
                           </div>
@@ -355,7 +355,7 @@ const Wishlist: React.FC = () => {
                           className={`text-xs font-medium px-2 py-1 rounded-full ${
                             suggestion.status === "approved"
                               ? "bg-green-100 text-green-700"
-                              : "bg-gray-100 text-gray-500"
+                              : "bg-stone-100 text-stone-500"
                           }`}
                         >
                           {suggestion.status === "approved"
@@ -367,7 +367,7 @@ const Wishlist: React.FC = () => {
 
                     {/* Action buttons for pending suggestions */}
                     {suggestion.status === "pending" && (
-                      <div className="flex gap-2 mt-4 pt-3 border-t border-gray-100">
+                      <div className="flex gap-2 mt-4 pt-3 border-t border-stone-100">
                         <button
                           onClick={() =>
                             handleApproveSuggestion(suggestion._id)
@@ -381,7 +381,7 @@ const Wishlist: React.FC = () => {
                           onClick={() =>
                             handleDeclineSuggestion(suggestion._id)
                           }
-                          className="flex items-center justify-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium transition-colors"
+                          className="flex items-center justify-center gap-2 bg-stone-200 hover:bg-stone-300 text-stone-700 py-2 px-4 rounded-lg font-medium transition-colors"
                         >
                           <X className="w-4 h-4" />
                           Decline
@@ -391,10 +391,10 @@ const Wishlist: React.FC = () => {
 
                     {/* Delete button for non-pending */}
                     {suggestion.status !== "pending" && (
-                      <div className="mt-3 pt-3 border-t border-gray-100">
+                      <div className="mt-3 pt-3 border-t border-stone-100">
                         <button
                           onClick={() => handleDeleteSuggestion(suggestion._id)}
-                          className="text-sm text-gray-400 hover:text-red-500 transition-colors"
+                          className="text-sm text-stone-400 hover:text-red-500 transition-colors"
                         >
                           Remove suggestion
                         </button>

@@ -234,10 +234,10 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
             <BarChart3 className="w-5 h-5 text-indigo-600" />
           </div>
           <div>
-            <h3 className="font-display font-bold text-gray-900">
+            <h3 className="font-display font-bold text-stone-900">
               Review Analytics
             </h3>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-stone-500">
               How readers engage with your content
             </p>
           </div>
@@ -248,19 +248,19 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
             <p className="text-2xl font-bold text-indigo-600">
               {totalBookReactions}
             </p>
-            <p className="text-xs text-gray-500">Book Reactions</p>
+            <p className="text-xs text-stone-500">Book Reactions</p>
           </div>
           <div className="bg-white rounded-xl p-3 text-center shadow-sm">
             <p className="text-2xl font-bold text-purple-600">
               {totalReviewReactions}
             </p>
-            <p className="text-xs text-gray-500">Review Reactions</p>
+            <p className="text-xs text-stone-500">Review Reactions</p>
           </div>
         </div>
 
         {mostPopularReviews.length > 0 && mostPopularReviews[0] && (
           <div className="space-y-2">
-            <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+            <p className="text-xs font-medium text-stone-600 uppercase tracking-wide">
               Top Review
             </p>
             <div className="bg-white rounded-xl p-3 shadow-sm flex items-center gap-3">
@@ -268,10 +268,10 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                 <Award className="w-4 h-4 text-amber-600" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-gray-900 truncate text-sm">
+                <p className="font-medium text-stone-900 truncate text-sm">
                   {mostPopularReviews[0].title}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-stone-500">
                   {mostPopularReviews[0].totalReviewReactions} reactions
                 </p>
               </div>
@@ -297,7 +297,7 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
               <p className="text-3xl font-bold text-pink-600">
                 {totalBookReactions}
               </p>
-              <p className="text-sm text-gray-600">Book Reactions</p>
+              <p className="text-sm text-stone-600">Book Reactions</p>
             </div>
           </Card>
         </motion.div>
@@ -313,7 +313,7 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
               <p className="text-3xl font-bold text-purple-600">
                 {totalReviewReactions}
               </p>
-              <p className="text-sm text-gray-600">Review Reactions</p>
+              <p className="text-sm text-stone-600">Review Reactions</p>
             </div>
           </Card>
         </motion.div>
@@ -329,7 +329,7 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
               <p className="text-3xl font-bold text-amber-600">
                 {booksWithReviews.length}
               </p>
-              <p className="text-sm text-gray-600">Reviews Written</p>
+              <p className="text-sm text-stone-600">Reviews Written</p>
             </div>
           </Card>
         </motion.div>
@@ -350,7 +350,7 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                     ).toFixed(1)
                   : "0"}
               </p>
-              <p className="text-sm text-gray-600">Avg Engagement</p>
+              <p className="text-sm text-stone-600">Avg Engagement</p>
             </div>
           </Card>
         </motion.div>
@@ -369,10 +369,10 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                 <Award className="w-5 h-5 text-amber-600" />
               </div>
               <div>
-                <h3 className="font-display font-bold text-gray-900">
+                <h3 className="font-display font-bold text-stone-900">
                   Most Popular Reviews
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-stone-500">
                   Based on reader reactions
                 </p>
               </div>
@@ -383,17 +383,17 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                 {mostPopularReviews.map((book, index) => (
                   <div
                     key={book.id}
-                    className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                    className="flex items-center gap-3 p-3 bg-stone-50 rounded-xl hover:bg-stone-100 transition-colors"
                   >
                     <div
                       className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm ${
                         index === 0
                           ? "bg-amber-100 text-amber-700"
                           : index === 1
-                            ? "bg-gray-200 text-gray-700"
+                            ? "bg-stone-200 text-stone-700"
                             : index === 2
                               ? "bg-orange-100 text-orange-700"
-                              : "bg-gray-100 text-gray-600"
+                              : "bg-stone-100 text-stone-600"
                       }`}
                     >
                       {index + 1}
@@ -410,10 +410,10 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-gray-900 truncate">
+                      <p className="font-medium text-stone-900 truncate">
                         {book.title}
                       </p>
-                      <p className="text-sm text-gray-500 truncate">
+                      <p className="text-sm text-stone-500 truncate">
                         {book.author}
                       </p>
                     </div>
@@ -425,9 +425,9 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
               </div>
             ) : (
               <div className="text-center py-8">
-                <MessageSquare className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">No reviews with reactions yet</p>
-                <p className="text-sm text-gray-400">
+                <MessageSquare className="w-12 h-12 text-stone-300 mx-auto mb-3" />
+                <p className="text-stone-500">No reviews with reactions yet</p>
+                <p className="text-sm text-stone-400">
                   Share your reviews to get reader feedback!
                 </p>
               </div>
@@ -447,10 +447,10 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                 <Star className="w-5 h-5 text-indigo-600" />
               </div>
               <div>
-                <h3 className="font-display font-bold text-gray-900">
+                <h3 className="font-display font-bold text-stone-900">
                   Genre Ratings
                 </h3>
-                <p className="text-sm text-gray-500">Average rating by genre</p>
+                <p className="text-sm text-stone-500">Average rating by genre</p>
               </div>
             </div>
 
@@ -494,8 +494,8 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
               </div>
             ) : (
               <div className="text-center py-8">
-                <Star className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">
+                <Star className="w-12 h-12 text-stone-300 mx-auto mb-3" />
+                <p className="text-stone-500">
                   Rate more books to see genre stats
                 </p>
               </div>
@@ -518,10 +518,10 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                 <span className="text-lg">❤️</span>
               </div>
               <div>
-                <h3 className="font-display font-bold text-gray-900">
+                <h3 className="font-display font-bold text-stone-900">
                   Book Reactions
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-stone-500">
                   How readers feel about your books
                 </p>
               </div>
@@ -538,14 +538,14 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                     <span className="text-xl w-8">{reaction.emoji}</span>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-medium text-gray-700">
+                        <span className="text-sm font-medium text-stone-700">
                           {reaction.label}
                         </span>
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-stone-500">
                           {reaction.count}
                         </span>
                       </div>
-                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
                         <motion.div
                           className="h-full rounded-full"
                           style={{ backgroundColor: reaction.color }}
@@ -574,10 +574,10 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                 <span className="text-lg">💬</span>
               </div>
               <div>
-                <h3 className="font-display font-bold text-gray-900">
+                <h3 className="font-display font-bold text-stone-900">
                   Review Reactions
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-stone-500">
                   How readers feel about your reviews
                 </p>
               </div>
@@ -594,14 +594,14 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                     <span className="text-xl w-8">{reaction.emoji}</span>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-medium text-gray-700">
+                        <span className="text-sm font-medium text-stone-700">
                           {reaction.label}
                         </span>
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-stone-500">
                           {reaction.count}
                         </span>
                       </div>
-                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
                         <motion.div
                           className="h-full rounded-full"
                           style={{ backgroundColor: reaction.color }}

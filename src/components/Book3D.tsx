@@ -139,7 +139,7 @@ export function Book3D({
           {Array.from({ length: Math.min(20, Math.floor(pageCount / 20)) }).map((_, i) => (
             <div
               key={i}
-              className="absolute left-0 right-0 h-px bg-gray-200"
+              className="absolute left-0 right-0 h-px bg-stone-200"
               style={{ top: `${(i + 1) * 5}%` }}
             />
           ))}
@@ -306,7 +306,7 @@ export function BookOpen({ title, coverUrl, isOpen, onClose, children }: BookOpe
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+          className="absolute top-4 right-4 z-20 p-2 rounded-full bg-stone-100 hover:bg-stone-200 transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

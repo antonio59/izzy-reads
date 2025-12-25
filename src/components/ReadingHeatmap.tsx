@@ -27,7 +27,7 @@ const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 // Get color intensity based on reading count
 function getColor(count: number, maxCount: number): string {
-  if (count === 0) return "bg-gray-100";
+  if (count === 0) return "bg-stone-100";
   const intensity = Math.min(count / Math.max(maxCount, 1), 1);
 
   if (intensity <= 0.25) return "bg-purple-200";
@@ -181,11 +181,11 @@ const ReadingHeatmap: React.FC<ReadingHeatmapProps> = ({ className = "" }) => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="font-display font-bold text-gray-900 text-lg flex items-center gap-2">
+          <h3 className="font-display font-bold text-stone-900 text-lg flex items-center gap-2">
             <Flame className="w-5 h-5 text-orange-500" />
             Reading Activity
           </h3>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-stone-500">
             {totalBooks} books read in {selectedYear}
           </p>
         </div>
@@ -194,21 +194,21 @@ const ReadingHeatmap: React.FC<ReadingHeatmapProps> = ({ className = "" }) => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setSelectedYear((y) => y - 1)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-stone-100 rounded-lg transition-colors"
             aria-label="Previous year"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-600" />
+            <ChevronLeft className="w-5 h-5 text-stone-600" />
           </button>
-          <span className="font-bold text-gray-800 min-w-[4rem] text-center">
+          <span className="font-bold text-stone-800 min-w-[4rem] text-center">
             {selectedYear}
           </span>
           <button
             onClick={() => setSelectedYear((y) => Math.min(y + 1, currentYear))}
             disabled={selectedYear >= currentYear}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-2 hover:bg-stone-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Next year"
           >
-            <ChevronRight className="w-5 h-5 text-gray-600" />
+            <ChevronRight className="w-5 h-5 text-stone-600" />
           </button>
         </div>
       </div>
@@ -220,8 +220,8 @@ const ReadingHeatmap: React.FC<ReadingHeatmapProps> = ({ className = "" }) => {
             <BookOpen className="w-4 h-4 text-purple-600" />
           </div>
           <div>
-            <p className="text-xs text-gray-500">Total Books</p>
-            <p className="font-bold text-gray-800">{totalBooks}</p>
+            <p className="text-xs text-stone-500">Total Books</p>
+            <p className="font-bold text-stone-800">{totalBooks}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -229,8 +229,8 @@ const ReadingHeatmap: React.FC<ReadingHeatmapProps> = ({ className = "" }) => {
             <Flame className="w-4 h-4 text-orange-500" />
           </div>
           <div>
-            <p className="text-xs text-gray-500">Best Streak</p>
-            <p className="font-bold text-gray-800">{streakDays} days</p>
+            <p className="text-xs text-stone-500">Best Streak</p>
+            <p className="font-bold text-stone-800">{streakDays} days</p>
           </div>
         </div>
       </div>
@@ -243,7 +243,7 @@ const ReadingHeatmap: React.FC<ReadingHeatmapProps> = ({ className = "" }) => {
             {monthPositions.map((mp, i) => (
               <div
                 key={i}
-                className="text-xs text-gray-500"
+                className="text-xs text-stone-500"
                 style={{
                   position: "relative",
                   left: `${mp.position * 14}px`,
@@ -261,7 +261,7 @@ const ReadingHeatmap: React.FC<ReadingHeatmapProps> = ({ className = "" }) => {
           {/* Grid with day labels */}
           <div className="flex">
             {/* Day labels */}
-            <div className="flex flex-col gap-[3px] mr-2 text-xs text-gray-400">
+            <div className="flex flex-col gap-[3px] mr-2 text-xs text-stone-400">
               {DAYS.map((day, i) => (
                 <div key={day} className="h-[12px] flex items-center">
                   {i % 2 === 1 ? day.slice(0, 1) : ""}
@@ -294,21 +294,21 @@ const ReadingHeatmap: React.FC<ReadingHeatmapProps> = ({ className = "" }) => {
 
       {/* Legend */}
       <div className="flex items-center justify-end gap-2 mt-4">
-        <span className="text-xs text-gray-500">Less</span>
+        <span className="text-xs text-stone-500">Less</span>
         <div className="flex gap-1">
-          <div className="w-3 h-3 rounded-sm bg-gray-100" />
+          <div className="w-3 h-3 rounded-sm bg-stone-100" />
           <div className="w-3 h-3 rounded-sm bg-purple-200" />
           <div className="w-3 h-3 rounded-sm bg-purple-400" />
           <div className="w-3 h-3 rounded-sm bg-purple-500" />
           <div className="w-3 h-3 rounded-sm bg-purple-600" />
         </div>
-        <span className="text-xs text-gray-500">More</span>
+        <span className="text-xs text-stone-500">More</span>
       </div>
 
       {/* Tooltip */}
       {hoveredDay && (
         <motion.div
-          className="fixed z-50 bg-gray-900 text-white px-3 py-2 rounded-lg text-sm pointer-events-none"
+          className="fixed z-50 bg-stone-900 text-white px-3 py-2 rounded-lg text-sm pointer-events-none"
           style={{
             left: tooltipPosition.x + 10,
             top: tooltipPosition.y - 40,
@@ -323,13 +323,13 @@ const ReadingHeatmap: React.FC<ReadingHeatmapProps> = ({ className = "" }) => {
               day: "numeric",
             })}
           </p>
-          <p className="text-gray-300">
+          <p className="text-stone-300">
             {hoveredDay.count === 0
               ? "No books read"
               : `${hoveredDay.count} book${hoveredDay.count > 1 ? "s" : ""} read`}
           </p>
           {hoveredDay.books.length > 0 && (
-            <p className="text-xs text-gray-400 mt-1 max-w-[200px] truncate">
+            <p className="text-xs text-stone-400 mt-1 max-w-[200px] truncate">
               {hoveredDay.books.join(", ")}
             </p>
           )}

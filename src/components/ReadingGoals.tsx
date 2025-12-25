@@ -161,10 +161,10 @@ const ReadingGoals: React.FC = () => {
                   <Target className="w-7 h-7 text-rose-500" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-display font-bold text-gray-900">
+                  <h1 className="text-3xl font-display font-bold text-stone-900">
                     Reading Goals
                   </h1>
-                  <p className="text-gray-600">Track your reading journey</p>
+                  <p className="text-stone-600">Track your reading journey</p>
                 </div>
               </div>
             </div>
@@ -179,13 +179,13 @@ const ReadingGoals: React.FC = () => {
                   color="primary"
                   showValue={true}
                 />
-                <p className="text-xs text-gray-600 mt-1">Overall</p>
+                <p className="text-xs text-stone-600 mt-1">Overall</p>
               </div>
               <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-4 flex flex-col justify-center">
                 <p className="text-3xl font-display font-bold text-purple-600">
                   {completedGoals}/{goals.length}
                 </p>
-                <p className="text-sm text-gray-600">Goals Complete</p>
+                <p className="text-sm text-stone-600">Goals Complete</p>
               </div>
             </div>
           </div>
@@ -208,37 +208,37 @@ const ReadingGoals: React.FC = () => {
             <div className="w-12 h-12 mx-auto mb-2 rounded-xl bg-blue-100 flex items-center justify-center">
               <BookOpen className="w-6 h-6 text-blue-600" />
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-stone-900">
               {stats.booksRead}
             </p>
-            <p className="text-sm text-gray-500">Books Read</p>
+            <p className="text-sm text-stone-500">Books Read</p>
           </Card>
           <Card padding="md" className="text-center">
             <div className="w-12 h-12 mx-auto mb-2 rounded-xl bg-purple-100 flex items-center justify-center">
               <TrendingUp className="w-6 h-6 text-purple-600" />
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-stone-900">
               {stats.pagesRead.toLocaleString()}
             </p>
-            <p className="text-sm text-gray-500">Pages Read</p>
+            <p className="text-sm text-stone-500">Pages Read</p>
           </Card>
           <Card padding="md" className="text-center">
             <div className="w-12 h-12 mx-auto mb-2 rounded-xl bg-orange-100 flex items-center justify-center">
               <Flame className="w-6 h-6 text-orange-600" />
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-stone-900">
               {stats.streakWeeks}
             </p>
-            <p className="text-sm text-gray-500">Week Streak</p>
+            <p className="text-sm text-stone-500">Week Streak</p>
           </Card>
           <Card padding="md" className="text-center">
             <div className="w-12 h-12 mx-auto mb-2 rounded-xl bg-pink-100 flex items-center justify-center">
               <Award className="w-6 h-6 text-pink-600" />
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-stone-900">
               {stats.genresRead}
             </p>
-            <p className="text-sm text-gray-500">Genres Explored</p>
+            <p className="text-sm text-stone-500">Genres Explored</p>
           </Card>
         </div>
       </FadeIn>
@@ -251,7 +251,7 @@ const ReadingGoals: React.FC = () => {
       {/* Goals Section */}
       <FadeIn delay={0.2}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-display font-bold text-gray-900">
+          <h2 className="text-xl font-display font-bold text-stone-900">
             Your Goals
           </h2>
           <motion.button
@@ -285,7 +285,7 @@ const ReadingGoals: React.FC = () => {
                   <div className="flex items-start gap-4">
                     <div className="text-4xl">{goal.emoji}</div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-display font-bold text-gray-900 mb-1 truncate">
+                      <h3 className="font-display font-bold text-stone-900 mb-1 truncate">
                         {goal.title}
                       </h3>
 
@@ -306,7 +306,7 @@ const ReadingGoals: React.FC = () => {
 
                       <div className="mb-2">
                         <div className="flex justify-between text-sm mb-1">
-                          <span className="text-gray-600">
+                          <span className="text-stone-600">
                             {goal.current.toLocaleString()} /{" "}
                             {goal.target.toLocaleString()}
                           </span>
@@ -328,7 +328,7 @@ const ReadingGoals: React.FC = () => {
                       <div className="flex gap-2 mt-3">
                         <button
                           onClick={() => handleDeleteGoal(goal.id)}
-                          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -395,14 +395,14 @@ const ReadingGoals: React.FC = () => {
               exit={{ scale: 0.9, y: 20 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <h2 className="text-2xl font-display font-bold text-gray-900 mb-6">
+              <h2 className="text-2xl font-display font-bold text-stone-900 mb-6">
                 Create a New Goal
               </h2>
 
               <div className="space-y-4">
                 {/* Goal title */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-stone-700 mb-1">
                     Goal Title
                   </label>
                   <input
@@ -412,13 +412,13 @@ const ReadingGoals: React.FC = () => {
                       setNewGoal((prev) => ({ ...prev, title: e.target.value }))
                     }
                     placeholder="e.g., Read 10 books this summer"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
                   />
                 </div>
 
                 {/* Goal type */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-stone-700 mb-2">
                     Goal Type
                   </label>
                   <div className="grid grid-cols-2 gap-2">
@@ -435,13 +435,13 @@ const ReadingGoals: React.FC = () => {
                         className={`p-3 rounded-xl border-2 transition-all text-left ${
                           newGoal.type === type.type
                             ? "border-purple-500 bg-purple-50"
-                            : "border-gray-200 hover:border-gray-300"
+                            : "border-stone-200 hover:border-stone-300"
                         }`}
                       >
                         <span className="text-2xl block mb-1">
                           {type.emoji}
                         </span>
-                        <span className="font-medium text-gray-900">
+                        <span className="font-medium text-stone-900">
                           {type.label}
                         </span>
                       </button>
@@ -451,7 +451,7 @@ const ReadingGoals: React.FC = () => {
 
                 {/* Target number */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-stone-700 mb-1">
                     Target
                   </label>
                   <input
@@ -464,13 +464,13 @@ const ReadingGoals: React.FC = () => {
                       }))
                     }
                     min={1}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
                   />
                 </div>
 
                 {/* Deadline */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-stone-700 mb-1">
                     Deadline (optional)
                   </label>
                   <input
@@ -482,7 +482,7 @@ const ReadingGoals: React.FC = () => {
                         deadline: e.target.value,
                       }))
                     }
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
                   />
                 </div>
               </div>
@@ -491,7 +491,7 @@ const ReadingGoals: React.FC = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={() => setShowAddGoal(false)}
-                  className="flex-1 py-3 px-4 rounded-xl border border-gray-200 font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                  className="flex-1 py-3 px-4 rounded-xl border border-stone-200 font-medium text-stone-700 hover:bg-stone-50 transition-colors"
                 >
                   Cancel
                 </button>

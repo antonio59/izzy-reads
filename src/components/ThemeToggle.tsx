@@ -19,8 +19,8 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
         onClick={toggleDark}
         className={`p-2.5 rounded-lg transition-colors ${
           theme === "dark"
-            ? "bg-gray-800 text-yellow-400"
-            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            ? "bg-stone-800 text-yellow-400"
+            : "bg-stone-100 text-stone-600 hover:bg-stone-200"
         } ${className}`}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -57,7 +57,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
 
   return (
     <div
-      className={`flex gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl ${className}`}
+      className={`flex gap-2 p-1 bg-stone-100 dark:bg-stone-800 rounded-xl ${className}`}
     >
       <ThemeButton
         active={theme === "light"}
@@ -98,7 +98,7 @@ function ThemeButton({
       className={`relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
         active
           ? "text-white"
-          : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
+          : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200"
       }`}
     >
       {active && (

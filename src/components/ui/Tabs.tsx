@@ -32,14 +32,14 @@ export function Tabs({
 
   if (variant === "pills") {
     return (
-      <div className={`inline-flex bg-gray-100 rounded-xl p-1 ${className}`}>
+      <div className={`inline-flex bg-stone-100 rounded-xl p-1 ${className}`}>
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => onChange(tab.id)}
             className={`
               relative ${sizeStyles[size]} rounded-lg font-medium transition-colors
-              ${activeTab === tab.id ? "text-gray-900" : "text-gray-500 hover:text-gray-700"}
+              ${activeTab === tab.id ? "text-stone-900" : "text-stone-500 hover:text-stone-700"}
             `}
           >
             {activeTab === tab.id && (
@@ -61,7 +61,7 @@ export function Tabs({
 
   if (variant === "underline") {
     return (
-      <div className={`flex border-b border-gray-200 ${className}`}>
+      <div className={`flex border-b border-stone-200 ${className}`}>
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -100,7 +100,7 @@ export function Tabs({
             ${
               activeTab === tab.id
                 ? "bg-primary-100 text-primary-700"
-                : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                : "text-stone-500 hover:text-stone-700 hover:bg-stone-100"
             }
           `}
         >

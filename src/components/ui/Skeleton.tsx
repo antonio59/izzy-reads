@@ -15,7 +15,7 @@ export function Skeleton({
   height,
   animation = "pulse",
 }: SkeletonProps) {
-  const baseStyles = "bg-gray-200";
+  const baseStyles = "bg-stone-200";
 
   const variantStyles = {
     text: "rounded",
@@ -250,7 +250,7 @@ export function ProfileSkeleton() {
 
 export function TableRowSkeleton({ columns = 4 }: { columns?: number }) {
   return (
-    <div className="flex items-center gap-4 p-4 border-b border-gray-100">
+    <div className="flex items-center gap-4 p-4 border-b border-stone-100">
       {Array.from({ length: columns }).map((_, i) => (
         <Skeleton
           key={i}
@@ -272,7 +272,7 @@ export function TableSkeleton({
 }) {
   return (
     <div className="bg-white rounded-2xl shadow-soft overflow-hidden">
-      <div className="flex items-center gap-4 p-4 bg-gray-50 border-b border-gray-200">
+      <div className="flex items-center gap-4 p-4 bg-stone-50 border-b border-stone-200">
         {Array.from({ length: columns }).map((_, i) => (
           <Skeleton
             key={i}

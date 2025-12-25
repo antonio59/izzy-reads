@@ -40,7 +40,7 @@ const CATEGORY_INFO: Record<
 };
 
 const RARITY_INFO = {
-  common: { label: "Common", color: "bg-gray-200 text-gray-700", glow: "" },
+  common: { label: "Common", color: "bg-stone-200 text-stone-700", glow: "" },
   rare: {
     label: "Rare",
     color: "bg-blue-100 text-blue-700",
@@ -77,7 +77,7 @@ function AchievementCard({
       className={`relative p-5 rounded-2xl transition-all ${
         unlocked
           ? "bg-white shadow-soft hover:shadow-lg"
-          : "bg-gray-50 opacity-75"
+          : "bg-stone-50 opacity-75"
       } ${unlocked && achievement.rarity !== "common" ? `shadow-lg ${rarityInfo.glow}` : ""}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -100,7 +100,7 @@ function AchievementCard({
           className={`w-16 h-16 rounded-2xl flex items-center justify-center text-4xl ${
             unlocked
               ? `bg-gradient-to-br ${CATEGORY_INFO[achievement.category].color}`
-              : "bg-gray-200"
+              : "bg-stone-200"
           }`}
           animate={unlocked && isHovered ? { rotate: [0, -10, 10, 0] } : {}}
           transition={{ duration: 0.5 }}
@@ -108,7 +108,7 @@ function AchievementCard({
           {unlocked ? (
             achievement.icon
           ) : (
-            <Lock className="w-8 h-8 text-gray-400" />
+            <Lock className="w-8 h-8 text-stone-400" />
           )}
         </motion.div>
 
@@ -126,12 +126,12 @@ function AchievementCard({
 
       {/* Content */}
       <h3
-        className={`font-display font-bold mb-1 ${unlocked ? "text-gray-900" : "text-gray-400"}`}
+        className={`font-display font-bold mb-1 ${unlocked ? "text-stone-900" : "text-stone-400"}`}
       >
         {unlocked || !achievement.secret ? achievement.name : "???"}
       </h3>
       <p
-        className={`text-sm mb-3 ${unlocked ? "text-gray-600" : "text-gray-400"}`}
+        className={`text-sm mb-3 ${unlocked ? "text-stone-600" : "text-stone-400"}`}
       >
         {unlocked || !achievement.secret
           ? achievement.description
@@ -141,11 +141,11 @@ function AchievementCard({
       {/* Progress bar for locked achievements */}
       {!unlocked && progress > 0 && (
         <div className="mb-3">
-          <div className="flex justify-between text-xs text-gray-500 mb-1">
+          <div className="flex justify-between text-xs text-stone-500 mb-1">
             <span>Progress</span>
             <span>{Math.round(progress)}%</span>
           </div>
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div className="h-2 bg-stone-200 rounded-full overflow-hidden">
             <motion.div
               className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
               initial={{ width: 0 }}
@@ -159,10 +159,10 @@ function AchievementCard({
       {/* XP reward */}
       <div className="flex items-center gap-1 text-sm">
         <Star
-          className={`w-4 h-4 ${unlocked ? "text-amber-500" : "text-gray-400"}`}
+          className={`w-4 h-4 ${unlocked ? "text-amber-500" : "text-stone-400"}`}
         />
         <span
-          className={unlocked ? "text-amber-600 font-medium" : "text-gray-400"}
+          className={unlocked ? "text-amber-600 font-medium" : "text-stone-400"}
         >
           +{achievement.xpReward} XP
         </span>
@@ -235,10 +235,10 @@ const AchievementsPage: React.FC = () => {
                   <Trophy className="w-7 h-7 text-amber-500" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-display font-bold text-gray-900">
+                  <h1 className="text-3xl font-display font-bold text-stone-900">
                     Achievements
                   </h1>
-                  <p className="text-gray-600">
+                  <p className="text-stone-600">
                     {stats.unlocked} of {stats.total} unlocked
                   </p>
                 </div>
@@ -250,12 +250,12 @@ const AchievementsPage: React.FC = () => {
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-3xl">{level.icon}</span>
                 <div>
-                  <p className="font-bold text-gray-900">Level {level.level}</p>
-                  <p className="text-sm text-gray-600">{level.title}</p>
+                  <p className="font-bold text-stone-900">Level {level.level}</p>
+                  <p className="text-sm text-stone-600">{level.title}</p>
                 </div>
               </div>
               <div className="mt-2">
-                <div className="flex justify-between text-xs text-gray-500 mb-1">
+                <div className="flex justify-between text-xs text-stone-500 mb-1">
                   <span>{xpInLevel.toLocaleString()} XP</span>
                   <span>{xpForNextLevel.toLocaleString()} XP</span>
                 </div>
@@ -293,7 +293,7 @@ const AchievementsPage: React.FC = () => {
       {/* Filters */}
       <FadeIn delay={0.1}>
         <div className="flex flex-wrap gap-3 items-center">
-          <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex items-center gap-2 text-stone-600">
             <Filter className="w-4 h-4" />
             <span className="text-sm font-medium">Filter:</span>
           </div>
@@ -305,7 +305,7 @@ const AchievementsPage: React.FC = () => {
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
                 filter === "all"
                   ? "bg-purple-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
               }`}
             >
               All
@@ -317,7 +317,7 @@ const AchievementsPage: React.FC = () => {
                 className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all flex items-center gap-1 ${
                   filter === key
                     ? "bg-purple-600 text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
                 }`}
               >
                 <span>{info.emoji}</span>
@@ -326,7 +326,7 @@ const AchievementsPage: React.FC = () => {
             ))}
           </div>
 
-          <div className="h-6 w-px bg-gray-200 hidden sm:block" />
+          <div className="h-6 w-px bg-stone-200 hidden sm:block" />
 
           {/* Status filters */}
           <div className="flex gap-2">
@@ -336,8 +336,8 @@ const AchievementsPage: React.FC = () => {
                 onClick={() => setShowUnlocked(status)}
                 className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
                   showUnlocked === status
-                    ? "bg-gray-800 text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    ? "bg-stone-800 text-white"
+                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
                 }`}
               >
                 {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -380,19 +380,19 @@ const AchievementsPage: React.FC = () => {
               <p className="text-3xl font-display font-bold text-purple-600">
                 {stats.unlocked}
               </p>
-              <p className="text-sm text-gray-600">Achievements Unlocked</p>
+              <p className="text-sm text-stone-600">Achievements Unlocked</p>
             </div>
             <div className="text-center">
               <p className="text-3xl font-display font-bold text-pink-600">
                 {stats.totalXP.toLocaleString()}
               </p>
-              <p className="text-sm text-gray-600">XP from Achievements</p>
+              <p className="text-sm text-stone-600">XP from Achievements</p>
             </div>
             <div className="text-center">
               <p className="text-3xl font-display font-bold text-amber-600">
                 {Math.round((stats.unlocked / stats.total) * 100)}%
               </p>
-              <p className="text-sm text-gray-600">Completion</p>
+              <p className="text-sm text-stone-600">Completion</p>
             </div>
           </div>
         </Card>

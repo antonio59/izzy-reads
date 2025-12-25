@@ -20,7 +20,7 @@ const variantStyles: Record<CardVariant, string> = {
   default: "bg-white shadow-soft",
   elevated: "bg-white shadow-soft-md",
   interactive: "bg-white shadow-soft hover:shadow-soft-lg cursor-pointer",
-  outlined: "bg-white border border-gray-200",
+  outlined: "bg-white border border-stone-200",
   gradient: "bg-gradient-to-br from-primary-50 to-accent-50 shadow-soft",
 };
 
@@ -99,7 +99,7 @@ export function CardTitle({
   as: Tag = "h3",
 }: CardTitleProps) {
   return (
-    <Tag className={`font-display font-bold text-gray-900 ${className}`}>
+    <Tag className={`font-display font-bold text-stone-900 ${className}`}>
       {children}
     </Tag>
   );
@@ -116,7 +116,7 @@ export function CardDescription({
   className = "",
 }: CardDescriptionProps) {
   return (
-    <p className={`text-sm text-gray-500 mt-1 ${className}`}>{children}</p>
+    <p className={`text-sm text-stone-500 mt-1 ${className}`}>{children}</p>
   );
 }
 
@@ -138,7 +138,7 @@ interface CardFooterProps {
 
 export function CardFooter({ children, className = "" }: CardFooterProps) {
   return (
-    <div className={`mt-4 pt-4 border-t border-gray-100 ${className}`}>
+    <div className={`mt-4 pt-4 border-t border-stone-100 ${className}`}>
       {children}
     </div>
   );
@@ -185,7 +185,7 @@ export function StatCard({
     <Card variant="default" padding="md" className={className}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-500">{label}</p>
+          <p className="text-sm font-medium text-stone-500">{label}</p>
           <p
             className={`text-3xl font-bold font-display mt-1 ${colorStyles[color]}`}
           >

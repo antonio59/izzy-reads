@@ -108,25 +108,25 @@ const Progress: React.FC = () => {
       </div>
 
       {/* Level Progress */}
-      <div className="bg-white rounded-2xl p-6 border border-gray-100">
+      <div className="bg-white rounded-2xl p-6 border border-stone-100">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-2xl">
               {level.icon}
             </div>
             <div>
-              <h3 className="font-bold text-gray-900">Level {level.level}</h3>
-              <p className="text-sm text-gray-500">{level.title}</p>
+              <h3 className="font-bold text-stone-900">Level {level.level}</h3>
+              <p className="text-sm text-stone-500">{level.title}</p>
             </div>
           </div>
           <div className="text-right">
             <p className="font-bold text-purple-600">{totalXP} XP</p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-stone-500">
               {Math.round((1 - xpProgress) * 100)}% to next level
             </p>
           </div>
         </div>
-        <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+        <div className="h-3 bg-stone-100 rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
             initial={{ width: 0 }}
@@ -137,8 +137,8 @@ const Progress: React.FC = () => {
       </div>
 
       {/* Achievements */}
-      <div className="bg-white rounded-2xl p-6 border border-gray-100">
-        <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+      <div className="bg-white rounded-2xl p-6 border border-stone-100">
+        <h2 className="text-xl font-bold text-stone-900 mb-4 flex items-center gap-2">
           <Trophy className="w-5 h-5 text-amber-500" />
           Achievements
         </h2>
@@ -146,7 +146,7 @@ const Progress: React.FC = () => {
         {/* Unlocked */}
         {unlockedList.length > 0 && (
           <div className="mb-6">
-            <h3 className="text-sm font-medium text-gray-500 mb-3">Unlocked</h3>
+            <h3 className="text-sm font-medium text-stone-500 mb-3">Unlocked</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {unlockedList.map((achievement: Achievement) => (
                 <AchievementBadge
@@ -162,7 +162,7 @@ const Progress: React.FC = () => {
         {/* Locked */}
         {lockedList.length > 0 && (
           <div>
-            <h3 className="text-sm font-medium text-gray-500 mb-3">
+            <h3 className="text-sm font-medium text-stone-500 mb-3">
               Keep Reading to Unlock
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -179,15 +179,15 @@ const Progress: React.FC = () => {
       </div>
 
       {/* Reading Goals */}
-      <div className="bg-white rounded-2xl p-6 border border-gray-100">
+      <div className="bg-white rounded-2xl p-6 border border-stone-100">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+          <h2 className="text-xl font-bold text-stone-900 flex items-center gap-2">
             <Target className="w-5 h-5 text-green-500" />
             Reading Goals
           </h2>
           <button
             onClick={() => setShowGoalEditor(true)}
-            className="flex items-center gap-1 px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            className="flex items-center gap-1 px-3 py-1.5 text-sm text-stone-500 hover:text-stone-700 hover:bg-stone-100 rounded-lg transition-colors"
           >
             <Settings className="w-4 h-4" />
             Edit Goals
@@ -228,20 +228,20 @@ const Progress: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-900">
+                <h3 className="text-xl font-bold text-stone-900">
                   Set Reading Goals
                 </h3>
                 <button
                   onClick={() => setShowGoalEditor(false)}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="p-2 hover:bg-stone-100 rounded-lg transition-colors"
                 >
-                  <X className="w-5 h-5 text-gray-500" />
+                  <X className="w-5 h-5 text-stone-500" />
                 </button>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-stone-700 mb-2">
                     Books per Year
                   </label>
                   <div className="flex items-center gap-3">
@@ -255,7 +255,7 @@ const Progress: React.FC = () => {
                         setYearlyGoal(val);
                         setMonthlyGoal(Math.ceil(val / 12));
                       }}
-                      className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                      className="flex-1 h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-purple-500"
                     />
                     <span className="w-12 text-center font-bold text-purple-600">
                       {yearlyGoal}
@@ -264,7 +264,7 @@ const Progress: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-stone-700 mb-2">
                     Books per Month
                   </label>
                   <div className="flex items-center gap-3">
@@ -278,7 +278,7 @@ const Progress: React.FC = () => {
                         setMonthlyGoal(val);
                         setYearlyGoal(val * 12);
                       }}
-                      className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                      className="flex-1 h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-purple-500"
                     />
                     <span className="w-12 text-center font-bold text-purple-600">
                       {monthlyGoal}
@@ -289,7 +289,7 @@ const Progress: React.FC = () => {
                 <div className="pt-4 flex gap-3">
                   <button
                     onClick={() => setShowGoalEditor(false)}
-                    className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                    className="flex-1 px-4 py-2.5 border border-stone-200 rounded-xl font-medium text-stone-600 hover:bg-stone-50 transition-colors"
                   >
                     Cancel
                   </button>
@@ -333,7 +333,7 @@ const StatCard: React.FC<StatCardProps> = ({
 
   return (
     <motion.div
-      className="bg-white rounded-xl p-4 border border-gray-100"
+      className="bg-white rounded-xl p-4 border border-stone-100"
       whileHover={{ y: -2 }}
     >
       <div
@@ -341,8 +341,8 @@ const StatCard: React.FC<StatCardProps> = ({
       >
         <Icon className="w-5 h-5 text-white" />
       </div>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
-      <p className="text-sm text-gray-500">{label}</p>
+      <p className="text-2xl font-bold text-stone-900">{value}</p>
+      <p className="text-sm text-stone-500">{label}</p>
     </motion.div>
   );
 };
@@ -367,7 +367,7 @@ const AchievementBadge: React.FC<AchievementBadgeProps> = ({
       className={`p-3 rounded-xl text-center transition-all ${
         unlocked
           ? "bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200"
-          : "bg-gray-50 border border-gray-100 opacity-50"
+          : "bg-stone-50 border border-stone-100 opacity-50"
       }`}
       whileHover={unlocked ? { scale: 1.05 } : {}}
     >
@@ -375,7 +375,7 @@ const AchievementBadge: React.FC<AchievementBadgeProps> = ({
         {achievement.icon}
       </div>
       <p
-        className={`text-xs font-medium ${unlocked ? "text-gray-900" : "text-gray-500"}`}
+        className={`text-xs font-medium ${unlocked ? "text-stone-900" : "text-stone-500"}`}
       >
         {achievement.name}
       </p>
@@ -402,20 +402,20 @@ const GoalCard: React.FC<GoalCardProps> = ({
 
   return (
     <div
-      className={`p-4 rounded-xl border ${isComplete ? "bg-green-50 border-green-200" : "bg-gray-50 border-gray-100"}`}
+      className={`p-4 rounded-xl border ${isComplete ? "bg-green-50 border-green-200" : "bg-stone-50 border-stone-100"}`}
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className="text-2xl">{icon}</span>
-          <span className="font-medium text-gray-900">{title}</span>
+          <span className="font-medium text-stone-900">{title}</span>
         </div>
         <span
-          className={`font-bold ${isComplete ? "text-green-600" : "text-gray-600"}`}
+          className={`font-bold ${isComplete ? "text-green-600" : "text-stone-600"}`}
         >
           {current}/{target}
         </span>
       </div>
-      <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+      <div className="h-2 bg-stone-200 rounded-full overflow-hidden">
         <motion.div
           className={`h-full ${isComplete ? "bg-green-500" : "bg-purple-500"}`}
           initial={{ width: 0 }}

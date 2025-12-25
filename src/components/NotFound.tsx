@@ -217,10 +217,10 @@ const NotFound: React.FC = () => {
               >
                 {currentMessage.emoji}
               </motion.span>
-              <h2 className="text-2xl md:text-3xl font-display font-bold text-gray-800 mb-2">
+              <h2 className="text-2xl md:text-3xl font-display font-bold text-stone-800 mb-2">
                 {currentMessage.title}
               </h2>
-              <p className="text-gray-600 text-lg mb-8">
+              <p className="text-stone-600 text-lg mb-8">
                 {currentMessage.subtitle}
               </p>
             </motion.div>
@@ -259,12 +259,12 @@ const NotFound: React.FC = () => {
 
           {/* Fun suggestion */}
           <motion.div
-            className="mt-8 pt-8 border-t border-gray-200"
+            className="mt-8 pt-8 border-t border-stone-200"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
           >
-            <p className="text-gray-500 text-sm flex items-center justify-center gap-2">
+            <p className="text-stone-500 text-sm flex items-center justify-center gap-2">
               <Sparkles className="w-4 h-4 text-purple-500" />
               While you're here, why not read a book?
               <Sparkles className="w-4 h-4 text-pink-500" />

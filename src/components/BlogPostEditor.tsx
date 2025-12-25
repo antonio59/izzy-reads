@@ -158,11 +158,11 @@ const BlogPostEditor: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200">
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-stone-200">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           <button
             onClick={() => navigate("/create")}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+            className="flex items-center gap-2 text-stone-600 hover:text-stone-900 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="font-medium">Back</span>
@@ -174,7 +174,7 @@ const BlogPostEditor: React.FC = () => {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
                 showPreview
                   ? "bg-purple-100 text-purple-700"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
               }`}
             >
               {showPreview ? (
@@ -208,10 +208,10 @@ const BlogPostEditor: React.FC = () => {
               exit={{ opacity: 0, y: -20 }}
               className="bg-white rounded-2xl shadow-lg p-8"
             >
-              <h1 className="text-3xl font-bold text-gray-900 mb-6">
+              <h1 className="text-3xl font-bold text-stone-900 mb-6">
                 {title || "Untitled Post"}
               </h1>
-              <div className="prose prose-lg max-w-none text-gray-700">
+              <div className="prose prose-lg max-w-none text-stone-700">
                 {renderPreview()}
               </div>
             </motion.div>
@@ -230,7 +230,7 @@ const BlogPostEditor: React.FC = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Give your post an awesome title..."
-                  className="w-full text-3xl font-bold text-gray-900 placeholder-gray-300 border-none focus:outline-none focus:ring-0"
+                  className="w-full text-3xl font-bold text-stone-900 placeholder-stone-300 border-none focus:outline-none focus:ring-0"
                 />
               </div>
 
@@ -245,7 +245,7 @@ const BlogPostEditor: React.FC = () => {
                       className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
                         showEmojiPicker
                           ? "bg-purple-100 text-purple-700"
-                          : "bg-gray-100 text-gray-600 hover:bg-purple-50 hover:text-purple-600"
+                          : "bg-stone-100 text-stone-600 hover:bg-purple-50 hover:text-purple-600"
                       }`}
                     >
                       <Smile className="w-5 h-5" />
@@ -258,10 +258,10 @@ const BlogPostEditor: React.FC = () => {
                           initial={{ opacity: 0, scale: 0.95, y: 10 }}
                           animate={{ opacity: 1, scale: 1, y: 0 }}
                           exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                          className="absolute z-50 top-full mt-2 left-0 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
+                          className="absolute z-50 top-full mt-2 left-0 w-80 bg-white rounded-xl shadow-2xl border border-stone-200 overflow-hidden"
                         >
                           {/* Category Tabs */}
-                          <div className="flex overflow-x-auto p-2 border-b border-gray-100 gap-1">
+                          <div className="flex overflow-x-auto p-2 border-b border-stone-100 gap-1">
                             {Object.keys(EMOJI_CATEGORIES).map((category) => (
                               <button
                                 key={category}
@@ -269,7 +269,7 @@ const BlogPostEditor: React.FC = () => {
                                 className={`px-3 py-1.5 text-xs font-medium rounded-lg whitespace-nowrap transition-colors ${
                                   activeEmojiCategory === category
                                     ? "bg-purple-100 text-purple-700"
-                                    : "text-gray-500 hover:bg-gray-100"
+                                    : "text-stone-500 hover:bg-stone-100"
                                 }`}
                               >
                                 {category}
@@ -289,7 +289,7 @@ const BlogPostEditor: React.FC = () => {
                                     insertEmoji(emoji);
                                     setShowEmojiPicker(false);
                                   }}
-                                  className="w-12 h-12 flex items-center justify-center text-2xl hover:bg-gray-100 rounded-xl transition-colors"
+                                  className="w-12 h-12 flex items-center justify-center text-2xl hover:bg-stone-100 rounded-xl transition-colors"
                                 >
                                   {emoji}
                                 </button>
@@ -302,7 +302,7 @@ const BlogPostEditor: React.FC = () => {
                   </div>
 
                   {/* GIF Picker - wrapped in styled button */}
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-100 text-gray-600 hover:bg-pink-50 hover:text-pink-600 transition-all">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-stone-100 text-stone-600 hover:bg-pink-50 hover:text-pink-600 transition-all">
                     <Image className="w-5 h-5" />
                     <span className="font-medium">GIF</span>
                     <GifPicker
@@ -313,7 +313,7 @@ const BlogPostEditor: React.FC = () => {
 
                   <div className="flex-1" />
 
-                  <div className="flex items-center gap-2 text-sm text-gray-400">
+                  <div className="flex items-center gap-2 text-sm text-stone-400">
                     <Sparkles className="w-4 h-4" />
                     <span>Express yourself!</span>
                   </div>
@@ -327,13 +327,13 @@ const BlogPostEditor: React.FC = () => {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Start writing your amazing post here... Add emojis, GIFs, and let your creativity flow!"
-                  className="w-full min-h-[400px] text-lg text-gray-700 placeholder-gray-300 border-none focus:outline-none focus:ring-0 resize-none"
+                  className="w-full min-h-[400px] text-lg text-stone-700 placeholder-stone-300 border-none focus:outline-none focus:ring-0 resize-none"
                 />
 
                 {/* GIF Previews */}
                 {content.includes("![GIF]") && (
-                  <div className="mt-6 pt-6 border-t border-gray-100">
-                    <p className="text-sm font-medium text-gray-500 mb-3">
+                  <div className="mt-6 pt-6 border-t border-stone-100">
+                    <p className="text-sm font-medium text-stone-500 mb-3">
                       GIFs in your post:
                     </p>
                     <div className="flex flex-wrap gap-3">

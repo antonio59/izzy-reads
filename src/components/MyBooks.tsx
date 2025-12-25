@@ -175,13 +175,13 @@ const MyBooks: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 bg-gray-100 p-1.5 rounded-xl w-fit">
+      <div className="flex gap-2 bg-stone-100 p-1.5 rounded-xl w-fit">
         <button
           onClick={() => setActiveTab("read")}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
             activeTab === "read"
               ? "bg-white text-purple-600 shadow-sm"
-              : "text-gray-600 hover:text-gray-900"
+              : "text-stone-600 hover:text-stone-900"
           }`}
         >
           <BookOpen className="w-4 h-4" />
@@ -192,7 +192,7 @@ const MyBooks: React.FC = () => {
           className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
             activeTab === "want-to-read"
               ? "bg-white text-pink-600 shadow-sm"
-              : "text-gray-600 hover:text-gray-900"
+              : "text-stone-600 hover:text-stone-900"
           }`}
         >
           <Heart className="w-4 h-4" />
@@ -203,13 +203,13 @@ const MyBooks: React.FC = () => {
       {/* Search and Filter */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
           <input
             type="text"
             placeholder="Search your books..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2.5 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
           />
         </div>
 
@@ -221,7 +221,7 @@ const MyBooks: React.FC = () => {
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all ${
                 giftFromFilter
                   ? "bg-pink-100 text-pink-700 border border-pink-200"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200 border border-transparent"
+                  : "bg-stone-100 text-stone-600 hover:bg-stone-200 border border-transparent"
               }`}
             >
               <Gift className="w-4 h-4" />
@@ -245,10 +245,10 @@ const MyBooks: React.FC = () => {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute z-20 top-full mt-2 right-0 w-56 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden"
+                  className="absolute z-20 top-full mt-2 right-0 w-56 bg-white rounded-xl shadow-lg border border-stone-200 overflow-hidden"
                 >
-                  <div className="p-2 border-b border-gray-100 bg-gray-50">
-                    <p className="text-xs text-gray-500 font-medium flex items-center gap-1">
+                  <div className="p-2 border-b border-stone-100 bg-stone-50">
+                    <p className="text-xs text-stone-500 font-medium flex items-center gap-1">
                       <Gift className="w-3 h-3" />
                       Filter by gift giver
                     </p>
@@ -262,7 +262,7 @@ const MyBooks: React.FC = () => {
                       className={`w-full px-4 py-2 text-left text-sm transition-colors ${
                         !giftFromFilter
                           ? "bg-pink-50 text-pink-700"
-                          : "hover:bg-gray-50 text-gray-700"
+                          : "hover:bg-stone-50 text-stone-700"
                       }`}
                     >
                       All books
@@ -277,12 +277,12 @@ const MyBooks: React.FC = () => {
                         className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 transition-colors ${
                           giftFromFilter === giver
                             ? "bg-pink-50 text-pink-700"
-                            : "hover:bg-gray-50 text-gray-700"
+                            : "hover:bg-stone-50 text-stone-700"
                         }`}
                       >
                         <Gift className="w-4 h-4 text-pink-400" />
                         {giver}
-                        <span className="ml-auto text-xs text-gray-400">
+                        <span className="ml-auto text-xs text-stone-400">
                           {readBooks.filter((b) => b.giftFrom === giver).length}
                         </span>
                       </button>
@@ -381,11 +381,11 @@ const MyBooks: React.FC = () => {
                     {suggestions.map((suggestion) => (
                       <motion.div
                         key={suggestion._id}
-                        className={`bg-white rounded-xl p-4 text-gray-800 ${
+                        className={`bg-white rounded-xl p-4 text-stone-800 ${
                           suggestion.status === "approved"
                             ? "border-2 border-green-400"
                             : suggestion.status === "declined"
-                              ? "border-2 border-gray-300 opacity-60"
+                              ? "border-2 border-stone-300 opacity-60"
                               : ""
                         }`}
                         initial={{ opacity: 0, x: -20 }}
@@ -397,7 +397,7 @@ const MyBooks: React.FC = () => {
                             <h4 className="font-bold text-lg">
                               {suggestion.title}
                             </h4>
-                            <p className="text-gray-600 text-sm">
+                            <p className="text-stone-600 text-sm">
                               by {suggestion.author}
                             </p>
                             <div className="flex items-center gap-2 mt-2">
@@ -406,14 +406,14 @@ const MyBooks: React.FC = () => {
                                   {suggestion.genre}
                                 </span>
                               )}
-                              <span className="text-xs text-gray-400">
+                              <span className="text-xs text-stone-400">
                                 Suggested by {suggestion.suggestedBy}
                               </span>
                             </div>
                             {suggestion.reason && (
-                              <div className="mt-3 flex items-start gap-2 bg-gray-50 rounded-lg p-3">
-                                <MessageCircle className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                                <p className="text-sm text-gray-600 italic">
+                              <div className="mt-3 flex items-start gap-2 bg-stone-50 rounded-lg p-3">
+                                <MessageCircle className="w-4 h-4 text-stone-400 mt-0.5 flex-shrink-0" />
+                                <p className="text-sm text-stone-600 italic">
                                   "{suggestion.reason}"
                                 </p>
                               </div>
@@ -424,7 +424,7 @@ const MyBooks: React.FC = () => {
                               className={`text-xs font-medium px-2 py-1 rounded-full ${
                                 suggestion.status === "approved"
                                   ? "bg-green-100 text-green-700"
-                                  : "bg-gray-100 text-gray-500"
+                                  : "bg-stone-100 text-stone-500"
                               }`}
                             >
                               {suggestion.status === "approved"
@@ -435,7 +435,7 @@ const MyBooks: React.FC = () => {
                         </div>
 
                         {suggestion.status === "pending" && (
-                          <div className="flex gap-2 mt-4 pt-3 border-t border-gray-100">
+                          <div className="flex gap-2 mt-4 pt-3 border-t border-stone-100">
                             <button
                               onClick={() =>
                                 handleApproveSuggestion(suggestion._id)
@@ -449,7 +449,7 @@ const MyBooks: React.FC = () => {
                               onClick={() =>
                                 handleDeclineSuggestion(suggestion._id)
                               }
-                              className="flex items-center justify-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium transition-colors"
+                              className="flex items-center justify-center gap-2 bg-stone-200 hover:bg-stone-300 text-stone-700 py-2 px-4 rounded-lg font-medium transition-colors"
                             >
                               <X className="w-4 h-4" />
                               Decline
@@ -458,12 +458,12 @@ const MyBooks: React.FC = () => {
                         )}
 
                         {suggestion.status !== "pending" && (
-                          <div className="mt-3 pt-3 border-t border-gray-100">
+                          <div className="mt-3 pt-3 border-t border-stone-100">
                             <button
                               onClick={() =>
                                 handleDeleteSuggestion(suggestion._id)
                               }
-                              className="text-sm text-gray-400 hover:text-red-500 transition-colors"
+                              className="text-sm text-stone-400 hover:text-red-500 transition-colors"
                             >
                               Remove suggestion
                             </button>
@@ -556,7 +556,7 @@ const ReadBookCard: React.FC<ReadBookCardProps> = ({
 }) => {
   return (
     <motion.div
-      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group cursor-pointer hover:shadow-lg"
+      className="bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden group cursor-pointer hover:shadow-lg"
       whileHover={{ y: -4 }}
       onClick={onClick}
     >
@@ -584,10 +584,10 @@ const ReadBookCard: React.FC<ReadBookCardProps> = ({
 
       {/* Info */}
       <div className="p-3">
-        <h3 className="font-semibold text-gray-900 text-sm line-clamp-1">
+        <h3 className="font-semibold text-stone-900 text-sm line-clamp-1">
           {book.title}
         </h3>
-        <p className="text-gray-500 text-xs line-clamp-1">{book.author}</p>
+        <p className="text-stone-500 text-xs line-clamp-1">{book.author}</p>
 
         {/* Review indicator */}
         {book.notes && (
@@ -615,7 +615,7 @@ const ReadBookCard: React.FC<ReadBookCardProps> = ({
               e.stopPropagation();
               onMoveToWishlist();
             }}
-            className="px-2 py-1.5 text-gray-400 hover:text-pink-500 hover:bg-pink-50 rounded-lg transition-colors"
+            className="px-2 py-1.5 text-stone-400 hover:text-pink-500 hover:bg-pink-50 rounded-lg transition-colors"
             title="Move to Want to Read"
           >
             <ArrowRight className="w-3 h-3" />
@@ -625,7 +625,7 @@ const ReadBookCard: React.FC<ReadBookCardProps> = ({
               e.stopPropagation();
               onRemove();
             }}
-            className="px-2 py-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            className="px-2 py-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
             title="Remove book"
           >
             <Trash2 className="w-4 h-4" />
@@ -652,7 +652,7 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
 }) => {
   return (
     <motion.div
-      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group cursor-pointer hover:shadow-lg"
+      className="bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden group cursor-pointer hover:shadow-lg"
       whileHover={{ y: -4 }}
       onClick={onClick}
     >
@@ -673,10 +673,10 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
 
       {/* Info */}
       <div className="p-3">
-        <h3 className="font-semibold text-gray-900 text-sm line-clamp-1">
+        <h3 className="font-semibold text-stone-900 text-sm line-clamp-1">
           {book.title}
         </h3>
-        <p className="text-gray-500 text-xs line-clamp-1">{book.author}</p>
+        <p className="text-stone-500 text-xs line-clamp-1">{book.author}</p>
 
         {/* Actions */}
         <div className="flex gap-2 mt-3">
@@ -694,7 +694,7 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
               e.stopPropagation();
               onRemove();
             }}
-            className="px-2 py-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            className="px-2 py-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
           >
             ×
           </button>
@@ -722,11 +722,11 @@ const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   return (
     <div className="text-center py-16">
-      <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-        <Icon className="w-10 h-10 text-gray-400" />
+      <div className="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <Icon className="w-10 h-10 text-stone-400" />
       </div>
-      <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
-      <p className="text-gray-500 mb-6">{description}</p>
+      <h3 className="text-xl font-semibold text-stone-900 mb-2">{title}</h3>
+      <p className="text-stone-500 mb-6">{description}</p>
       <button
         onClick={onAction}
         className="bg-purple-600 text-white px-6 py-2.5 rounded-full font-medium hover:bg-purple-700 transition-colors"

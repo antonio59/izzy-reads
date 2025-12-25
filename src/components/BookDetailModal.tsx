@@ -210,7 +210,7 @@ export function BookDetailModal({
                           className={`w-6 h-6 ${
                             i < book.rating!
                               ? "text-amber-400 fill-amber-400"
-                              : "text-gray-200"
+                              : "text-stone-200"
                           }`}
                         />
                       </motion.div>
@@ -236,7 +236,7 @@ export function BookDetailModal({
                   </span>
                 )}
                 {book.pageCount && (
-                  <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-600 rounded-full">
+                  <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-stone-100 text-stone-600 rounded-full">
                     <Hash className="w-4 h-4" />
                     {book.pageCount} pages
                   </span>
@@ -267,10 +267,10 @@ export function BookDetailModal({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                  <h3 className="text-sm font-semibold text-stone-500 uppercase tracking-wide mb-2">
                     About This Book
                   </h3>
-                  <p className="text-gray-700 leading-relaxed">
+                  <p className="text-stone-700 leading-relaxed">
                     {book.description}
                   </p>
                 </motion.div>
@@ -284,14 +284,14 @@ export function BookDetailModal({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
                 >
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3 flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-stone-500 uppercase tracking-wide mb-3 flex items-center gap-2">
                     <Quote className="w-4 h-4" />
                     My Thoughts
                   </h3>
                   <div className="relative bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-5 border border-purple-100">
                     <Sparkles className="absolute top-3 right-3 w-5 h-5 text-purple-300" />
                     <p
-                      className={`text-gray-700 italic leading-relaxed ${!showFullNotes && book.notes.length > 300 ? "line-clamp-4" : ""}`}
+                      className={`text-stone-700 italic leading-relaxed ${!showFullNotes && book.notes.length > 300 ? "line-clamp-4" : ""}`}
                     >
                       "{book.notes}"
                     </p>
@@ -309,7 +309,7 @@ export function BookDetailModal({
 
               {/* Actions */}
               <motion.div
-                className="flex flex-wrap gap-3 pt-4 border-t border-gray-100"
+                className="flex flex-wrap gap-3 pt-4 border-t border-stone-100"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 }}
@@ -321,7 +321,7 @@ export function BookDetailModal({
                       text: `Check out "${book.title}" by ${book.author}!`,
                     });
                   }}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-medium transition-colors"
                 >
                   <Share2 className="w-4 h-4" />
                   Share

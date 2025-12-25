@@ -88,18 +88,18 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
       <div className="flex gap-3">
         {/* Search input */}
         <div className="flex-1 relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search books by title or author..."
-            className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+            className="w-full pl-12 pr-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
           />
           {searchQuery && (
             <button
               onClick={() => onSearchChange("")}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
             >
               <X className="w-5 h-5" />
             </button>
@@ -112,7 +112,7 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
           className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all ${
             isExpanded || hasActiveFilters
               ? "bg-purple-100 text-purple-700 border-2 border-purple-300"
-              : "bg-gray-100 text-gray-700 border-2 border-transparent hover:bg-gray-200"
+              : "bg-stone-100 text-stone-700 border-2 border-transparent hover:bg-stone-200"
           }`}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
@@ -139,10 +139,10 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="bg-white rounded-2xl border border-gray-200 p-5 space-y-5">
+            <div className="bg-white rounded-2xl border border-stone-200 p-5 space-y-5">
               {/* Sort options */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-stone-700 mb-2">
                   Sort By
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -153,7 +153,7 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                         sortBy === option.value
                           ? "bg-purple-100 text-purple-700"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          : "bg-stone-100 text-stone-600 hover:bg-stone-200"
                       }`}
                     >
                       {option.icon}
@@ -166,7 +166,7 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
                     onClick={() =>
                       onSortOrderChange(sortOrder === "asc" ? "desc" : "asc")
                     }
-                    className="flex items-center gap-1 px-3 py-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 text-sm font-medium transition-all"
+                    className="flex items-center gap-1 px-3 py-2 rounded-lg bg-stone-100 text-stone-600 hover:bg-stone-200 text-sm font-medium transition-all"
                   >
                     {sortOrder === "asc" ? (
                       <>
@@ -185,7 +185,7 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
 
               {/* Genre filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-stone-700 mb-2">
                   Genres
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -196,7 +196,7 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
                       className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
                         selectedGenres.includes(genre)
                           ? "bg-purple-600 text-white"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          : "bg-stone-100 text-stone-600 hover:bg-stone-200"
                       }`}
                     >
                       {genre}
@@ -207,7 +207,7 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
 
               {/* Rating filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-stone-700 mb-2">
                   Minimum Rating
                 </label>
                 <div className="flex gap-2">
@@ -218,7 +218,7 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
                       className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                         selectedRating === rating
                           ? "bg-amber-100 text-amber-700"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          : "bg-stone-100 text-stone-600 hover:bg-stone-200"
                       }`}
                     >
                       {rating === null ? (
@@ -236,7 +236,7 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
 
               {/* Active filters and clear */}
               {hasActiveFilters && (
-                <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                <div className="flex items-center justify-between pt-3 border-t border-stone-100">
                   <div className="flex flex-wrap gap-2">
                     {selectedGenres.map((genre) => (
                       <Badge
@@ -261,7 +261,7 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
                   </div>
                   <button
                     onClick={clearFilters}
-                    className="text-sm text-gray-500 hover:text-gray-700 font-medium"
+                    className="text-sm text-stone-500 hover:text-stone-700 font-medium"
                   >
                     Clear all
                   </button>
@@ -279,7 +279,7 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
           animate={{ opacity: 1 }}
           className="flex flex-wrap gap-2 items-center"
         >
-          <span className="text-sm text-gray-500">Active filters:</span>
+          <span className="text-sm text-stone-500">Active filters:</span>
           {selectedGenres.map((genre) => (
             <Badge
               key={genre}

@@ -60,9 +60,9 @@ const FunBookshelf: React.FC<FunBookshelfProps> = ({ books, onSelectBook }) => {
   if (books.length === 0) {
     return (
       <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-12 text-center">
-        <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-        <p className="text-gray-500 text-lg">Your bookshelf is empty!</p>
-        <p className="text-gray-400 text-sm mt-2">Add books to see them here</p>
+        <BookOpen className="w-16 h-16 text-stone-300 mx-auto mb-4" />
+        <p className="text-stone-500 text-lg">Your bookshelf is empty!</p>
+        <p className="text-stone-400 text-sm mt-2">Add books to see them here</p>
       </div>
     )
   }
@@ -73,8 +73,8 @@ const FunBookshelf: React.FC<FunBookshelfProps> = ({ books, onSelectBook }) => {
       <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-6 flex items-center gap-4">
         <div className="text-6xl">🐛</div>
         <div>
-          <h3 className="text-xl font-bold text-gray-800">Your Reading Bookworm!</h3>
-          <p className="text-gray-600">
+          <h3 className="text-xl font-bold text-stone-800">Your Reading Bookworm!</h3>
+          <p className="text-stone-600">
             You've read <span className="font-bold text-purple-600">{books.filter(b => b.isRead).length}</span> books!
             Keep reading to help your bookworm grow! 🌟
           </p>
@@ -155,9 +155,9 @@ const FunBookshelf: React.FC<FunBookshelfProps> = ({ books, onSelectBook }) => {
                         exit={{ opacity: 0, y: 10, scale: 0.9 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <div className="bg-white text-gray-800 px-4 py-3 rounded-xl shadow-2xl min-w-[180px] border border-gray-100">
+                        <div className="bg-white text-stone-800 px-4 py-3 rounded-xl shadow-2xl min-w-[180px] border border-stone-100">
                           <p className="font-bold text-sm truncate mb-1">{book.title}</p>
-                          <p className="text-gray-500 text-xs mb-2">{book.author}</p>
+                          <p className="text-stone-500 text-xs mb-2">{book.author}</p>
                           
                           {/* Rating Stars - Prominent */}
                           {book.rating && (
@@ -166,7 +166,7 @@ const FunBookshelf: React.FC<FunBookshelfProps> = ({ books, onSelectBook }) => {
                                 <Star
                                   key={i}
                                   className={`w-4 h-4 ${
-                                    i < book.rating! ? 'fill-amber-400 text-amber-400' : 'text-gray-300'
+                                    i < book.rating! ? 'fill-amber-400 text-amber-400' : 'text-stone-300'
                                   }`}
                                 />
                               ))}
@@ -271,14 +271,14 @@ const FunBookshelf: React.FC<FunBookshelfProps> = ({ books, onSelectBook }) => {
                     onClick={closeBook}
                     className="absolute top-4 right-4 p-2 bg-white/80 hover:bg-white rounded-full shadow-lg transition-all z-20"
                   >
-                    <X className="w-5 h-5 text-gray-600" />
+                    <X className="w-5 h-5 text-stone-600" />
                   </button>
 
                   {/* Book Title */}
-                  <h2 className="text-3xl font-display font-bold text-gray-800 mb-2 pr-10">
+                  <h2 className="text-3xl font-display font-bold text-stone-800 mb-2 pr-10">
                     {selectedBook.title}
                   </h2>
-                  <p className="text-lg text-gray-600 mb-4">by {selectedBook.author}</p>
+                  <p className="text-lg text-stone-600 mb-4">by {selectedBook.author}</p>
 
                   {/* Rating - Large and prominent */}
                   {selectedBook.rating && (
@@ -320,15 +320,15 @@ const FunBookshelf: React.FC<FunBookshelfProps> = ({ books, onSelectBook }) => {
 
                   {/* Review Section */}
                   <div>
-                    <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-stone-800 mb-3 flex items-center gap-2">
                       <span className="text-2xl">💭</span> Izzy's Review
                     </h3>
                     {selectedBook.notes ? (
-                      <p className="text-gray-700 leading-relaxed text-lg font-serif whitespace-pre-wrap">
+                      <p className="text-stone-700 leading-relaxed text-lg font-serif whitespace-pre-wrap">
                         {selectedBook.notes}
                       </p>
                     ) : (
-                      <p className="text-gray-400 italic">
+                      <p className="text-stone-400 italic">
                         No review written yet. This book was amazing though!
                       </p>
                     )}
@@ -337,7 +337,7 @@ const FunBookshelf: React.FC<FunBookshelfProps> = ({ books, onSelectBook }) => {
                   {/* Decorative footer */}
                   <div className="mt-8 pt-6 border-t border-amber-200 text-center">
                     <span className="text-4xl">📚</span>
-                    <p className="text-sm text-gray-500 mt-2">From Izzy's Reading Collection</p>
+                    <p className="text-sm text-stone-500 mt-2">From Izzy's Reading Collection</p>
                   </div>
                 </motion.div>
               </div>

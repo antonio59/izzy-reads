@@ -118,10 +118,10 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`p-2 rounded-lg hover:bg-gray-100 transition-colors ${buttonClassName}`}
+        className={`p-2 rounded-lg hover:bg-stone-100 transition-colors ${buttonClassName}`}
         title="Add GIF"
       >
-        <Image className="w-5 h-5 text-gray-500 hover:text-primary-500" />
+        <Image className="w-5 h-5 text-stone-500 hover:text-primary-500" />
       </button>
 
       <AnimatePresence>
@@ -131,21 +131,21 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.15 }}
-            className="absolute z-50 top-full mt-2 left-0 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden p-4"
+            className="absolute z-50 top-full mt-2 left-0 w-64 bg-white rounded-xl shadow-2xl border border-stone-200 overflow-hidden p-4"
           >
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-bold text-gray-800 flex items-center gap-2">
+              <h3 className="font-bold text-stone-800 flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-primary-500" />
                 GIFs
               </h3>
               <button
                 onClick={() => setIsOpen(false)}
-                className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                className="w-6 h-6 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center transition-colors"
               >
-                <X className="w-4 h-4 text-gray-500" />
+                <X className="w-4 h-4 text-stone-500" />
               </button>
             </div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-stone-500">
               GIF support is not configured yet. Ask the admin to add a Giphy
               API key!
             </p>
@@ -157,32 +157,32 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.15 }}
-            className="absolute z-50 top-full mt-2 left-0 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
+            className="absolute z-50 top-full mt-2 left-0 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-stone-200 overflow-hidden"
           >
             {/* Header */}
-            <div className="p-3 border-b border-gray-100">
+            <div className="p-3 border-b border-stone-100">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-bold text-gray-800 flex items-center gap-2">
+                <h3 className="font-bold text-stone-800 flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-primary-500" />
                   Find a GIF
                 </h3>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                  className="w-6 h-6 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center transition-colors"
                 >
-                  <X className="w-4 h-4 text-gray-500" />
+                  <X className="w-4 h-4 text-stone-500" />
                 </button>
               </div>
 
               {/* Search input */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={handleSearchChange}
                   placeholder="Search for GIFs..."
-                  className="w-full pl-9 pr-4 py-2 bg-gray-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
+                  className="w-full pl-9 pr-4 py-2 bg-stone-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
                   autoFocus
                 />
               </div>
@@ -197,7 +197,7 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
                         setSearchQuery(term);
                         handleSearch(term);
                       }}
-                      className="px-2 py-1 text-xs bg-gray-100 hover:bg-primary-100 text-gray-600 hover:text-primary-600 rounded-full transition-colors"
+                      className="px-2 py-1 text-xs bg-stone-100 hover:bg-primary-100 text-stone-600 hover:text-primary-600 rounded-full transition-colors"
                     >
                       {term}
                     </button>
@@ -218,7 +218,7 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
                     <motion.button
                       key={gif.id}
                       onClick={() => handleGifSelect(gif)}
-                      className="relative aspect-video rounded-lg overflow-hidden bg-gray-100 hover:ring-2 hover:ring-primary-400 transition-all"
+                      className="relative aspect-video rounded-lg overflow-hidden bg-stone-100 hover:ring-2 hover:ring-primary-400 transition-all"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -232,21 +232,21 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
                   ))}
                 </div>
               ) : hasSearched ? (
-                <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                <div className="flex flex-col items-center justify-center h-full text-stone-400">
                   <Image className="w-12 h-12 mb-2 opacity-50" />
                   <p className="text-sm">No GIFs found</p>
                   <p className="text-xs">Try a different search term</p>
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-400">
+                <div className="flex items-center justify-center h-full text-stone-400">
                   <p className="text-sm">Search for GIFs above</p>
                 </div>
               )}
             </div>
 
             {/* Giphy attribution */}
-            <div className="p-2 border-t border-gray-100 bg-gray-50">
-              <p className="text-xs text-gray-400 text-center">
+            <div className="p-2 border-t border-stone-100 bg-stone-50">
+              <p className="text-xs text-stone-400 text-center">
                 Powered by GIPHY
               </p>
             </div>

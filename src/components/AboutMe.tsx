@@ -22,7 +22,7 @@ const AboutMe = ({ aboutData }: AboutMeProps) => {
             <span className="text-6xl">💜</span>
           </div>
           <h3 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3 font-fun">About Me - Coming Soon!</h3>
-          <p className="text-gray-600 text-lg">Check back soon to learn more about Izzy! ✨💜📖</p>
+          <p className="text-stone-600 text-lg">Check back soon to learn more about Izzy! ✨💜📖</p>
         </div>
       </div>
     )
@@ -84,9 +84,9 @@ const AboutMe = ({ aboutData }: AboutMeProps) => {
                 <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg">
                   <span className="text-3xl">📖</span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-800 font-fun">Currently Reading</h3>
+                <h3 className="text-xl font-bold text-stone-800 font-fun">Currently Reading</h3>
               </div>
-              <p className="text-gray-700 text-lg font-medium bg-blue-50 p-4 rounded-xl">{aboutData.currentlyReading}</p>
+              <p className="text-stone-700 text-lg font-medium bg-blue-50 p-4 rounded-xl">{aboutData.currentlyReading}</p>
             </div>
           </div>
         )}
@@ -98,9 +98,9 @@ const AboutMe = ({ aboutData }: AboutMeProps) => {
               <div className="w-14 h-14 bg-gradient-to-br from-pink-400 to-rose-500 rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-3xl">💖</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-800 font-fun">Why I Love Reading</h3>
+              <h3 className="text-xl font-bold text-stone-800 font-fun">Why I Love Reading</h3>
             </div>
-            <p className="text-gray-700 leading-relaxed bg-pink-50 p-4 rounded-xl">{aboutData.whyIRead}</p>
+            <p className="text-stone-700 leading-relaxed bg-pink-50 p-4 rounded-xl">{aboutData.whyIRead}</p>
           </div>
         </div>
 
@@ -111,7 +111,7 @@ const AboutMe = ({ aboutData }: AboutMeProps) => {
               <div className="w-14 h-14 bg-gradient-to-br from-purple-400 to-violet-500 rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-3xl">⭐</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-800 font-fun">Favorite Genres</h3>
+              <h3 className="text-xl font-bold text-stone-800 font-fun">Favorite Genres</h3>
             </div>
             <div className="flex flex-wrap gap-2">
               {aboutData.favoriteGenres.map((genre, idx) => (
@@ -134,13 +134,13 @@ const AboutMe = ({ aboutData }: AboutMeProps) => {
               <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-3xl">✍️</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-800 font-fun">Favorite Authors</h3>
+              <h3 className="text-xl font-bold text-stone-800 font-fun">Favorite Authors</h3>
             </div>
             <ul className="space-y-2">
               {aboutData.favoriteAuthors.map((author, idx) => (
                 <li 
                   key={idx} 
-                  className="flex items-center gap-3 text-gray-700 bg-amber-50 p-3 rounded-xl hover:bg-amber-100 transition-colors"
+                  className="flex items-center gap-3 text-stone-700 bg-amber-50 p-3 rounded-xl hover:bg-amber-100 transition-colors"
                   style={{ animation: `slide-up 0.3s ease-out ${0.4 + idx * 0.05}s both` }}
                 >
                   <span className="text-xl">✨</span>
@@ -156,7 +156,7 @@ const AboutMe = ({ aboutData }: AboutMeProps) => {
         <div className="relative" style={{ animation: 'slide-up 0.5s ease-out 0.5s both' }}>
           <div className="absolute -inset-1 bg-gradient-to-r from-yellow-300 via-amber-300 to-orange-300 rounded-[2rem] blur-lg opacity-30"></div>
           <div className="relative bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 rounded-[2rem] shadow-xl p-8 border-4 border-amber-200">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3 font-fun">
+            <h3 className="text-2xl font-bold text-stone-800 mb-6 flex items-center gap-3 font-fun">
               <span className="text-4xl animate-bounce">🎉</span>
               Fun Facts About Me
               <span className="text-4xl animate-bounce" style={{ animationDelay: '0.2s' }}>🌈</span>
@@ -169,7 +169,7 @@ const AboutMe = ({ aboutData }: AboutMeProps) => {
                   style={{ animation: `slide-up 0.3s ease-out ${0.5 + idx * 0.05}s both` }}
                 >
                   <span className="text-3xl flex-shrink-0 group-hover:animate-wiggle">📌</span>
-                  <p className="text-gray-700 font-medium">{fact}</p>
+                  <p className="text-stone-700 font-medium">{fact}</p>
                 </div>
               ))}
             </div>
@@ -185,7 +185,7 @@ const AboutMe = ({ aboutData }: AboutMeProps) => {
               <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-4xl">🎯</span>
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 font-fun">My Reading Goals</h3>
+              <h3 className="text-2xl font-bold text-stone-800 font-fun">My Reading Goals</h3>
             </div>
             <ul className="space-y-3">
               {aboutData.readingGoals.map((goal, idx) => (
@@ -195,7 +195,7 @@ const AboutMe = ({ aboutData }: AboutMeProps) => {
                   style={{ animation: `slide-up 0.3s ease-out ${0.6 + idx * 0.05}s both` }}
                 >
                   <span className="text-2xl flex-shrink-0">🌟</span>
-                  <span className="text-gray-700 text-lg font-medium">{goal}</span>
+                  <span className="text-stone-700 text-lg font-medium">{goal}</span>
                 </li>
               ))}
             </ul>
@@ -211,7 +211,7 @@ const AboutMe = ({ aboutData }: AboutMeProps) => {
               <div className="w-16 h-16 bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-4xl">🏆</span>
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 font-fun">Reading Achievements</h3>
+              <h3 className="text-2xl font-bold text-stone-800 font-fun">Reading Achievements</h3>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {aboutData.achievements.map((achievement, idx) => (
@@ -222,7 +222,7 @@ const AboutMe = ({ aboutData }: AboutMeProps) => {
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-3xl group-hover:animate-bounce">🏆</span>
-                    <span className="text-gray-700 font-bold">{achievement}</span>
+                    <span className="text-stone-700 font-bold">{achievement}</span>
                   </div>
                 </div>
               ))}

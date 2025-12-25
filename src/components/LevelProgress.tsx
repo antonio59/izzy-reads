@@ -19,9 +19,9 @@ export function LevelProgress({ totalXP, className = '', variant = 'default' }: 
       <div className={`flex items-center gap-3 ${className}`}>
         <div className="flex items-center gap-2">
           <span className="text-xl">{level.icon}</span>
-          <span className="font-display font-bold text-gray-900">Lvl {level.level}</span>
+          <span className="font-display font-bold text-stone-900">Lvl {level.level}</span>
         </div>
-        <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+        <div className="flex-1 h-2 bg-stone-100 rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-gradient-to-r from-iris-500 to-coral-500"
             initial={{ width: 0 }}
@@ -29,7 +29,7 @@ export function LevelProgress({ totalXP, className = '', variant = 'default' }: 
             transition={{ duration: 0.5, ease: 'easeOut' }}
           />
         </div>
-        <span className="text-xs text-gray-500">{formatXP(totalXP)} XP</span>
+        <span className="text-xs text-stone-500">{formatXP(totalXP)} XP</span>
       </div>
     )
   }
@@ -49,8 +49,8 @@ export function LevelProgress({ totalXP, className = '', variant = 'default' }: 
                 {level.icon}
               </motion.div>
               <div>
-                <p className="text-sm text-gray-500">Level {level.level}</p>
-                <h3 className="font-display font-bold text-xl text-gray-900">
+                <p className="text-sm text-stone-500">Level {level.level}</p>
+                <h3 className="font-display font-bold text-xl text-stone-900">
                   {level.title}
                 </h3>
               </div>
@@ -59,13 +59,13 @@ export function LevelProgress({ totalXP, className = '', variant = 'default' }: 
               <p className="text-2xl font-display font-bold text-iris-600">
                 {formatXP(totalXP)}
               </p>
-              <p className="text-sm text-gray-500">Total XP</p>
+              <p className="text-sm text-stone-500">Total XP</p>
             </div>
           </div>
 
           {/* Progress bar */}
           <div className="relative">
-            <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-4 bg-stone-100 rounded-full overflow-hidden">
               <motion.div
                 className="h-full bg-gradient-to-r from-iris-500 via-coral-400 to-sage-500"
                 initial={{ width: 0 }}
@@ -87,7 +87,7 @@ export function LevelProgress({ totalXP, className = '', variant = 'default' }: 
 
           {/* Stats */}
           <div className="flex items-center justify-between mt-3 text-sm">
-            <span className="text-gray-500">
+            <span className="text-stone-500">
               {formatXP(xpInLevel)} / {formatXP(xpForNextLevel)} XP
             </span>
             <span className="text-iris-600 font-medium">
@@ -97,14 +97,14 @@ export function LevelProgress({ totalXP, className = '', variant = 'default' }: 
 
           {/* Next level info */}
           {nextLevel && (
-            <div className="mt-4 pt-4 border-t border-gray-100">
+            <div className="mt-4 pt-4 border-t border-stone-100">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-gray-500">
+                <div className="flex items-center gap-2 text-stone-500">
                   <ChevronUp className="w-4 h-4" />
                   <span className="text-sm">Next: {nextLevel.title}</span>
                   <span>{nextLevel.icon}</span>
                 </div>
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-stone-600">
                   {formatXP(xpForNextLevel - xpInLevel)} XP to go
                 </span>
               </div>
@@ -122,13 +122,13 @@ export function LevelProgress({ totalXP, className = '', variant = 'default' }: 
         <div className="flex items-center gap-2">
           <span className="text-2xl">{level.icon}</span>
           <div>
-            <span className="font-display font-bold text-gray-900">
+            <span className="font-display font-bold text-stone-900">
               Level {level.level}
             </span>
-            <span className="text-sm text-gray-500 ml-2">{level.title}</span>
+            <span className="text-sm text-stone-500 ml-2">{level.title}</span>
           </div>
         </div>
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-stone-500">
           {formatXP(xpInLevel)} / {formatXP(xpForNextLevel)} XP
         </span>
       </div>
@@ -143,7 +143,7 @@ export function LevelProgress({ totalXP, className = '', variant = 'default' }: 
       </div>
 
       {nextLevel && (
-        <p className="text-xs text-gray-500 mt-2 text-center">
+        <p className="text-xs text-stone-500 mt-2 text-center">
           {formatXP(xpForNextLevel - xpInLevel)} XP to {nextLevel.title} {nextLevel.icon}
         </p>
       )}
@@ -182,7 +182,7 @@ export function CircularLevel({ totalXP, size = 'md', className = '' }: Circular
       >
         {/* Background circle */}
         <circle
-          className="text-gray-100"
+          className="text-stone-100"
           strokeWidth={s.stroke}
           stroke="currentColor"
           fill="transparent"
@@ -224,7 +224,7 @@ export function CircularLevel({ totalXP, size = 'md', className = '' }: Circular
         >
           {level.icon}
         </motion.span>
-        <span className={`font-display font-bold text-gray-700 ${s.level}`}>
+        <span className={`font-display font-bold text-stone-700 ${s.level}`}>
           Lvl {level.level}
         </span>
       </div>
@@ -274,7 +274,7 @@ interface LevelMilestonesProps {
 export function LevelMilestones({ levels, currentLevel, className = '' }: LevelMilestonesProps) {
   return (
     <div className={className}>
-      <h3 className="font-display font-semibold text-gray-900 mb-4">Level Journey</h3>
+      <h3 className="font-display font-semibold text-stone-900 mb-4">Level Journey</h3>
       <div className="space-y-3">
         {levels.map((level) => {
           const isComplete = currentLevel >= level.level
@@ -288,8 +288,8 @@ export function LevelMilestones({ levels, currentLevel, className = '' }: LevelM
                 ${isComplete
                   ? isCurrent
                     ? 'bg-iris-50 border-iris-300'
-                    : 'bg-gray-50 border-gray-200'
-                  : 'bg-white border-gray-100 opacity-60'
+                    : 'bg-stone-50 border-stone-200'
+                  : 'bg-white border-stone-100 opacity-60'
                 }
               `}
               initial={false}
@@ -301,7 +301,7 @@ export function LevelMilestones({ levels, currentLevel, className = '' }: LevelM
               </span>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <span className={`font-medium ${isComplete ? 'text-gray-900' : 'text-gray-400'}`}>
+                  <span className={`font-medium ${isComplete ? 'text-stone-900' : 'text-stone-400'}`}>
                     Level {level.level}
                   </span>
                   {isCurrent && (
@@ -310,11 +310,11 @@ export function LevelMilestones({ levels, currentLevel, className = '' }: LevelM
                     </span>
                   )}
                 </div>
-                <span className={`text-sm ${isComplete ? 'text-gray-600' : 'text-gray-400'}`}>
+                <span className={`text-sm ${isComplete ? 'text-stone-600' : 'text-stone-400'}`}>
                   {level.title}
                 </span>
               </div>
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-stone-400">
                 {formatXP(level.minXP)} XP
               </span>
             </motion.div>

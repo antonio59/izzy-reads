@@ -191,7 +191,7 @@ export function BookCard({
             <div className="flex-1 flex flex-col justify-between py-1">
               <div>
                 <div className="flex items-start justify-between gap-2">
-                  <h3 className="font-display font-bold text-xl text-gray-900 line-clamp-2">
+                  <h3 className="font-display font-bold text-xl text-stone-900 line-clamp-2">
                     {book.title}
                   </h3>
                   {book.rating && book.rating > 0 && (
@@ -203,7 +203,7 @@ export function BookCard({
                     </div>
                   )}
                 </div>
-                <p className="text-gray-600 mt-1">{book.author}</p>
+                <p className="text-stone-600 mt-1">{book.author}</p>
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-2 mt-3">
@@ -214,7 +214,7 @@ export function BookCard({
                     </span>
                   )}
                   {showPages && book.pageCount && (
-                    <span className="inline-flex items-center gap-1 text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">
+                    <span className="inline-flex items-center gap-1 text-xs bg-stone-100 text-stone-600 px-3 py-1 rounded-full">
                       <Hash className="w-3 h-3" />
                       {book.pageCount} pages
                     </span>
@@ -233,7 +233,7 @@ export function BookCard({
 
               {/* Notes Preview */}
               {book.notes && (
-                <p className="text-gray-500 text-sm italic line-clamp-2 mt-3">
+                <p className="text-stone-500 text-sm italic line-clamp-2 mt-3">
                   "{book.notes}"
                 </p>
               )}
@@ -255,7 +255,7 @@ export function BookCard({
     return (
       <motion.div
         onClick={onClick}
-        className={`flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors ${className}`}
+        className={`flex items-center gap-4 p-3 rounded-xl hover:bg-stone-50 cursor-pointer transition-colors ${className}`}
         whileHover={{ x: 4 }}
         whileTap={{ scale: 0.99 }}
       >
@@ -279,15 +279,15 @@ export function BookCard({
 
         {/* Info */}
         <div className="flex-1 min-w-0">
-          <p className="font-medium text-gray-900 truncate">{book.title}</p>
-          <p className="text-sm text-gray-500 truncate">{book.author}</p>
+          <p className="font-medium text-stone-900 truncate">{book.title}</p>
+          <p className="text-sm text-stone-500 truncate">{book.author}</p>
         </div>
 
         {/* Rating */}
         {showRating && book.rating && book.rating > 0 && (
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-sm font-medium text-stone-700">
               {book.rating}
             </span>
           </div>
@@ -428,11 +428,11 @@ export function BookCard({
 
               {/* Page Count or Date */}
               {showPages && book.pageCount ? (
-                <span className="text-xs text-gray-500 font-medium">
+                <span className="text-xs text-stone-500 font-medium">
                   {book.pageCount} pages
                 </span>
               ) : book.dateRead ? (
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-stone-500">
                   {new Date(book.dateRead).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
@@ -447,7 +447,7 @@ export function BookCard({
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`w-4 h-4 ${i < book.rating! ? "text-amber-400 fill-amber-400" : "text-gray-200"}`}
+                    className={`w-4 h-4 ${i < book.rating! ? "text-amber-400 fill-amber-400" : "text-stone-200"}`}
                   />
                 ))}
               </div>

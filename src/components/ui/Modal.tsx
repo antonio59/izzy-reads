@@ -115,14 +115,14 @@ export function Modal({
                   <div>
                     <h2
                       id="modal-title"
-                      className="text-xl font-display font-bold text-gray-900"
+                      className="text-xl font-display font-bold text-stone-900"
                     >
                       {title}
                     </h2>
                     {description && (
                       <p
                         id="modal-description"
-                        className="text-sm text-gray-500 mt-1"
+                        className="text-sm text-stone-500 mt-1"
                       >
                         {description}
                       </p>
@@ -132,7 +132,7 @@ export function Modal({
                 {showCloseButton && (
                   <button
                     onClick={onClose}
-                    className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                    className="p-2 rounded-lg text-stone-400 hover:text-stone-600 hover:bg-stone-100 transition-colors"
                     aria-label="Close modal"
                   >
                     <X className="w-5 h-5" />
@@ -159,7 +159,7 @@ interface ModalFooterProps {
 export function ModalFooter({ children, className = "" }: ModalFooterProps) {
   return (
     <div
-      className={`flex items-center justify-end gap-3 pt-4 border-t border-gray-100 ${className}`}
+      className={`flex items-center justify-end gap-3 pt-4 border-t border-stone-100 ${className}`}
     >
       {children}
     </div>
@@ -206,14 +206,14 @@ export function ConfirmModal({
     <Modal isOpen={isOpen} onClose={onClose} size="sm">
       <div className="text-center">
         <span className="text-4xl mb-4 block">{icons[variant]}</span>
-        <h3 className="text-lg font-display font-bold text-gray-900 mb-2">
+        <h3 className="text-lg font-display font-bold text-stone-900 mb-2">
           {title}
         </h3>
-        <p className="text-gray-600 mb-6">{message}</p>
+        <p className="text-stone-600 mb-6">{message}</p>
         <div className="flex gap-3 justify-center">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
+            className="px-4 py-2 rounded-lg font-medium text-stone-600 bg-stone-100 hover:bg-stone-200 transition-colors"
             disabled={loading}
           >
             {cancelText}

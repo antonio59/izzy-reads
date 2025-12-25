@@ -147,10 +147,10 @@ export function GenreBingo({ board, onCellClick, onAssignBook, className = '' }:
         {/* Progress bar */}
         <div className="mt-4">
           <div className="flex justify-between text-sm mb-1">
-            <span className="text-gray-600">{completedCount} / {totalCells} genres</span>
-            <span className="text-gray-500">{progressPercent}%</span>
+            <span className="text-stone-600">{completedCount} / {totalCells} genres</span>
+            <span className="text-stone-500">{progressPercent}%</span>
           </div>
-          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
             <motion.div
               className="h-full bg-gradient-to-r from-iris-500 via-coral-400 to-sage-500"
               initial={{ width: 0 }}
@@ -181,7 +181,7 @@ export function GenreBingo({ board, onCellClick, onAssignBook, className = '' }:
                     ? isInLine
                       ? 'bg-gradient-to-br from-iris-100 to-coral-100 border-iris-300 shadow-md'
                       : 'bg-sage-50 border-sage-300'
-                    : 'bg-white border-gray-200 hover:border-iris-300 hover:bg-iris-50'
+                    : 'bg-white border-stone-200 hover:border-iris-300 hover:bg-iris-50'
                   }
                 `}
                 whileHover={{ scale: 1.05 }}
@@ -222,7 +222,7 @@ export function GenreBingo({ board, onCellClick, onAssignBook, className = '' }:
                 {/* Genre name */}
                 <span className={`
                   text-xs font-medium text-center mt-1 leading-tight
-                  ${isCompleted ? 'text-gray-700' : 'text-gray-500'}
+                  ${isCompleted ? 'text-stone-700' : 'text-stone-500'}
                   ${board.size === 5 ? 'text-[10px]' : ''}
                 `}>
                   {cell.genre.name}
@@ -233,7 +233,7 @@ export function GenreBingo({ board, onCellClick, onAssignBook, className = '' }:
         </div>
 
         {/* Legend */}
-        <div className="mt-4 flex flex-wrap gap-3 text-xs text-gray-500">
+        <div className="mt-4 flex flex-wrap gap-3 text-xs text-stone-500">
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 bg-sage-50 border border-sage-300 rounded" />
             <span>Completed</span>
@@ -267,11 +267,11 @@ export function GenreBingo({ board, onCellClick, onAssignBook, className = '' }:
                   <span className="font-medium">Completed!</span>
                 </div>
                 {selectedCellData.bookTitle && (
-                  <div className="bg-gray-50 rounded-xl p-4">
-                    <p className="text-sm text-gray-500">Book read:</p>
-                    <p className="font-semibold text-gray-900">{selectedCellData.bookTitle}</p>
+                  <div className="bg-stone-50 rounded-xl p-4">
+                    <p className="text-sm text-stone-500">Book read:</p>
+                    <p className="font-semibold text-stone-900">{selectedCellData.bookTitle}</p>
                     {selectedCellData.completedDate && (
-                      <p className="text-xs text-gray-400 mt-1">
+                      <p className="text-xs text-stone-400 mt-1">
                         {new Date(selectedCellData.completedDate).toLocaleDateString()}
                       </p>
                     )}
@@ -280,7 +280,7 @@ export function GenreBingo({ board, onCellClick, onAssignBook, className = '' }:
               </div>
             ) : (
               <div className="space-y-4">
-                <p className="text-gray-600">
+                <p className="text-stone-600">
                   Read a <span className="font-semibold">{selectedCellData.genre.name}</span> book to complete this cell!
                 </p>
                 <Button
@@ -324,7 +324,7 @@ export function MiniBingo({ board, onClick, className = '' }: MiniBingoProps) {
       whileHover={{ y: -2 }}
     >
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-gray-700">Genre Bingo</span>
+        <span className="text-sm font-medium text-stone-700">Genre Bingo</span>
         {completedLines.length > 0 && (
           <Badge variant="coral" className="text-xs">
             {completedLines.length} lines
@@ -342,7 +342,7 @@ export function MiniBingo({ board, onClick, className = '' }: MiniBingoProps) {
                 ? isInCompletedLine(index, completedLines)
                   ? 'bg-gradient-to-br from-iris-200 to-coral-200'
                   : 'bg-sage-100'
-                : 'bg-gray-100'
+                : 'bg-stone-100'
               }
             `}
           >

@@ -80,10 +80,10 @@ const BookRecommendations = ({ books }: BookRecommendationsProps) => {
                 </div>
 
                 <div className="p-4 bg-gradient-to-b from-white to-amber-50/50">
-                  <h3 className="font-bold text-gray-800 text-sm leading-tight line-clamp-2 mb-1 group-hover:text-pink-600 transition-colors">
+                  <h3 className="font-bold text-stone-800 text-sm leading-tight line-clamp-2 mb-1 group-hover:text-pink-600 transition-colors">
                     {book.title}
                   </h3>
-                  <p className="text-xs text-gray-600 line-clamp-1 font-medium">{book.author}</p>
+                  <p className="text-xs text-stone-600 line-clamp-1 font-medium">{book.author}</p>
                   {book.notes && (
                     <p className="text-xs text-amber-700 italic line-clamp-2 mt-2 border-t border-amber-100 pt-2 bg-amber-50 -mx-4 px-4 -mb-4 pb-4 rounded-b-2xl">
                       "{book.notes}"

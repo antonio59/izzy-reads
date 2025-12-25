@@ -158,7 +158,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         animate={{ opacity: 1, y: 0 }}
       >
         {/* Progress bar */}
-        <div className="h-2 bg-gray-100">
+        <div className="h-2 bg-stone-100">
           <motion.div
             className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
             initial={{ width: 0 }}
@@ -187,10 +187,10 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                   <span className="text-5xl">📚</span>
                 </motion.div>
 
-                <h1 className="text-4xl font-display font-bold text-gray-900 mb-4">
+                <h1 className="text-4xl font-display font-bold text-stone-900 mb-4">
                   Welcome to Izzy's Bookshelf!
                 </h1>
-                <p className="text-xl text-gray-600 mb-8">
+                <p className="text-xl text-stone-600 mb-8">
                   Your magical reading adventure starts here. Let's set up your
                   profile!
                 </p>
@@ -225,17 +225,17 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
               >
                 <div className="text-center mb-8">
                   <span className="text-6xl mb-4 block">👋</span>
-                  <h2 className="text-3xl font-display font-bold text-gray-900 mb-2">
+                  <h2 className="text-3xl font-display font-bold text-stone-900 mb-2">
                     What's your name?
                   </h2>
-                  <p className="text-gray-600">
+                  <p className="text-stone-600">
                     We'll use this to personalize your experience
                   </p>
                 </div>
 
                 <div className="max-w-sm mx-auto space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-stone-700 mb-2">
                       Your Name
                     </label>
                     <input
@@ -245,13 +245,13 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                         setData((prev) => ({ ...prev, name: e.target.value }))
                       }
                       placeholder="Enter your name..."
-                      className="w-full px-4 py-4 text-xl rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all text-center"
+                      className="w-full px-4 py-4 text-xl rounded-2xl border-2 border-stone-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all text-center"
                       autoFocus
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-stone-700 mb-2">
                       Your Age
                     </label>
                     <input
@@ -265,7 +265,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                       }
                       min={5}
                       max={18}
-                      className="w-full px-4 py-4 text-xl rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all text-center"
+                      className="w-full px-4 py-4 text-xl rounded-2xl border-2 border-stone-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all text-center"
                     />
                   </div>
                 </div>
@@ -282,10 +282,10 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
               >
                 <div className="text-center mb-8">
                   <span className="text-6xl mb-4 block">🎭</span>
-                  <h2 className="text-3xl font-display font-bold text-gray-900 mb-2">
+                  <h2 className="text-3xl font-display font-bold text-stone-900 mb-2">
                     What do you love to read?
                   </h2>
-                  <p className="text-gray-600">
+                  <p className="text-stone-600">
                     Pick your favorite genres (select at least one!)
                   </p>
                 </div>
@@ -298,13 +298,13 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                       className={`p-4 rounded-2xl border-2 transition-all text-left ${
                         data.favoriteGenres.includes(genre.id)
                           ? "border-purple-500 bg-purple-50"
-                          : "border-gray-200 hover:border-gray-300"
+                          : "border-stone-200 hover:border-stone-300"
                       }`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       <span className="text-2xl block mb-1">{genre.emoji}</span>
-                      <span className="font-medium text-gray-900 text-sm">
+                      <span className="font-medium text-stone-900 text-sm">
                         {genre.label}
                       </span>
                       {data.favoriteGenres.includes(genre.id) && (
@@ -332,10 +332,10 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
               >
                 <div className="text-center mb-8">
                   <span className="text-6xl mb-4 block">🎯</span>
-                  <h2 className="text-3xl font-display font-bold text-gray-900 mb-2">
+                  <h2 className="text-3xl font-display font-bold text-stone-900 mb-2">
                     Set your reading goal!
                   </h2>
-                  <p className="text-gray-600">
+                  <p className="text-stone-600">
                     How many books do you want to read this year?
                   </p>
                 </div>
@@ -353,23 +353,23 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                       className={`p-5 rounded-2xl border-2 transition-all text-center ${
                         data.readingGoal === goal.value
                           ? "border-purple-500 bg-purple-50"
-                          : "border-gray-200 hover:border-gray-300"
+                          : "border-stone-200 hover:border-stone-300"
                       }`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       <span className="text-4xl block mb-2">{goal.emoji}</span>
-                      <span className="font-bold text-gray-900 block">
+                      <span className="font-bold text-stone-900 block">
                         {goal.value} books
                       </span>
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-stone-500">
                         {goal.label}
                       </span>
                     </motion.button>
                   ))}
                 </div>
 
-                <p className="text-center text-sm text-gray-500 mt-4">
+                <p className="text-center text-sm text-stone-500 mt-4">
                   Don't worry, you can always change this later!
                 </p>
               </motion.div>
@@ -392,35 +392,35 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                   <Rocket className="w-16 h-16 text-white" />
                 </motion.div>
 
-                <h2 className="text-4xl font-display font-bold text-gray-900 mb-4">
+                <h2 className="text-4xl font-display font-bold text-stone-900 mb-4">
                   You're all set, {data.name}!
                 </h2>
-                <p className="text-xl text-gray-600 mb-8">
+                <p className="text-xl text-stone-600 mb-8">
                   Your reading adventure awaits. Let's explore amazing books
                   together!
                 </p>
 
                 <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 max-w-md mx-auto mb-6">
-                  <h3 className="font-bold text-gray-900 mb-3">
+                  <h3 className="font-bold text-stone-900 mb-3">
                     Your Profile Summary:
                   </h3>
                   <div className="space-y-2 text-left">
                     <p className="flex justify-between">
-                      <span className="text-gray-600">Name:</span>
+                      <span className="text-stone-600">Name:</span>
                       <span className="font-medium">{data.name}</span>
                     </p>
                     <p className="flex justify-between">
-                      <span className="text-gray-600">Age:</span>
+                      <span className="text-stone-600">Age:</span>
                       <span className="font-medium">{data.age} years old</span>
                     </p>
                     <p className="flex justify-between">
-                      <span className="text-gray-600">Reading Goal:</span>
+                      <span className="text-stone-600">Reading Goal:</span>
                       <span className="font-medium">
                         {data.readingGoal} books/year
                       </span>
                     </p>
                     <p className="flex justify-between">
-                      <span className="text-gray-600">Genres:</span>
+                      <span className="text-stone-600">Genres:</span>
                       <span className="font-medium">
                         {data.favoriteGenres.length} selected
                       </span>
@@ -467,7 +467,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
               step === 0
                 ? "opacity-0 pointer-events-none"
-                : "text-gray-600 hover:bg-gray-100"
+                : "text-stone-600 hover:bg-stone-100"
             }`}
           >
             <ChevronLeft className="w-5 h-5" />
@@ -483,7 +483,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                     ? "bg-purple-500 w-4"
                     : i < step
                       ? "bg-purple-300"
-                      : "bg-gray-200"
+                      : "bg-stone-200"
                 }`}
               />
             ))}

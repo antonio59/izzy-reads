@@ -199,11 +199,11 @@ export function EmptyState({
         {icon}
       </motion.div>
 
-      <h3 className="text-xl font-display font-bold text-gray-800 mb-2">
+      <h3 className="text-xl font-display font-bold text-stone-800 mb-2">
         {title}
       </h3>
 
-      <p className="text-gray-500 max-w-md mx-auto mb-6">{description}</p>
+      <p className="text-stone-500 max-w-md mx-auto mb-6">{description}</p>
 
       {action && (
         <motion.button
@@ -224,10 +224,10 @@ export function EmptyBooks({ onAction }: { onAction?: () => void }) {
   return (
     <div className="text-center py-12 px-6">
       <FunIllustration type="books" />
-      <h3 className="text-xl font-display font-bold text-gray-800 mb-2">
+      <h3 className="text-xl font-display font-bold text-stone-800 mb-2">
         Your bookshelf is waiting!
       </h3>
-      <p className="text-gray-500 max-w-md mx-auto mb-6">
+      <p className="text-stone-500 max-w-md mx-auto mb-6">
         Start your reading adventure by adding your first book. Every great
         journey begins with a single page!
       </p>
@@ -249,10 +249,10 @@ export function EmptyPoems({ onAction }: { onAction?: () => void }) {
   return (
     <div className="text-center py-12 px-6">
       <FunIllustration type="poems" />
-      <h3 className="text-xl font-display font-bold text-gray-800 mb-2">
+      <h3 className="text-xl font-display font-bold text-stone-800 mb-2">
         Your poetry corner awaits!
       </h3>
-      <p className="text-gray-500 max-w-md mx-auto mb-6">
+      <p className="text-stone-500 max-w-md mx-auto mb-6">
         Let your imagination run wild! Write your thoughts, feelings, or just
         something silly. There are no wrong poems!
       </p>
@@ -274,10 +274,10 @@ export function EmptyBlog({ onAction }: { onAction?: () => void }) {
   return (
     <div className="text-center py-12 px-6">
       <FunIllustration type="blog" />
-      <h3 className="text-xl font-display font-bold text-gray-800 mb-2">
+      <h3 className="text-xl font-display font-bold text-stone-800 mb-2">
         Share your stories!
       </h3>
-      <p className="text-gray-500 max-w-md mx-auto mb-6">
+      <p className="text-stone-500 max-w-md mx-auto mb-6">
         Tell the world about your favorite books, share reviews, or write about
         your reading adventures!
       </p>
@@ -299,10 +299,10 @@ export function EmptyWishlist({ onAction }: { onAction?: () => void }) {
   return (
     <div className="text-center py-12 px-6">
       <FunIllustration type="wishlist" />
-      <h3 className="text-xl font-display font-bold text-gray-800 mb-2">
+      <h3 className="text-xl font-display font-bold text-stone-800 mb-2">
         Dream big, read bigger!
       </h3>
-      <p className="text-gray-500 max-w-md mx-auto mb-6">
+      <p className="text-stone-500 max-w-md mx-auto mb-6">
         Add books you're dreaming about to your wishlist. Maybe someone special
         will surprise you!
       </p>
@@ -324,10 +324,10 @@ export function EmptyAchievements() {
   return (
     <div className="text-center py-12 px-6">
       <FunIllustration type="achievements" />
-      <h3 className="text-xl font-display font-bold text-gray-800 mb-2">
+      <h3 className="text-xl font-display font-bold text-stone-800 mb-2">
         Your trophy case is empty... for now!
       </h3>
-      <p className="text-gray-500 max-w-md mx-auto">
+      <p className="text-stone-500 max-w-md mx-auto">
         Start reading, writing, and exploring to unlock amazing achievements.
         Every reader is a champion!
       </p>
@@ -349,10 +349,10 @@ export function EmptySearch({ query }: { query: string }) {
       >
         🔍
       </motion.div>
-      <h3 className="text-xl font-display font-bold text-gray-800 mb-2">
+      <h3 className="text-xl font-display font-bold text-stone-800 mb-2">
         No results for "{query}"
       </h3>
-      <p className="text-gray-500 max-w-md mx-auto">
+      <p className="text-stone-500 max-w-md mx-auto">
         Try different keywords or check your spelling. The perfect book is out
         there waiting!
       </p>

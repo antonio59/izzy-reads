@@ -107,11 +107,11 @@ function ErrorFallback({
           </motion.span>
         </motion.div>
 
-        <h1 className="text-2xl font-display font-bold text-gray-800 mb-2">
+        <h1 className="text-2xl font-display font-bold text-stone-800 mb-2">
           {randomMessage.message}
         </h1>
 
-        <p className="text-gray-500 mb-8">
+        <p className="text-stone-500 mb-8">
           Don't worry, even the best stories have unexpected chapters. Let's get
           you back on track!
         </p>
@@ -130,7 +130,7 @@ function ErrorFallback({
 
           <motion.button
             onClick={onReload}
-            className="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gray-200 transition-all"
+            className="w-full bg-stone-100 text-stone-700 py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-stone-200 transition-all"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -151,7 +151,7 @@ function ErrorFallback({
 
         {/* Fun footer */}
         <motion.p
-          className="mt-8 text-sm text-gray-400"
+          className="mt-8 text-sm text-stone-400"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}

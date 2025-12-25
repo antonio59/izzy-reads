@@ -180,13 +180,13 @@ const EnhancedBookshelf: React.FC = () => {
       )}
 
       {/* View Toggle */}
-      <div className="flex justify-center gap-1 p-1.5 bg-white rounded-2xl w-fit mx-auto shadow-lg border border-gray-100">
+      <div className="flex justify-center gap-1 p-1.5 bg-white rounded-2xl w-fit mx-auto shadow-lg border border-stone-100">
         <button
           onClick={() => setViewMode("cards")}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold transition-all ${
             viewMode === "cards"
               ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md"
-              : "text-gray-600 hover:bg-gray-50"
+              : "text-stone-600 hover:bg-stone-50"
           }`}
         >
           <LayoutGrid className="w-4 h-4" />
@@ -197,7 +197,7 @@ const EnhancedBookshelf: React.FC = () => {
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold transition-all ${
             viewMode === "shelf"
               ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md"
-              : "text-gray-600 hover:bg-gray-50"
+              : "text-stone-600 hover:bg-stone-50"
           }`}
         >
           <Layers className="w-4 h-4" />
@@ -208,7 +208,7 @@ const EnhancedBookshelf: React.FC = () => {
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold transition-all ${
             viewMode === "grid"
               ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md"
-              : "text-gray-600 hover:bg-gray-50"
+              : "text-stone-600 hover:bg-stone-50"
           }`}
         >
           <Grid className="w-4 h-4" />
@@ -218,7 +218,7 @@ const EnhancedBookshelf: React.FC = () => {
 
       {/* Results count */}
       {hasActiveFilters && filteredBooks.length !== readBooks.length && (
-        <p className="text-center text-gray-500 text-sm">
+        <p className="text-center text-stone-500 text-sm">
           Showing {filteredBooks.length} of {readBooks.length} books
         </p>
       )}
