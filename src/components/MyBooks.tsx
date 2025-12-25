@@ -16,6 +16,7 @@ import {
   ChevronUp,
   Library,
   Download,
+  Edit3,
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { useAuth } from "../contexts/AuthContext";
@@ -23,6 +24,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import BookSearch from "./BookSearch";
 import { BookDetailModal } from "./BookDetailModal";
+import { EditBookModal } from "./EditBookModal";
 import type { Book } from "../types";
 import type { Id } from "../../convex/_generated/dataModel";
 
@@ -33,6 +35,7 @@ const MyBooks: React.FC = () => {
     books,
     wishlist,
     addBook,
+    updateBook,
     addToWishlist,
     removeFromWishlist,
     moveToBookshelf,
@@ -43,6 +46,7 @@ const MyBooks: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>("read");
   const [showSearch, setShowSearch] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -209,6 +213,7 @@ const MyBooks: React.FC = () => {
                 book={book}
                 onMoveToWishlist={() => handleMoveToWishlist(book.id)}
                 onRemove={() => handleDeleteBook(book.id)}
+                onEdit={() => setEditingBook(book)}
                 onClick={() => setSelectedBook(book)}
               />
             ))}
@@ -404,9 +409,24 @@ const MyBooks: React.FC = () => {
           book={selectedBook}
           isOpen={!!selectedBook}
           onClose={() => setSelectedBook(null)}
-          showActions={false}
+          onEdit={(book) => {
+            setSelectedBook(null);
+            setEditingBook(book);
+          }}
+          showActions={true}
         />
       )}
+
+      {/* Edit Book Modal */}
+      <EditBookModal
+        book={editingBook}
+        isOpen={!!editingBook}
+        onClose={() => setEditingBook(null)}
+        onSave={async (bookId, updates) => {
+          await updateBook(bookId, updates);
+          setEditingBook(null);
+        }}
+      />
     </div>
   );
 };
@@ -416,6 +436,7 @@ interface ReadBookCardProps {
   book: Book;
   onMoveToWishlist: () => void;
   onRemove: () => void;
+  onEdit: () => void;
   onClick: () => void;
 }
 
@@ -423,6 +444,7 @@ const ReadBookCard: React.FC<ReadBookCardProps> = ({
   book,
   onMoveToWishlist,
   onRemove,
+  onEdit,
   onClick,
 }) => {
   return (
@@ -460,18 +482,36 @@ const ReadBookCard: React.FC<ReadBookCardProps> = ({
         </h3>
         <p className="text-gray-500 text-xs line-clamp-1">{book.author}</p>
 
+        {/* Review indicator */}
+        {book.notes && (
+          <div className="flex items-center gap-1 text-xs text-green-600 mt-1">
+            <MessageCircle className="w-3 h-3" />
+            <span>Reviewed</span>
+          </div>
+        )}
+
         {/* Actions */}
         <div className="flex gap-2 mt-3">
           <button
             onClick={(e) => {
               e.stopPropagation();
+              onEdit();
+            }}
+            className="flex-1 text-xs bg-purple-100 text-purple-600 py-1.5 rounded-lg font-medium hover:bg-purple-200 transition-colors flex items-center justify-center gap-1"
+            title={book.notes ? "Edit Review" : "Write Review"}
+          >
+            <Edit3 className="w-3 h-3" />
+            {book.notes ? "Edit" : "Review"}
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
               onMoveToWishlist();
             }}
-            className="flex-1 text-xs bg-pink-100 text-pink-600 py-1.5 rounded-lg font-medium hover:bg-pink-200 transition-colors flex items-center justify-center gap-1"
+            className="px-2 py-1.5 text-gray-400 hover:text-pink-500 hover:bg-pink-50 rounded-lg transition-colors"
             title="Move to Want to Read"
           >
             <ArrowRight className="w-3 h-3" />
-            To List
           </button>
           <button
             onClick={(e) => {
