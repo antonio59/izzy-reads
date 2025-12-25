@@ -32,13 +32,28 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isParentMode, setIsParentMode] = useState(false);
 
-  // Initialize with default user for demo purposes
+  // Initialize with default user and load saved avatar on mount
   useEffect(() => {
+    // Try to load saved profile first
+    let savedAvatar: AvatarConfig | undefined;
+    const savedProfile = localStorage.getItem("userProfile");
+    if (savedProfile) {
+      try {
+        const parsed = JSON.parse(savedProfile);
+        if (parsed.avatar) {
+          savedAvatar = parsed.avatar;
+        }
+      } catch {
+        // Ignore parse errors
+      }
+    }
+
     const defaultUser: User = {
       id: "1",
       name: "Isabella",
       age: 10,
       isParent: false,
+      avatar: savedAvatar, // Include avatar immediately
       settings: {
         theme: "colorful",
         readingGoal: 20,
@@ -57,21 +72,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       },
     };
     setUser(defaultUser);
-  }, []);
-
-  // Load saved profile on mount
-  useEffect(() => {
-    const savedProfile = localStorage.getItem("userProfile");
-    if (savedProfile) {
-      try {
-        const parsed = JSON.parse(savedProfile);
-        if (parsed.avatar) {
-          setUser((prev) => (prev ? { ...prev, avatar: parsed.avatar } : prev));
-        }
-      } catch {
-        // Ignore parse errors
-      }
-    }
   }, []);
 
   const updateUserSettings = (newSettings: Partial<UserSettings>) => {
