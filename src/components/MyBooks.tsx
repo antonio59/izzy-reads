@@ -120,7 +120,7 @@ const MyBooks: React.FC = () => {
     suggestionId: Id<"bookSuggestions">,
   ) => {
     if (!convexUserId) return;
-    await approveSuggestion({ suggestionId, userId: convexUserId });
+    await approveSuggestion({ suggestionId });
   };
 
   const handleDeclineSuggestion = async (

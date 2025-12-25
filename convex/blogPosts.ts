@@ -1,6 +1,8 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { auth } from "./auth";
 
+// Get blog posts for a specific user
 export const getByUser = query({
   args: { userId: v.id("users") },
   handler: async (ctx, args) => {
@@ -11,6 +13,7 @@ export const getByUser = query({
   },
 });
 
+// Get all published blog posts (for public pages - read only)
 export const getPublished = query({
   args: {},
   handler: async (ctx) => {
@@ -21,9 +24,9 @@ export const getPublished = query({
   },
 });
 
+// Add a blog post - requires authentication
 export const add = mutation({
   args: {
-    userId: v.id("users"),
     title: v.string(),
     content: v.string(),
     bookId: v.optional(v.id("books")),
@@ -34,10 +37,15 @@ export const add = mutation({
     emoji: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("blogPosts", args);
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+    return await ctx.db.insert("blogPosts", { ...args, userId });
   },
 });
 
+// Update a blog post - requires authentication and ownership verification
 export const update = mutation({
   args: {
     id: v.id("blogPosts"),
@@ -50,6 +58,20 @@ export const update = mutation({
     emoji: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    // Verify ownership
+    const post = await ctx.db.get(args.id);
+    if (!post) {
+      throw new Error("Blog post not found");
+    }
+    if (post.userId !== userId) {
+      throw new Error("Not authorized to update this post");
+    }
+
     const { id, ...updates } = args;
     const filteredUpdates = Object.fromEntries(
       Object.entries(updates).filter(([, value]) => value !== undefined),
@@ -58,9 +80,24 @@ export const update = mutation({
   },
 });
 
+// Remove a blog post - requires authentication and ownership verification
 export const remove = mutation({
   args: { id: v.id("blogPosts") },
   handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    // Verify ownership
+    const post = await ctx.db.get(args.id);
+    if (!post) {
+      throw new Error("Blog post not found");
+    }
+    if (post.userId !== userId) {
+      throw new Error("Not authorized to delete this post");
+    }
+
     await ctx.db.delete(args.id);
   },
 });

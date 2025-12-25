@@ -1,31 +1,31 @@
-import { useEffect, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { X } from 'lucide-react'
+import { useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
 
 interface ModalProps {
-  isOpen: boolean
-  onClose: () => void
-  children: React.ReactNode
-  title?: string
-  description?: string
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
-  closeOnOverlayClick?: boolean
-  showCloseButton?: boolean
-  className?: string
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+  title?: string;
+  description?: string;
+  size?: "sm" | "md" | "lg" | "xl" | "full";
+  closeOnOverlayClick?: boolean;
+  showCloseButton?: boolean;
+  className?: string;
 }
 
 const sizeStyles = {
-  sm: 'max-w-md',
-  md: 'max-w-lg',
-  lg: 'max-w-2xl',
-  xl: 'max-w-4xl',
-  full: 'max-w-[90vw] max-h-[90vh]',
-}
+  sm: "max-w-md",
+  md: "max-w-lg",
+  lg: "max-w-2xl",
+  xl: "max-w-4xl",
+  full: "max-w-[90vw] max-h-[90vh]",
+};
 
 const overlayVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
-}
+};
 
 const modalVariants = {
   hidden: {
@@ -43,7 +43,7 @@ const modalVariants = {
     scale: 0.95,
     y: 20,
   },
-}
+};
 
 export function Modal({
   isOpen,
@@ -51,32 +51,32 @@ export function Modal({
   children,
   title,
   description,
-  size = 'md',
+  size = "md",
   closeOnOverlayClick = true,
   showCloseButton = true,
-  className = '',
+  className = "",
 }: ModalProps) {
   // Handle escape key
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose()
+      if (e.key === "Escape") {
+        onClose();
       }
     },
-    [onClose]
-  )
+    [onClose],
+  );
 
   useEffect(() => {
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'hidden'
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'unset'
-    }
-  }, [isOpen, handleEscape])
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen, handleEscape]);
 
   return (
     <AnimatePresence>
@@ -102,11 +102,11 @@ export function Modal({
             initial="hidden"
             animate="visible"
             exit="exit"
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
             role="dialog"
             aria-modal="true"
-            aria-labelledby={title ? 'modal-title' : undefined}
-            aria-describedby={description ? 'modal-description' : undefined}
+            aria-labelledby={title ? "modal-title" : undefined}
+            aria-describedby={description ? "modal-description" : undefined}
           >
             {/* Header */}
             {(title || showCloseButton) && (
@@ -147,34 +147,36 @@ export function Modal({
         </div>
       )}
     </AnimatePresence>
-  )
+  );
 }
 
 // Modal Footer component for actions
 interface ModalFooterProps {
-  children: React.ReactNode
-  className?: string
+  children: React.ReactNode;
+  className?: string;
 }
 
-export function ModalFooter({ children, className = '' }: ModalFooterProps) {
+export function ModalFooter({ children, className = "" }: ModalFooterProps) {
   return (
-    <div className={`flex items-center justify-end gap-3 pt-4 border-t border-gray-100 ${className}`}>
+    <div
+      className={`flex items-center justify-end gap-3 pt-4 border-t border-gray-100 ${className}`}
+    >
       {children}
     </div>
-  )
+  );
 }
 
 // Confirmation Modal
 interface ConfirmModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onConfirm: () => void
-  title: string
-  message: string
-  confirmText?: string
-  cancelText?: string
-  variant?: 'danger' | 'warning' | 'default'
-  loading?: boolean
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  title: string;
+  message: string;
+  confirmText?: string;
+  cancelText?: string;
+  variant?: "danger" | "warning" | "default";
+  loading?: boolean;
 }
 
 export function ConfirmModal({
@@ -183,22 +185,22 @@ export function ConfirmModal({
   onConfirm,
   title,
   message,
-  confirmText = 'Confirm',
-  cancelText = 'Cancel',
-  variant = 'default',
+  confirmText = "Confirm",
+  cancelText = "Cancel",
+  variant = "default",
   loading = false,
 }: ConfirmModalProps) {
   const variantStyles = {
-    danger: 'bg-red-500 hover:bg-red-600',
-    warning: 'bg-amber-500 hover:bg-amber-600',
-    default: 'bg-iris-500 hover:bg-iris-600',
-  }
+    danger: "bg-red-500 hover:bg-red-600",
+    warning: "bg-amber-500 hover:bg-amber-600",
+    default: "bg-primary-500 hover:bg-primary-600",
+  };
 
   const icons = {
-    danger: '⚠️',
-    warning: '❓',
-    default: '💭',
-  }
+    danger: "⚠️",
+    warning: "❓",
+    default: "💭",
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm">
@@ -221,12 +223,12 @@ export function ConfirmModal({
             className={`px-4 py-2 rounded-lg font-medium text-white ${variantStyles[variant]} transition-colors disabled:opacity-50`}
             disabled={loading}
           >
-            {loading ? 'Loading...' : confirmText}
+            {loading ? "Loading..." : confirmText}
           </button>
         </div>
       </div>
     </Modal>
-  )
+  );
 }
 
-export default Modal
+export default Modal;

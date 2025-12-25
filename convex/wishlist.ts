@@ -1,6 +1,8 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { auth } from "./auth";
 
+// Get wishlist for a specific user
 export const getByUser = query({
   args: { userId: v.id("users") },
   handler: async (ctx, args) => {
@@ -11,7 +13,7 @@ export const getByUser = query({
   },
 });
 
-// Get all wishlist items (for public pages)
+// Get all wishlist items (for public pages - read only)
 export const getAll = query({
   args: {},
   handler: async (ctx) => {
@@ -19,9 +21,9 @@ export const getAll = query({
   },
 });
 
+// Add to wishlist - requires authentication
 export const add = mutation({
   args: {
-    userId: v.id("users"),
     title: v.string(),
     author: v.string(),
     coverUrl: v.optional(v.string()),
@@ -33,13 +35,32 @@ export const add = mutation({
     dateAdded: v.string(),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("wishlist", args);
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+    return await ctx.db.insert("wishlist", { ...args, userId });
   },
 });
 
+// Remove from wishlist - requires authentication and ownership verification
 export const remove = mutation({
   args: { id: v.id("wishlist") },
   handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    // Verify ownership
+    const item = await ctx.db.get(args.id);
+    if (!item) {
+      throw new Error("Wishlist item not found");
+    }
+    if (item.userId !== userId) {
+      throw new Error("Not authorized to remove this item");
+    }
+
     await ctx.db.delete(args.id);
   },
 });

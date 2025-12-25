@@ -1,58 +1,72 @@
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion";
 
-export type BadgeVariant = 'primary' | 'accent' | 'iris' | 'coral' | 'sage' | 'gray' | 'success' | 'warning' | 'error' | 'outline' | 'default'
-export type BadgeSize = 'sm' | 'md' | 'lg'
+export type BadgeVariant =
+  | "primary"
+  | "accent"
+  | "stone"
+  | "success"
+  | "warning"
+  | "error"
+  | "outline"
+  | "iris"
+  | "coral"
+  | "sage"
+  | "gray"
+  | "default";
+export type BadgeSize = "sm" | "md" | "lg";
 
 interface BadgeProps {
-  children: React.ReactNode
-  variant?: BadgeVariant
-  size?: BadgeSize
-  icon?: React.ReactNode
-  removable?: boolean
-  onRemove?: () => void
-  className?: string
-  animated?: boolean
+  children: React.ReactNode;
+  variant?: BadgeVariant;
+  size?: BadgeSize;
+  icon?: React.ReactNode;
+  removable?: boolean;
+  onRemove?: () => void;
+  className?: string;
+  animated?: boolean;
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
-  primary: 'bg-primary-100 text-primary-700 border-primary-200',
-  accent: 'bg-accent-100 text-accent-700 border-accent-200',
-  iris: 'bg-primary-100 text-primary-700 border-primary-200', // Keep for compat mapping
-  coral: 'bg-accent-100 text-accent-700 border-accent-200', // Keep for compat mapping
-  sage: 'bg-sage-100 text-sage-700 border-sage-200',
-  gray: 'bg-stone-100 text-stone-700 border-stone-200',
-  success: 'bg-green-100 text-green-700 border-green-200',
-  warning: 'bg-amber-100 text-amber-700 border-amber-200',
-  error: 'bg-red-100 text-red-700 border-red-200',
-  outline: 'bg-transparent text-stone-600 border-stone-300',
-  default: 'bg-stone-100 text-stone-600 border-stone-200',
-}
+  primary: "bg-primary-100 text-primary-700 border-primary-200",
+  accent: "bg-accent-100 text-accent-700 border-accent-200",
+  stone: "bg-stone-100 text-stone-700 border-stone-200",
+  success: "bg-success-50 text-success-600 border-success-100",
+  warning: "bg-amber-100 text-amber-700 border-amber-200",
+  error: "bg-error-50 text-error-600 border-error-100",
+  outline: "bg-transparent text-stone-600 border-stone-300",
+  default: "bg-stone-100 text-stone-600 border-stone-200",
+  // Legacy aliases
+  iris: "bg-primary-100 text-primary-700 border-primary-200",
+  coral: "bg-accent-100 text-accent-700 border-accent-200",
+  sage: "bg-success-50 text-success-600 border-success-100",
+  gray: "bg-stone-100 text-stone-700 border-stone-200",
+};
 
 const sizeStyles: Record<BadgeSize, string> = {
-  sm: 'px-2 py-0.5 text-xs',
-  md: 'px-2.5 py-1 text-sm',
-  lg: 'px-3 py-1.5 text-base',
-}
+  sm: "px-2 py-0.5 text-xs",
+  md: "px-2.5 py-1 text-sm",
+  lg: "px-3 py-1.5 text-base",
+};
 
 export function Badge({
   children,
-  variant = 'primary',
-  size = 'md',
+  variant = "primary",
+  size = "md",
   icon,
   removable = false,
   onRemove,
-  className = '',
+  className = "",
   animated = false,
 }: BadgeProps) {
-  const Component = animated ? motion.span : 'span'
+  const Component = animated ? motion.span : "span";
   const animationProps = animated
     ? {
-      initial: { scale: 0.8, opacity: 0 },
-      animate: { scale: 1, opacity: 1 },
-      exit: { scale: 0.8, opacity: 0 },
-      transition: { duration: 0.2 },
-    }
-    : {}
+        initial: { scale: 0.8, opacity: 0 },
+        animate: { scale: 1, opacity: 1 },
+        exit: { scale: 0.8, opacity: 0 },
+        transition: { duration: 0.2 },
+      }
+    : {};
 
   return (
     <Component
@@ -72,61 +86,71 @@ export function Badge({
           className="ml-1 rounded-full hover:bg-black/10 p-0.5 transition-colors"
           aria-label="Remove badge"
         >
-          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <svg
+            className="w-3 h-3"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       )}
     </Component>
-  )
+  );
 }
 
 // Achievement Badge - specialized for gamification
 interface AchievementBadgeProps {
-  icon: string // emoji
-  name: string
-  description?: string
-  unlocked?: boolean
-  rarity?: 'common' | 'rare' | 'epic' | 'legendary'
-  size?: 'sm' | 'md' | 'lg'
-  className?: string
+  icon: string; // emoji
+  name: string;
+  description?: string;
+  unlocked?: boolean;
+  rarity?: "common" | "rare" | "epic" | "legendary";
+  size?: "sm" | "md" | "lg";
+  className?: string;
 }
 
 const rarityStyles = {
-  common: 'from-gray-200 to-gray-300',
-  rare: 'from-primary-300 to-primary-400',
-  epic: 'from-accent-300 to-accent-400',
-  legendary: 'from-amber-300 to-amber-400',
-}
+  common: "from-stone-200 to-stone-300",
+  rare: "from-primary-300 to-primary-400",
+  epic: "from-accent-300 to-accent-400",
+  legendary: "from-amber-300 to-amber-400",
+};
 
 const rarityShadows = {
-  common: '',
-  rare: 'shadow-primary',
-  epic: 'shadow-accent',
-  legendary: 'shadow-[0_4px_14px_rgba(251,191,36,0.3)]',
-}
+  common: "",
+  rare: "shadow-primary",
+  epic: "shadow-accent",
+  legendary: "shadow-[0_4px_14px_rgba(251,191,36,0.3)]",
+};
 
 export function AchievementBadge({
   icon,
   name,
   description,
   unlocked = true,
-  rarity = 'common',
-  size = 'md',
-  className = '',
+  rarity = "common",
+  size = "md",
+  className = "",
 }: AchievementBadgeProps) {
   const sizeClasses = {
-    sm: 'w-12 h-12 text-xl',
-    md: 'w-16 h-16 text-2xl',
-    lg: 'w-20 h-20 text-3xl',
-  }
+    sm: "w-12 h-12 text-xl",
+    md: "w-16 h-16 text-2xl",
+    lg: "w-20 h-20 text-3xl",
+  };
 
   return (
     <motion.div
       className={`flex flex-col items-center gap-2 ${className}`}
       initial={{ scale: 0, rotate: -180 }}
       animate={{ scale: 1, rotate: 0 }}
-      transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+      transition={{ type: "spring", stiffness: 260, damping: 20 }}
     >
       <div
         className={`
@@ -134,31 +158,33 @@ export function AchievementBadge({
           rounded-full flex items-center justify-center
           bg-gradient-to-br ${rarityStyles[rarity]}
           ${rarityShadows[rarity]}
-          ${!unlocked ? 'grayscale opacity-50' : ''}
+          ${!unlocked ? "grayscale opacity-50" : ""}
           transition-all duration-300
         `}
       >
-        <span className={!unlocked ? 'opacity-50' : ''}>{icon}</span>
+        <span className={!unlocked ? "opacity-50" : ""}>{icon}</span>
       </div>
       <div className="text-center">
-        <p className={`font-medium text-sm ${!unlocked ? 'text-gray-400' : 'text-gray-900'}`}>
+        <p
+          className={`font-medium text-sm ${!unlocked ? "text-stone-400" : "text-stone-900"}`}
+        >
           {name}
         </p>
         {description && (
-          <p className="text-xs text-gray-500 mt-0.5">{description}</p>
+          <p className="text-xs text-stone-500 mt-0.5">{description}</p>
         )}
       </div>
     </motion.div>
-  )
+  );
 }
 
 // Level Badge - for displaying user level
 interface LevelBadgeProps {
-  level: number
-  title: string
-  xp: number
-  xpToNext: number
-  className?: string
+  level: number;
+  title: string;
+  xp: number;
+  xpToNext: number;
+  className?: string;
 }
 
 export function LevelBadge({
@@ -166,16 +192,16 @@ export function LevelBadge({
   title,
   xp,
   xpToNext,
-  className = '',
+  className = "",
 }: LevelBadgeProps) {
-  const progress = Math.round((xp / xpToNext) * 100)
+  const progress = Math.round((xp / xpToNext) * 100);
 
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       <div className="relative">
         <svg className="w-14 h-14 transform -rotate-90">
           <circle
-            className="text-gray-200"
+            className="text-stone-200"
             strokeWidth="4"
             stroke="currentColor"
             fill="transparent"
@@ -192,7 +218,7 @@ export function LevelBadge({
             r="24"
             cx="28"
             cy="28"
-            initial={{ strokeDasharray: '0 150.8' }}
+            initial={{ strokeDasharray: "0 150.8" }}
             animate={{ strokeDasharray: `${progress * 1.508} 150.8` }}
             transition={{ duration: 0.5 }}
           />
@@ -202,44 +228,46 @@ export function LevelBadge({
         </span>
       </div>
       <div>
-        <p className="font-medium text-gray-900">{title}</p>
-        <p className="text-xs text-gray-500">
+        <p className="font-medium text-stone-900">{title}</p>
+        <p className="text-xs text-stone-500">
           {xp.toLocaleString()} / {xpToNext.toLocaleString()} XP
         </p>
       </div>
     </div>
-  )
+  );
 }
 
 // Streak Badge - for reading streaks
 interface StreakBadgeProps {
-  days: number
-  className?: string
+  days: number;
+  className?: string;
 }
 
-export function StreakBadge({ days, className = '' }: StreakBadgeProps) {
-  const isActive = days > 0
-  const isMilestone = days >= 7 || days >= 30 || days >= 100
+export function StreakBadge({ days, className = "" }: StreakBadgeProps) {
+  const isActive = days > 0;
+  const isMilestone = days >= 7 || days >= 30 || days >= 100;
 
   return (
     <motion.div
       className={`
         inline-flex items-center gap-2 px-3 py-2 rounded-xl
-        ${isActive ? 'bg-gradient-to-r from-accent-100 to-amber-100' : 'bg-gray-100'}
+        ${isActive ? "bg-gradient-to-r from-accent-100 to-amber-100" : "bg-stone-100"}
         ${className}
       `}
       animate={isMilestone ? { scale: [1, 1.05, 1] } : {}}
       transition={{ repeat: isMilestone ? Infinity : 0, duration: 2 }}
     >
-      <span className="text-2xl">{isActive ? '🔥' : '❄️'}</span>
+      <span className="text-2xl">{isActive ? "🔥" : "❄️"}</span>
       <div>
-        <p className={`font-bold ${isActive ? 'text-accent-600' : 'text-gray-500'}`}>
-          {days} day{days !== 1 ? 's' : ''}
+        <p
+          className={`font-bold ${isActive ? "text-accent-600" : "text-stone-500"}`}
+        >
+          {days} day{days !== 1 ? "s" : ""}
         </p>
-        <p className="text-xs text-gray-500">Reading streak</p>
+        <p className="text-xs text-stone-500">Reading streak</p>
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default Badge
+export default Badge;

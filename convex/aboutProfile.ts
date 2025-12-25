@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { auth } from "./auth";
 
 // Get the about profile (public - for displaying on public pages)
 export const get = query({
@@ -22,10 +23,9 @@ export const getByUser = query({
   },
 });
 
-// Create or update about profile
+// Create or update about profile - requires authentication
 export const upsert = mutation({
   args: {
-    userId: v.id("users"),
     isPublished: v.boolean(),
     bio: v.string(),
     favoriteGenres: v.array(v.string()),
@@ -39,17 +39,27 @@ export const upsert = mutation({
     heroDescription: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
     const existing = await ctx.db
       .query("aboutProfile")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .withIndex("by_user", (q) => q.eq("userId", userId))
       .first();
 
     const data = {
       ...args,
+      userId,
       updatedAt: new Date().toISOString(),
     };
 
     if (existing) {
+      // Verify ownership
+      if (existing.userId !== userId) {
+        throw new Error("Not authorized to update this profile");
+      }
       await ctx.db.patch(existing._id, data);
       return existing._id;
     } else {
@@ -58,44 +68,66 @@ export const upsert = mutation({
   },
 });
 
-// Update just the published status
+// Update just the published status - requires authentication
 export const setPublished = mutation({
   args: {
-    userId: v.id("users"),
     isPublished: v.boolean(),
   },
   handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
     const existing = await ctx.db
       .query("aboutProfile")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .withIndex("by_user", (q) => q.eq("userId", userId))
       .first();
 
-    if (existing) {
-      await ctx.db.patch(existing._id, {
-        isPublished: args.isPublished,
-        updatedAt: new Date().toISOString(),
-      });
+    if (!existing) {
+      throw new Error("Profile not found");
     }
+
+    // Verify ownership
+    if (existing.userId !== userId) {
+      throw new Error("Not authorized to update this profile");
+    }
+
+    await ctx.db.patch(existing._id, {
+      isPublished: args.isPublished,
+      updatedAt: new Date().toISOString(),
+    });
   },
 });
 
-// Update currently reading
+// Update currently reading - requires authentication
 export const updateCurrentlyReading = mutation({
   args: {
-    userId: v.id("users"),
     currentlyReading: v.string(),
   },
   handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
     const existing = await ctx.db
       .query("aboutProfile")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .withIndex("by_user", (q) => q.eq("userId", userId))
       .first();
 
-    if (existing) {
-      await ctx.db.patch(existing._id, {
-        currentlyReading: args.currentlyReading,
-        updatedAt: new Date().toISOString(),
-      });
+    if (!existing) {
+      throw new Error("Profile not found");
     }
+
+    // Verify ownership
+    if (existing.userId !== userId) {
+      throw new Error("Not authorized to update this profile");
+    }
+
+    await ctx.db.patch(existing._id, {
+      currentlyReading: args.currentlyReading,
+      updatedAt: new Date().toISOString(),
+    });
   },
 });

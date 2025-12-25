@@ -1,51 +1,58 @@
-import { forwardRef } from 'react'
-import { motion, type HTMLMotionProps } from 'framer-motion'
+import { forwardRef } from "react";
+import { motion, type HTMLMotionProps } from "framer-motion";
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'coral' | 'sage' | 'danger'
-export type ButtonSize = 'sm' | 'md' | 'lg'
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "ghost"
+  | "accent"
+  | "success"
+  | "danger";
+export type ButtonSize = "sm" | "md" | "lg";
 
-interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
-  variant?: ButtonVariant
-  size?: ButtonSize
-  children: React.ReactNode
-  icon?: React.ReactNode
-  iconPosition?: 'left' | 'right'
-  loading?: boolean
-  fullWidth?: boolean
+interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  children: React.ReactNode;
+  icon?: React.ReactNode;
+  iconPosition?: "left" | "right";
+  loading?: boolean;
+  fullWidth?: boolean;
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-iris-500 text-white hover:bg-iris-600 shadow-iris',
-  secondary: 'bg-white text-iris-600 border border-iris-200 hover:bg-iris-50 hover:border-iris-300',
-  ghost: 'bg-transparent text-iris-600 hover:bg-iris-50',
-  coral: 'bg-coral-500 text-white hover:bg-coral-600 shadow-coral',
-  sage: 'bg-sage-500 text-white hover:bg-sage-600 shadow-sage',
-  danger: 'bg-red-500 text-white hover:bg-red-600 shadow-soft-md',
-}
+  primary: "bg-primary-500 text-white hover:bg-primary-600 shadow-primary",
+  secondary:
+    "bg-white text-primary-600 border border-primary-200 hover:bg-primary-50 hover:border-primary-300",
+  ghost: "bg-transparent text-primary-600 hover:bg-primary-50",
+  accent: "bg-accent-500 text-white hover:bg-accent-600 shadow-accent",
+  success: "bg-success-500 text-white hover:bg-success-600 shadow-soft-md",
+  danger: "bg-error-500 text-white hover:bg-error-600 shadow-soft-md",
+};
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'px-3 py-1.5 text-sm gap-1.5',
-  md: 'px-4 py-2 text-base gap-2',
-  lg: 'px-6 py-3 text-lg gap-2.5',
-}
+  sm: "px-3 py-1.5 text-sm gap-1.5",
+  md: "px-4 py-2 text-base gap-2",
+  lg: "px-6 py-3 text-lg gap-2.5",
+};
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
-      variant = 'primary',
-      size = 'md',
+      variant = "primary",
+      size = "md",
       children,
       icon,
-      iconPosition = 'left',
+      iconPosition = "left",
       loading = false,
       fullWidth = false,
       disabled,
-      className = '',
+      className = "",
       ...props
     },
-    ref
+    ref,
   ) => {
-    const isDisabled = disabled || loading
+    const isDisabled = disabled || loading;
 
     return (
       <motion.button
@@ -56,7 +63,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           disabled:opacity-50 disabled:cursor-not-allowed
           ${variantStyles[variant]}
           ${sizeStyles[size]}
-          ${fullWidth ? 'w-full' : ''}
+          ${fullWidth ? "w-full" : ""}
           ${className}
         `}
         disabled={isDisabled}
@@ -72,25 +79,29 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           </>
         ) : (
           <>
-            {icon && iconPosition === 'left' && <span className="flex-shrink-0">{icon}</span>}
+            {icon && iconPosition === "left" && (
+              <span className="flex-shrink-0">{icon}</span>
+            )}
             <span>{children}</span>
-            {icon && iconPosition === 'right' && <span className="flex-shrink-0">{icon}</span>}
+            {icon && iconPosition === "right" && (
+              <span className="flex-shrink-0">{icon}</span>
+            )}
           </>
         )}
       </motion.button>
-    )
-  }
-)
+    );
+  },
+);
 
-Button.displayName = 'Button'
+Button.displayName = "Button";
 
 // Loading spinner component
 function LoadingSpinner({ size }: { size: ButtonSize }) {
   const sizeClasses = {
-    sm: 'w-3 h-3',
-    md: 'w-4 h-4',
-    lg: 'w-5 h-5',
-  }
+    sm: "w-3 h-3",
+    md: "w-4 h-4",
+    lg: "w-5 h-5",
+  };
 
   return (
     <svg
@@ -113,22 +124,25 @@ function LoadingSpinner({ size }: { size: ButtonSize }) {
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
       />
     </svg>
-  )
+  );
 }
 
 // Icon button variant
-interface IconButtonProps extends Omit<ButtonProps, 'children' | 'icon' | 'iconPosition'> {
-  icon: React.ReactNode
-  'aria-label': string
+interface IconButtonProps extends Omit<
+  ButtonProps,
+  "children" | "icon" | "iconPosition"
+> {
+  icon: React.ReactNode;
+  "aria-label": string;
 }
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
-  ({ icon, size = 'md', className = '', ...props }, ref) => {
+  ({ icon, size = "md", className = "", ...props }, ref) => {
     const sizeClasses = {
-      sm: 'p-1.5',
-      md: 'p-2',
-      lg: 'p-3',
-    }
+      sm: "p-1.5",
+      md: "p-2",
+      lg: "p-3",
+    };
 
     return (
       <Button
@@ -139,10 +153,10 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       >
         {icon}
       </Button>
-    )
-  }
-)
+    );
+  },
+);
 
-IconButton.displayName = 'IconButton'
+IconButton.displayName = "IconButton";
 
-export default Button
+export default Button;

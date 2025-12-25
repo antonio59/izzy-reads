@@ -106,14 +106,14 @@ const toastStyles: Record<
   { bg: string; icon: React.ReactNode; iconBg: string }
 > = {
   success: {
-    bg: "bg-white border-sage-200",
-    icon: <CheckCircle className="w-5 h-5 text-sage-500" />,
-    iconBg: "bg-sage-50",
+    bg: "bg-white border-success-200",
+    icon: <CheckCircle className="w-5 h-5 text-success-500" />,
+    iconBg: "bg-success-50",
   },
   error: {
-    bg: "bg-white border-red-200",
-    icon: <AlertCircle className="w-5 h-5 text-red-500" />,
-    iconBg: "bg-red-50",
+    bg: "bg-white border-error-200",
+    icon: <AlertCircle className="w-5 h-5 text-error-500" />,
+    iconBg: "bg-error-50",
   },
   warning: {
     bg: "bg-white border-amber-200",
@@ -121,9 +121,9 @@ const toastStyles: Record<
     iconBg: "bg-amber-50",
   },
   info: {
-    bg: "bg-white border-iris-200",
-    icon: <Info className="w-5 h-5 text-iris-500" />,
-    iconBg: "bg-iris-50",
+    bg: "bg-white border-primary-200",
+    icon: <Info className="w-5 h-5 text-primary-500" />,
+    iconBg: "bg-primary-50",
   },
 };
 
@@ -144,14 +144,14 @@ function ToastItem({ toast, onClose }: ToastItemProps) {
     >
       <div className={`p-1.5 rounded-lg ${styles.iconBg}`}>{styles.icon}</div>
       <div className="flex-1 min-w-0">
-        <p className="font-medium text-gray-900">{toast.title}</p>
+        <p className="font-medium text-stone-900">{toast.title}</p>
         {toast.message && (
-          <p className="text-sm text-gray-500 mt-0.5">{toast.message}</p>
+          <p className="text-sm text-stone-500 mt-0.5">{toast.message}</p>
         )}
       </div>
       <button
         onClick={onClose}
-        className="p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+        className="p-1 rounded-lg text-stone-400 hover:text-stone-600 hover:bg-stone-100 transition-colors"
       >
         <X className="w-4 h-4" />
       </button>

@@ -220,10 +220,7 @@ function App() {
                       path="/poems"
                       element={<Navigate to="/create" replace />}
                     />
-                    <Route
-                      path="/blog"
-                      element={<Navigate to="/create" replace />}
-                    />
+
                     <Route
                       path="/achievements"
                       element={<Navigate to="/progress" replace />}

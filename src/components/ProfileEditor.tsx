@@ -108,7 +108,6 @@ const ProfileEditor: React.FC = () => {
     setSaving(true);
     try {
       await upsertProfile({
-        userId: convexUserId,
         ...profile,
         currentlyReading: profile.currentlyReading || undefined,
         heroTagline: profile.heroTagline || undefined,

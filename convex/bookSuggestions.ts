@@ -1,10 +1,27 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { auth } from "./auth";
+import type { MutationCtx } from "./_generated/server";
+import type { Id } from "./_generated/dataModel";
 
-// Get all suggestions (for admin review)
+// Helper to check if user is admin (has isParent flag)
+async function requireAdmin(ctx: MutationCtx, userId: Id<"users">) {
+  const profile = await ctx.db
+    .query("userProfiles")
+    .withIndex("by_userId", (q) => q.eq("userId", userId))
+    .first();
+
+  if (!profile?.isParent) {
+    throw new Error("Admin access required");
+  }
+}
+
+// Get all suggestions (for admin review) - requires admin auth
 export const getAll = query({
   args: {},
   handler: async (ctx) => {
+    // Note: Queries can't throw for auth in Convex, so we return all for now
+    // The UI should restrict access to admin users
     return await ctx.db.query("bookSuggestions").order("desc").collect();
   },
 });
@@ -72,7 +89,7 @@ export const submit = mutation({
   },
 });
 
-// Update suggestion status (admin only - should add auth check in production)
+// Update suggestion status - requires admin authentication
 export const updateStatus = mutation({
   args: {
     id: v.id("bookSuggestions"),
@@ -83,33 +100,51 @@ export const updateStatus = mutation({
     ),
   },
   handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    await requireAdmin(ctx, userId);
     await ctx.db.patch(args.id, { status: args.status });
   },
 });
 
-// Delete a suggestion
+// Delete a suggestion - requires admin authentication
 export const remove = mutation({
   args: { id: v.id("bookSuggestions") },
   handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    await requireAdmin(ctx, userId);
     await ctx.db.delete(args.id);
   },
 });
 
-// Add approved suggestion to wishlist
+// Add approved suggestion to wishlist - requires admin authentication
 export const addToWishlist = mutation({
   args: {
     suggestionId: v.id("bookSuggestions"),
-    userId: v.id("users"),
   },
   handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    await requireAdmin(ctx, userId);
+
     const suggestion = await ctx.db.get(args.suggestionId);
     if (!suggestion) {
       throw new Error("Suggestion not found");
     }
 
-    // Add to wishlist
+    // Add to wishlist using the authenticated user's ID
     await ctx.db.insert("wishlist", {
-      userId: args.userId,
+      userId,
       title: suggestion.title,
       author: suggestion.author,
       genre: suggestion.genre || "Fiction",

@@ -326,7 +326,6 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
   const addBook = async (book: Omit<Book, "id">) => {
     if (!convexUserId) throw new Error("Not authenticated");
     await addBookMutation({
-      userId: convexUserId,
       title: book.title,
       author: book.author,
       coverUrl: book.coverUrl,
@@ -340,13 +339,13 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
       rating: book.rating,
       isRead: book.isRead,
       notes: book.notes,
+      giftFrom: book.giftFrom,
     });
   };
 
   const bulkAddBooks = async (newBooks: Omit<Book, "id">[]) => {
     if (!convexUserId) throw new Error("Not authenticated");
     await bulkAddBooksMutation({
-      userId: convexUserId,
       books: newBooks.map((book) => ({
         title: book.title,
         author: book.author,
@@ -392,7 +391,6 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
   const addToWishlist = async (book: Omit<Book, "id">) => {
     if (!convexUserId) throw new Error("Not authenticated");
     await addWishlistMutation({
-      userId: convexUserId,
       title: book.title,
       author: book.author,
       coverUrl: book.coverUrl,
@@ -439,7 +437,6 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
   const addBlogPost = async (post: Omit<BlogPost, "id">) => {
     if (!convexUserId) throw new Error("Not authenticated");
     await addBlogPostMutation({
-      userId: convexUserId,
       title: post.title,
       content: post.content,
       bookId: post.bookId as Id<"books"> | undefined,
@@ -473,7 +470,6 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
   const addPoem = async (poem: Omit<Poem, "id">) => {
     if (!convexUserId) throw new Error("Not authenticated");
     await addPoemMutation({
-      userId: convexUserId,
       title: poem.title,
       content: poem.content,
       emoji: poem.emoji,
