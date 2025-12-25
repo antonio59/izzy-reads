@@ -9,6 +9,7 @@ import {
   Sparkles,
   Gift,
   Smile,
+  ChevronDown,
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import type { Book } from "../types";
@@ -78,14 +79,6 @@ export function EditBookModal({
     });
     return Array.from(givers).sort();
   }, [books]);
-
-  // Filter gift suggestions based on input
-  const filteredGiftSuggestions = useMemo(() => {
-    if (!giftFrom.trim()) return existingGiftGivers;
-    return existingGiftGivers.filter((g) =>
-      g.toLowerCase().includes(giftFrom.toLowerCase()),
-    );
-  }, [giftFrom, existingGiftGivers]);
 
   // Insert emoji at cursor position in notes
   const insertEmoji = (emoji: string) => {
@@ -292,61 +285,103 @@ export function EditBookModal({
                 </div>
               </div>
 
-              {/* Gift From with Autocomplete */}
+              {/* Gift From - Combobox Style */}
               <div className="relative">
                 <label className="block text-sm font-semibold text-stone-700 mb-2">
                   <Gift className="w-4 h-4 inline mr-2 text-pink-500" />
                   Gift from (optional)
                 </label>
                 <p className="text-xs text-stone-500 mb-2">
-                  Did someone special give you this book? Remember them here!
+                  Did someone special give you this book? Select from previous
+                  givers or type a new name.
                 </p>
-                <input
-                  ref={giftInputRef}
-                  type="text"
-                  value={giftFrom}
-                  onChange={(e) => setGiftFrom(e.target.value)}
-                  onFocus={() => setShowGiftSuggestions(true)}
-                  onBlur={() =>
-                    setTimeout(() => setShowGiftSuggestions(false), 200)
-                  }
-                  placeholder="e.g., Grandma, Uncle Joe, Mom..."
-                  className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                />
 
-                {/* Gift Giver Suggestions Dropdown */}
-                <AnimatePresence>
-                  {showGiftSuggestions &&
-                    filteredGiftSuggestions.length > 0 && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute z-10 w-full mt-1 bg-white border border-stone-200 rounded-xl shadow-lg overflow-hidden"
+                {/* Selected value as tag or input */}
+                <div className="relative">
+                  {giftFrom ? (
+                    <div className="flex items-center gap-2 px-4 py-3 border border-pink-200 bg-pink-50 rounded-xl">
+                      <Gift className="w-4 h-4 text-pink-500" />
+                      <span className="flex-1 text-stone-700 font-medium">
+                        {giftFrom}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setGiftFrom("")}
+                        className="p-1 hover:bg-pink-100 rounded-full transition-colors"
                       >
-                        <div className="p-2 border-b border-stone-100 bg-stone-50">
-                          <p className="text-xs text-stone-500 font-medium">
-                            People who've given you books:
-                          </p>
-                        </div>
-                        <div className="max-h-40 overflow-y-auto">
-                          {filteredGiftSuggestions.map((giver) => (
-                            <button
-                              key={giver}
-                              type="button"
-                              onClick={() => {
-                                setGiftFrom(giver);
-                                setShowGiftSuggestions(false);
-                              }}
-                              className="w-full px-4 py-2 text-left hover:bg-pink-50 text-stone-700 text-sm flex items-center gap-2 transition-colors"
-                            >
-                              <Gift className="w-4 h-4 text-pink-400" />
-                              {giver}
-                            </button>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
+                        <X className="w-4 h-4 text-pink-500" />
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <input
+                        ref={giftInputRef}
+                        type="text"
+                        value={giftFrom}
+                        onChange={(e) => setGiftFrom(e.target.value)}
+                        onFocus={() => setShowGiftSuggestions(true)}
+                        onBlur={() =>
+                          setTimeout(() => setShowGiftSuggestions(false), 200)
+                        }
+                        placeholder="Type a name or select below..."
+                        className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setShowGiftSuggestions(!showGiftSuggestions)
+                        }
+                        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-stone-100 rounded-lg transition-colors"
+                      >
+                        <ChevronDown
+                          className={`w-4 h-4 text-stone-400 transition-transform ${showGiftSuggestions ? "rotate-180" : ""}`}
+                        />
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                {/* Gift Giver Dropdown */}
+                <AnimatePresence>
+                  {showGiftSuggestions && !giftFrom && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute z-10 w-full mt-1 bg-white border border-stone-200 rounded-xl shadow-lg overflow-hidden"
+                    >
+                      {existingGiftGivers.length > 0 && (
+                        <>
+                          <div className="p-2 border-b border-stone-100 bg-stone-50">
+                            <p className="text-xs text-stone-500 font-medium">
+                              People who've given you books:
+                            </p>
+                          </div>
+                          <div className="max-h-40 overflow-y-auto">
+                            {existingGiftGivers.map((giver) => (
+                              <button
+                                key={giver}
+                                type="button"
+                                onClick={() => {
+                                  setGiftFrom(giver);
+                                  setShowGiftSuggestions(false);
+                                }}
+                                className="w-full px-4 py-2.5 text-left hover:bg-pink-50 text-stone-700 text-sm flex items-center gap-2 transition-colors"
+                              >
+                                <Gift className="w-4 h-4 text-pink-400" />
+                                {giver}
+                              </button>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                      <div className="p-2 border-t border-stone-100 bg-stone-50">
+                        <p className="text-xs text-stone-400">
+                          Or type a new name above
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
                 </AnimatePresence>
               </div>
 
