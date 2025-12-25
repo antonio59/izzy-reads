@@ -1,6 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import {
   BookOpen,
   Heart,
@@ -310,7 +310,7 @@ const MyBooks: React.FC = () => {
       {/* Book Grid */}
       {activeTab === "read" ? (
         filteredReadBooks.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <AnimatedGrid className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {filteredReadBooks.map((book) => (
               <ReadBookCard
                 key={book.id}
@@ -321,7 +321,7 @@ const MyBooks: React.FC = () => {
                 onClick={() => setSelectedBook(book)}
               />
             ))}
-          </div>
+          </AnimatedGrid>
         ) : (
           <EmptyState
             icon={BookOpen}
@@ -351,7 +351,7 @@ const MyBooks: React.FC = () => {
 
           {/* Wishlist Books */}
           {filteredWishlist.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <AnimatedGrid className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {filteredWishlist.map((book) => (
                 <WishlistCard
                   key={book.id}
@@ -361,7 +361,7 @@ const MyBooks: React.FC = () => {
                   onClick={() => setSelectedBook(book)}
                 />
               ))}
-            </div>
+            </AnimatedGrid>
           ) : (
             <EmptyState
               icon={Heart}
@@ -410,6 +410,50 @@ const MyBooks: React.FC = () => {
   );
 };
 
+// Stagger container for grid animations
+const staggerContainer = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const staggerItem = {
+  hidden: { opacity: 0, y: 20, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.3,
+      ease: [0.4, 0, 0.2, 1] as const,
+    },
+  },
+};
+
+// Animated Grid component
+const AnimatedGrid: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+}> = ({ children, className = "" }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.1 });
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      variants={staggerContainer}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 // Read Book Card Component
 interface ReadBookCardProps {
   book: Book;
@@ -429,6 +473,7 @@ const ReadBookCard: React.FC<ReadBookCardProps> = ({
   return (
     <motion.div
       className="bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden group cursor-pointer hover:shadow-lg"
+      variants={staggerItem}
       whileHover={{ y: -4 }}
       onClick={onClick}
     >
@@ -525,6 +570,7 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
   return (
     <motion.div
       className="bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden group cursor-pointer hover:shadow-lg"
+      variants={staggerItem}
       whileHover={{ y: -4 }}
       onClick={onClick}
     >
