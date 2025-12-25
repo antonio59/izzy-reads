@@ -1,37 +1,23 @@
 import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import {
   BookOpen,
   TrendingUp,
   Heart,
   PenTool,
   Feather,
-  ChevronRight,
   Sparkles,
-  Calendar,
   Star,
   User,
   BarChart3,
 } from "lucide-react";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useBooks } from "../contexts/BookContext";
 import { useUser } from "../contexts/UserContext";
 import { getWeeklyQuote } from "../utils/readingQuotes";
 import { Card, StatCard } from "./ui/Card";
-import { Badge, StreakBadge } from "./ui/Badge";
+import { StreakBadge } from "./ui/Badge";
 import { ChallengeProgress } from "./ui/Progress";
 import { StaggerContainer, StaggerItem, FadeIn } from "./PageTransition";
 import { BookGrid } from "./BookGrid";
@@ -41,12 +27,20 @@ import AvatarCreator, {
   type AvatarConfig,
 } from "./AvatarCreator";
 import { ReviewAnalytics } from "./ReviewAnalytics";
+import {
+  ReadingActivityChart,
+  GenrePieChart,
+  MostLovedBooks,
+  RecentBooks,
+  QuickActions,
+  WeeklyQuote,
+  generateMonthlyData,
+  generateGenreData,
+} from "./DashboardWidgets";
 import type { Book } from "../types";
 
 const Dashboard: React.FC = () => {
   const { books, wishlist, readingChallenges, readingStats } = useBooks();
-
-  // Get reaction stats from Convex
   const reactionStats = useQuery(api.reactions.getAllBookReactionStats);
   const { user, updateUserProfile } = useUser();
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
@@ -90,22 +84,51 @@ const Dashboard: React.FC = () => {
       .filter((b): b is Book & { reactionCount: number } => b !== null);
   }, [reactionStats, books]);
 
-  // Total reactions from Convex
   const totalReactions = reactionStats?.totalReactions ?? 0;
-
   const currentChallenge = readingChallenges[0];
 
   // Generate chart data
   const monthlyReadingData = generateMonthlyData(books);
   const genreData = generateGenreData(books);
 
-  const COLORS = [
-    "#8b5cf6",
-    "#f97f5e",
-    "#14b8a6",
-    "#f59e0b",
-    "#ec4899",
-    "#6366f1",
+  // Quick actions configuration
+  const quickActions = [
+    {
+      to: "/books",
+      icon: <BookOpen className="w-5 h-5" />,
+      label: "Add a Book",
+      color: "primary" as const,
+    },
+    {
+      to: "/create",
+      icon: <Feather className="w-5 h-5" />,
+      label: "Write a Poem",
+      color: "accent" as const,
+    },
+    {
+      to: "/create",
+      icon: <PenTool className="w-5 h-5" />,
+      label: "Write a Post",
+      color: "sage" as const,
+    },
+    {
+      to: "/books",
+      icon: <Heart className="w-5 h-5" />,
+      label: "Update Wishlist",
+      color: "primary" as const,
+    },
+    {
+      onClick: () => setShowAvatarCreator(true),
+      icon: <User className="w-5 h-5" />,
+      label: "Edit My Avatar",
+      color: "accent" as const,
+    },
+    {
+      to: "/profile",
+      icon: <User className="w-5 h-5" />,
+      label: "Edit About Me",
+      color: "sage" as const,
+    },
   ];
 
   return (
@@ -157,7 +180,7 @@ const Dashboard: React.FC = () => {
         </Card>
       </FadeIn>
 
-      {/* Stats Grid - Bento Layout */}
+      {/* Stats Grid */}
       <StaggerContainer className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         <StaggerItem>
           <StatCard
@@ -225,316 +248,42 @@ const Dashboard: React.FC = () => {
 
           {/* Reading Activity Chart */}
           <FadeIn delay={0.2}>
-            <Card padding="lg">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h3 className="font-display font-bold text-stone-900 text-lg">
-                    Reading Activity
-                  </h3>
-                  <p className="text-sm text-stone-500">Books read per month</p>
-                </div>
-                <Badge
-                  variant="primary"
-                  icon={<Calendar className="w-3 h-3" />}
-                >
-                  This Year
-                </Badge>
-              </div>
-              <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={monthlyReadingData}>
-                    <defs>
-                      <linearGradient
-                        id="colorBooks"
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1"
-                      >
-                        <stop
-                          offset="5%"
-                          stopColor="#8b5cf6"
-                          stopOpacity={0.3}
-                        />
-                        <stop
-                          offset="95%"
-                          stopColor="#8b5cf6"
-                          stopOpacity={0}
-                        />
-                      </linearGradient>
-                    </defs>
-                    <XAxis
-                      dataKey="month"
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fontSize: 12, fill: "#9ca3af" }}
-                    />
-                    <YAxis
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fontSize: 12, fill: "#9ca3af" }}
-                      allowDecimals={false}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "white",
-                        border: "none",
-                        borderRadius: "12px",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                      }}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="books"
-                      stroke="#8b5cf6"
-                      strokeWidth={2}
-                      fillOpacity={1}
-                      fill="url(#colorBooks)"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </Card>
+            <ReadingActivityChart data={monthlyReadingData} />
           </FadeIn>
 
           {/* Recent Books */}
           <FadeIn delay={0.3}>
-            <Card padding="lg">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-display font-bold text-stone-900 text-lg">
-                  Recent Reads
-                </h3>
-                <Link
-                  to="/books"
-                  className="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
-                >
-                  View All <ChevronRight className="w-4 h-4" />
-                </Link>
-              </div>
-
-              {recentBooks.length > 0 ? (
-                <BookGrid
-                  books={recentBooks}
-                  onBookClick={setSelectedBook}
-                  size="md"
-                  columns={4}
-                />
-              ) : (
-                <div className="text-center py-8">
-                  <motion.div
-                    animate={{ y: [0, -8, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    <BookOpen className="w-12 h-12 text-stone-300 mx-auto mb-3" />
-                  </motion.div>
-                  <p className="text-stone-500 font-medium">
-                    No books read yet!
-                  </p>
-                  <p className="text-sm text-stone-400">
-                    Start your reading journey today
-                  </p>
-                  <Link
-                    to="/bookshelf"
-                    className="inline-block mt-4 px-4 py-2 bg-purple-100 text-purple-700 rounded-xl font-medium hover:bg-purple-200 transition-colors"
-                  >
-                    Add Your First Book
-                  </Link>
-                </div>
-              )}
-            </Card>
+            <RecentBooks
+              books={recentBooks}
+              onBookClick={setSelectedBook}
+              BookGridComponent={BookGrid}
+            />
           </FadeIn>
 
-          {/* Most Loved Books - Reader Reactions */}
-          {mostLovedBooks.length > 0 && (
-            <FadeIn delay={0.35}>
-              <Card
-                padding="lg"
-                className="bg-gradient-to-br from-pink-50 to-rose-50 border-pink-100"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">❤️</span>
-                    <h3 className="font-display font-bold text-stone-900 text-lg">
-                      Most Loved by Readers
-                    </h3>
-                  </div>
-                  <Badge variant="primary">{totalReactions} reactions</Badge>
-                </div>
-                <p className="text-sm text-stone-600 mb-4">
-                  These books are getting the most love from visitors!
-                </p>
-                <div className="space-y-3">
-                  {mostLovedBooks.map((book, index: number) => (
-                    <div
-                      key={book.id}
-                      className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm"
-                    >
-                      <div className="flex items-center justify-center w-8 h-8 bg-primary-100 text-primary-600 font-bold rounded-full">
-                        {index + 1}
-                      </div>
-                      {book.coverUrl ? (
-                        <img
-                          src={book.coverUrl}
-                          alt={book.title}
-                          className="w-10 h-14 object-cover rounded shadow-sm"
-                        />
-                      ) : (
-                        <div className="w-10 h-14 bg-gradient-to-br from-primary-400 to-accent-400 rounded flex items-center justify-center">
-                          <BookOpen className="w-5 h-5 text-white" />
-                        </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-stone-900 truncate">
-                          {book.title}
-                        </p>
-                        <p className="text-sm text-stone-500 truncate">
-                          {book.author}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-1 bg-pink-100 px-2 py-1 rounded-full">
-                        <span className="text-sm">❤️</span>
-                        <span className="text-sm font-bold text-pink-600">
-                          {book.reactionCount}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </Card>
-            </FadeIn>
-          )}
+          {/* Most Loved Books */}
+          <FadeIn delay={0.35}>
+            <MostLovedBooks
+              books={mostLovedBooks}
+              totalReactions={totalReactions}
+            />
+          </FadeIn>
         </div>
 
         {/* Right Column - 1/3 width */}
         <div className="space-y-6">
           {/* Genre Distribution */}
           <FadeIn delay={0.2}>
-            <Card padding="lg">
-              <h3 className="font-display font-bold text-stone-900 text-lg mb-4">
-                Genre Mix
-              </h3>
-              {genreData.length > 0 ? (
-                <>
-                  <div className="h-40">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={genreData}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={40}
-                          outerRadius={60}
-                          paddingAngle={4}
-                          dataKey="value"
-                        >
-                          {genreData.map((_, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={COLORS[index % COLORS.length]}
-                            />
-                          ))}
-                        </Pie>
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "white",
-                            border: "none",
-                            borderRadius: "8px",
-                            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                          }}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {genreData.slice(0, 4).map((genre, index) => (
-                      <Badge key={genre.name} variant="gray">
-                        <span
-                          className="w-2 h-2 rounded-full mr-1"
-                          style={{
-                            backgroundColor: COLORS[index % COLORS.length],
-                          }}
-                        />
-                        {genre.name}
-                      </Badge>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-stone-400 text-sm">
-                    Read more books to see your genre mix!
-                  </p>
-                </div>
-              )}
-            </Card>
+            <GenrePieChart data={genreData} />
           </FadeIn>
 
           {/* Quick Actions */}
           <FadeIn delay={0.3}>
-            <Card padding="lg">
-              <h3 className="font-display font-bold text-stone-900 text-lg mb-4">
-                Quick Actions
-              </h3>
-              <div className="space-y-3">
-                <QuickActionLink
-                  to="/books"
-                  icon={<BookOpen className="w-5 h-5" />}
-                  label="Add a Book"
-                  color="primary"
-                />
-                <QuickActionLink
-                  to="/create"
-                  icon={<Feather className="w-5 h-5" />}
-                  label="Write a Poem"
-                  color="accent"
-                />
-                <QuickActionLink
-                  to="/create"
-                  icon={<PenTool className="w-5 h-5" />}
-                  label="Write a Post"
-                  color="sage"
-                />
-                <QuickActionLink
-                  to="/books"
-                  icon={<Heart className="w-5 h-5" />}
-                  label="Update Wishlist"
-                  color="primary"
-                />
-                <QuickActionButton
-                  onClick={() => setShowAvatarCreator(true)}
-                  icon={<User className="w-5 h-5" />}
-                  label="Edit My Avatar"
-                  color="accent"
-                />
-                <QuickActionLink
-                  to="/profile"
-                  icon={<User className="w-5 h-5" />}
-                  label="Edit About Me"
-                  color="sage"
-                />
-              </div>
-            </Card>
+            <QuickActions actions={quickActions} />
           </FadeIn>
 
           {/* Weekly Quote */}
           <FadeIn delay={0.4}>
-            <Card
-              variant="default"
-              padding="lg"
-              className="bg-gradient-to-br from-primary-500 to-accent-500 text-white"
-            >
-              <div className="text-center">
-                <span className="text-3xl mb-3 block">
-                  {getWeeklyQuote().emoji}
-                </span>
-                <p className="text-white/90 italic mb-3">
-                  "{getWeeklyQuote().text}"
-                </p>
-                <p className="text-sm text-white/70">
-                  — {getWeeklyQuote().author}
-                </p>
-              </div>
-            </Card>
+            <WeeklyQuote quote={getWeeklyQuote()} />
           </FadeIn>
         </div>
       </div>
@@ -582,119 +331,5 @@ const Dashboard: React.FC = () => {
     </div>
   );
 };
-
-// Quick Action Link component
-function QuickActionLink({
-  to,
-  icon,
-  label,
-  color,
-}: {
-  to: string;
-  icon: React.ReactNode;
-  label: string;
-  color: "primary" | "accent" | "sage";
-}) {
-  const colorStyles = {
-    primary: "bg-primary-50 text-primary-600 group-hover:bg-primary-100",
-    accent: "bg-accent-50 text-accent-600 group-hover:bg-accent-100",
-    sage: "bg-sage-50 text-sage-600 group-hover:bg-sage-100",
-  };
-
-  return (
-    <Link
-      to={to}
-      className="group flex items-center gap-3 p-3 rounded-xl hover:bg-stone-50 transition-colors"
-    >
-      <div className={`p-2 rounded-lg transition-colors ${colorStyles[color]}`}>
-        {icon}
-      </div>
-      <span className="font-medium text-stone-700 group-hover:text-stone-900">
-        {label}
-      </span>
-      <ChevronRight className="w-4 h-4 text-stone-400 ml-auto group-hover:translate-x-1 transition-transform" />
-    </Link>
-  );
-}
-
-// Quick Action Button component (for non-link actions)
-function QuickActionButton({
-  onClick,
-  icon,
-  label,
-  color,
-}: {
-  onClick: () => void;
-  icon: React.ReactNode;
-  label: string;
-  color: "primary" | "accent" | "sage";
-}) {
-  const colorStyles = {
-    primary: "bg-primary-50 text-primary-600 group-hover:bg-primary-100",
-    accent: "bg-accent-50 text-accent-600 group-hover:bg-accent-100",
-    sage: "bg-sage-50 text-sage-600 group-hover:bg-sage-100",
-  };
-
-  return (
-    <button
-      onClick={onClick}
-      className="group flex items-center gap-3 p-3 rounded-xl hover:bg-stone-50 transition-colors w-full text-left"
-    >
-      <div className={`p-2 rounded-lg transition-colors ${colorStyles[color]}`}>
-        {icon}
-      </div>
-      <span className="font-medium text-stone-700 group-hover:text-stone-900">
-        {label}
-      </span>
-      <ChevronRight className="w-4 h-4 text-stone-400 ml-auto group-hover:translate-x-1 transition-transform" />
-    </button>
-  );
-}
-
-// Helper function to generate monthly reading data
-function generateMonthlyData(books: Book[]) {
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth();
-
-  return months.slice(0, currentMonth + 1).map((month, index) => {
-    const booksInMonth = books.filter((book) => {
-      if (!book.dateRead || !book.isRead) return false;
-      const date = new Date(book.dateRead);
-      return date.getFullYear() === currentYear && date.getMonth() === index;
-    }).length;
-
-    return { month, books: booksInMonth };
-  });
-}
-
-// Helper function to generate genre distribution data
-function generateGenreData(books: Book[]) {
-  const readBooks = books.filter((book) => book.isRead && book.genre);
-  const genreCounts: Record<string, number> = {};
-
-  readBooks.forEach((book) => {
-    if (book.genre) {
-      genreCounts[book.genre] = (genreCounts[book.genre] || 0) + 1;
-    }
-  });
-
-  return Object.entries(genreCounts)
-    .map(([name, value]) => ({ name, value }))
-    .sort((a, b) => b.value - a.value);
-}
 
 export default Dashboard;
