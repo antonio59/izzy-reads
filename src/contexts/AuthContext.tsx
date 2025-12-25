@@ -39,6 +39,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { signIn: convexSignIn, signOut: convexSignOut } = useAuthActions();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [convexUserId, setConvexUserId] = useState<Id<"users"> | null>(null);
+  const [initialCheckDone, setInitialCheckDone] = useState(false);
 
   // Query to get current user profile
   const currentUser = useQuery(
@@ -47,6 +48,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 
   const createUserProfile = useMutation(api.users.createProfile);
+
+  useEffect(() => {
+    // Mark initial check as done once we have a definitive auth state
+    if (!isLoading) {
+      setInitialCheckDone(true);
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     if (currentUser) {
@@ -171,9 +179,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   // Consider loading if:
-  // 1. Convex auth is still loading
-  // 2. We're authenticated but user data hasn't loaded yet
-  const loading = isLoading || (isAuthenticated && currentUser === undefined);
+  // 1. Initial auth check hasn't completed
+  // 2. Convex auth is still loading
+  // 3. We're authenticated but user data hasn't loaded yet
+  const loading =
+    !initialCheckDone ||
+    isLoading ||
+    (isAuthenticated && currentUser === undefined);
 
   const value = {
     user,
