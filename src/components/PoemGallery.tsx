@@ -1,62 +1,68 @@
-import { useState } from 'react'
-import { AnimatePresence } from 'framer-motion'
-import { Feather, Heart, Sparkles, Plus, Edit, Trash2 } from 'lucide-react'
-import PoetryEditor from './PoetryEditor'
-import type { Poem } from '../types'
+import { useState } from "react";
+import { AnimatePresence } from "framer-motion";
+import { Feather, Heart, Sparkles, Plus, Edit, Trash2 } from "lucide-react";
+import PoetryEditor from "./PoetryEditor";
+import type { Poem } from "../types";
 
 interface PoemGalleryProps {
-  poems: Poem[]
-  onAddPoem: (poem: Poem) => void
-  onEditPoem: (id: string, poem: Partial<Poem>) => void
-  onDeletePoem: (id: string) => void
+  poems: Poem[];
+  onAddPoem: (poem: Omit<Poem, "id">) => Promise<void>;
+  onEditPoem: (id: string, poem: Partial<Poem>) => Promise<void>;
+  onDeletePoem: (id: string) => Promise<void>;
 }
 
 const BACKGROUND_PATTERNS = [
-  'bg-gradient-to-br from-accent-100 to-primary-100',
-  'bg-gradient-to-br from-blue-100 to-cyan-100',
-  'bg-gradient-to-br from-amber-100 to-orange-100',
-  'bg-gradient-to-br from-green-100 to-emerald-100',
-  'bg-gradient-to-br from-primary-100 to-accent-100',
-  'bg-gradient-to-br from-indigo-100 to-blue-100',
-]
+  "bg-gradient-to-br from-accent-100 to-primary-100",
+  "bg-gradient-to-br from-blue-100 to-cyan-100",
+  "bg-gradient-to-br from-amber-100 to-orange-100",
+  "bg-gradient-to-br from-green-100 to-emerald-100",
+  "bg-gradient-to-br from-primary-100 to-accent-100",
+  "bg-gradient-to-br from-indigo-100 to-blue-100",
+];
 
-const PoemGallery: React.FC<PoemGalleryProps> = ({ poems, onAddPoem, onEditPoem, onDeletePoem }) => {
-  const [showEditor, setShowEditor] = useState(false)
-  const [editingPoem, setEditingPoem] = useState<Poem | null>(null)
-  const [selectedPoem, setSelectedPoem] = useState<Poem | null>(null)
+const PoemGallery: React.FC<PoemGalleryProps> = ({
+  poems,
+  onAddPoem,
+  onEditPoem,
+  onDeletePoem,
+}) => {
+  const [showEditor, setShowEditor] = useState(false);
+  const [editingPoem, setEditingPoem] = useState<Poem | null>(null);
+  const [selectedPoem, setSelectedPoem] = useState<Poem | null>(null);
 
   const handleStartNew = () => {
-    setEditingPoem(null)
-    setShowEditor(true)
-  }
+    setEditingPoem(null);
+    setShowEditor(true);
+  };
 
   const handleEdit = (poem: Poem) => {
-    setEditingPoem(poem)
-    setShowEditor(true)
-  }
+    setEditingPoem(poem);
+    setShowEditor(true);
+  };
 
-  const handleSavePoem = (poemData: Omit<Poem, 'id' | 'dateCreated' | 'likes'>) => {
+  const handleSavePoem = async (
+    poemData: Omit<Poem, "id" | "dateCreated" | "likes">,
+  ) => {
     if (editingPoem) {
-      onEditPoem(editingPoem.id, poemData)
+      await onEditPoem(editingPoem.id, poemData);
     } else {
-      const newPoem: Poem = {
-        id: crypto.randomUUID(),
+      const newPoem: Omit<Poem, "id"> = {
         ...poemData,
         dateCreated: new Date().toISOString(),
         likes: 0,
-      }
-      onAddPoem(newPoem)
+      };
+      await onAddPoem(newPoem);
     }
-    setShowEditor(false)
-    setEditingPoem(null)
-  }
+    setShowEditor(false);
+    setEditingPoem(null);
+  };
 
-  const handleLike = (poemId: string) => {
-    const poem = poems.find(p => p.id === poemId)
+  const handleLike = async (poemId: string) => {
+    const poem = poems.find((p) => p.id === poemId);
     if (poem) {
-      onEditPoem(poemId, { likes: poem.likes + 1 })
+      await onEditPoem(poemId, { likes: poem.likes + 1 });
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -69,7 +75,9 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({ poems, onAddPoem, onEditPoem,
               <Feather className="w-10 h-10" />
               My Poetry Corner
             </h2>
-            <p className="text-white/90 text-lg">Express yourself through the magic of words! ✨</p>
+            <p className="text-white/90 text-lg">
+              Express yourself through the magic of words! ✨
+            </p>
           </div>
           <button
             onClick={handleStartNew}
@@ -88,8 +96,8 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({ poems, onAddPoem, onEditPoem,
             poem={editingPoem}
             onSave={handleSavePoem}
             onClose={() => {
-              setShowEditor(false)
-              setEditingPoem(null)
+              setShowEditor(false);
+              setEditingPoem(null);
             }}
           />
         )}
@@ -105,22 +113,28 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({ poems, onAddPoem, onEditPoem,
               className="bg-white rounded-3xl shadow-soft hover:shadow-soft-lg transition-all cursor-pointer group border border-gray-100 overflow-hidden"
             >
               {/* Card Header (or Image) */}
-              <div className={`
+              <div
+                className={`
                 h-48 relative overflow-hidden flex items-center justify-center
-                ${poem.imageUrl ? 'bg-gray-100' : BACKGROUND_PATTERNS[index % BACKGROUND_PATTERNS.length]}
-              `}>
+                ${poem.imageUrl ? "bg-gray-100" : BACKGROUND_PATTERNS[index % BACKGROUND_PATTERNS.length]}
+              `}
+              >
                 {poem.imageUrl ? (
-                  <img src={poem.imageUrl} alt={poem.title} className="w-full h-full object-cover" />
+                  <img
+                    src={poem.imageUrl}
+                    alt={poem.title}
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <span className="text-6xl transform group-hover:scale-110 transition-transform duration-500">
-                    {poem.emoji || '✨'}
+                    {poem.emoji || "✨"}
                   </span>
                 )}
                 <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={(e) => {
-                      e.stopPropagation()
-                      handleEdit(poem)
+                      e.stopPropagation();
+                      handleEdit(poem);
                     }}
                     className="p-2 bg-white/90 backdrop-blur rounded-lg hover:bg-white text-primary-600 shadow-sm"
                   >
@@ -128,8 +142,8 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({ poems, onAddPoem, onEditPoem,
                   </button>
                   <button
                     onClick={(e) => {
-                      e.stopPropagation()
-                      onDeletePoem(poem.id)
+                      e.stopPropagation();
+                      onDeletePoem(poem.id);
                     }}
                     className="p-2 bg-white/90 backdrop-blur rounded-lg hover:bg-white text-red-500 shadow-sm"
                   >
@@ -140,7 +154,9 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({ poems, onAddPoem, onEditPoem,
 
               {/* Card Content */}
               <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1">{poem.title}</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1">
+                  {poem.title}
+                </h3>
                 <p className="text-gray-500 text-sm mb-4 line-clamp-2 font-serif italic">
                   {poem.content}
                 </p>
@@ -151,12 +167,14 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({ poems, onAddPoem, onEditPoem,
                   </span>
                   <button
                     onClick={(e) => {
-                      e.stopPropagation()
-                      handleLike(poem.id)
+                      e.stopPropagation();
+                      handleLike(poem.id);
                     }}
                     className="flex items-center gap-1.5 text-gray-400 hover:text-accent-500 transition-colors group/like"
                   >
-                    <Heart className={`w-4 h-4 ${poem.likes > 0 ? 'fill-accent-500 text-accent-500' : 'group-hover/like:text-accent-500'}`} />
+                    <Heart
+                      className={`w-4 h-4 ${poem.likes > 0 ? "fill-accent-500 text-accent-500" : "group-hover/like:text-accent-500"}`}
+                    />
                     <span className="text-sm font-medium">{poem.likes}</span>
                   </button>
                 </div>
@@ -169,8 +187,13 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({ poems, onAddPoem, onEditPoem,
           <div className="w-20 h-20 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-6">
             <Feather className="w-10 h-10 text-primary-400" />
           </div>
-          <p className="text-gray-900 text-xl font-bold mb-2">No poems created yet</p>
-          <p className="text-gray-500 mb-6 max-w-sm mx-auto">Start your collection by writing a new poem or uploading a picture of your handwritten work!</p>
+          <p className="text-gray-900 text-xl font-bold mb-2">
+            No poems created yet
+          </p>
+          <p className="text-gray-500 mb-6 max-w-sm mx-auto">
+            Start your collection by writing a new poem or uploading a picture
+            of your handwritten work!
+          </p>
           <button
             onClick={handleStartNew}
             className="inline-flex items-center gap-2 text-primary-600 font-bold hover:text-primary-700"
@@ -191,14 +214,22 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({ poems, onAddPoem, onEditPoem,
             onClick={(e) => e.stopPropagation()}
           >
             {/* Visual Side */}
-            <div className={`
+            <div
+              className={`
               md:w-1/2 min-h-[300px] md:min-h-full relative flex items-center justify-center
-              ${selectedPoem.imageUrl ? 'bg-black' : BACKGROUND_PATTERNS[poems.indexOf(selectedPoem) % BACKGROUND_PATTERNS.length]}
-            `}>
+              ${selectedPoem.imageUrl ? "bg-black" : BACKGROUND_PATTERNS[poems.indexOf(selectedPoem) % BACKGROUND_PATTERNS.length]}
+            `}
+            >
               {selectedPoem.imageUrl ? (
-                <img src={selectedPoem.imageUrl} alt={selectedPoem.title} className="max-w-full max-h-full object-contain" />
+                <img
+                  src={selectedPoem.imageUrl}
+                  alt={selectedPoem.title}
+                  className="max-w-full max-h-full object-contain"
+                />
               ) : (
-                <span className="text-9xl filter drop-shadow-xl animate-float">{selectedPoem.emoji || '✨'}</span>
+                <span className="text-9xl filter drop-shadow-xl animate-float">
+                  {selectedPoem.emoji || "✨"}
+                </span>
               )}
             </div>
 
@@ -206,22 +237,26 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({ poems, onAddPoem, onEditPoem,
             <div className="md:w-1/2 p-8 md:p-12 overflow-y-auto bg-white flex flex-col">
               <div className="flex justify-between items-start mb-8">
                 <div>
-                  <h3 className="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-2">{selectedPoem.title}</h3>
+                  <h3 className="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-2">
+                    {selectedPoem.title}
+                  </h3>
                   <p className="text-gray-500 font-medium">
-                    {new Date(selectedPoem.dateCreated).toLocaleDateString(undefined, {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
+                    {new Date(selectedPoem.dateCreated).toLocaleDateString(
+                      undefined,
+                      {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      },
+                    )}
                   </p>
                 </div>
                 <button
                   onClick={() => setSelectedPoem(null)}
                   className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
                 >
-                  <span className="sr-only">Close</span>
-                  ✕
+                  <span className="sr-only">Close</span>✕
                 </button>
               </div>
 
@@ -242,7 +277,9 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({ poems, onAddPoem, onEditPoem,
                   onClick={() => handleLike(selectedPoem.id)}
                   className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-500 rounded-full hover:bg-red-100 transition-colors font-bold"
                 >
-                  <Heart className={`w-5 h-5 ${selectedPoem.likes > 0 ? 'fill-current' : ''}`} />
+                  <Heart
+                    className={`w-5 h-5 ${selectedPoem.likes > 0 ? "fill-current" : ""}`}
+                  />
                   {selectedPoem.likes} Likes
                 </button>
               </div>
@@ -251,7 +288,7 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({ poems, onAddPoem, onEditPoem,
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default PoemGallery
+export default PoemGallery;
