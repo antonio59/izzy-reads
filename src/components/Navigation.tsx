@@ -18,6 +18,7 @@ import {
   Download,
   ChevronDown,
   MoreHorizontal,
+  Globe,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useGamification } from "../contexts/GamificationContext";
@@ -41,6 +42,7 @@ const moreNavItems = [
   { path: "/goals", icon: Target, label: "Goals" },
   { path: "/series", icon: Library, label: "Series" },
   { path: "/export", icon: Download, label: "Export" },
+  { path: "/", icon: Globe, label: "Public Site" },
 ];
 
 // Combined for mobile - show most important
@@ -198,6 +200,16 @@ const Navigation: React.FC<NavigationProps> = ({
 
             {/* User Actions */}
             <div className="flex items-center gap-2">
+              {/* View Public Site */}
+              <Link
+                to="/"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-500 hover:text-primary-600 hover:bg-primary-50 transition-colors text-sm font-medium"
+                title="View your public portfolio"
+              >
+                <Globe className="h-4 w-4" />
+                <span className="hidden lg:inline">Public Site</span>
+              </Link>
+
               {/* Parent Mode Toggle */}
               <motion.button
                 onClick={() => setIsParentMode(!isParentMode)}
