@@ -1,6 +1,8 @@
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import AboutPage from "./AboutPage";
+import { PublicNav } from "./PublicNav";
+import { PublicFooter } from "./PublicFooter";
 
 // Default/fallback data (the original hardcoded content)
 const defaultAboutData = {
@@ -40,21 +42,39 @@ const defaultAboutData = {
 export function AboutPageWrapper() {
   const profileData = useQuery(api.aboutProfile.get);
 
-  // Use Convex data if available, otherwise use default
-  const aboutData = profileData
-    ? {
-        isPublished: profileData.isPublished,
-        bio: profileData.bio,
-        favoriteGenres: profileData.favoriteGenres,
-        favoriteAuthors: profileData.favoriteAuthors,
-        whyIRead: profileData.whyIRead,
-        funFacts: profileData.funFacts,
-        currentlyReading: profileData.currentlyReading,
-        readingGoals: profileData.readingGoals,
-        achievements: profileData.achievements,
-        profilePhoto: undefined, // Could add this to schema later
-      }
-    : defaultAboutData;
+  // Show loading state while Convex is initializing
+  if (profileData === undefined) {
+    return (
+      <div className="min-h-screen bg-cream-100 flex flex-col">
+        <PublicNav />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-12 h-12 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-stone-500 font-medium">Loading...</p>
+          </div>
+        </div>
+        <PublicFooter />
+      </div>
+    );
+  }
+
+  // If loaded but null (no profile saved), use default data
+  // If loaded with data, use that data
+  const aboutData =
+    profileData !== null
+      ? {
+          isPublished: profileData.isPublished,
+          bio: profileData.bio,
+          favoriteGenres: profileData.favoriteGenres,
+          favoriteAuthors: profileData.favoriteAuthors,
+          whyIRead: profileData.whyIRead,
+          funFacts: profileData.funFacts,
+          currentlyReading: profileData.currentlyReading,
+          readingGoals: profileData.readingGoals,
+          achievements: profileData.achievements,
+          profilePhoto: undefined, // Could add this to schema later
+        }
+      : defaultAboutData;
 
   return <AboutPage aboutData={aboutData} />;
 }
