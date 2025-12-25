@@ -170,10 +170,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  // Consider loading if:
+  // 1. Convex auth is still loading
+  // 2. We're authenticated but user data hasn't loaded yet
+  const loading = isLoading || (isAuthenticated && currentUser === undefined);
+
   const value = {
     user,
     convexUserId,
-    loading: isLoading,
+    loading,
     signIn,
     signUp,
     signOut,
