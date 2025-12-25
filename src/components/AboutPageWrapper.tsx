@@ -3,6 +3,7 @@ import { api } from "../../convex/_generated/api";
 import AboutPage from "./AboutPage";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
+import { Component, type ReactNode } from "react";
 
 // Default/fallback data (the original hardcoded content)
 const defaultAboutData = {
@@ -39,7 +40,41 @@ const defaultAboutData = {
   ],
 };
 
-export function AboutPageWrapper() {
+// Error boundary to catch Convex query errors and fall back to default data
+interface ErrorBoundaryState {
+  hasError: boolean;
+}
+
+class AboutErrorBoundary extends Component<
+  { children: ReactNode },
+  ErrorBoundaryState
+> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(): ErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error) {
+    console.warn(
+      "AboutPageWrapper caught error, using defaults:",
+      error.message,
+    );
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // Fall back to default about page when Convex errors
+      return <AboutPage aboutData={defaultAboutData} />;
+    }
+    return this.props.children;
+  }
+}
+
+function AboutPageContent() {
   const profileData = useQuery(api.aboutProfile.get);
 
   // Show loading state while Convex is initializing
@@ -77,6 +112,14 @@ export function AboutPageWrapper() {
       : defaultAboutData;
 
   return <AboutPage aboutData={aboutData} />;
+}
+
+export function AboutPageWrapper() {
+  return (
+    <AboutErrorBoundary>
+      <AboutPageContent />
+    </AboutErrorBoundary>
+  );
 }
 
 export default AboutPageWrapper;
