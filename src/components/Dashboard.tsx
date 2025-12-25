@@ -502,6 +502,12 @@ const Dashboard: React.FC = () => {
                   label="Edit My Avatar"
                   color="accent"
                 />
+                <QuickActionLink
+                  to="/profile"
+                  icon={<User className="w-5 h-5" />}
+                  label="Edit About Me"
+                  color="sage"
+                />
               </div>
             </Card>
           </FadeIn>

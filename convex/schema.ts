@@ -157,4 +157,22 @@ export default defineSchema({
     completed: v.boolean(),
     createdAt: v.string(),
   }).index("by_user", ["userId"]),
+
+  // About/Profile page content
+  aboutProfile: defineTable({
+    userId: v.id("users"),
+    isPublished: v.boolean(),
+    bio: v.string(),
+    favoriteGenres: v.array(v.string()),
+    favoriteAuthors: v.array(v.string()),
+    whyIRead: v.string(),
+    funFacts: v.array(v.string()),
+    currentlyReading: v.optional(v.string()),
+    readingGoals: v.array(v.string()),
+    achievements: v.array(v.string()),
+    // Hero section customization
+    heroTagline: v.optional(v.string()),
+    heroDescription: v.optional(v.string()),
+    updatedAt: v.string(),
+  }).index("by_user", ["userId"]),
 });

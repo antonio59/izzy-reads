@@ -12,7 +12,7 @@ import PublicPortfolio from "./components/PublicPortfolio";
 import PublicPoetry from "./components/PublicPoetry";
 import PublicWishlist from "./components/PublicWishlist";
 import PublicReviews from "./components/PublicReviews";
-import AboutPage from "./components/AboutPage";
+import AboutPageWrapper from "./components/AboutPageWrapper";
 import NotFound from "./components/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { Layout, PublicLayout, AuthLayout } from "./components/Layout";
@@ -36,6 +36,7 @@ const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 // Legacy routes kept for direct access
 const SeriesTracker = lazy(() => import("./components/SeriesTracker"));
 const ExportData = lazy(() => import("./components/ExportData"));
+const ProfileEditor = lazy(() => import("./components/ProfileEditor"));
 
 // Loading spinner for lazy-loaded components
 const PageLoader = () => (
@@ -46,41 +47,6 @@ const PageLoader = () => (
     </div>
   </div>
 );
-
-// Static about data (would come from database in production)
-const aboutData = {
-  isPublished: true,
-  bio: "Hi! I'm Izzy, and I absolutely LOVE reading! Books take me on amazing adventures to magical worlds, help me meet incredible characters, and teach me new things every day. Reading is my superpower!",
-  favoriteGenres: ["Fantasy", "Adventure", "Mystery", "Realistic Fiction"],
-  favoriteAuthors: [
-    "J.K. Rowling",
-    "R.J. Palacio",
-    "Roald Dahl",
-    "Rick Riordan",
-  ],
-  whyIRead:
-    "I read because every book is a new adventure! Reading helps me imagine amazing worlds, understand different people, and learn about things I've never experienced. Plus, it's really fun!",
-  funFacts: [
-    "I can finish a 300-page book in one weekend!",
-    "My favorite reading spot is curled up on the couch with my dog",
-    "I've read the entire Harry Potter series 3 times",
-    "I love recommending books to my friends",
-  ],
-  currentlyReading: "Percy Jackson & The Lightning Thief by Rick Riordan",
-  readingGoals: [
-    "Read 50 books this year",
-    "Try a new genre every month",
-    "Start a book club with my friends",
-    "Write reviews for every book I read",
-  ],
-  achievements: [
-    "Read 100 books",
-    "Finished a series in one week",
-    "Poetry Contest Winner",
-    "Book Club Leader",
-    "500 Pages in One Day",
-  ],
-};
 
 function App() {
   return (
@@ -105,7 +71,7 @@ function App() {
                       path="/about"
                       element={
                         <PublicLayout>
-                          <AboutPage aboutData={aboutData} />
+                          <AboutPageWrapper />
                         </PublicLayout>
                       }
                     />
@@ -237,7 +203,7 @@ function App() {
                       element={<Navigate to="/progress" replace />}
                     />
 
-                    {/* Keep series and export accessible but not in main nav */}
+                    {/* Keep series, export, and profile editor accessible but not in main nav */}
                     <Route
                       path="/series"
                       element={
@@ -257,6 +223,18 @@ function App() {
                           <ProtectedRoute>
                             <Layout>
                               <ExportData />
+                            </Layout>
+                          </ProtectedRoute>
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/profile"
+                      element={
+                        <Suspense fallback={<PageLoader />}>
+                          <ProtectedRoute>
+                            <Layout>
+                              <ProfileEditor />
                             </Layout>
                           </ProtectedRoute>
                         </Suspense>
