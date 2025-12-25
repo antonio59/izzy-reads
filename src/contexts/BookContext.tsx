@@ -203,6 +203,10 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
   // For public pages (when not authenticated), fetch ALL data
   // This is Izzy's personal site, so all data is hers and public
   const allBooksData = useQuery(api.books.getAll, convexUserId ? "skip" : {});
+  const allWishlistData = useQuery(
+    api.wishlist.getAll,
+    convexUserId ? "skip" : {},
+  );
   const allPoemsData = useQuery(api.poems.getAll, convexUserId ? "skip" : {});
 
   // Convex queries - when authenticated, get user's data
@@ -229,10 +233,8 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
 
   // Use user data if authenticated, otherwise public data
   const booksData = convexUserId ? userBooksData : allBooksData;
+  const wishlistData = convexUserId ? userWishlistData : allWishlistData;
   const poemsData = convexUserId ? userPoemsData : allPoemsData;
-  // Wishlist: for public, extract from all books where isRead=false, or show empty
-  // For authenticated user, use their wishlist
-  const wishlistData = userWishlistData;
   const blogPostsData = userBlogPostsData; // Blog posts only for authenticated users
 
   // Convex mutations
