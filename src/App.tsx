@@ -30,6 +30,7 @@ const Signup = lazy(() => import("./components/Signup"));
 const Dashboard = lazy(() => import("./components/Dashboard"));
 const MyBooks = lazy(() => import("./components/MyBooks"));
 const Create = lazy(() => import("./components/Create"));
+const BlogPostEditor = lazy(() => import("./components/BlogPostEditor"));
 const Progress = lazy(() => import("./components/Progress"));
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 
@@ -161,6 +162,26 @@ function App() {
                             <Layout>
                               <Create />
                             </Layout>
+                          </ProtectedRoute>
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/create/post"
+                      element={
+                        <Suspense fallback={<PageLoader />}>
+                          <ProtectedRoute>
+                            <BlogPostEditor />
+                          </ProtectedRoute>
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/create/post/:id"
+                      element={
+                        <Suspense fallback={<PageLoader />}>
+                          <ProtectedRoute>
+                            <BlogPostEditor />
                           </ProtectedRoute>
                         </Suspense>
                       }
