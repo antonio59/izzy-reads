@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -17,6 +17,7 @@ import {
   Library,
   Download,
   Edit3,
+  Gift,
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { useAuth } from "../contexts/AuthContext";
@@ -49,6 +50,8 @@ const MyBooks: React.FC = () => {
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [giftFromFilter, setGiftFromFilter] = useState<string>("");
+  const [showGiftFilter, setShowGiftFilter] = useState(false);
 
   // Book suggestions
   const suggestions = useQuery(api.bookSuggestions.getAll);
@@ -59,12 +62,26 @@ const MyBooks: React.FC = () => {
 
   const readBooks = books.filter((book) => book.isRead);
 
-  // Filter books based on search
-  const filteredReadBooks = readBooks.filter(
-    (book) =>
+  // Get unique gift givers for filter
+  const giftGivers = useMemo(() => {
+    const givers = new Set<string>();
+    readBooks.forEach((book) => {
+      if (book.giftFrom && book.giftFrom.trim()) {
+        givers.add(book.giftFrom.trim());
+      }
+    });
+    return Array.from(givers).sort();
+  }, [readBooks]);
+
+  // Filter books based on search and gift giver
+  const filteredReadBooks = readBooks.filter((book) => {
+    const matchesSearch =
       book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      book.author.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+      book.author.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesGiftFilter =
+      !giftFromFilter || book.giftFrom === giftFromFilter;
+    return matchesSearch && matchesGiftFilter;
+  });
 
   const filteredWishlist = wishlist.filter(
     (book) =>
@@ -191,17 +208,115 @@ const MyBooks: React.FC = () => {
         </button>
       </div>
 
-      {/* Search */}
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-        <input
-          type="text"
-          placeholder="Search your books..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-        />
+      {/* Search and Filter */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search your books..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          />
+        </div>
+
+        {/* Gift Giver Filter - only show on Read tab when there are gift givers */}
+        {activeTab === "read" && giftGivers.length > 0 && (
+          <div className="relative">
+            <button
+              onClick={() => setShowGiftFilter(!showGiftFilter)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all ${
+                giftFromFilter
+                  ? "bg-pink-100 text-pink-700 border border-pink-200"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200 border border-transparent"
+              }`}
+            >
+              <Gift className="w-4 h-4" />
+              {giftFromFilter || "Gift from..."}
+              {giftFromFilter && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setGiftFromFilter("");
+                  }}
+                  className="ml-1 p-0.5 hover:bg-pink-200 rounded-full"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+            </button>
+
+            <AnimatePresence>
+              {showGiftFilter && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute z-20 top-full mt-2 right-0 w-56 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden"
+                >
+                  <div className="p-2 border-b border-gray-100 bg-gray-50">
+                    <p className="text-xs text-gray-500 font-medium flex items-center gap-1">
+                      <Gift className="w-3 h-3" />
+                      Filter by gift giver
+                    </p>
+                  </div>
+                  <div className="max-h-48 overflow-y-auto">
+                    <button
+                      onClick={() => {
+                        setGiftFromFilter("");
+                        setShowGiftFilter(false);
+                      }}
+                      className={`w-full px-4 py-2 text-left text-sm transition-colors ${
+                        !giftFromFilter
+                          ? "bg-pink-50 text-pink-700"
+                          : "hover:bg-gray-50 text-gray-700"
+                      }`}
+                    >
+                      All books
+                    </button>
+                    {giftGivers.map((giver) => (
+                      <button
+                        key={giver}
+                        onClick={() => {
+                          setGiftFromFilter(giver);
+                          setShowGiftFilter(false);
+                        }}
+                        className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 transition-colors ${
+                          giftFromFilter === giver
+                            ? "bg-pink-50 text-pink-700"
+                            : "hover:bg-gray-50 text-gray-700"
+                        }`}
+                      >
+                        <Gift className="w-4 h-4 text-pink-400" />
+                        {giver}
+                        <span className="ml-auto text-xs text-gray-400">
+                          {readBooks.filter((b) => b.giftFrom === giver).length}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
       </div>
+
+      {/* Active filter indicator */}
+      {giftFromFilter && (
+        <div className="flex items-center gap-2 text-sm text-pink-600 bg-pink-50 px-4 py-2 rounded-lg w-fit">
+          <Gift className="w-4 h-4" />
+          Showing books from{" "}
+          <span className="font-semibold">{giftFromFilter}</span>
+          <button
+            onClick={() => setGiftFromFilter("")}
+            className="ml-2 text-pink-500 hover:text-pink-700"
+          >
+            Clear filter
+          </button>
+        </div>
+      )}
 
       {/* Book Grid */}
       {activeTab === "read" ? (

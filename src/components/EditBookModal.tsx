@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -8,7 +8,9 @@ import {
   Save,
   Sparkles,
   Gift,
+  Smile,
 } from "lucide-react";
+import { useBooks } from "../contexts/BookContext";
 import type { Book } from "../types";
 
 interface EditBookModalProps {
@@ -17,6 +19,14 @@ interface EditBookModalProps {
   onClose: () => void;
   onSave: (bookId: string, updates: Partial<Book>) => Promise<void>;
 }
+
+// Emoji categories for reviews
+const REVIEW_EMOJIS = {
+  Reactions: ["😍", "🥰", "😊", "🤩", "😭", "😢", "🤔", "😮", "🫣", "😱"],
+  Ratings: ["⭐", "🌟", "💫", "✨", "💖", "❤️", "💯", "👍", "👎", "🔥"],
+  Books: ["📚", "📖", "📕", "📗", "📘", "📙", "🔖", "📝", "✏️", "🎓"],
+  Fun: ["🦋", "🌈", "🎉", "🎊", "🏆", "🎭", "🎨", "🎵", "🌸", "🦄"],
+};
 
 // Generate month options
 const MONTHS = [
@@ -44,6 +54,7 @@ export function EditBookModal({
   onClose,
   onSave,
 }: EditBookModalProps) {
+  const { books } = useBooks();
   const [rating, setRating] = useState(0);
   const [notes, setNotes] = useState("");
   const [month, setMonth] = useState("");
@@ -51,6 +62,49 @@ export function EditBookModal({
   const [giftFrom, setGiftFrom] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [hoverRating, setHoverRating] = useState(0);
+  const [showGiftSuggestions, setShowGiftSuggestions] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [activeEmojiCategory, setActiveEmojiCategory] = useState("Reactions");
+  const notesRef = useRef<HTMLTextAreaElement>(null);
+  const giftInputRef = useRef<HTMLInputElement>(null);
+
+  // Get unique gift givers from all books
+  const existingGiftGivers = useMemo(() => {
+    const givers = new Set<string>();
+    books.forEach((b) => {
+      if (b.giftFrom && b.giftFrom.trim()) {
+        givers.add(b.giftFrom.trim());
+      }
+    });
+    return Array.from(givers).sort();
+  }, [books]);
+
+  // Filter gift suggestions based on input
+  const filteredGiftSuggestions = useMemo(() => {
+    if (!giftFrom.trim()) return existingGiftGivers;
+    return existingGiftGivers.filter((g) =>
+      g.toLowerCase().includes(giftFrom.toLowerCase()),
+    );
+  }, [giftFrom, existingGiftGivers]);
+
+  // Insert emoji at cursor position in notes
+  const insertEmoji = (emoji: string) => {
+    if (notesRef.current) {
+      const start = notesRef.current.selectionStart;
+      const end = notesRef.current.selectionEnd;
+      const newNotes = notes.substring(0, start) + emoji + notes.substring(end);
+      setNotes(newNotes);
+      setTimeout(() => {
+        if (notesRef.current) {
+          notesRef.current.selectionStart = start + emoji.length;
+          notesRef.current.selectionEnd = start + emoji.length;
+          notesRef.current.focus();
+        }
+      }, 0);
+    } else {
+      setNotes(notes + emoji);
+    }
+  };
 
   // Reset form when book changes
   useEffect(() => {
@@ -238,8 +292,8 @@ export function EditBookModal({
                 </div>
               </div>
 
-              {/* Gift From */}
-              <div>
+              {/* Gift From with Autocomplete */}
+              <div className="relative">
                 <label className="block text-sm font-semibold text-stone-700 mb-2">
                   <Gift className="w-4 h-4 inline mr-2 text-pink-500" />
                   Gift from (optional)
@@ -248,15 +302,55 @@ export function EditBookModal({
                   Did someone special give you this book? Remember them here!
                 </p>
                 <input
+                  ref={giftInputRef}
                   type="text"
                   value={giftFrom}
                   onChange={(e) => setGiftFrom(e.target.value)}
+                  onFocus={() => setShowGiftSuggestions(true)}
+                  onBlur={() =>
+                    setTimeout(() => setShowGiftSuggestions(false), 200)
+                  }
                   placeholder="e.g., Grandma, Uncle Joe, Mom..."
                   className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                 />
+
+                {/* Gift Giver Suggestions Dropdown */}
+                <AnimatePresence>
+                  {showGiftSuggestions &&
+                    filteredGiftSuggestions.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute z-10 w-full mt-1 bg-white border border-stone-200 rounded-xl shadow-lg overflow-hidden"
+                      >
+                        <div className="p-2 border-b border-stone-100 bg-stone-50">
+                          <p className="text-xs text-stone-500 font-medium">
+                            People who've given you books:
+                          </p>
+                        </div>
+                        <div className="max-h-40 overflow-y-auto">
+                          {filteredGiftSuggestions.map((giver) => (
+                            <button
+                              key={giver}
+                              type="button"
+                              onClick={() => {
+                                setGiftFrom(giver);
+                                setShowGiftSuggestions(false);
+                              }}
+                              className="w-full px-4 py-2 text-left hover:bg-pink-50 text-stone-700 text-sm flex items-center gap-2 transition-colors"
+                            >
+                              <Gift className="w-4 h-4 text-pink-400" />
+                              {giver}
+                            </button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                </AnimatePresence>
               </div>
 
-              {/* Review/Notes */}
+              {/* Review/Notes with Emoji Picker */}
               <div>
                 <label className="block text-sm font-semibold text-stone-700 mb-2">
                   <Sparkles className="w-4 h-4 inline mr-2 text-accent-500" />
@@ -266,11 +360,85 @@ export function EditBookModal({
                   Share your thoughts about this book! What did you love? What
                   would you tell a friend about it?
                 </p>
+
+                {/* Emoji Toolbar */}
+                <div className="flex items-center gap-2 mb-2 p-2 bg-stone-50 rounded-t-xl border border-b-0 border-stone-200">
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                        showEmojiPicker
+                          ? "bg-accent-100 text-accent-700"
+                          : "bg-white text-stone-600 hover:bg-accent-50 hover:text-accent-600 border border-stone-200"
+                      }`}
+                    >
+                      <Smile className="w-4 h-4" />
+                      Add Emoji
+                    </button>
+
+                    {/* Emoji Picker Dropdown */}
+                    <AnimatePresence>
+                      {showEmojiPicker && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          className="absolute z-20 top-full mt-2 left-0 w-72 bg-white rounded-xl shadow-2xl border border-stone-200 overflow-hidden"
+                        >
+                          {/* Category Tabs */}
+                          <div className="flex overflow-x-auto p-2 border-b border-stone-100 gap-1">
+                            {Object.keys(REVIEW_EMOJIS).map((category) => (
+                              <button
+                                key={category}
+                                type="button"
+                                onClick={() => setActiveEmojiCategory(category)}
+                                className={`px-3 py-1.5 text-xs font-medium rounded-lg whitespace-nowrap transition-colors ${
+                                  activeEmojiCategory === category
+                                    ? "bg-accent-100 text-accent-700"
+                                    : "text-stone-500 hover:bg-stone-100"
+                                }`}
+                              >
+                                {category}
+                              </button>
+                            ))}
+                          </div>
+
+                          {/* Emoji Grid */}
+                          <div className="p-3">
+                            <div className="grid grid-cols-5 gap-1">
+                              {REVIEW_EMOJIS[
+                                activeEmojiCategory as keyof typeof REVIEW_EMOJIS
+                              ].map((emoji) => (
+                                <button
+                                  key={emoji}
+                                  type="button"
+                                  onClick={() => {
+                                    insertEmoji(emoji);
+                                    setShowEmojiPicker(false);
+                                  }}
+                                  className="w-10 h-10 flex items-center justify-center text-xl hover:bg-stone-100 rounded-lg transition-colors"
+                                >
+                                  {emoji}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  <span className="text-xs text-stone-400 ml-auto">
+                    Express yourself with emojis!
+                  </span>
+                </div>
+
                 <textarea
+                  ref={notesRef}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Write your review here... What did you think of the story? Who was your favorite character? Would you recommend it?"
-                  className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none"
+                  placeholder="Write your review here... What did you think of the story? Who was your favorite character? Would you recommend it? 📚✨"
+                  className="w-full px-4 py-3 border border-stone-200 rounded-b-xl rounded-t-none focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none"
                   rows={6}
                 />
                 <p className="text-xs text-stone-400 mt-2 text-right">
