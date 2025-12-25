@@ -1,6 +1,39 @@
 import { mutation } from "./_generated/server";
 import { izzyBooks } from "../src/data/seedBooks";
 
+// Clean up orphaned auth data (accounts without corresponding users)
+export const cleanupOrphanedAuth = mutation({
+  args: {},
+  handler: async (ctx) => {
+    // Get all accounts
+    const accounts = await ctx.db.query("authAccounts").collect();
+    let deletedCount = 0;
+
+    for (const account of accounts) {
+      // Check if the user exists
+      const user = await ctx.db.get(account.userId);
+      if (!user) {
+        // Delete orphaned account
+        await ctx.db.delete(account._id);
+        deletedCount++;
+        console.log(`Deleted orphaned account: ${account._id}`);
+      }
+    }
+
+    // Also clean up any orphaned sessions
+    const sessions = await ctx.db.query("authSessions").collect();
+    for (const session of sessions) {
+      const user = await ctx.db.get(session.userId);
+      if (!user) {
+        await ctx.db.delete(session._id);
+        console.log(`Deleted orphaned session: ${session._id}`);
+      }
+    }
+
+    return { message: `Cleaned up ${deletedCount} orphaned accounts` };
+  },
+});
+
 // Seed database with Izzy's book collection
 export const seedDatabase = mutation({
   args: {},
@@ -13,7 +46,7 @@ export const seedDatabase = mutation({
     }
 
     console.log("Seeding database with Izzy's books...");
-    
+
     // For seeding, we need to skip authentication and use a system approach
     // This creates both the auth user and profile
     const newUserId = await ctx.db.insert("users", {
@@ -28,11 +61,11 @@ export const seedDatabase = mutation({
       isParent: false,
       theme: "colorful",
     });
-    
+
     console.log("Created user with ID:", newUserId);
 
     // Transform seed data to match Convex schema
-    const booksForConvex = izzyBooks.map(book => ({
+    const booksForConvex = izzyBooks.map((book) => ({
       userId: newUserId,
       title: book.title,
       author: book.author,
@@ -54,9 +87,9 @@ export const seedDatabase = mutation({
     }
 
     console.log(`Seeded ${insertedIds.length} books to database`);
-    return { 
+    return {
       message: "Database seeded successfully",
-      count: insertedIds.length
+      count: insertedIds.length,
     };
   },
 });

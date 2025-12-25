@@ -65,6 +65,12 @@ export function BookDetailModal({
 }: BookDetailModalProps) {
   const [imageError, setImageError] = useState(false);
   const [showFullNotes, setShowFullNotes] = useState(false);
+
+  // Early return if no book - prevents accessing properties of null
+  if (!book) {
+    return null;
+  }
+
   const gradient = getBookGradient(book.title);
   const genreEmoji = getGenreEmoji(book.genre);
 

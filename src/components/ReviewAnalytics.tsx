@@ -253,7 +253,7 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
           </div>
         </div>
 
-        {mostPopularReviews.length > 0 && (
+        {mostPopularReviews.length > 0 && mostPopularReviews[0] && (
           <div className="space-y-2">
             <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">
               Top Review

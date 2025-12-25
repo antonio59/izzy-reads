@@ -550,12 +550,14 @@ const Dashboard: React.FC = () => {
       </FadeIn>
 
       {/* Book Detail Modal */}
-      <BookDetailModal
-        book={selectedBook!}
-        isOpen={!!selectedBook}
-        onClose={() => setSelectedBook(null)}
-        showActions={false}
-      />
+      {selectedBook && (
+        <BookDetailModal
+          book={selectedBook}
+          isOpen={!!selectedBook}
+          onClose={() => setSelectedBook(null)}
+          showActions={false}
+        />
+      )}
 
       {/* Avatar Creator Modal */}
       <AnimatePresence>
