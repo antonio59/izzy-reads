@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   BookOpen,
   Heart,
@@ -7,11 +7,21 @@ import {
   Search,
   Trash2,
   ArrowRight,
+  Lightbulb,
+  Check,
+  X,
+  MessageCircle,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
+import { useAuth } from "../contexts/AuthContext";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import BookSearch from "./BookSearch";
 import { BookDetailModal } from "./BookDetailModal";
 import type { Book } from "../types";
+import type { Id } from "../../convex/_generated/dataModel";
 
 type TabType = "read" | "want-to-read";
 
@@ -26,10 +36,19 @@ const MyBooks: React.FC = () => {
     moveToWishlist,
     deleteBook,
   } = useBooks();
+  const { convexUserId } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>("read");
   const [showSearch, setShowSearch] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Book suggestions
+  const suggestions = useQuery(api.bookSuggestions.getAll);
+  const pendingCount = useQuery(api.bookSuggestions.getPendingCount);
+  const approveSuggestion = useMutation(api.bookSuggestions.addToWishlist);
+  const updateSuggestionStatus = useMutation(api.bookSuggestions.updateStatus);
+  const removeSuggestion = useMutation(api.bookSuggestions.remove);
 
   const readBooks = books.filter((book) => book.isRead);
 
@@ -71,6 +90,26 @@ const MyBooks: React.FC = () => {
     if (confirm("Are you sure you want to remove this book?")) {
       await deleteBook(bookId);
     }
+  };
+
+  // Suggestion handlers
+  const handleApproveSuggestion = async (
+    suggestionId: Id<"bookSuggestions">,
+  ) => {
+    if (!convexUserId) return;
+    await approveSuggestion({ suggestionId, userId: convexUserId });
+  };
+
+  const handleDeclineSuggestion = async (
+    suggestionId: Id<"bookSuggestions">,
+  ) => {
+    await updateSuggestionStatus({ id: suggestionId, status: "declined" });
+  };
+
+  const handleDeleteSuggestion = async (
+    suggestionId: Id<"bookSuggestions">,
+  ) => {
+    await removeSuggestion({ id: suggestionId });
   };
 
   return (
@@ -160,26 +199,172 @@ const MyBooks: React.FC = () => {
             onAction={() => setShowSearch(true)}
           />
         )
-      ) : filteredWishlist.length > 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {filteredWishlist.map((book) => (
-            <WishlistCard
-              key={book.id}
-              book={book}
-              onMarkRead={() => handleMoveToRead(book.id)}
-              onRemove={() => handleRemoveFromWishlist(book.id)}
-              onClick={() => setSelectedBook(book)}
-            />
-          ))}
-        </div>
       ) : (
-        <EmptyState
-          icon={Heart}
-          title="Your reading list is empty"
-          description="Add books you want to read next!"
-          actionLabel="Find Books"
-          onAction={() => setShowSearch(true)}
-        />
+        <>
+          {/* Book Suggestions Section */}
+          {suggestions && suggestions.length > 0 && (
+            <div className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-5 text-white mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <Lightbulb className="w-6 h-6" />
+                  <h3 className="font-bold text-lg">
+                    Book Suggestions
+                    {pendingCount && pendingCount > 0 && (
+                      <span className="ml-2 bg-white text-amber-600 text-sm font-bold px-2.5 py-0.5 rounded-full">
+                        {pendingCount} new
+                      </span>
+                    )}
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setShowSuggestions(!showSuggestions)}
+                  className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                >
+                  {showSuggestions ? (
+                    <>
+                      Hide <ChevronUp className="w-4 h-4" />
+                    </>
+                  ) : (
+                    <>
+                      View All <ChevronDown className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              </div>
+              <p className="text-white/90 text-sm">
+                Readers suggested these books for you!
+              </p>
+
+              <AnimatePresence>
+                {showSuggestions && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mt-4 space-y-3 overflow-hidden"
+                  >
+                    {suggestions.map((suggestion) => (
+                      <motion.div
+                        key={suggestion._id}
+                        className={`bg-white rounded-xl p-4 text-gray-800 ${
+                          suggestion.status === "approved"
+                            ? "border-2 border-green-400"
+                            : suggestion.status === "declined"
+                              ? "border-2 border-gray-300 opacity-60"
+                              : ""
+                        }`}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        layout
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <h4 className="font-bold text-lg">
+                              {suggestion.title}
+                            </h4>
+                            <p className="text-gray-600 text-sm">
+                              by {suggestion.author}
+                            </p>
+                            <div className="flex items-center gap-2 mt-2">
+                              {suggestion.genre && (
+                                <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full">
+                                  {suggestion.genre}
+                                </span>
+                              )}
+                              <span className="text-xs text-gray-400">
+                                Suggested by {suggestion.suggestedBy}
+                              </span>
+                            </div>
+                            {suggestion.reason && (
+                              <div className="mt-3 flex items-start gap-2 bg-gray-50 rounded-lg p-3">
+                                <MessageCircle className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                                <p className="text-sm text-gray-600 italic">
+                                  "{suggestion.reason}"
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                          {suggestion.status !== "pending" && (
+                            <span
+                              className={`text-xs font-medium px-2 py-1 rounded-full ${
+                                suggestion.status === "approved"
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-gray-100 text-gray-500"
+                              }`}
+                            >
+                              {suggestion.status === "approved"
+                                ? "✓ Added"
+                                : "Declined"}
+                            </span>
+                          )}
+                        </div>
+
+                        {suggestion.status === "pending" && (
+                          <div className="flex gap-2 mt-4 pt-3 border-t border-gray-100">
+                            <button
+                              onClick={() =>
+                                handleApproveSuggestion(suggestion._id)
+                              }
+                              className="flex-1 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg font-medium transition-colors"
+                            >
+                              <Check className="w-4 h-4" />
+                              Add to List
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleDeclineSuggestion(suggestion._id)
+                              }
+                              className="flex items-center justify-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium transition-colors"
+                            >
+                              <X className="w-4 h-4" />
+                              Decline
+                            </button>
+                          </div>
+                        )}
+
+                        {suggestion.status !== "pending" && (
+                          <div className="mt-3 pt-3 border-t border-gray-100">
+                            <button
+                              onClick={() =>
+                                handleDeleteSuggestion(suggestion._id)
+                              }
+                              className="text-sm text-gray-400 hover:text-red-500 transition-colors"
+                            >
+                              Remove suggestion
+                            </button>
+                          </div>
+                        )}
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+
+          {/* Wishlist Books */}
+          {filteredWishlist.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {filteredWishlist.map((book) => (
+                <WishlistCard
+                  key={book.id}
+                  book={book}
+                  onMarkRead={() => handleMoveToRead(book.id)}
+                  onRemove={() => handleRemoveFromWishlist(book.id)}
+                  onClick={() => setSelectedBook(book)}
+                />
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              icon={Heart}
+              title="Your reading list is empty"
+              description="Add books you want to read next!"
+              actionLabel="Find Books"
+              onAction={() => setShowSearch(true)}
+            />
+          )}
+        </>
       )}
 
       {/* Book Search Modal */}
