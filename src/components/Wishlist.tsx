@@ -10,12 +10,20 @@ import {
   Check,
   X,
   MessageCircle,
+  Search,
+  Loader2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useBooks } from "../contexts/BookContext";
 import { useAuth } from "../contexts/AuthContext";
+import {
+  searchBooks,
+  suggestGenre,
+  determineAgeRating,
+  type UnifiedBook,
+} from "../services/bookApi";
 import type { Book } from "../types";
 import type { Id } from "../../convex/_generated/dataModel";
 
@@ -25,14 +33,12 @@ const Wishlist: React.FC = () => {
   const { convexUserId } = useAuth();
   const [showAddForm, setShowAddForm] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [newBook, setNewBook] = useState<Partial<Book>>({
-    title: "",
-    author: "",
-    genre: "Fiction",
-    ageRating: "8+",
-    pageCount: 0,
-    description: "",
-  });
+
+  // Search state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<UnifiedBook[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedBook, setSelectedBook] = useState<UnifiedBook | null>(null);
 
   // Fetch suggestions
   const suggestions = useQuery(api.bookSuggestions.getAll);
@@ -74,30 +80,55 @@ const Wishlist: React.FC = () => {
     }
   };
 
-  const handleAddToWishlist = () => {
-    if (newBook.title && newBook.author) {
-      const book: Book = {
-        id: Date.now().toString(),
-        title: newBook.title,
-        author: newBook.author,
-        genre: newBook.genre || "Fiction",
-        ageRating: newBook.ageRating || "8+",
-        dateAdded: new Date().toISOString().split("T")[0],
-        isRead: false,
-        pageCount: newBook.pageCount || 0,
-        description: newBook.description || "",
-      };
-      addToWishlist(book);
-      setNewBook({
-        title: "",
-        author: "",
-        genre: "Fiction",
-        ageRating: "8+",
-        pageCount: 0,
-        description: "",
-      });
-      setShowAddForm(false);
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+
+    setIsSearching(true);
+    try {
+      const results = await searchBooks(searchQuery, 12);
+      setSearchResults(results);
+    } catch (error) {
+      console.error("Search failed:", error);
+    } finally {
+      setIsSearching(false);
     }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  const handleAddToWishlist = () => {
+    if (!selectedBook) return;
+
+    const book: Book = {
+      id: crypto.randomUUID(),
+      title: selectedBook.title,
+      author: selectedBook.author,
+      coverUrl: selectedBook.coverUrl,
+      isbn: selectedBook.isbn,
+      genre: suggestGenre(selectedBook),
+      pageCount: selectedBook.pageCount,
+      description: selectedBook.description,
+      ageRating: determineAgeRating(selectedBook),
+      dateAdded: new Date().toISOString().split("T")[0],
+      isRead: false,
+    };
+
+    addToWishlist(book);
+    setSelectedBook(null);
+    setSearchQuery("");
+    setSearchResults([]);
+    setShowAddForm(false);
+  };
+
+  const handleCloseModal = () => {
+    setShowAddForm(false);
+    setSearchQuery("");
+    setSearchResults([]);
+    setSelectedBook(null);
   };
 
   const handleMoveToBookshelf = (bookId: string) => {
@@ -267,112 +298,189 @@ const Wishlist: React.FC = () => {
         </div>
       )}
 
-      {/* Add Book Modal */}
+      {/* Add Book Modal - Search Based */}
       {showAddForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Add to Wishlist
-            </h2>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  value={newBook.title}
-                  onChange={(e) =>
-                    setNewBook({ ...newBook, title: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-transparent"
-                  placeholder="Enter book title"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Author
-                </label>
-                <input
-                  type="text"
-                  value={newBook.author}
-                  onChange={(e) =>
-                    setNewBook({ ...newBook, author: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-transparent"
-                  placeholder="Enter author name"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Genre
-                </label>
-                <select
-                  value={newBook.genre}
-                  onChange={(e) =>
-                    setNewBook({ ...newBook, genre: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-transparent"
+          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            {/* Header with Search */}
+            <div className="bg-gradient-to-r from-accent-500 to-primary-500 p-6 text-white">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold flex items-center gap-2">
+                  <Heart className="w-8 h-8" />
+                  Add to Wishlist
+                </h2>
+                <button
+                  onClick={handleCloseModal}
+                  className="text-white hover:bg-white/20 rounded-full p-2 transition-colors"
                 >
-                  <option value="Fiction">Fiction</option>
-                  <option value="Fantasy">Fantasy</option>
-                  <option value="Adventure">Adventure</option>
-                  <option value="Mystery">Mystery</option>
-                  <option value="Science Fiction">Science Fiction</option>
-                  <option value="Non-Fiction">Non-Fiction</option>
-                </select>
+                  <X className="w-5 h-5" />
+                </button>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Pages (if you know)
-                </label>
-                <input
-                  type="number"
-                  value={newBook.pageCount}
-                  onChange={(e) =>
-                    setNewBook({
-                      ...newBook,
-                      pageCount: parseInt(e.target.value) || 0,
-                    })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-transparent"
-                  placeholder="Number of pages"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Why do you want to read this?
-                </label>
-                <textarea
-                  value={newBook.description}
-                  onChange={(e) =>
-                    setNewBook({ ...newBook, description: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-transparent"
-                  rows={3}
-                  placeholder="What makes this book interesting to you?"
-                />
+              {/* Search Bar */}
+              <div className="flex gap-2">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Search by title, author, or ISBN..."
+                    className="w-full pl-10 pr-4 py-3 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-accent-300"
+                  />
+                </div>
+                <button
+                  onClick={handleSearch}
+                  disabled={isSearching}
+                  className="bg-white text-accent-600 px-6 py-3 rounded-lg font-semibold hover:bg-accent-50 transition-colors disabled:opacity-50 flex items-center gap-2"
+                >
+                  {isSearching ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Searching...
+                    </>
+                  ) : (
+                    <>
+                      <Search className="w-5 h-5" />
+                      Search
+                    </>
+                  )}
+                </button>
               </div>
             </div>
 
-            <div className="flex space-x-3 mt-6">
-              <button
-                onClick={handleAddToWishlist}
-                className="flex-1 bg-accent-600 text-white py-2 rounded-lg hover:bg-accent-700 transition-colors duration-200"
-              >
-                Add to Wishlist
-              </button>
-              <button
-                onClick={() => setShowAddForm(false)}
-                className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition-colors duration-200"
-              >
-                Cancel
-              </button>
+            {/* Results */}
+            <div
+              className="p-6 overflow-y-auto"
+              style={{ maxHeight: "calc(90vh - 200px)" }}
+            >
+              {selectedBook ? (
+                // Book Details View
+                <div className="space-y-6">
+                  <button
+                    onClick={() => setSelectedBook(null)}
+                    className="text-accent-600 hover:text-accent-700 font-medium"
+                  >
+                    ← Back to results
+                  </button>
+
+                  <div className="flex gap-6">
+                    {selectedBook.coverUrl ? (
+                      <img
+                        src={selectedBook.coverUrl}
+                        alt={selectedBook.title}
+                        className="w-48 h-72 object-cover rounded-lg shadow-lg"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    ) : (
+                      <div className="w-48 h-72 bg-gradient-to-br from-accent-400 to-primary-400 rounded-lg shadow-lg flex items-center justify-center">
+                        <BookOpen className="w-16 h-16 text-white" />
+                      </div>
+                    )}
+
+                    <div className="flex-1 space-y-4">
+                      <div>
+                        <h3 className="text-3xl font-bold text-gray-800 mb-2">
+                          {selectedBook.title}
+                        </h3>
+                        <p className="text-xl text-gray-600">
+                          by {selectedBook.author}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap gap-3">
+                        {selectedBook.publishYear && (
+                          <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                            📅 {selectedBook.publishYear}
+                          </span>
+                        )}
+                        {selectedBook.pageCount && (
+                          <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+                            📄 {selectedBook.pageCount} pages
+                          </span>
+                        )}
+                        {selectedBook.publisher && (
+                          <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">
+                            🏢 {selectedBook.publisher}
+                          </span>
+                        )}
+                      </div>
+
+                      {selectedBook.description && (
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <h4 className="font-semibold mb-2">Description:</h4>
+                          <p className="text-gray-700 text-sm leading-relaxed">
+                            {selectedBook.description.slice(0, 300)}
+                            {selectedBook.description.length > 300 && "..."}
+                          </p>
+                        </div>
+                      )}
+
+                      <button
+                        onClick={handleAddToWishlist}
+                        className="w-full bg-gradient-to-r from-accent-500 to-primary-500 text-white py-3 rounded-lg font-bold hover:from-accent-600 hover:to-primary-600 transition-all flex items-center justify-center gap-2"
+                      >
+                        <Heart className="w-5 h-5" />
+                        Add to Wishlist
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : searchResults.length > 0 ? (
+                // Search Results Grid
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {searchResults.map((book) => (
+                    <div
+                      key={book.id}
+                      onClick={() => setSelectedBook(book)}
+                      className="cursor-pointer group"
+                    >
+                      <div className="relative overflow-hidden rounded-lg shadow-md group-hover:shadow-xl transition-all transform group-hover:scale-105">
+                        {book.coverUrl ? (
+                          <img
+                            src={book.coverUrl}
+                            alt={book.title}
+                            className="w-full h-64 object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                              e.currentTarget.nextElementSibling?.classList.remove(
+                                "hidden",
+                              );
+                            }}
+                          />
+                        ) : null}
+                        <div
+                          className={`w-full h-64 bg-gradient-to-br from-accent-400 to-primary-400 flex items-center justify-center ${book.coverUrl ? "hidden" : ""}`}
+                        >
+                          <BookOpen className="w-12 h-12 text-white" />
+                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
+                          <div className="text-white text-sm">
+                            <p className="font-bold truncate">{book.title}</p>
+                            <p className="text-xs truncate">{book.author}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                // Empty State
+                <div className="text-center py-12">
+                  <Heart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-500 text-lg">
+                    {isSearching
+                      ? "Searching..."
+                      : "Search for books to add to your wishlist!"}
+                  </p>
+                  <p className="text-gray-400 text-sm mt-2">
+                    Try searching for your favorite book or author
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

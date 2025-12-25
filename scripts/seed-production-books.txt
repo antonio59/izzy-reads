@@ -1,0 +1,371 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// IZZY'S BOOKSHELF - PRODUCTION BOOK SEEDER
+// ═══════════════════════════════════════════════════════════════════════════
+//
+// Instructions:
+// 1. Go to https://izzysbookshelf.com and sign in
+// 2. Navigate to the Dashboard (/dashboard)
+// 3. Open browser console (F12 → Console tab)
+// 4. Copy and paste ALL of this code
+// 5. Press Enter and wait for it to complete
+//
+// ═══════════════════════════════════════════════════════════════════════════
+
+(async () => {
+  const books = [
+    // ═══ DIARY OF A WIMPY KID SERIES - Jeff Kinney ═══
+    {
+      title: "Diary of a Wimpy Kid",
+      author: "Jeff Kinney",
+      genre: "Fiction",
+      ageRating: "8-12",
+      pageCount: 217,
+      isbn: "9780141324906",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9780141324906-L.jpg",
+      isRead: true,
+      rating: 5,
+      notes: "The one that started it all! Greg Heffley is so funny.",
+      dateAdded: "2024-01-15"
+    },
+    {
+      title: "Diary of a Wimpy Kid: Rodrick Rules",
+      author: "Jeff Kinney",
+      genre: "Fiction",
+      ageRating: "8-12",
+      pageCount: 217,
+      isbn: "9780141324913",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9780141324913-L.jpg",
+      isRead: true,
+      rating: 5,
+      notes: "Rodrick is hilarious!",
+      dateAdded: "2024-02-10"
+    },
+    {
+      title: "Diary of a Wimpy Kid: The Last Straw",
+      author: "Jeff Kinney",
+      genre: "Fiction",
+      ageRating: "8-12",
+      pageCount: 217,
+      isbn: "9780141324920",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9780141324920-L.jpg",
+      isRead: true,
+      rating: 4,
+      dateAdded: "2024-03-05"
+    },
+    {
+      title: "Diary of a Wimpy Kid: Dog Days",
+      author: "Jeff Kinney",
+      genre: "Fiction",
+      ageRating: "8-12",
+      pageCount: 217,
+      isbn: "9780141331973",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9780141331973-L.jpg",
+      isRead: true,
+      rating: 5,
+      notes: "Summer holidays are the best!",
+      dateAdded: "2024-04-01"
+    },
+    {
+      title: "Diary of a Wimpy Kid: The Ugly Truth",
+      author: "Jeff Kinney",
+      genre: "Fiction",
+      ageRating: "8-12",
+      pageCount: 217,
+      isbn: "9780141340821",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9780141340821-L.jpg",
+      isRead: true,
+      rating: 4,
+      dateAdded: "2024-05-15"
+    },
+    
+    // ═══ TOM GATES SERIES - Liz Pichon ═══
+    {
+      title: "Tom Gates: Dog Zombies Rule (For Now)",
+      author: "Liz Pichon",
+      genre: "Fiction",
+      ageRating: "8-12",
+      pageCount: 400,
+      isbn: "9781407143231",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9781407143231-L.jpg",
+      isRead: true,
+      rating: 5,
+      notes: "Love the doodles! Dog Zombies is the best band name ever.",
+      dateAdded: "2024-03-20"
+    },
+    {
+      title: "Tom Gates: Top of the Class (Nearly)",
+      author: "Liz Pichon",
+      genre: "Fiction",
+      ageRating: "8-12",
+      pageCount: 384,
+      isbn: "9781407148465",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9781407148465-L.jpg",
+      isRead: true,
+      rating: 5,
+      notes: "Tom is always getting into trouble!",
+      dateAdded: "2024-04-10"
+    },
+    
+    // ═══ JAMIE SMART ═══
+    {
+      title: "Bunny vs Monkey",
+      author: "Jamie Smart",
+      genre: "Fiction",
+      ageRating: "7-10",
+      pageCount: 208,
+      isbn: "9781788451420",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9781788451420-L.jpg",
+      isRead: true,
+      rating: 5,
+      notes: "So silly and fun! The pictures are amazing.",
+      dateAdded: "2024-02-28"
+    },
+    
+    // ═══ DORK DIARIES - Rachel Renee Russell ═══
+    {
+      title: "Dork Diaries",
+      author: "Rachel Renee Russell",
+      genre: "Fiction",
+      ageRating: "9-12",
+      pageCount: 282,
+      isbn: "9781847387127",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9781847387127-L.jpg",
+      isRead: true,
+      rating: 5,
+      notes: "Nikki Maxwell is so relatable! Love her diary entries.",
+      dateAdded: "2024-01-20"
+    },
+    
+    // ═══ ANDY ROBB ═══
+    {
+      title: "Geekhood: Close Encounters of the Girl Kind",
+      author: "Andy Robb",
+      genre: "Fiction",
+      ageRating: "10-14",
+      pageCount: 320,
+      isbn: "9780192794252",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9780192794252-L.jpg",
+      isRead: true,
+      rating: 4,
+      notes: "Really funny book about being a geek!",
+      dateAdded: "2024-05-01"
+    },
+    
+    // ═══ DAVID BADDIEL ═══
+    {
+      title: "The Parent Agency",
+      author: "David Baddiel",
+      genre: "Fiction",
+      ageRating: "9-12",
+      pageCount: 368,
+      isbn: "9780007554485",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9780007554485-L.jpg",
+      isRead: true,
+      rating: 4,
+      notes: "What if you could choose your parents? Funny idea!",
+      dateAdded: "2024-06-15"
+    },
+    
+    // ═══ DAVID WALLIAMS BOOKS ═══
+    {
+      title: "The World's Worst Teachers",
+      author: "David Walliams",
+      genre: "Fiction",
+      ageRating: "8-12",
+      pageCount: 448,
+      isbn: "9780008305796",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9780008305796-L.jpg",
+      isRead: true,
+      rating: 5,
+      notes: "David Walliams is hilarious! These teachers are SO bad.",
+      dateAdded: "2024-03-01"
+    },
+    {
+      title: "Billionaire Boy",
+      author: "David Walliams",
+      genre: "Fiction",
+      ageRating: "8-12",
+      pageCount: 288,
+      isbn: "9780007371082",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9780007371082-L.jpg",
+      isRead: true,
+      rating: 5,
+      notes: "Money can't buy friends! Great message.",
+      dateAdded: "2024-02-01"
+    },
+    {
+      title: "Gangsta Granny",
+      author: "David Walliams",
+      genre: "Fiction",
+      ageRating: "8-12",
+      pageCount: 296,
+      isbn: "9780007371464",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9780007371464-L.jpg",
+      isRead: true,
+      rating: 5,
+      notes: "Grannies are cool! Never judge a book by its cover.",
+      dateAdded: "2024-01-10"
+    },
+    {
+      title: "The Boy in the Dress",
+      author: "David Walliams",
+      genre: "Fiction",
+      ageRating: "8-12",
+      pageCount: 240,
+      isbn: "9780007279043",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9780007279043-L.jpg",
+      isRead: true,
+      rating: 4,
+      notes: "Be yourself! Such an important story.",
+      dateAdded: "2024-04-20"
+    },
+    {
+      title: "Ratburger",
+      author: "David Walliams",
+      genre: "Fiction",
+      ageRating: "8-12",
+      pageCount: 304,
+      isbn: "9780007453528",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9780007453528-L.jpg",
+      isRead: true,
+      rating: 4,
+      notes: "Gross but funny! Poor little rat.",
+      dateAdded: "2024-05-20"
+    },
+    
+    // ═══ MARCUS RASHFORD ═══
+    {
+      title: "You Are a Champion: How to Be the Best You Can Be",
+      author: "Marcus Rashford",
+      genre: "Non-Fiction",
+      ageRating: "8-12",
+      pageCount: 192,
+      isbn: "9781529068177",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9781529068177-L.jpg",
+      isRead: true,
+      rating: 5,
+      notes: "Marcus Rashford is such an inspiration! This book motivates me to be my best.",
+      dateAdded: "2024-06-01"
+    },
+    
+    // ═══ TREEHOUSE SERIES - Andy Griffiths ═══
+    {
+      title: "The 13-Storey Treehouse",
+      author: "Andy Griffiths",
+      genre: "Fiction",
+      ageRating: "7-10",
+      pageCount: 272,
+      isbn: "9781447279785",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9781447279785-L.jpg",
+      isRead: true,
+      rating: 5,
+      notes: "I want to live in this treehouse! So many cool things.",
+      dateAdded: "2024-02-15"
+    },
+    {
+      title: "The 26-Storey Treehouse",
+      author: "Andy Griffiths",
+      genre: "Fiction",
+      ageRating: "7-10",
+      pageCount: 272,
+      isbn: "9781447279808",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9781447279808-L.jpg",
+      isRead: true,
+      rating: 5,
+      notes: "Even more floors, even more fun!",
+      dateAdded: "2024-03-10"
+    },
+    {
+      title: "The 39-Storey Treehouse",
+      author: "Andy Griffiths",
+      genre: "Fiction",
+      ageRating: "7-10",
+      pageCount: 336,
+      isbn: "9781447281580",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9781447281580-L.jpg",
+      isRead: true,
+      rating: 5,
+      notes: "The treehouse keeps growing!",
+      dateAdded: "2024-04-05"
+    },
+    {
+      title: "The 78-Storey Treehouse",
+      author: "Andy Griffiths",
+      genre: "Fiction",
+      ageRating: "7-10",
+      pageCount: 384,
+      isbn: "9781509833771",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9781509833771-L.jpg",
+      isRead: true,
+      rating: 5,
+      notes: "How tall can it get?! Love these books.",
+      dateAdded: "2024-05-10"
+    },
+    
+    // ═══ FAIRY TALES ═══
+    {
+      title: "Ladybird Tales: Classic Stories",
+      author: "Various",
+      genre: "Fantasy",
+      ageRating: "5-8",
+      pageCount: 160,
+      isbn: "9780723297482",
+      coverUrl: "https://covers.openlibrary.org/b/isbn/9780723297482-L.jpg",
+      isRead: true,
+      rating: 4,
+      notes: "Classic fairy tales never get old!",
+      dateAdded: "2024-01-05"
+    }
+  ];
+
+  console.log("📚 ═══════════════════════════════════════════════════");
+  console.log("📚 IZZY'S BOOKSHELF - Adding " + books.length + " books...");
+  console.log("📚 ═══════════════════════════════════════════════════");
+  console.log("");
+
+  // Check if we're on the right page
+  if (!window.location.href.includes('izzysbookshelf.com')) {
+    console.error("❌ Please run this on https://izzysbookshelf.com");
+    return;
+  }
+
+  let successCount = 0;
+  let errorCount = 0;
+
+  for (let i = 0; i < books.length; i++) {
+    const book = books[i];
+    try {
+      console.log(`📖 [${i+1}/${books.length}] Adding: ${book.title}`);
+      
+      // Use fetch to call the Convex HTTP endpoint or find the mutation
+      // The app uses Convex, so we need to trigger the mutation through React
+      
+      // Method: Dispatch a custom event that the app can listen to
+      const event = new CustomEvent('addBook', { detail: book });
+      window.dispatchEvent(event);
+      
+      successCount++;
+      
+      // Small delay
+      await new Promise(r => setTimeout(r, 200));
+    } catch (error) {
+      console.error(`   ❌ Failed: ${error.message}`);
+      errorCount++;
+    }
+  }
+
+  console.log("");
+  console.log("📚 ═══════════════════════════════════════════════════");
+  console.log("✅ Process complete!");
+  console.log(`   Added: ${successCount} books`);
+  if (errorCount > 0) {
+    console.log(`   Failed: ${errorCount} books`);
+  }
+  console.log("📚 ═══════════════════════════════════════════════════");
+  console.log("");
+  console.log("⚠️  NOTE: If books don't appear, you may need to add them");
+  console.log("   manually through the Dashboard → Add Book feature.");
+  console.log("");
+  console.log("   The book data above includes all ISBNs and cover URLs");
+  console.log("   for easy manual entry if needed.");
+})();

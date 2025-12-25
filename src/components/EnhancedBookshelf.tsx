@@ -251,12 +251,14 @@ const EnhancedBookshelf: React.FC = () => {
       )}
 
       {/* Book Detail Modal */}
-      <BookDetailModal
-        book={selectedBook!}
-        isOpen={!!selectedBook}
-        onClose={() => setSelectedBook(null)}
-        showActions={false}
-      />
+      {selectedBook && (
+        <BookDetailModal
+          book={selectedBook}
+          isOpen={!!selectedBook}
+          onClose={() => setSelectedBook(null)}
+          showActions={false}
+        />
+      )}
     </div>
   );
 };
