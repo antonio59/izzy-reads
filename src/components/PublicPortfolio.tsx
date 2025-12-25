@@ -74,10 +74,8 @@ const PublicPortfolio = () => {
           >
             <div className="flex items-center gap-5">
               {/* Avatar - properly sized */}
-              <div className="flex-shrink-0">
-                <div className="w-16 h-16 md:w-20 md:h-20 shadow-lg ring-2 ring-primary-100 rounded-full overflow-hidden">
-                  <AvatarPreview config={userAvatar} size="xl" />
-                </div>
+              <div className="flex-shrink-0 shadow-lg ring-2 ring-primary-100 rounded-full overflow-hidden">
+                <AvatarPreview config={userAvatar} size="md" />
               </div>
 
               {/* Hero Content */}

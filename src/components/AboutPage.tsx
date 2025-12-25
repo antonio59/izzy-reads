@@ -92,10 +92,8 @@ export function AboutPage({ aboutData }: AboutPageProps) {
               <div className="relative p-6 sm:p-8 bg-primary-600">
                 <div className="flex flex-col sm:flex-row items-center gap-6">
                   {/* Profile Photo / Avatar */}
-                  <div className="flex-shrink-0">
-                    <div className="w-28 h-28 rounded-full border-4 border-white shadow-lg overflow-hidden bg-white">
-                      <AvatarPreview config={userAvatar} size="xl" />
-                    </div>
+                  <div className="flex-shrink-0 rounded-full border-4 border-white shadow-lg overflow-hidden">
+                    <AvatarPreview config={userAvatar} size="lg" />
                   </div>
 
                   {/* Bio */}
