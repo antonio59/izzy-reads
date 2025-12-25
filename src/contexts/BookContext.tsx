@@ -114,8 +114,7 @@ function convexBlogPostToBlogPost(doc: Doc<"blogPosts">): BlogPost {
     bookId: doc.bookId as string | undefined,
     dateCreated: doc.dateCreated,
     dateModified: doc.dateModified,
-    status: doc.status,
-    parentApproved: doc.parentApproved,
+    status: doc.status as "draft" | "published",
     tags: doc.tags,
     emoji: doc.emoji,
   };
@@ -363,7 +362,6 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
       dateCreated: post.dateCreated,
       dateModified: post.dateModified,
       status: post.status,
-      parentApproved: post.parentApproved,
       tags: post.tags,
       emoji: post.emoji,
     });
@@ -378,7 +376,6 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
       bookId: rest.bookId as Id<"books"> | undefined,
       dateModified: rest.dateModified || new Date().toISOString(),
       status: rest.status,
-      parentApproved: rest.parentApproved,
       tags: rest.tags,
       emoji: rest.emoji,
     });

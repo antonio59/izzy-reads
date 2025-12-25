@@ -29,8 +29,7 @@ export const add = mutation({
     bookId: v.optional(v.id("books")),
     dateCreated: v.string(),
     dateModified: v.string(),
-    status: v.union(v.literal("draft"), v.literal("pending"), v.literal("published")),
-    parentApproved: v.boolean(),
+    status: v.union(v.literal("draft"), v.literal("published")),
     tags: v.array(v.string()),
     emoji: v.optional(v.string()),
   },
@@ -46,15 +45,14 @@ export const update = mutation({
     content: v.optional(v.string()),
     bookId: v.optional(v.id("books")),
     dateModified: v.string(),
-    status: v.optional(v.union(v.literal("draft"), v.literal("pending"), v.literal("published"))),
-    parentApproved: v.optional(v.boolean()),
+    status: v.optional(v.union(v.literal("draft"), v.literal("published"))),
     tags: v.optional(v.array(v.string())),
     emoji: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const { id, ...updates } = args;
     const filteredUpdates = Object.fromEntries(
-      Object.entries(updates).filter(([, value]) => value !== undefined)
+      Object.entries(updates).filter(([, value]) => value !== undefined),
     );
     await ctx.db.patch(id, filteredUpdates);
   },

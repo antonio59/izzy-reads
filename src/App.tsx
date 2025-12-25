@@ -31,7 +31,6 @@ const Dashboard = lazy(() => import("./components/Dashboard"));
 const MyBooks = lazy(() => import("./components/MyBooks"));
 const Create = lazy(() => import("./components/Create"));
 const Progress = lazy(() => import("./components/Progress"));
-const ParentDashboard = lazy(() => import("./components/ParentDashboard"));
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 
 // Legacy routes kept for direct access
@@ -212,19 +211,6 @@ function App() {
                         </Suspense>
                       }
                     />
-                    <Route
-                      path="/parent"
-                      element={
-                        <Suspense fallback={<PageLoader />}>
-                          <ProtectedRoute>
-                            <Layout>
-                              <ParentDashboard />
-                            </Layout>
-                          </ProtectedRoute>
-                        </Suspense>
-                      }
-                    />
-
                     {/* LEGACY REDIRECTS - keep old URLs working */}
                     <Route
                       path="/bookshelf"

@@ -84,12 +84,9 @@ export default defineSchema({
     bookId: v.optional(v.id("books")),
     dateCreated: v.string(),
     dateModified: v.string(),
-    status: v.union(
-      v.literal("draft"),
-      v.literal("pending"),
-      v.literal("published"),
-    ),
-    parentApproved: v.boolean(),
+    status: v.union(v.literal("draft"), v.literal("published")),
+    // Keep parentApproved for backward compatibility but it's no longer used
+    parentApproved: v.optional(v.boolean()),
     tags: v.array(v.string()),
     emoji: v.optional(v.string()),
   })

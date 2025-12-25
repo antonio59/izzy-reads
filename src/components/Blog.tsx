@@ -3,7 +3,6 @@ import {
   PenTool,
   Plus,
   BookOpen,
-  Clock,
   CheckCircle,
   AlertCircle,
   Edit,
@@ -145,8 +144,7 @@ const Blog: React.FC = () => {
         bookId: newPost.bookId,
         dateCreated: new Date().toISOString(),
         dateModified: new Date().toISOString(),
-        status: "pending",
-        parentApproved: false,
+        status: "published",
         tags: newPost.tags || [],
         emoji: newPost.emoji || "📚",
       };
@@ -167,30 +165,24 @@ const Blog: React.FC = () => {
       updateBlogPost(editingPost.id, {
         ...editingPost,
         dateModified: new Date().toISOString(),
-        status: "pending",
-        parentApproved: false,
       });
       setEditingPost(null);
     }
   };
 
-  const getStatusIcon = (status: string, parentApproved: boolean) => {
-    if (status === "published" && parentApproved) {
+  const getStatusIcon = (status: string) => {
+    if (status === "published") {
       return <CheckCircle className="h-5 w-5 text-success-500" />;
-    } else if (status === "pending") {
-      return <Clock className="h-5 w-5 text-warning-500" />;
     } else {
       return <AlertCircle className="h-5 w-5 text-gray-400" />;
     }
   };
 
-  const getStatusText = (status: string, parentApproved: boolean) => {
-    if (status === "published" && parentApproved) {
-      return "Published ✨";
-    } else if (status === "pending") {
-      return "Waiting for parent approval 👀";
+  const getStatusText = (status: string) => {
+    if (status === "published") {
+      return "Published";
     } else {
-      return "Draft 📝";
+      return "Draft";
     }
   };
 
@@ -235,27 +227,10 @@ const Blog: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Published</p>
               <p className="text-2xl font-bold text-primary-600">
-                {
-                  blogPosts.filter(
-                    (post) =>
-                      post.status === "published" && post.parentApproved,
-                  ).length
-                }
+                {blogPosts.filter((post) => post.status === "published").length}
               </p>
             </div>
             <CheckCircle className="h-8 w-8 text-primary-500" />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-lg p-4 border-l-4 border-warning-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Pending</p>
-              <p className="text-2xl font-bold text-warning-600">
-                {blogPosts.filter((post) => post.status === "pending").length}
-              </p>
-            </div>
-            <Clock className="h-8 w-8 text-warning-500" />
           </div>
         </div>
 
@@ -306,7 +281,7 @@ const Blog: React.FC = () => {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      {getStatusIcon(post.status, post.parentApproved)}
+                      {getStatusIcon(post.status)}
                       <button
                         onClick={() => setEditingPost(post)}
                         className="p-1 text-gray-400 hover:text-primary-600 transition-colors"
@@ -329,9 +304,7 @@ const Blog: React.FC = () => {
                   </div>
 
                   <div className="flex items-center justify-between text-sm text-gray-500">
-                    <span>
-                      {getStatusText(post.status, post.parentApproved)}
-                    </span>
+                    <span>{getStatusText(post.status)}</span>
                     <span>
                       {post.dateModified !== post.dateCreated
                         ? "Updated"

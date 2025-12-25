@@ -43,8 +43,7 @@ export interface BlogPost {
   bookId?: string;
   dateCreated: string;
   dateModified: string;
-  status: "draft" | "pending" | "published";
-  parentApproved: boolean;
+  status: "draft" | "published";
   tags: string[];
   emoji?: string;
 }

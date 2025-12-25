@@ -33,7 +33,6 @@ export default defineConfig({
           ],
           "feature-admin": [
             "./src/components/Dashboard.tsx",
-            "./src/components/ParentDashboard.tsx",
             "./src/components/EnhancedBookshelf.tsx",
           ],
         },

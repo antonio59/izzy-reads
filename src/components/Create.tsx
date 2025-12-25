@@ -79,8 +79,7 @@ const Create: React.FC = () => {
         content,
         dateCreated: now,
         dateModified: now,
-        status: "draft",
-        parentApproved: false,
+        status: "published",
         tags: [],
       });
     }
@@ -317,9 +316,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
             className={`text-xs px-2 py-1 rounded-full font-medium ${
               post.status === "published"
                 ? "bg-green-100 text-green-700"
-                : post.status === "pending"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : "bg-gray-100 text-gray-600"
+                : "bg-gray-100 text-gray-600"
             }`}
           >
             {post.status}

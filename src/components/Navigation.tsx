@@ -5,8 +5,6 @@ import {
   BookOpen,
   PenTool,
   Home,
-  Settings,
-  Shield,
   LogOut,
   Sparkles,
   Trophy,
@@ -17,11 +15,6 @@ import {
 import { useAuth } from "../contexts/AuthContext";
 import { useGamification } from "../contexts/GamificationContext";
 
-interface NavigationProps {
-  isParentMode: boolean;
-  setIsParentMode: (mode: boolean) => void;
-}
-
 // Simplified to 4 core navigation items
 const mainNavItems = [
   { path: "/dashboard", icon: Home, label: "Home" },
@@ -30,10 +23,7 @@ const mainNavItems = [
   { path: "/progress", icon: Trophy, label: "Progress" },
 ];
 
-const Navigation: React.FC<NavigationProps> = ({
-  isParentMode,
-  setIsParentMode,
-}) => {
+const Navigation: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut } = useAuth();
@@ -126,53 +116,6 @@ const Navigation: React.FC<NavigationProps> = ({
                 <Globe className="h-4 w-4" />
                 <span className="hidden lg:inline">My Portfolio</span>
               </Link>
-
-              {/* Parent Mode Toggle */}
-              <motion.button
-                onClick={() => setIsParentMode(!isParentMode)}
-                className={`p-2.5 rounded-lg transition-colors relative ${
-                  isParentMode
-                    ? "bg-accent-100 text-accent-600"
-                    : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                title={
-                  isParentMode ? "Parent Mode Active" : "Switch to Parent Mode"
-                }
-                aria-label={
-                  isParentMode ? "Disable Parent Mode" : "Enable Parent Mode"
-                }
-              >
-                <Shield className="h-5 w-5" />
-                {isParentMode && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-accent-500 rounded-full"
-                  />
-                )}
-              </motion.button>
-
-              {/* Parent Dashboard Link */}
-              <AnimatePresence>
-                {isParentMode && (
-                  <motion.div
-                    initial={{ width: 0, opacity: 0 }}
-                    animate={{ width: "auto", opacity: 1 }}
-                    exit={{ width: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Link
-                      to="/parent"
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-accent-500 text-white text-sm font-medium hover:bg-accent-600 transition-colors"
-                    >
-                      <Settings className="h-4 w-4" />
-                      <span>Parent</span>
-                    </Link>
-                  </motion.div>
-                )}
-              </AnimatePresence>
 
               {/* Logout */}
               <motion.button
@@ -271,34 +214,6 @@ const Navigation: React.FC<NavigationProps> = ({
                       My Public Portfolio
                     </span>
                   </Link>
-
-                  <button
-                    onClick={() => {
-                      setIsParentMode(!isParentMode);
-                      setShowMobileMenu(false);
-                    }}
-                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors w-full"
-                  >
-                    <Shield
-                      className={`h-5 w-5 ${isParentMode ? "text-accent-500" : "text-gray-400"}`}
-                    />
-                    <span className="font-medium text-gray-700">
-                      {isParentMode ? "Exit Parent Mode" : "Parent Mode"}
-                    </span>
-                  </button>
-
-                  {isParentMode && (
-                    <Link
-                      to="/parent"
-                      onClick={() => setShowMobileMenu(false)}
-                      className="flex items-center gap-3 p-3 rounded-xl bg-accent-50 transition-colors"
-                    >
-                      <Settings className="h-5 w-5 text-accent-600" />
-                      <span className="font-medium text-accent-700">
-                        Parent Dashboard
-                      </span>
-                    </Link>
-                  )}
 
                   <hr className="my-4 border-gray-100" />
 

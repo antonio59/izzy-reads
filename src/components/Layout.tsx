@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import Navigation from "./Navigation";
@@ -13,7 +12,6 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps) {
-  const [isParentMode, setIsParentMode] = useState(false);
   const location = useLocation();
 
   return (
@@ -21,10 +19,7 @@ export function Layout({ children }: LayoutProps) {
       <ToastProvider>
         <div className="min-h-screen bg-hero pb-20 md:pb-0">
           <SkipToContent />
-          <Navigation
-            isParentMode={isParentMode}
-            setIsParentMode={setIsParentMode}
-          />
+          <Navigation />
           <AnimatePresence mode="wait">
             <PageTransition key={location.pathname}>
               <main
