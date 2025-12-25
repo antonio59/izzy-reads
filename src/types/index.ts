@@ -9,11 +9,12 @@ export interface Book {
   description?: string;
   ageRating: string;
   dateAdded: string;
-  dateRead?: string;
+  dateRead?: string; // Format: "YYYY-MM" for month/year
   rating?: number;
   isRead: boolean;
   notes?: string;
   review?: string;
+  giftFrom?: string; // Who gave this book as a gift
   reactions?: BookReactions;
   reviewReactions?: ReviewReactions;
 }

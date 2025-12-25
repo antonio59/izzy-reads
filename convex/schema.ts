@@ -50,10 +50,11 @@ export default defineSchema({
     description: v.optional(v.string()),
     ageRating: v.string(),
     dateAdded: v.string(),
-    dateRead: v.optional(v.string()),
+    dateRead: v.optional(v.string()), // Format: "YYYY-MM" for month/year
     rating: v.optional(v.number()),
     isRead: v.boolean(),
     notes: v.optional(v.string()),
+    giftFrom: v.optional(v.string()), // Who gave this book as a gift
   }).index("by_user", ["userId"]),
 
   wishlist: defineTable({

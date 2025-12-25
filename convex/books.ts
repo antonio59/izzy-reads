@@ -38,6 +38,7 @@ export const add = mutation({
     rating: v.optional(v.number()),
     isRead: v.boolean(),
     notes: v.optional(v.string()),
+    giftFrom: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     return await ctx.db.insert("books", args);
@@ -59,6 +60,7 @@ export const update = mutation({
     rating: v.optional(v.number()),
     isRead: v.optional(v.boolean()),
     notes: v.optional(v.string()),
+    giftFrom: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const { id, ...updates } = args;

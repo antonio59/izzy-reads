@@ -126,6 +126,7 @@ function convexBookToBook(doc: Doc<"books">): Book {
     rating: doc.rating,
     isRead: doc.isRead,
     notes: doc.notes,
+    giftFrom: doc.giftFrom,
   };
 }
 

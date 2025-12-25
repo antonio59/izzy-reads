@@ -1,6 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Star, BookOpen, Calendar, Save, Sparkles } from "lucide-react";
+import {
+  X,
+  Star,
+  BookOpen,
+  Calendar,
+  Save,
+  Sparkles,
+  Gift,
+} from "lucide-react";
 import type { Book } from "../types";
 
 interface EditBookModalProps {
@@ -10,6 +18,26 @@ interface EditBookModalProps {
   onSave: (bookId: string, updates: Partial<Book>) => Promise<void>;
 }
 
+// Generate month options
+const MONTHS = [
+  { value: "01", label: "January" },
+  { value: "02", label: "February" },
+  { value: "03", label: "March" },
+  { value: "04", label: "April" },
+  { value: "05", label: "May" },
+  { value: "06", label: "June" },
+  { value: "07", label: "July" },
+  { value: "08", label: "August" },
+  { value: "09", label: "September" },
+  { value: "10", label: "October" },
+  { value: "11", label: "November" },
+  { value: "12", label: "December" },
+];
+
+// Generate year options (last 10 years)
+const currentYear = new Date().getFullYear();
+const YEARS = Array.from({ length: 10 }, (_, i) => currentYear - i);
+
 export function EditBookModal({
   book,
   isOpen,
@@ -18,7 +46,9 @@ export function EditBookModal({
 }: EditBookModalProps) {
   const [rating, setRating] = useState(0);
   const [notes, setNotes] = useState("");
-  const [dateRead, setDateRead] = useState("");
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
+  const [giftFrom, setGiftFrom] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [hoverRating, setHoverRating] = useState(0);
 
@@ -27,9 +57,29 @@ export function EditBookModal({
     if (book) {
       setRating(book.rating || 0);
       setNotes(book.notes || "");
-      setDateRead(book.dateRead || new Date().toISOString().split("T")[0]);
+      setGiftFrom(book.giftFrom || "");
+
+      // Parse existing date (could be YYYY-MM-DD or YYYY-MM format)
+      if (book.dateRead) {
+        const parts = book.dateRead.split("-");
+        setYear(parts[0] || String(currentYear));
+        setMonth(parts[1] || "");
+      } else {
+        // Default to current month/year
+        const now = new Date();
+        setYear(String(now.getFullYear()));
+        setMonth(String(now.getMonth() + 1).padStart(2, "0"));
+      }
     }
   }, [book]);
+
+  // Combine month and year into dateRead format
+  const dateRead = useMemo(() => {
+    if (month && year) {
+      return `${year}-${month}`;
+    }
+    return "";
+  }, [month, year]);
 
   if (!book) return null;
 
@@ -40,6 +90,7 @@ export function EditBookModal({
         rating,
         notes,
         dateRead,
+        giftFrom: giftFrom || undefined,
       });
       onClose();
     } catch (error) {
@@ -153,16 +204,54 @@ export function EditBookModal({
                 </div>
               </div>
 
-              {/* Date Read */}
+              {/* Month/Year Read */}
               <div>
                 <label className="block text-sm font-semibold text-stone-700 mb-2">
                   <Calendar className="w-4 h-4 inline mr-2 text-primary-500" />
-                  Date Finished
+                  When did you finish this book?
                 </label>
+                <div className="flex gap-3">
+                  <select
+                    value={month}
+                    onChange={(e) => setMonth(e.target.value)}
+                    className="flex-1 px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all bg-white"
+                  >
+                    <option value="">Select month</option>
+                    {MONTHS.map((m) => (
+                      <option key={m.value} value={m.value}>
+                        {m.label}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                    className="w-32 px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all bg-white"
+                  >
+                    <option value="">Year</option>
+                    {YEARS.map((y) => (
+                      <option key={y} value={y}>
+                        {y}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Gift From */}
+              <div>
+                <label className="block text-sm font-semibold text-stone-700 mb-2">
+                  <Gift className="w-4 h-4 inline mr-2 text-pink-500" />
+                  Gift from (optional)
+                </label>
+                <p className="text-xs text-stone-500 mb-2">
+                  Did someone special give you this book? Remember them here!
+                </p>
                 <input
-                  type="date"
-                  value={dateRead}
-                  onChange={(e) => setDateRead(e.target.value)}
+                  type="text"
+                  value={giftFrom}
+                  onChange={(e) => setGiftFrom(e.target.value)}
+                  placeholder="e.g., Grandma, Uncle Joe, Mom..."
                   className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                 />
               </div>

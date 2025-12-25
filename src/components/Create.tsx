@@ -1,9 +1,27 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { PenTool, Feather, Plus, Edit, Trash2, Heart } from "lucide-react";
+import {
+  PenTool,
+  Feather,
+  Plus,
+  Edit,
+  Trash2,
+  Heart,
+  Smile,
+} from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import PoetryEditor from "./PoetryEditor";
+import { GifPicker } from "./GifPicker";
 import type { Poem, BlogPost } from "../types";
+
+// Common emoji categories for a teen reader
+const EMOJI_CATEGORIES = {
+  Favorites: ["📚", "✨", "💖", "🌟", "📖", "🎉", "💫", "🦋", "🌸", "💜"],
+  Feelings: ["😊", "🥰", "😍", "🤩", "😭", "😢", "😤", "🤔", "😌", "🥺"],
+  Reactions: ["👍", "👏", "🙌", "💪", "🔥", "💯", "✅", "❤️", "💕", "😂"],
+  Nature: ["🌈", "☀️", "🌙", "⭐", "🌺", "🌻", "🍀", "🌊", "🦄", "🐱"],
+  Objects: ["📝", "✏️", "🎨", "🎵", "🎬", "📷", "🎁", "💌", "🏆", "🎀"],
+};
 
 type TabType = "poems" | "posts";
 
@@ -360,7 +378,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
   );
 };
 
-// Simple Post Editor
+// Simple Post Editor with Emoji & GIF support
 interface PostEditorProps {
   post: BlogPost | null;
   onSave: (title: string, content: string) => void;
@@ -370,10 +388,57 @@ interface PostEditorProps {
 const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, onClose }) => {
   const [title, setTitle] = useState(post?.title || "");
   const [content, setContent] = useState(post?.content || "");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [activeEmojiCategory, setActiveEmojiCategory] =
+    useState<string>("Favorites");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = () => {
     if (title.trim() && content.trim()) {
       onSave(title, content);
+    }
+  };
+
+  // Insert emoji at cursor position
+  const insertEmoji = (emoji: string) => {
+    if (textareaRef.current) {
+      const start = textareaRef.current.selectionStart;
+      const end = textareaRef.current.selectionEnd;
+      const newContent =
+        content.substring(0, start) + emoji + content.substring(end);
+      setContent(newContent);
+      // Reset cursor position after emoji
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.selectionStart = start + emoji.length;
+          textareaRef.current.selectionEnd = start + emoji.length;
+          textareaRef.current.focus();
+        }
+      }, 0);
+    } else {
+      setContent(content + emoji);
+    }
+  };
+
+  // Insert GIF as markdown image
+  const insertGif = (gifUrl: string) => {
+    const gifMarkdown = `\n![GIF](${gifUrl})\n`;
+    if (textareaRef.current) {
+      const start = textareaRef.current.selectionStart;
+      const end = textareaRef.current.selectionEnd;
+      const newContent =
+        content.substring(0, start) + gifMarkdown + content.substring(end);
+      setContent(newContent);
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.selectionStart = start + gifMarkdown.length;
+          textareaRef.current.selectionEnd = start + gifMarkdown.length;
+          textareaRef.current.focus();
+        }
+      }, 0);
+    } else {
+      setContent(content + gifMarkdown);
     }
   };
 
@@ -397,7 +462,7 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, onClose }) => {
             {post ? "Edit Post" : "Write a New Post"}
           </h2>
         </div>
-        <div className="p-6 space-y-4">
+        <div className="p-6 space-y-4 overflow-y-auto max-h-[60vh]">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Title
@@ -414,13 +479,112 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, onClose }) => {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Content
             </label>
+
+            {/* Toolbar with Emoji and GIF buttons */}
+            <div className="flex items-center gap-1 mb-2 p-2 bg-gray-50 rounded-t-xl border border-b-0 border-gray-200">
+              {/* Emoji Picker Button */}
+              <div className="relative" ref={emojiPickerRef}>
+                <button
+                  type="button"
+                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                  className={`p-2 rounded-lg transition-colors ${
+                    showEmojiPicker
+                      ? "bg-purple-100 text-purple-600"
+                      : "hover:bg-gray-100 text-gray-500 hover:text-purple-500"
+                  }`}
+                  title="Add Emoji"
+                >
+                  <Smile className="w-5 h-5" />
+                </button>
+
+                {/* Emoji Picker Dropdown */}
+                <AnimatePresence>
+                  {showEmojiPicker && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                      className="absolute z-50 top-full mt-2 left-0 w-72 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
+                    >
+                      {/* Category Tabs */}
+                      <div className="flex overflow-x-auto p-2 border-b border-gray-100 gap-1">
+                        {Object.keys(EMOJI_CATEGORIES).map((category) => (
+                          <button
+                            key={category}
+                            onClick={() => setActiveEmojiCategory(category)}
+                            className={`px-3 py-1.5 text-xs font-medium rounded-lg whitespace-nowrap transition-colors ${
+                              activeEmojiCategory === category
+                                ? "bg-purple-100 text-purple-700"
+                                : "text-gray-500 hover:bg-gray-100"
+                            }`}
+                          >
+                            {category}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Emoji Grid */}
+                      <div className="p-3">
+                        <div className="grid grid-cols-5 gap-1">
+                          {EMOJI_CATEGORIES[
+                            activeEmojiCategory as keyof typeof EMOJI_CATEGORIES
+                          ].map((emoji) => (
+                            <button
+                              key={emoji}
+                              onClick={() => {
+                                insertEmoji(emoji);
+                                setShowEmojiPicker(false);
+                              }}
+                              className="w-10 h-10 flex items-center justify-center text-2xl hover:bg-gray-100 rounded-lg transition-colors"
+                            >
+                              {emoji}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* GIF Picker */}
+              <GifPicker onSelect={insertGif} />
+
+              <span className="text-xs text-gray-400 ml-auto">
+                Add emojis and GIFs to make your post fun!
+              </span>
+            </div>
+
             <textarea
+              ref={textareaRef}
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Write your thoughts..."
+              placeholder="Write your thoughts... Use emojis and GIFs to express yourself!"
               rows={8}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+              className="w-full px-4 py-2.5 border border-gray-200 rounded-b-xl rounded-t-none focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
             />
+
+            {/* Preview GIFs in content */}
+            {content.includes("![GIF]") && (
+              <div className="mt-2 p-3 bg-gray-50 rounded-xl">
+                <p className="text-xs text-gray-500 mb-2">GIF Preview:</p>
+                <div className="flex flex-wrap gap-2">
+                  {content
+                    .match(/!\[GIF\]\((https?:\/\/[^\)]+)\)/g)
+                    ?.map((match, idx) => {
+                      const url = match.match(/\((https?:\/\/[^\)]+)\)/)?.[1];
+                      return url ? (
+                        <img
+                          key={idx}
+                          src={url}
+                          alt="GIF preview"
+                          className="h-20 rounded-lg object-cover"
+                        />
+                      ) : null;
+                    })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <div className="p-6 border-t border-gray-100 flex justify-end gap-3">
