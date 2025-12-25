@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
-import { Book, PenTool, Gift, User, Star } from "lucide-react";
+import { Book, PenTool, Gift, User, Star, LayoutDashboard } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
 
 // Custom book logo SVG component
 export function BookLogo({ className }: { className?: string }) {
@@ -63,6 +64,8 @@ interface NavItem {
 
 export function PublicNav() {
   const location = useLocation();
+  const { user } = useAuth();
+  const isAuthenticated = !!user;
 
   const navItems: NavItem[] = [
     { id: "home", label: "My Books", icon: Book, path: "/", show: true },
@@ -121,6 +124,17 @@ export function PublicNav() {
                 </Link>
               );
             })}
+
+            {/* Dashboard link for logged-in users */}
+            {isAuthenticated && (
+              <Link
+                to="/dashboard"
+                className="ml-2 px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2 bg-primary-500 text-white hover:bg-primary-600 transition-all"
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                <span className="hidden sm:inline">Dashboard</span>
+              </Link>
+            )}
           </div>
         </div>
       </div>

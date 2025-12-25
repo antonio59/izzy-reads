@@ -301,7 +301,7 @@ const Dashboard: React.FC = () => {
                   Recent Reads
                 </h3>
                 <Link
-                  to="/bookshelf"
+                  to="/books"
                   className="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
                 >
                   View All <ChevronRight className="w-4 h-4" />
@@ -473,25 +473,25 @@ const Dashboard: React.FC = () => {
               </h3>
               <div className="space-y-3">
                 <QuickActionLink
-                  to="/bookshelf"
+                  to="/books"
                   icon={<BookOpen className="w-5 h-5" />}
                   label="Add a Book"
                   color="primary"
                 />
                 <QuickActionLink
-                  to="/poems"
+                  to="/create"
                   icon={<Feather className="w-5 h-5" />}
                   label="Write a Poem"
                   color="accent"
                 />
                 <QuickActionLink
-                  to="/blog"
+                  to="/create"
                   icon={<PenTool className="w-5 h-5" />}
                   label="Write a Post"
                   color="sage"
                 />
                 <QuickActionLink
-                  to="/wishlist"
+                  to="/books"
                   icon={<Heart className="w-5 h-5" />}
                   label="Update Wishlist"
                   color="primary"

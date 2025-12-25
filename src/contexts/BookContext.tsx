@@ -29,6 +29,7 @@ interface BookContextType {
   addToWishlist: (book: Omit<Book, "id">) => Promise<void>;
   removeFromWishlist: (id: string) => Promise<void>;
   moveToBookshelf: (id: string) => Promise<void>;
+  moveToWishlist: (id: string) => Promise<void>;
   addBlogPost: (post: Omit<BlogPost, "id">) => Promise<void>;
   updateBlogPost: (id: string, updates: Partial<BlogPost>) => Promise<void>;
   deleteBlogPost: (id: string) => Promise<void>;
@@ -351,6 +352,20 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
     }
   };
 
+  const moveToWishlist = async (id: string) => {
+    const book = books.find((b) => b.id === id);
+    if (book) {
+      await deleteBook(id);
+      await addToWishlist({
+        ...book,
+        isRead: false,
+        dateRead: undefined,
+        rating: undefined,
+        notes: undefined,
+      });
+    }
+  };
+
   // Blog post operations
   const addBlogPost = async (post: Omit<BlogPost, "id">) => {
     if (!convexUserId) throw new Error("Not authenticated");
@@ -462,6 +477,7 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
     addToWishlist,
     removeFromWishlist,
     moveToBookshelf,
+    moveToWishlist,
     addBlogPost,
     updateBlogPost,
     deleteBlogPost,

@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, Heart, Plus, Search } from "lucide-react";
+import {
+  BookOpen,
+  Heart,
+  Plus,
+  Search,
+  Trash2,
+  ArrowRight,
+} from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import BookSearch from "./BookSearch";
-import { BookGrid } from "./BookGrid";
 import { BookDetailModal } from "./BookDetailModal";
 import type { Book } from "../types";
 
@@ -17,6 +23,8 @@ const MyBooks: React.FC = () => {
     addToWishlist,
     removeFromWishlist,
     moveToBookshelf,
+    moveToWishlist,
+    deleteBook,
   } = useBooks();
   const [activeTab, setActiveTab] = useState<TabType>("read");
   const [showSearch, setShowSearch] = useState(false);
@@ -53,6 +61,16 @@ const MyBooks: React.FC = () => {
 
   const handleRemoveFromWishlist = async (bookId: string) => {
     await removeFromWishlist(bookId);
+  };
+
+  const handleMoveToWishlist = async (bookId: string) => {
+    await moveToWishlist(bookId);
+  };
+
+  const handleDeleteBook = async (bookId: string) => {
+    if (confirm("Are you sure you want to remove this book?")) {
+      await deleteBook(bookId);
+    }
   };
 
   return (
@@ -122,12 +140,17 @@ const MyBooks: React.FC = () => {
       {/* Book Grid */}
       {activeTab === "read" ? (
         filteredReadBooks.length > 0 ? (
-          <BookGrid
-            books={filteredReadBooks}
-            onBookClick={setSelectedBook}
-            size="lg"
-            columns={5}
-          />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {filteredReadBooks.map((book) => (
+              <ReadBookCard
+                key={book.id}
+                book={book}
+                onMoveToWishlist={() => handleMoveToWishlist(book.id)}
+                onRemove={() => handleDeleteBook(book.id)}
+                onClick={() => setSelectedBook(book)}
+              />
+            ))}
+          </div>
         ) : (
           <EmptyState
             icon={BookOpen}
@@ -177,6 +200,84 @@ const MyBooks: React.FC = () => {
         />
       )}
     </div>
+  );
+};
+
+// Read Book Card Component
+interface ReadBookCardProps {
+  book: Book;
+  onMoveToWishlist: () => void;
+  onRemove: () => void;
+  onClick: () => void;
+}
+
+const ReadBookCard: React.FC<ReadBookCardProps> = ({
+  book,
+  onMoveToWishlist,
+  onRemove,
+  onClick,
+}) => {
+  return (
+    <motion.div
+      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group cursor-pointer hover:shadow-lg"
+      whileHover={{ y: -4 }}
+      onClick={onClick}
+    >
+      {/* Cover */}
+      <div className="aspect-[2/3] bg-gradient-to-br from-purple-100 to-indigo-100 relative">
+        {book.coverUrl ? (
+          <img
+            src={book.coverUrl}
+            alt={book.title}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <BookOpen className="w-12 h-12 text-purple-300" />
+          </div>
+        )}
+        {/* Rating badge */}
+        {book.rating && book.rating > 0 && (
+          <div className="absolute top-2 right-2 bg-amber-400 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
+            <span>{book.rating}</span>
+            <span>★</span>
+          </div>
+        )}
+      </div>
+
+      {/* Info */}
+      <div className="p-3">
+        <h3 className="font-semibold text-gray-900 text-sm line-clamp-1">
+          {book.title}
+        </h3>
+        <p className="text-gray-500 text-xs line-clamp-1">{book.author}</p>
+
+        {/* Actions */}
+        <div className="flex gap-2 mt-3">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onMoveToWishlist();
+            }}
+            className="flex-1 text-xs bg-pink-100 text-pink-600 py-1.5 rounded-lg font-medium hover:bg-pink-200 transition-colors flex items-center justify-center gap-1"
+            title="Move to Want to Read"
+          >
+            <ArrowRight className="w-3 h-3" />
+            To List
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemove();
+            }}
+            className="px-2 py-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            title="Remove book"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 
