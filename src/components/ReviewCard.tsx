@@ -2,67 +2,19 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Star, Share2, BookOpen, Calendar, MessageCircle } from "lucide-react";
-import type { Book, ReviewReactions } from "../types";
-
-// Review-specific reactions (about the quality of the review)
-const REVIEW_REACTIONS: {
-  key: keyof ReviewReactions;
-  emoji: string;
-  label: string;
-  color: string;
-}[] = [
-  {
-    key: "helpful",
-    emoji: "👍",
-    label: "Helpful",
-    color: "bg-blue-100 hover:bg-blue-200 text-blue-600",
-  },
-  {
-    key: "greatReview",
-    emoji: "⭐",
-    label: "Great review!",
-    color: "bg-amber-100 hover:bg-amber-200 text-amber-600",
-  },
-  {
-    key: "agree",
-    emoji: "🤝",
-    label: "I agree",
-    color: "bg-green-100 hover:bg-green-200 text-green-600",
-  },
-  {
-    key: "funny",
-    emoji: "😂",
-    label: "Funny",
-    color: "bg-pink-100 hover:bg-pink-200 text-pink-600",
-  },
-  {
-    key: "insightful",
-    emoji: "💡",
-    label: "Insightful",
-    color: "bg-purple-100 hover:bg-purple-200 text-purple-600",
-  },
-];
+import type { Book } from "../types";
+import { ReviewReactionButtons } from "./ReactionButtons";
 
 interface ReviewCardProps {
   book: Book;
-  onReaction?: (bookId: string, reactionType: keyof ReviewReactions) => void;
   featured?: boolean;
 }
 
-export function ReviewCard({
-  book,
-  onReaction,
-  featured = false,
-}: ReviewCardProps) {
+export function ReviewCard({ book, featured = false }: ReviewCardProps) {
   const [imageError, setImageError] = useState(false);
-  const [showAllReactions, setShowAllReactions] = useState(false);
 
   const reviewText = book.notes || book.review;
   if (!reviewText) return null;
-
-  const totalReactions = book.reviewReactions
-    ? Object.values(book.reviewReactions).reduce((sum, count) => sum + count, 0)
-    : 0;
 
   const handleShare = async () => {
     const shareUrl = `${window.location.origin}/reviews/${book.id}`;
@@ -196,34 +148,15 @@ export function ReviewCard({
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs text-stone-400 mr-1">
                   <MessageCircle className="w-3 h-3 inline mr-1" />
-                  React to review:
+                  React:
                 </span>
-                {REVIEW_REACTIONS.slice(
-                  0,
-                  showAllReactions ? undefined : 3,
-                ).map((r) => {
-                  const count = book.reviewReactions?.[r.key] || 0;
-                  return (
-                    <motion.button
-                      key={r.key}
-                      onClick={() => onReaction?.(book.id, r.key)}
-                      className={`px-2 py-1 rounded-full text-xs font-medium transition-all ${r.color}`}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      {r.emoji}
-                      {count > 0 && <span className="ml-1">{count}</span>}
-                    </motion.button>
-                  );
-                })}
-                {!showAllReactions && (
-                  <button
-                    onClick={() => setShowAllReactions(true)}
-                    className="text-xs text-stone-400 hover:text-stone-600"
-                  >
-                    +{REVIEW_REACTIONS.length - 3} more
-                  </button>
-                )}
+                <ReviewReactionButtons
+                  bookId={book.id}
+                  showLabel={false}
+                  size="sm"
+                  maxVisible={3}
+                  showMoreButton={true}
+                />
               </div>
 
               {/* Share button */}
@@ -235,13 +168,6 @@ export function ReviewCard({
                 Share
               </button>
             </div>
-
-            {totalReactions > 0 && (
-              <p className="text-xs text-stone-400 mt-2">
-                {totalReactions} reaction{totalReactions !== 1 ? "s" : ""} to
-                this review
-              </p>
-            )}
           </div>
         </div>
       </div>

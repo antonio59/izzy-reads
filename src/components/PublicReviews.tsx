@@ -18,53 +18,15 @@ import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
 import { ReviewCard } from "./ReviewCard";
 import { AvatarPreview, type AvatarConfig } from "./AvatarCreator";
-import type { Book, ReviewReactions } from "../types";
+import { ReviewReactionButtons } from "./ReactionButtons";
+import type { Book } from "../types";
 
-// Review-specific reactions
-const REVIEW_REACTIONS: {
-  key: keyof ReviewReactions;
-  emoji: string;
-  label: string;
-  color: string;
-}[] = [
-  {
-    key: "helpful",
-    emoji: "👍",
-    label: "Helpful",
-    color: "bg-blue-100 hover:bg-blue-200 text-blue-600",
-  },
-  {
-    key: "greatReview",
-    emoji: "⭐",
-    label: "Great review!",
-    color: "bg-amber-100 hover:bg-amber-200 text-amber-600",
-  },
-  {
-    key: "agree",
-    emoji: "🤝",
-    label: "I agree",
-    color: "bg-green-100 hover:bg-green-200 text-green-600",
-  },
-  {
-    key: "funny",
-    emoji: "😂",
-    label: "Funny",
-    color: "bg-pink-100 hover:bg-pink-200 text-pink-600",
-  },
-  {
-    key: "insightful",
-    emoji: "💡",
-    label: "Insightful",
-    color: "bg-purple-100 hover:bg-purple-200 text-purple-600",
-  },
-];
-
-type SortOption = "recent" | "rating" | "popular";
+type SortOption = "recent" | "rating";
 type FilterGenre = string | "all";
 
 export function PublicReviews() {
   const { bookId } = useParams<{ bookId?: string }>();
-  const { books, addReviewReaction } = useBooks();
+  const { books } = useBooks();
   const { user } = useUser();
   const [sortBy, setSortBy] = useState<SortOption>("recent");
   const [filterGenre, setFilterGenre] = useState<FilterGenre>("all");
@@ -117,17 +79,6 @@ export function PublicReviews() {
       case "rating":
         result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
         break;
-      case "popular":
-        result.sort((a, b) => {
-          const reactionsA = a.reviewReactions
-            ? Object.values(a.reviewReactions).reduce((sum, c) => sum + c, 0)
-            : 0;
-          const reactionsB = b.reviewReactions
-            ? Object.values(b.reviewReactions).reduce((sum, c) => sum + c, 0)
-            : 0;
-          return reactionsB - reactionsA;
-        });
-        break;
     }
 
     return result;
@@ -136,22 +87,9 @@ export function PublicReviews() {
   // If viewing a specific review
   const selectedBook = bookId ? books.find((b) => b.id === bookId) : null;
 
-  const handleReaction = (
-    bookId: string,
-    reactionType: keyof ReviewReactions,
-  ) => {
-    addReviewReaction(bookId, reactionType);
-  };
-
   // Single review view
   if (selectedBook) {
-    return (
-      <SingleReviewView
-        book={selectedBook}
-        onReaction={handleReaction}
-        userAvatar={userAvatar}
-      />
-    );
+    return <SingleReviewView book={selectedBook} userAvatar={userAvatar} />;
   }
 
   // Reviews list view
@@ -297,7 +235,6 @@ export function PublicReviews() {
               >
                 <option value="recent">Most Recent</option>
                 <option value="rating">Highest Rated</option>
-                <option value="popular">Most Popular</option>
               </select>
             </div>
           </div>
@@ -316,11 +253,7 @@ export function PublicReviews() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
                 >
-                  <ReviewCard
-                    book={book}
-                    onReaction={handleReaction}
-                    featured={index === 0 && sortBy === "popular"}
-                  />
+                  <ReviewCard book={book} featured={index === 0} />
                 </motion.div>
               ))}
             </div>
@@ -348,19 +281,13 @@ export function PublicReviews() {
 // Single Review View Component
 function SingleReviewView({
   book,
-  onReaction,
   userAvatar,
 }: {
   book: Book;
-  onReaction: (bookId: string, reactionType: keyof ReviewReactions) => void;
   userAvatar: AvatarConfig;
 }) {
   const [imageError, setImageError] = useState(false);
   const reviewText = book.notes || book.review;
-
-  const totalReactions = book.reviewReactions
-    ? Object.values(book.reviewReactions).reduce((sum, count) => sum + count, 0)
-    : 0;
 
   const handleShare = async () => {
     const shareUrl = window.location.href;
@@ -509,34 +436,11 @@ function SingleReviewView({
                   What do you think of this review?
                 </h3>
 
-                <div className="flex flex-wrap gap-3 mb-4">
-                  {REVIEW_REACTIONS.map((r) => {
-                    const count = book.reviewReactions?.[r.key] || 0;
-                    return (
-                      <motion.button
-                        key={r.key}
-                        onClick={() => onReaction(book.id, r.key)}
-                        className={`px-4 py-2 rounded-full font-medium transition-all ${r.color}`}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        {r.emoji} {r.label}
-                        {count > 0 && (
-                          <span className="ml-2 bg-white/50 px-2 py-0.5 rounded-full text-sm">
-                            {count}
-                          </span>
-                        )}
-                      </motion.button>
-                    );
-                  })}
-                </div>
-
-                {totalReactions > 0 && (
-                  <p className="text-sm text-stone-500">
-                    {totalReactions} reader{totalReactions !== 1 ? "s" : ""}{" "}
-                    reacted to this review
-                  </p>
-                )}
+                <ReviewReactionButtons
+                  bookId={book.id}
+                  maxVisible={5}
+                  showMoreButton={false}
+                />
               </div>
             </div>
           </motion.div>

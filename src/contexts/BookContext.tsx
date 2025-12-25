@@ -200,20 +200,20 @@ function convexChallengeToChallenge(
 export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
   const { convexUserId } = useAuth();
 
-  // Convex queries - only run when we have a user ID
-  const booksData = useQuery(
+  // Convex queries - when authenticated, get user's data
+  const userBooksData = useQuery(
     api.books.getByUser,
     convexUserId ? { userId: convexUserId } : "skip",
   );
-  const wishlistData = useQuery(
+  const userWishlistData = useQuery(
     api.wishlist.getByUser,
     convexUserId ? { userId: convexUserId } : "skip",
   );
-  const poemsData = useQuery(
+  const userPoemsData = useQuery(
     api.poems.getByUser,
     convexUserId ? { userId: convexUserId } : "skip",
   );
-  const blogPostsData = useQuery(
+  const userBlogPostsData = useQuery(
     api.blogPosts.getByUser,
     convexUserId ? { userId: convexUserId } : "skip",
   );
@@ -221,6 +221,20 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
     api.readingChallenges.getByUser,
     convexUserId ? { userId: convexUserId } : "skip",
   );
+
+  // For public pages - fetch all data when not authenticated
+  const allBooksData = useQuery(api.books.getAll, convexUserId ? "skip" : {});
+  const allWishlistData = useQuery(
+    api.wishlist.getAll,
+    convexUserId ? "skip" : {},
+  );
+  const allPoemsData = useQuery(api.poems.getAll, convexUserId ? "skip" : {});
+
+  // Use user data if authenticated, otherwise public data
+  const booksData = convexUserId ? userBooksData : allBooksData;
+  const wishlistData = convexUserId ? userWishlistData : allWishlistData;
+  const poemsData = convexUserId ? userPoemsData : allPoemsData;
+  const blogPostsData = userBlogPostsData; // Blog posts only for authenticated users
 
   // Convex mutations
   const addBookMutation = useMutation(api.books.add);

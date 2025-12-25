@@ -11,6 +11,14 @@ export const getByUser = query({
   },
 });
 
+// Get all wishlist items (for public pages)
+export const getAll = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db.query("wishlist").collect();
+  },
+});
+
 export const add = mutation({
   args: {
     userId: v.id("users"),

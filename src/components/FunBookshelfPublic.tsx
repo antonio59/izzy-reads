@@ -1,51 +1,12 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import type { Book, BookReactions } from "../types";
-import { useBooks } from "../contexts/BookContext";
+import type { Book } from "../types";
+import { BookReactionButtons, BookReactionCountBadge } from "./ReactionButtons";
 
 interface FunBookshelfPublicProps {
   books: Book[];
   showFilters?: boolean;
 }
-
-// Reactions use the unified palette - primary berry for selected state
-const REACTIONS: {
-  key: keyof BookReactions;
-  emoji: string;
-  label: string;
-  color: string;
-}[] = [
-  {
-    key: "love",
-    emoji: "❤️",
-    label: "Love it!",
-    color: "bg-primary-100 hover:bg-primary-200 text-primary-600",
-  },
-  {
-    key: "amazing",
-    emoji: "🤩",
-    label: "Amazing!",
-    color: "bg-star-light hover:bg-star-light/80 text-star-muted",
-  },
-  {
-    key: "mustRead",
-    emoji: "📚",
-    label: "Must read!",
-    color: "bg-accent-100 hover:bg-accent-200 text-accent-600",
-  },
-  {
-    key: "soGood",
-    emoji: "🔥",
-    label: "So good!",
-    color: "bg-primary-100 hover:bg-primary-200 text-primary-600",
-  },
-  {
-    key: "notForMe",
-    emoji: "😕",
-    label: "Not for me",
-    color: "bg-stone-100 hover:bg-stone-200 text-stone-600",
-  },
-];
 
 // All genres use accent teal for consistency
 const GENRE_STYLES: Record<
@@ -82,25 +43,13 @@ function getBookGradient(title: string): [string, string] {
   return colors[hash % colors.length];
 }
 
-// Helper to get total reaction count
-const getReactionCount = (book: Book): number => {
-  if (!book.reactions) return 0;
-  return (
-    book.reactions.love +
-    book.reactions.amazing +
-    book.reactions.mustRead +
-    book.reactions.soGood
-  );
-};
-
 const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
   books,
   showFilters = true,
 }) => {
-  const { addReaction } = useBooks();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<"title" | "mostLoved">("title");
+  const [sortBy, setSortBy] = useState<"title" | "rating">("title");
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -120,15 +69,14 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
     });
 
     // Sort based on selected sort option
-    if (sortBy === "mostLoved") {
-      return filtered.sort((a, b) => getReactionCount(b) - getReactionCount(a));
+    if (sortBy === "rating") {
+      return filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     }
     // Default: alphabetically by title
     return filtered.sort((a, b) => a.title.localeCompare(b.title));
   }, [books, searchQuery, selectedGenre, sortBy]);
 
-  const handleReaction = (bookId: string, reactionKey: keyof BookReactions) => {
-    addReaction(bookId, reactionKey);
+  const handleReactionConfetti = () => {
     setShowConfetti(true);
     setTimeout(() => setShowConfetti(false), 1000);
   };
@@ -198,14 +146,14 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
               A-Z
             </button>
             <button
-              onClick={() => setSortBy("mostLoved")}
+              onClick={() => setSortBy("rating")}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
-                sortBy === "mostLoved"
+                sortBy === "rating"
                   ? "bg-primary-500 text-white"
                   : "bg-white text-stone-500 hover:bg-primary-50 hover:text-primary-600"
               }`}
             >
-              <span>❤️</span> Most Loved
+              <span>⭐</span> Highest Rated
             </button>
           </div>
 
@@ -337,14 +285,9 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                   )}
 
                   {/* Reaction count badge */}
-                  {getReactionCount(book) > 0 && (
-                    <div className="absolute top-2 left-2 flex items-center gap-1 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full shadow-md">
-                      <span className="text-xs">❤️</span>
-                      <span className="text-xs font-bold text-primary-600">
-                        {getReactionCount(book)}
-                      </span>
-                    </div>
-                  )}
+                  <div className="absolute top-2 left-2">
+                    <BookReactionCountBadge bookId={book.id} />
+                  </div>
 
                   {/* Desktop hover overlay with title */}
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-3 pt-10 hidden sm:block opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -526,32 +469,12 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                   <p className="text-center font-medium text-stone-600">
                     What do you think of this book?
                   </p>
-                  <div className="flex justify-center gap-2 flex-wrap">
-                    {REACTIONS.map((r) => {
-                      const count = selectedBook.reactions?.[r.key] || 0;
-                      return (
-                        <motion.button
-                          key={r.key}
-                          onClick={() => handleReaction(selectedBook.id, r.key)}
-                          className={`px-4 py-2 rounded-full font-medium text-sm transition-all ${r.color}`}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          {r.emoji} {r.label}
-                          {count > 0 && (
-                            <span className="ml-1.5 bg-white/30 px-1.5 py-0.5 rounded-full text-xs">
-                              {count}
-                            </span>
-                          )}
-                        </motion.button>
-                      );
-                    })}
+                  <div className="flex justify-center">
+                    <BookReactionButtons
+                      bookId={selectedBook.id}
+                      onReaction={handleReactionConfetti}
+                    />
                   </div>
-                  {getReactionCount(selectedBook) > 0 && (
-                    <p className="text-center text-sm text-stone-400">
-                      {getReactionCount(selectedBook)} total reactions
-                    </p>
-                  )}
                 </div>
 
                 <button
