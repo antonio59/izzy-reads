@@ -16,7 +16,9 @@ export default defineSchema({
     theme: v.optional(
       v.union(v.literal("light"), v.literal("dark"), v.literal("colorful")),
     ),
-    readingGoal: v.optional(v.number()),
+    readingGoal: v.optional(v.number()), // Legacy - yearly goal
+    yearlyBookGoal: v.optional(v.number()), // Books per year goal
+    monthlyBookGoal: v.optional(v.number()), // Books per month goal
     notifications: v.optional(v.boolean()),
     requireApproval: v.optional(v.boolean()),
     contentFilter: v.optional(v.boolean()),
@@ -120,4 +122,39 @@ export default defineSchema({
       v.literal("declined"),
     ),
   }).index("by_status", ["status"]),
+
+  // Reactions from visitors on books/reviews (public, no auth required)
+  bookReactions: defineTable({
+    bookId: v.id("books"),
+    visitorId: v.string(), // Anonymous visitor ID (from localStorage)
+    reactionType: v.union(
+      // Book reactions
+      v.literal("love"),
+      v.literal("amazing"),
+      v.literal("mustRead"),
+      v.literal("soGood"),
+      v.literal("notForMe"),
+      // Review reactions
+      v.literal("helpful"),
+      v.literal("greatReview"),
+      v.literal("agree"),
+      v.literal("funny"),
+      v.literal("insightful"),
+    ),
+    isReviewReaction: v.boolean(), // true = reaction to review, false = reaction to book
+    createdAt: v.string(),
+  })
+    .index("by_book", ["bookId"])
+    .index("by_visitor", ["visitorId"])
+    .index("by_book_visitor", ["bookId", "visitorId"]),
+
+  // Book series for tracking series progress
+  bookSeries: defineTable({
+    userId: v.id("users"),
+    name: v.string(),
+    description: v.optional(v.string()),
+    bookIds: v.array(v.id("books")), // Ordered list of books in the series
+    completed: v.boolean(),
+    createdAt: v.string(),
+  }).index("by_user", ["userId"]),
 });

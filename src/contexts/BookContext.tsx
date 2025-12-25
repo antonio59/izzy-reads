@@ -59,6 +59,65 @@ interface BookProviderProps {
   children: ReactNode;
 }
 
+// Calculate reading streak (consecutive months with at least 1 book read, going back from current month)
+function calculateReadingStreak(readBooks: Book[]): number {
+  if (readBooks.length === 0) return 0;
+
+  // Get books with valid dateRead, sorted by date descending
+  const booksWithDates = readBooks
+    .filter((book) => book.dateRead)
+    .sort(
+      (a, b) =>
+        new Date(b.dateRead!).getTime() - new Date(a.dateRead!).getTime(),
+    );
+
+  if (booksWithDates.length === 0) return 0;
+
+  // Create a set of "YYYY-MM" strings for months with books read
+  const monthsWithBooks = new Set<string>();
+  for (const book of booksWithDates) {
+    const date = new Date(book.dateRead!);
+    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+    monthsWithBooks.add(monthKey);
+  }
+
+  // Start from current month and count consecutive months
+  let streak = 0;
+  const now = new Date();
+  let year = now.getFullYear();
+  let month = now.getMonth() + 1; // 1-indexed
+
+  // Check if current month has a book - if not, start from previous month
+  const currentMonthKey = `${year}-${String(month).padStart(2, "0")}`;
+  if (!monthsWithBooks.has(currentMonthKey)) {
+    // Check if last month has a book to start the streak
+    month--;
+    if (month === 0) {
+      month = 12;
+      year--;
+    }
+  }
+
+  // Count consecutive months going backwards
+  while (true) {
+    const monthKey = `${year}-${String(month).padStart(2, "0")}`;
+    if (monthsWithBooks.has(monthKey)) {
+      streak++;
+      month--;
+      if (month === 0) {
+        month = 12;
+        year--;
+      }
+    } else {
+      break;
+    }
+    // Safety limit - don't go back more than 5 years
+    if (streak > 60) break;
+  }
+
+  return streak;
+}
+
 // Helper to convert Convex doc to Book type
 function convexBookToBook(doc: Doc<"books">): Book {
   return {
@@ -242,11 +301,14 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
         new Date(book.dateRead).getMonth() === currentMonth,
     ).length;
 
+    // Calculate reading streak (consecutive months with at least 1 book read)
+    const readingStreak = calculateReadingStreak(readBooks);
+
     return {
       totalBooks: readBooks.length,
       totalPages,
       favoriteGenre,
-      readingStreak: 0, // TODO: Calculate properly
+      readingStreak,
       averageRating,
       booksThisMonth,
       booksThisYear,

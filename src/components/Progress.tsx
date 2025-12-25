@@ -1,7 +1,19 @@
-import { motion } from "framer-motion";
-import { Trophy, Target, Flame, BookOpen, Star, Award } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Trophy,
+  Target,
+  Flame,
+  BookOpen,
+  Star,
+  Award,
+  Settings,
+  X,
+  Check,
+} from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { useGamification } from "../contexts/GamificationContext";
+import { useUser } from "../contexts/UserContext";
 
 interface Achievement {
   id: string;
@@ -13,6 +25,7 @@ interface Achievement {
 
 const Progress: React.FC = () => {
   const { books, readingStats } = useBooks();
+  const { user, updateUserSettings } = useUser();
   const {
     totalXP,
     level,
@@ -20,6 +33,14 @@ const Progress: React.FC = () => {
     unlockedAchievements,
     progressPercent,
   } = useGamification();
+
+  const [showGoalEditor, setShowGoalEditor] = useState(false);
+  const [yearlyGoal, setYearlyGoal] = useState(
+    user?.settings?.readingGoal || 12,
+  );
+  const [monthlyGoal, setMonthlyGoal] = useState(
+    Math.ceil((user?.settings?.readingGoal || 12) / 12) || 2,
+  );
 
   const readBooks = books.filter((b) => b.isRead);
   const unlockedList = allAchievements.filter((a: Achievement) =>
@@ -31,6 +52,15 @@ const Progress: React.FC = () => {
 
   // Use progress from context
   const xpProgress = progressPercent / 100;
+
+  // Get goals from user settings or use defaults
+  const targetYearlyBooks = user?.settings?.readingGoal || 12;
+  const targetMonthlyBooks = Math.ceil(targetYearlyBooks / 12) || 2;
+
+  const handleSaveGoals = () => {
+    updateUserSettings({ readingGoal: yearlyGoal });
+    setShowGoalEditor(false);
+  };
 
   return (
     <div className="space-y-6">
@@ -150,26 +180,132 @@ const Progress: React.FC = () => {
 
       {/* Reading Goals */}
       <div className="bg-white rounded-2xl p-6 border border-gray-100">
-        <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <Target className="w-5 h-5 text-green-500" />
-          Reading Goals
-        </h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+            <Target className="w-5 h-5 text-green-500" />
+            Reading Goals
+          </h2>
+          <button
+            onClick={() => setShowGoalEditor(true)}
+            className="flex items-center gap-1 px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <Settings className="w-4 h-4" />
+            Edit Goals
+          </button>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <GoalCard
             title="Books This Year"
             current={readingStats.booksThisYear}
-            target={12}
+            target={targetYearlyBooks}
             icon="📚"
           />
           <GoalCard
             title="Books This Month"
             current={readingStats.booksThisMonth}
-            target={2}
+            target={targetMonthlyBooks}
             icon="📖"
           />
         </div>
       </div>
+
+      {/* Goal Editor Modal */}
+      <AnimatePresence>
+        {showGoalEditor && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowGoalEditor(false)}
+          >
+            <motion.div
+              className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl"
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-900">
+                  Set Reading Goals
+                </h3>
+                <button
+                  onClick={() => setShowGoalEditor(false)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Books per Year
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="range"
+                      min="1"
+                      max="100"
+                      value={yearlyGoal}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value);
+                        setYearlyGoal(val);
+                        setMonthlyGoal(Math.ceil(val / 12));
+                      }}
+                      className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                    />
+                    <span className="w-12 text-center font-bold text-purple-600">
+                      {yearlyGoal}
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Books per Month
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="range"
+                      min="1"
+                      max="20"
+                      value={monthlyGoal}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value);
+                        setMonthlyGoal(val);
+                        setYearlyGoal(val * 12);
+                      }}
+                      className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                    />
+                    <span className="w-12 text-center font-bold text-purple-600">
+                      {monthlyGoal}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="pt-4 flex gap-3">
+                  <button
+                    onClick={() => setShowGoalEditor(false)}
+                    className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveGoals}
+                    className="flex-1 px-4 py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Check className="w-4 h-4" />
+                    Save
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

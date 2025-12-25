@@ -12,11 +12,15 @@ import {
   Trash2,
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
+import { useAuth } from "../contexts/AuthContext";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import { Card } from "./ui/Card";
 import { Badge } from "./ui/Badge";
 import { Progress } from "./ui/Progress";
 import { FadeIn, StaggerContainer, StaggerItem } from "./PageTransition";
-import type { Book, BookSeries } from "../types";
+import type { Book } from "../types";
+import type { Id, Doc } from "../../convex/_generated/dataModel";
 
 // Popular book series for suggestions
 const POPULAR_SERIES = [
@@ -55,73 +59,105 @@ const POPULAR_SERIES = [
   },
 ];
 
-interface SeriesWithBooks extends BookSeries {
-  booksRead: Book[];
+interface SeriesWithBooks {
+  id: Id<"bookSeries">;
+  name: string;
+  description?: string;
+  bookIds: Id<"books">[];
+  completed: boolean;
+  books: Book[];
+  booksRead: number;
   progress: number;
 }
 
 const SeriesTracker: React.FC = () => {
   const { books } = useBooks();
+  const { convexUserId } = useAuth();
 
-  const [series, setSeries] = useState<BookSeries[]>([
-    {
-      id: "1",
-      name: "Harry Potter",
-      books: [
-        { bookId: "1", orderInSeries: 1, isRead: true },
-        { bookId: "2", orderInSeries: 2, isRead: false },
-      ],
-      completed: false,
-    },
-  ]);
+  // Convex queries and mutations
+  const seriesData = useQuery(
+    api.series.getByUser,
+    convexUserId ? { userId: convexUserId } : "skip",
+  );
+  const createSeries = useMutation(api.series.create);
+  const deleteSeries = useMutation(api.series.remove);
+  const addBookToSeries = useMutation(api.series.addBook);
+  const removeBookFromSeries = useMutation(api.series.removeBook);
 
   const [showAddSeries, setShowAddSeries] = useState(false);
+  const [showAddBook, setShowAddBook] = useState<Id<"bookSeries"> | null>(null);
   const [newSeriesName, setNewSeriesName] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [expandedSeries, setExpandedSeries] = useState<string[]>(["1"]);
+  const [bookSearchQuery, setBookSearchQuery] = useState("");
+  const [expandedSeries, setExpandedSeries] = useState<string[]>([]);
 
-  // Get series with book details
+  // Convert Convex series to SeriesWithBooks
   const seriesWithBooks: SeriesWithBooks[] = useMemo(() => {
-    return series.map((s) => {
-      const booksRead = s.books
-        .filter((sb) => sb.isRead)
-        .map((sb) => books.find((b) => b.id === sb.bookId))
+    if (!seriesData) return [];
+
+    return seriesData.map((s: Doc<"bookSeries">) => {
+      const seriesBooks = s.bookIds
+        .map((bookId) => books.find((b) => b.id === bookId))
         .filter((b): b is Book => b !== undefined);
 
+      const booksRead = seriesBooks.filter((b) => b.isRead).length;
       const progress =
-        s.books.length > 0
-          ? Math.round(
-              (s.books.filter((b) => b.isRead).length / s.books.length) * 100,
-            )
+        seriesBooks.length > 0
+          ? Math.round((booksRead / seriesBooks.length) * 100)
           : 0;
 
       return {
-        ...s,
+        id: s._id,
+        name: s.name,
+        description: s.description,
+        bookIds: s.bookIds,
+        completed: s.completed,
+        books: seriesBooks,
         booksRead,
         progress,
       };
     });
-  }, [series, books]);
+  }, [seriesData, books]);
 
-  const handleAddSeries = (name: string) => {
-    if (!name.trim()) return;
+  const handleAddSeries = async (name: string) => {
+    if (!name.trim() || !convexUserId) return;
 
-    const newSeries: BookSeries = {
-      id: Date.now().toString(),
+    await createSeries({
+      userId: convexUserId,
       name: name.trim(),
-      books: [],
-      completed: false,
-    };
+    });
 
-    setSeries((prev) => [...prev, newSeries]);
-    setExpandedSeries((prev) => [...prev, newSeries.id]);
     setShowAddSeries(false);
     setNewSeriesName("");
   };
 
-  const handleDeleteSeries = (id: string) => {
-    setSeries((prev) => prev.filter((s) => s.id !== id));
-    setExpandedSeries((prev) => prev.filter((sid) => sid !== id));
+  const handleDeleteSeries = async (id: Id<"bookSeries">) => {
+    if (confirm("Are you sure you want to delete this series?")) {
+      await deleteSeries({ id });
+      setExpandedSeries((prev) => prev.filter((sid) => sid !== id));
+    }
+  };
+
+  const handleAddBookToSeries = async (
+    seriesId: Id<"bookSeries">,
+    bookId: string,
+  ) => {
+    await addBookToSeries({
+      seriesId,
+      bookId: bookId as Id<"books">,
+    });
+    setShowAddBook(null);
+    setBookSearchQuery("");
+  };
+
+  const handleRemoveBookFromSeries = async (
+    seriesId: Id<"bookSeries">,
+    bookId: string,
+  ) => {
+    await removeBookFromSeries({
+      seriesId,
+      bookId: bookId as Id<"books">,
+    });
   };
 
   const toggleExpanded = (id: string) => {
@@ -135,6 +171,21 @@ const SeriesTracker: React.FC = () => {
       s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       s.author.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
+  // Get books not already in a series for adding
+  const getAvailableBooks = (seriesId: Id<"bookSeries">) => {
+    const series = seriesWithBooks.find((s) => s.id === seriesId);
+    if (!series) return books;
+
+    return books.filter(
+      (book) =>
+        !series.bookIds.includes(book.id as Id<"books">) &&
+        (book.title.toLowerCase().includes(bookSearchQuery.toLowerCase()) ||
+          book.author.toLowerCase().includes(bookSearchQuery.toLowerCase())),
+    );
+  };
+
+  const isLoading = convexUserId && seriesData === undefined;
 
   return (
     <div className="space-y-6">
@@ -189,22 +240,19 @@ const SeriesTracker: React.FC = () => {
         <div className="grid grid-cols-3 gap-4">
           <Card padding="md" className="text-center">
             <p className="text-3xl font-display font-bold text-indigo-600">
-              {series.length}
+              {seriesWithBooks.length}
             </p>
             <p className="text-sm text-gray-500">Series Tracked</p>
           </Card>
           <Card padding="md" className="text-center">
             <p className="text-3xl font-display font-bold text-purple-600">
-              {series.filter((s) => s.completed).length}
+              {seriesWithBooks.filter((s) => s.completed).length}
             </p>
             <p className="text-sm text-gray-500">Completed</p>
           </Card>
           <Card padding="md" className="text-center">
             <p className="text-3xl font-display font-bold text-pink-600">
-              {series.reduce(
-                (sum, s) => sum + s.books.filter((b) => b.isRead).length,
-                0,
-              )}
+              {seriesWithBooks.reduce((sum, s) => sum + s.booksRead, 0)}
             </p>
             <p className="text-sm text-gray-500">Books Read</p>
           </Card>
@@ -213,168 +261,199 @@ const SeriesTracker: React.FC = () => {
 
       {/* Series List */}
       <FadeIn delay={0.2}>
-        <StaggerContainer className="space-y-4">
-          {seriesWithBooks.length > 0 ? (
-            seriesWithBooks.map((s) => (
-              <StaggerItem key={s.id}>
-                <Card
-                  padding="none"
-                  className={`overflow-hidden ${s.completed ? "ring-2 ring-green-400" : ""}`}
-                >
-                  {/* Series header */}
-                  <button
-                    onClick={() => toggleExpanded(s.id)}
-                    className="w-full p-5 flex items-center justify-between hover:bg-gray-50 transition-colors"
+        {isLoading ? (
+          <Card padding="lg" className="text-center">
+            <div className="animate-pulse flex flex-col items-center">
+              <div className="w-16 h-16 bg-gray-200 rounded-full mb-4" />
+              <div className="h-4 bg-gray-200 rounded w-32 mb-2" />
+              <div className="h-3 bg-gray-200 rounded w-48" />
+            </div>
+          </Card>
+        ) : (
+          <StaggerContainer className="space-y-4">
+            {seriesWithBooks.length > 0 ? (
+              seriesWithBooks.map((s) => (
+                <StaggerItem key={s.id}>
+                  <Card
+                    padding="none"
+                    className={`overflow-hidden ${s.completed ? "ring-2 ring-green-400" : ""}`}
                   >
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center text-2xl">
-                        {POPULAR_SERIES.find((ps) => ps.name === s.name)
-                          ?.emoji || "📚"}
-                      </div>
-                      <div className="text-left">
-                        <h3 className="font-display font-bold text-gray-900">
-                          {s.name}
-                        </h3>
-                        <p className="text-sm text-gray-500">
-                          {s.books.filter((b) => b.isRead).length} of{" "}
-                          {s.books.length} books read
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                      {/* Progress indicator */}
-                      <div className="hidden sm:flex items-center gap-3">
-                        <div className="w-32">
-                          <Progress
-                            value={s.progress}
-                            max={100}
-                            color="primary"
-                            size="sm"
-                          />
+                    {/* Series header */}
+                    <button
+                      onClick={() => toggleExpanded(s.id)}
+                      className="w-full p-5 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center text-2xl">
+                          {POPULAR_SERIES.find((ps) => ps.name === s.name)
+                            ?.emoji || "📚"}
                         </div>
-                        <span className="text-sm font-medium text-gray-600 w-12">
-                          {s.progress}%
-                        </span>
+                        <div className="text-left">
+                          <h3 className="font-display font-bold text-gray-900">
+                            {s.name}
+                          </h3>
+                          <p className="text-sm text-gray-500">
+                            {s.booksRead} of {s.books.length} books read
+                          </p>
+                        </div>
                       </div>
 
-                      {s.completed && (
-                        <Badge
-                          variant="success"
-                          icon={<Check className="w-3 h-3" />}
+                      <div className="flex items-center gap-4">
+                        {/* Progress indicator */}
+                        <div className="hidden sm:flex items-center gap-3">
+                          <div className="w-32">
+                            <Progress
+                              value={s.progress}
+                              max={100}
+                              color="primary"
+                              size="sm"
+                            />
+                          </div>
+                          <span className="text-sm font-medium text-gray-600 w-12">
+                            {s.progress}%
+                          </span>
+                        </div>
+
+                        {s.completed && (
+                          <Badge
+                            variant="success"
+                            icon={<Check className="w-3 h-3" />}
+                          >
+                            Complete
+                          </Badge>
+                        )}
+
+                        <ChevronDown
+                          className={`w-5 h-5 text-gray-400 transition-transform ${
+                            expandedSeries.includes(s.id) ? "rotate-180" : ""
+                          }`}
+                        />
+                      </div>
+                    </button>
+
+                    {/* Expanded content */}
+                    <AnimatePresence>
+                      {expandedSeries.includes(s.id) && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="border-t border-gray-100"
                         >
-                          Complete
-                        </Badge>
-                      )}
-
-                      <ChevronDown
-                        className={`w-5 h-5 text-gray-400 transition-transform ${
-                          expandedSeries.includes(s.id) ? "rotate-180" : ""
-                        }`}
-                      />
-                    </div>
-                  </button>
-
-                  {/* Expanded content */}
-                  <AnimatePresence>
-                    {expandedSeries.includes(s.id) && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        className="border-t border-gray-100"
-                      >
-                        <div className="p-5 bg-gray-50">
-                          {s.books.length > 0 ? (
-                            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                              {s.books.map((book, index) => {
-                                const bookDetails = books.find(
-                                  (b) => b.id === book.bookId,
-                                );
-                                return (
+                          <div className="p-5 bg-gray-50">
+                            {s.books.length > 0 ? (
+                              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                                {s.books.map((book, index) => (
                                   <div
-                                    key={book.bookId}
-                                    className={`relative p-3 rounded-xl text-center transition-all ${
+                                    key={book.id}
+                                    className={`relative p-3 rounded-xl text-center transition-all group ${
                                       book.isRead
                                         ? "bg-white shadow-sm"
                                         : "bg-gray-100 opacity-60"
                                     }`}
                                   >
+                                    <button
+                                      onClick={() =>
+                                        handleRemoveBookFromSeries(
+                                          s.id,
+                                          book.id,
+                                        )
+                                      }
+                                      className="absolute top-1 right-1 p-1 bg-red-100 text-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-200"
+                                      title="Remove from series"
+                                    >
+                                      <X className="w-3 h-3" />
+                                    </button>
                                     <span className="text-xs text-gray-400">
                                       Book {index + 1}
                                     </span>
-                                    <div className="w-10 h-10 mx-auto my-2 rounded-lg bg-gradient-to-br from-indigo-200 to-purple-200 flex items-center justify-center">
-                                      <BookOpen
-                                        className={`w-5 h-5 ${book.isRead ? "text-indigo-600" : "text-gray-400"}`}
+                                    {book.coverUrl ? (
+                                      <img
+                                        src={book.coverUrl}
+                                        alt={book.title}
+                                        className="w-16 h-24 mx-auto my-2 rounded-lg object-cover shadow-sm"
                                       />
-                                    </div>
+                                    ) : (
+                                      <div className="w-16 h-24 mx-auto my-2 rounded-lg bg-gradient-to-br from-indigo-200 to-purple-200 flex items-center justify-center">
+                                        <BookOpen
+                                          className={`w-6 h-6 ${book.isRead ? "text-indigo-600" : "text-gray-400"}`}
+                                        />
+                                      </div>
+                                    )}
                                     {book.isRead && (
-                                      <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
+                                      <div className="absolute top-8 right-2 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
                                         <Check className="w-3 h-3 text-white" />
                                       </div>
                                     )}
                                     <p className="text-xs font-medium text-gray-700 truncate">
-                                      {bookDetails?.title ||
-                                        `Book ${index + 1}`}
+                                      {book.title}
                                     </p>
                                   </div>
-                                );
-                              })}
-                            </div>
-                          ) : (
-                            <div className="text-center py-8">
-                              <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                              <p className="text-gray-500">
-                                No books added yet
-                              </p>
-                              <p className="text-sm text-gray-400">
-                                Add books from your bookshelf to track progress
-                              </p>
-                            </div>
-                          )}
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="text-center py-8">
+                                <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                <p className="text-gray-500">
+                                  No books added yet
+                                </p>
+                                <p className="text-sm text-gray-400">
+                                  Add books from your bookshelf to track
+                                  progress
+                                </p>
+                              </div>
+                            )}
 
-                          {/* Actions */}
-                          <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-gray-200">
-                            <button
-                              onClick={() => handleDeleteSeries(s.id)}
-                              className="flex items-center gap-1 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                              Delete Series
-                            </button>
+                            {/* Actions */}
+                            <div className="flex justify-between gap-2 mt-4 pt-4 border-t border-gray-200">
+                              <button
+                                onClick={() => setShowAddBook(s.id)}
+                                className="flex items-center gap-1 px-3 py-2 text-sm text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                              >
+                                <Plus className="w-4 h-4" />
+                                Add Book
+                              </button>
+                              <button
+                                onClick={() => handleDeleteSeries(s.id)}
+                                className="flex items-center gap-1 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                                Delete Series
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </Card>
-              </StaggerItem>
-            ))
-          ) : (
-            <Card padding="lg" className="text-center">
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <span className="text-6xl block mb-4">📚</span>
-              </motion.div>
-              <h3 className="text-xl font-display font-bold text-gray-800 mb-2">
-                Start tracking your series!
-              </h3>
-              <p className="text-gray-500 mb-6">
-                Keep track of which books you've read in your favorite series
-              </p>
-              <motion.button
-                onClick={() => setShowAddSeries(true)}
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-bold"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Add Your First Series
-              </motion.button>
-            </Card>
-          )}
-        </StaggerContainer>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </Card>
+                </StaggerItem>
+              ))
+            ) : (
+              <Card padding="lg" className="text-center">
+                <motion.div
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <span className="text-6xl block mb-4">📚</span>
+                </motion.div>
+                <h3 className="text-xl font-display font-bold text-gray-800 mb-2">
+                  Start tracking your series!
+                </h3>
+                <p className="text-gray-500 mb-6">
+                  Keep track of which books you've read in your favorite series
+                </p>
+                <motion.button
+                  onClick={() => setShowAddSeries(true)}
+                  className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-bold"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Add Your First Series
+                </motion.button>
+              </Card>
+            )}
+          </StaggerContainer>
+        )}
       </FadeIn>
 
       {/* Add Series Modal */}
@@ -472,6 +551,105 @@ const SeriesTracker: React.FC = () => {
                     <ChevronRight className="w-5 h-5 text-gray-400" />
                   </button>
                 ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Add Book to Series Modal */}
+      <AnimatePresence>
+        {showAddBook && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => {
+              setShowAddBook(null);
+              setBookSearchQuery("");
+            }}
+          >
+            <motion.div
+              className="bg-white rounded-3xl p-6 max-w-lg w-full max-h-[80vh] overflow-auto shadow-2xl"
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-display font-bold text-gray-900">
+                  Add Book to Series
+                </h2>
+                <button
+                  onClick={() => {
+                    setShowAddBook(null);
+                    setBookSearchQuery("");
+                  }}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+
+              {/* Search books */}
+              <div className="relative mb-4">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  value={bookSearchQuery}
+                  onChange={(e) => setBookSearchQuery(e.target.value)}
+                  placeholder="Search your books..."
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                />
+              </div>
+
+              {/* Book list */}
+              <div className="space-y-2 max-h-96 overflow-auto">
+                {getAvailableBooks(showAddBook).length > 0 ? (
+                  getAvailableBooks(showAddBook).map((book) => (
+                    <button
+                      key={book.id}
+                      onClick={() =>
+                        handleAddBookToSeries(showAddBook, book.id)
+                      }
+                      className="w-full p-3 rounded-xl border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all flex items-center gap-3 text-left"
+                    >
+                      {book.coverUrl ? (
+                        <img
+                          src={book.coverUrl}
+                          alt={book.title}
+                          className="w-10 h-14 rounded object-cover"
+                        />
+                      ) : (
+                        <div className="w-10 h-14 rounded bg-gradient-to-br from-indigo-200 to-purple-200 flex items-center justify-center">
+                          <BookOpen className="w-5 h-5 text-indigo-600" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-900 truncate">
+                          {book.title}
+                        </p>
+                        <p className="text-sm text-gray-500 truncate">
+                          {book.author}
+                        </p>
+                      </div>
+                      {book.isRead && (
+                        <Badge variant="success" size="sm">
+                          Read
+                        </Badge>
+                      )}
+                    </button>
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                    <p className="text-gray-500">No books available</p>
+                    <p className="text-sm text-gray-400">
+                      Add books to your bookshelf first
+                    </p>
+                  </div>
+                )}
               </div>
             </motion.div>
           </motion.div>
