@@ -15,7 +15,6 @@ import {
   ChevronDown,
   ChevronUp,
   Library,
-  Download,
   Edit3,
   Gift,
 } from "lucide-react";
@@ -171,13 +170,6 @@ const MyBooks: React.FC = () => {
           >
             <Library className="w-4 h-4" />
             Series Tracker
-          </Link>
-          <Link
-            to="/export"
-            className="flex items-center gap-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
-          >
-            <Download className="w-4 h-4" />
-            Export Data
           </Link>
         </div>
       </div>

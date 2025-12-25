@@ -37,7 +37,7 @@ const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 
 // Legacy routes kept for direct access
 const SeriesTracker = lazy(() => import("./components/SeriesTracker"));
-const ExportData = lazy(() => import("./components/ExportData"));
+
 const ProfileEditor = lazy(() => import("./components/ProfileEditor"));
 
 // Loading spinner for lazy-loaded components
@@ -246,18 +246,7 @@ function App() {
                         </Suspense>
                       }
                     />
-                    <Route
-                      path="/export"
-                      element={
-                        <Suspense fallback={<PageLoader />}>
-                          <ProtectedRoute>
-                            <Layout>
-                              <ExportData />
-                            </Layout>
-                          </ProtectedRoute>
-                        </Suspense>
-                      }
-                    />
+
                     <Route
                       path="/profile"
                       element={
