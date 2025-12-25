@@ -10,6 +10,7 @@ import "./App.css";
 // Eager load public pages (most visited)
 import PublicPortfolio from "./components/PublicPortfolio";
 import PublicPoetry from "./components/PublicPoetry";
+import PublicBlog from "./components/PublicBlog";
 import PublicWishlist from "./components/PublicWishlist";
 import PublicReviews from "./components/PublicReviews";
 import AboutPageWrapper from "./components/AboutPageWrapper";
@@ -81,6 +82,14 @@ function App() {
                       element={
                         <PublicLayout>
                           <PublicPoetry />
+                        </PublicLayout>
+                      }
+                    />
+                    <Route
+                      path="/blog"
+                      element={
+                        <PublicLayout>
+                          <PublicBlog />
                         </PublicLayout>
                       }
                     />

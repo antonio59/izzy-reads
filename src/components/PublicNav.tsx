@@ -1,5 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
-import { Book, PenTool, Gift, User, Star, LayoutDashboard } from "lucide-react";
+import {
+  Book,
+  PenTool,
+  Gift,
+  User,
+  Star,
+  LayoutDashboard,
+  FileText,
+} from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 
 // Custom book logo SVG component
@@ -77,6 +85,7 @@ export function PublicNav() {
       show: true,
     },
     { id: "poems", label: "Poems", icon: PenTool, path: "/poetry", show: true },
+    { id: "blog", label: "Blog", icon: FileText, path: "/blog", show: true },
     {
       id: "wishlist",
       label: "Wishlist",
