@@ -16,6 +16,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useBooks } from "../contexts/BookContext";
 import { useAuth } from "../contexts/AuthContext";
+import { useToastActions } from "./ui/Toast";
 import { BookSearchModal } from "./ui/BookSearchModal";
 import type { Book } from "../types";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -24,6 +25,7 @@ const Wishlist: React.FC = () => {
   const { wishlist, addToWishlist, removeFromWishlist, moveToBookshelf } =
     useBooks();
   const { convexUserId } = useAuth();
+  const toast = useToastActions();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -42,8 +44,10 @@ const Wishlist: React.FC = () => {
     if (!convexUserId) return;
     try {
       await addSuggestionToWishlist({ suggestionId });
+      toast.success("Added to wishlist!", "The suggested book has been added.");
     } catch (error) {
       console.error("Failed to approve suggestion:", error);
+      toast.error("Failed to add suggestion", "Please try again.");
     }
   };
 
@@ -52,8 +56,10 @@ const Wishlist: React.FC = () => {
   ) => {
     try {
       await updateSuggestionStatus({ id: suggestionId, status: "declined" });
+      toast.info("Suggestion declined");
     } catch (error) {
       console.error("Failed to decline suggestion:", error);
+      toast.error("Failed to decline", "Please try again.");
     }
   };
 
@@ -62,20 +68,35 @@ const Wishlist: React.FC = () => {
   ) => {
     try {
       await removeSuggestion({ id: suggestionId });
+      toast.success("Suggestion removed");
     } catch (error) {
       console.error("Failed to delete suggestion:", error);
+      toast.error("Failed to remove", "Please try again.");
     }
   };
 
   const handleAddToWishlist = async (book: Omit<Book, "id">) => {
-    await addToWishlist(book);
+    try {
+      await addToWishlist(book);
+      toast.success("Added to wishlist!", `"${book.title}" is on your list.`);
+    } catch (error) {
+      console.error("Failed to add to wishlist:", error);
+      toast.error("Failed to add book", "Please try again.");
+      throw error; // Re-throw so BookSearchModal knows it failed
+    }
   };
 
   const handleMoveToBookshelf = async (bookId: string) => {
+    const book = wishlist.find((b) => b.id === bookId);
     try {
       await moveToBookshelf(bookId);
+      toast.success(
+        "Moved to bookshelf!",
+        book ? `"${book.title}" is now on your bookshelf.` : undefined,
+      );
     } catch (error) {
       console.error("Failed to move to bookshelf:", error);
+      toast.error("Failed to move book", "Please try again.");
     }
   };
 

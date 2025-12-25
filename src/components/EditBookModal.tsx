@@ -12,6 +12,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
+import { useToastActions } from "./ui/Toast";
 import type { Book } from "../types";
 
 interface EditBookModalProps {
@@ -56,6 +57,7 @@ export function EditBookModal({
   onSave,
 }: EditBookModalProps) {
   const { books } = useBooks();
+  const toast = useToastActions();
   const [rating, setRating] = useState(0);
   const [notes, setNotes] = useState("");
   const [month, setMonth] = useState("");
@@ -139,9 +141,11 @@ export function EditBookModal({
         dateRead,
         giftFrom: giftFrom || undefined,
       });
+      toast.success("Changes saved!", `Updated "${book.title}"`);
       onClose();
     } catch (error) {
       console.error("Failed to save:", error);
+      toast.error("Failed to save", "Please try again.");
     } finally {
       setIsSaving(false);
     }

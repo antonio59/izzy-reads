@@ -7,6 +7,7 @@ import {
   determineAgeRating,
   type UnifiedBook,
 } from "../../services/bookApi";
+import { useToastActions } from "./Toast";
 import type { Book } from "../../types";
 
 export type BookSearchMode = "bookshelf" | "wishlist";
@@ -50,6 +51,7 @@ export function BookSearchModal({
   const [loading, setLoading] = useState(false);
   const [selectedBook, setSelectedBook] = useState<UnifiedBook | null>(null);
   const [adding, setAdding] = useState(false);
+  const toast = useToastActions();
 
   const config = modeConfig[mode];
   const ButtonIcon = config.buttonIcon;
@@ -61,8 +63,12 @@ export function BookSearchModal({
     try {
       const books = await searchBooks(query, 12);
       setResults(books);
+      if (books.length === 0) {
+        toast.info("No books found", "Try a different search term.");
+      }
     } catch (error) {
       console.error("Search failed:", error);
+      toast.error("Search failed", "Please try again.");
     } finally {
       setLoading(false);
     }
@@ -102,6 +108,7 @@ export function BookSearchModal({
       handleClose();
     } catch (error) {
       console.error("Failed to add book:", error);
+      // Don't show toast here - parent component should handle it
     } finally {
       setAdding(false);
     }
