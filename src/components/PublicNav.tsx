@@ -94,7 +94,7 @@ export function PublicNav() {
           <Link to="/" className="flex items-center gap-2 group">
             <BookLogo className="w-8 h-8 text-primary-500 group-hover:scale-110 transition-transform" />
             <span className="font-display font-bold text-stone-700">
-              Izzy's Corner
+              Izzy's Bookshelf
             </span>
           </Link>
 

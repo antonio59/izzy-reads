@@ -89,7 +89,7 @@ const PublicPortfolio = () => {
                   Hi, I'm Izzy! 👋
                 </h1>
                 <p className="text-base text-stone-500 mb-8 leading-relaxed max-w-xl">
-                  Welcome to my magical reading corner! I{" "}
+                  Welcome to my bookshelf! I{" "}
                   <strong className="text-primary-500">absolutely love</strong>{" "}
                   books. Here you'll find my reviews, poems, and all my bookish
                   adventures.

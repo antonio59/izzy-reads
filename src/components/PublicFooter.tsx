@@ -9,7 +9,7 @@ export function PublicFooter() {
           <div className="flex items-center gap-2">
             <BookLogo className="w-6 h-6 text-primary-500" />
             <span className="font-display font-bold text-stone-700">
-              Izzy's Corner
+              Izzy's Bookshelf
             </span>
           </div>
           <p className="text-stone-500 text-sm">
