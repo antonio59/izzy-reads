@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Book } from "../types";
 import { BookReactionButtons, BookReactionCountBadge } from "./ReactionButtons";
+import { ShareBookButton } from "./ShareButton";
 
 interface FunBookshelfPublicProps {
   books: Book[];
@@ -477,23 +478,14 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                   </div>
                 </div>
 
-                <button
-                  onClick={() => {
-                    const text = `Check out "${selectedBook.title}" by ${selectedBook.author}!`;
-                    if (navigator.share) {
-                      navigator.share({
-                        title: selectedBook.title,
-                        text,
-                        url: window.location.href,
-                      });
-                    } else {
-                      navigator.clipboard.writeText(text);
-                    }
-                  }}
-                  className="w-full mt-4 py-3 bg-primary-500 text-white rounded-xl font-medium hover:bg-primary-600 transition-colors"
-                >
-                  Share This Book
-                </button>
+                <div className="mt-4">
+                  <ShareBookButton
+                    book={selectedBook}
+                    variant="button"
+                    size="lg"
+                    className="w-full justify-center py-3 bg-primary-500 hover:bg-primary-600 text-white"
+                  />
+                </div>
               </div>
             </motion.div>
           </motion.div>

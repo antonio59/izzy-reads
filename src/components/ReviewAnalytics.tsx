@@ -21,6 +21,8 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import { useBooks } from "../contexts/BookContext";
 import { Card } from "./ui/Card";
 import { Badge } from "./ui/Badge";
@@ -88,19 +90,20 @@ interface ReviewAnalyticsProps {
 }
 
 export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
-  const { books, getBookReactionCount } = useBooks();
+  const { books } = useBooks();
+
+  // Get reaction stats from Convex
+  const reactionStats = useQuery(api.reactions.getAllBookReactionStats);
 
   // Get books with reviews
   const booksWithReviews = useMemo(() => {
     return books.filter((book) => book.isRead && (book.notes || book.review));
   }, [books]);
 
-  // Calculate total book reactions
-  const totalBookReactions = useMemo(() => {
-    return books.reduce((sum, book) => sum + getBookReactionCount(book), 0);
-  }, [books, getBookReactionCount]);
+  // Total book reactions from Convex
+  const totalBookReactions = reactionStats?.totalReactions ?? 0;
 
-  // Calculate total review reactions
+  // Calculate total review reactions (TODO: add similar query for review reactions)
   const totalReviewReactions = useMemo(() => {
     return books.reduce((sum, book) => {
       if (!book.reviewReactions) return sum;
@@ -178,6 +181,8 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
       { total: number; count: number; reactions: number }
     > = {};
 
+    const reactionsByBook = reactionStats?.reactionsByBook ?? {};
+
     books.forEach((book) => {
       if (book.isRead && book.genre) {
         if (!genreStats[book.genre]) {
@@ -187,7 +192,7 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
           genreStats[book.genre].total += book.rating;
           genreStats[book.genre].count += 1;
         }
-        genreStats[book.genre].reactions += getBookReactionCount(book);
+        genreStats[book.genre].reactions += reactionsByBook[book.id] ?? 0;
       }
     });
 
@@ -200,7 +205,7 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
       }))
       .sort((a, b) => b.avgRating - a.avgRating)
       .slice(0, 6);
-  }, [books, getBookReactionCount]);
+  }, [books, reactionStats]);
 
   // Chart data for genre ratings
   const genreChartData = genrePerformance.map((g) => ({

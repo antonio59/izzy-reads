@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Star, Share2, BookOpen, Calendar, MessageCircle } from "lucide-react";
+import { Star, BookOpen, Calendar, MessageCircle } from "lucide-react";
 import type { Book } from "../types";
 import { ReviewReactionButtons } from "./ReactionButtons";
+import { ShareReviewButton } from "./ShareButton";
 
 interface ReviewCardProps {
   book: Book;
@@ -15,31 +16,6 @@ export function ReviewCard({ book, featured = false }: ReviewCardProps) {
 
   const reviewText = book.notes || book.review;
   if (!reviewText) return null;
-
-  const handleShare = async () => {
-    const shareUrl = `${window.location.origin}/reviews/${book.id}`;
-    const shareText = `Check out Izzy's review of "${book.title}" by ${book.author}!`;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `Izzy's Review: ${book.title}`,
-          text: shareText,
-          url: shareUrl,
-        });
-      } catch {
-        // User cancelled or share failed
-        copyToClipboard(shareUrl);
-      }
-    } else {
-      copyToClipboard(shareUrl);
-    }
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    // Could add a toast notification here
-  };
 
   return (
     <motion.article
@@ -160,13 +136,7 @@ export function ReviewCard({ book, featured = false }: ReviewCardProps) {
               </div>
 
               {/* Share button */}
-              <button
-                onClick={handleShare}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-full text-sm font-medium transition-colors"
-              >
-                <Share2 className="w-4 h-4" />
-                Share
-              </button>
+              <ShareReviewButton book={book} size="sm" />
             </div>
           </div>
         </div>

@@ -9,8 +9,6 @@ import type {
   ReadingChallenge,
   ReadingStats,
   Poem,
-  BookReactions,
-  ReviewReactions,
 } from "../types";
 import type { Id, Doc } from "../../convex/_generated/dataModel";
 
@@ -36,13 +34,6 @@ interface BookContextType {
   addPoem: (poem: Omit<Poem, "id">) => Promise<void>;
   updatePoem: (id: string, updates: Partial<Poem>) => Promise<void>;
   deletePoem: (id: string) => Promise<void>;
-  addReaction: (bookId: string, reactionType: keyof BookReactions) => void;
-  addReviewReaction: (
-    bookId: string,
-    reactionType: keyof ReviewReactions,
-  ) => void;
-  getBookReactionCount: (book: Book) => number;
-  getMostLovedBooks: () => Book[];
 }
 
 const BookContext = createContext<BookContextType | undefined>(undefined);
@@ -507,38 +498,6 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
     await removePoemMutation({ id: id as Id<"poems"> });
   };
 
-  // Reaction operations (local for now - TODO: add to Convex)
-  const addReaction = (bookId: string, reactionType: keyof BookReactions) => {
-    console.log("TODO: Implement reactions in Convex", bookId, reactionType);
-  };
-
-  const addReviewReaction = (
-    bookId: string,
-    reactionType: keyof ReviewReactions,
-  ) => {
-    console.log(
-      "TODO: Implement review reactions in Convex",
-      bookId,
-      reactionType,
-    );
-  };
-
-  const getBookReactionCount = (book: Book): number => {
-    if (!book.reactions) return 0;
-    return (
-      book.reactions.love +
-      book.reactions.amazing +
-      book.reactions.mustRead +
-      book.reactions.soGood
-    );
-  };
-
-  const getMostLovedBooks = (): Book[] => {
-    return [...books]
-      .filter((book) => book.isRead && getBookReactionCount(book) > 0)
-      .sort((a, b) => getBookReactionCount(b) - getBookReactionCount(a));
-  };
-
   const value = {
     books,
     wishlist,
@@ -561,10 +520,6 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
     addPoem,
     updatePoem,
     deletePoem,
-    addReaction,
-    addReviewReaction,
-    getBookReactionCount,
-    getMostLovedBooks,
   };
 
   return <BookContext.Provider value={value}>{children}</BookContext.Provider>;

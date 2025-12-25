@@ -158,3 +158,36 @@ export const removeReaction = mutation({
     }
   },
 });
+
+// Get reaction stats for all books (for Dashboard)
+export const getAllBookReactionStats = query({
+  args: {},
+  handler: async (ctx) => {
+    // Get all book reactions (not review reactions)
+    const allReactions = await ctx.db
+      .query("bookReactions")
+      .filter((q) => q.eq(q.field("isReviewReaction"), false))
+      .collect();
+
+    // Aggregate by book
+    const bookReactions: Record<string, number> = {};
+    let totalReactions = 0;
+
+    for (const r of allReactions) {
+      const bookId = r.bookId as string;
+      bookReactions[bookId] = (bookReactions[bookId] || 0) + 1;
+      totalReactions++;
+    }
+
+    // Convert to array sorted by count
+    const topBooks = Object.entries(bookReactions)
+      .map(([bookId, count]) => ({ bookId, count }))
+      .sort((a, b) => b.count - a.count);
+
+    return {
+      totalReactions,
+      topBooks,
+      reactionsByBook: bookReactions,
+    };
+  },
+});

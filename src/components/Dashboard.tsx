@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -25,6 +25,8 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import { useBooks } from "../contexts/BookContext";
 import { useUser } from "../contexts/UserContext";
 import { getWeeklyQuote } from "../utils/readingQuotes";
@@ -42,14 +44,10 @@ import { ReviewAnalytics } from "./ReviewAnalytics";
 import type { Book } from "../types";
 
 const Dashboard: React.FC = () => {
-  const {
-    books,
-    wishlist,
-    readingChallenges,
-    readingStats,
-    getMostLovedBooks,
-    getBookReactionCount,
-  } = useBooks();
+  const { books, wishlist, readingChallenges, readingStats } = useBooks();
+
+  // Get reaction stats from Convex
+  const reactionStats = useQuery(api.reactions.getAllBookReactionStats);
   const { user, updateUserProfile } = useUser();
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [showAvatarCreator, setShowAvatarCreator] = useState(false);
@@ -80,14 +78,20 @@ const Dashboard: React.FC = () => {
     )
     .slice(0, 4);
 
-  // Get most loved books for the dashboard
-  const mostLovedBooks = getMostLovedBooks().slice(0, 3);
+  // Get most loved books from reaction stats
+  const mostLovedBooks = useMemo(() => {
+    if (!reactionStats?.topBooks) return [];
+    return reactionStats.topBooks
+      .slice(0, 3)
+      .map(({ bookId, count }) => {
+        const book = books.find((b) => b.id === bookId);
+        return book ? { ...book, reactionCount: count } : null;
+      })
+      .filter((b): b is Book & { reactionCount: number } => b !== null);
+  }, [reactionStats, books]);
 
-  // Calculate total reactions across all books
-  const totalReactions = books.reduce(
-    (sum, book) => sum + getBookReactionCount(book),
-    0,
-  );
+  // Total reactions from Convex
+  const totalReactions = reactionStats?.totalReactions ?? 0;
 
   const currentChallenge = readingChallenges[0];
 
@@ -360,7 +364,7 @@ const Dashboard: React.FC = () => {
                   These books are getting the most love from visitors!
                 </p>
                 <div className="space-y-3">
-                  {mostLovedBooks.map((book, index) => (
+                  {mostLovedBooks.map((book, index: number) => (
                     <div
                       key={book.id}
                       className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm"
@@ -390,7 +394,7 @@ const Dashboard: React.FC = () => {
                       <div className="flex items-center gap-1 bg-pink-100 px-2 py-1 rounded-full">
                         <span className="text-sm">❤️</span>
                         <span className="text-sm font-bold text-pink-600">
-                          {getBookReactionCount(book)}
+                          {book.reactionCount}
                         </span>
                       </div>
                     </div>

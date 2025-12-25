@@ -76,7 +76,7 @@ const BookshelfWithFilters: React.FC<BookshelfWithFiltersProps> = ({
       try {
         await navigator.share(shareData);
       } catch {
-        console.log("Share cancelled");
+        // Share was cancelled by user - no action needed
       }
     } else {
       // Fallback: copy to clipboard

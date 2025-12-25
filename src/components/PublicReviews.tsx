@@ -7,7 +7,6 @@ import {
   Filter,
   BookOpen,
   Calendar,
-  Share2,
   ArrowLeft,
   Sparkles,
   X,
@@ -19,6 +18,7 @@ import { PublicFooter } from "./PublicFooter";
 import { ReviewCard } from "./ReviewCard";
 import { AvatarPreview, type AvatarConfig } from "./AvatarCreator";
 import { ReviewReactionButtons } from "./ReactionButtons";
+import { ShareReviewButton } from "./ShareButton";
 import type { Book } from "../types";
 
 type SortOption = "recent" | "rating";
@@ -289,25 +289,6 @@ function SingleReviewView({
   const [imageError, setImageError] = useState(false);
   const reviewText = book.notes || book.review;
 
-  const handleShare = async () => {
-    const shareUrl = window.location.href;
-    const shareText = `Check out Izzy's review of "${book.title}" by ${book.author}!`;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `Izzy's Review: ${book.title}`,
-          text: shareText,
-          url: shareUrl,
-        });
-      } catch {
-        navigator.clipboard.writeText(shareUrl);
-      }
-    } else {
-      navigator.clipboard.writeText(shareUrl);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-cream-100 flex flex-col">
       {/* Navigation */}
@@ -321,13 +302,11 @@ function SingleReviewView({
               <ArrowLeft className="w-5 h-5" />
               <span className="font-medium">All Reviews</span>
             </Link>
-            <button
-              onClick={handleShare}
-              className="flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-medium transition-colors"
-            >
-              <Share2 className="w-4 h-4" />
-              Share Review
-            </button>
+            <ShareReviewButton
+              book={book}
+              size="md"
+              className="bg-primary-500 hover:bg-primary-600 text-white"
+            />
           </div>
         </div>
       </nav>
