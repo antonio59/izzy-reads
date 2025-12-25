@@ -131,7 +131,7 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.15 }}
-            className="absolute z-50 top-full mt-2 right-0 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden p-4"
+            className="absolute z-50 top-full mt-2 left-0 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden p-4"
           >
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-bold text-gray-800 flex items-center gap-2">
@@ -157,7 +157,7 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.15 }}
-            className="absolute z-50 top-full mt-2 right-0 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
+            className="absolute z-50 top-full mt-2 left-0 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
           >
             {/* Header */}
             <div className="p-3 border-b border-gray-100">

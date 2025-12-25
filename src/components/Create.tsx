@@ -454,7 +454,7 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, onClose }) => {
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
+        className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-visible"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6 border-b border-gray-100">
@@ -462,7 +462,7 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, onClose }) => {
             {post ? "Edit Post" : "Write a New Post"}
           </h2>
         </div>
-        <div className="p-6 space-y-4 overflow-y-auto max-h-[60vh]">
+        <div className="p-6 space-y-4 overflow-visible">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Title
