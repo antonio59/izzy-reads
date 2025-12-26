@@ -338,7 +338,7 @@ const PublicPortfolio = () => {
               </div>
               <div>
                 <h2 className="text-3xl md:text-4xl font-display font-extrabold text-stone-800">
-                  My Blog
+                  My Writing
                 </h2>
                 <p className="text-sm text-stone-400 mt-1">
                   Thoughts about reading and life

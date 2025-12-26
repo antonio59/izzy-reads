@@ -85,7 +85,7 @@ export function PublicNav() {
       show: true,
     },
     { id: "poems", label: "Poems", icon: PenTool, path: "/poetry", show: true },
-    { id: "blog", label: "Blog", icon: FileText, path: "/blog", show: true },
+    { id: "blog", label: "Writing", icon: FileText, path: "/blog", show: true },
     {
       id: "wishlist",
       label: "Wishlist",

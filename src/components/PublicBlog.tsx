@@ -80,7 +80,7 @@ const PublicBlog = () => {
               </div>
               <div>
                 <h1 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800">
-                  Izzy's Blog
+                  Izzy's Writing
                 </h1>
                 <p className="text-sm text-stone-500">
                   Thoughts & adventures from my reading journey
@@ -194,7 +194,7 @@ const PublicBlog = () => {
                 <PenTool className="w-16 h-16 text-rose-400" />
               </div>
               <h3 className="text-2xl font-display font-bold text-stone-800 mb-3">
-                Blog Posts Coming Soon!
+                Writing Coming Soon!
               </h3>
               <p className="text-stone-500 max-w-md mx-auto">
                 Izzy is busy writing about reading adventures. Check back soon

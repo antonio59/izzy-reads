@@ -243,7 +243,7 @@ const Blog: React.FC = () => {
         <div>
           <h1 className="text-3xl font-bold text-sage-600 flex items-center">
             <PenTool className="h-8 w-8 mr-3" />
-            My Reading Blog
+            My Writing
           </h1>
           <p className="text-stone-600 mt-1">
             Share your thoughts about the books you love! ✍️
@@ -385,7 +385,7 @@ const Blog: React.FC = () => {
         <div className="text-center py-12">
           <PenTool className="h-24 w-24 text-sage-300 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-stone-600 mb-2">
-            No blog posts yet!
+            No posts yet!
           </h3>
           <p className="text-stone-500 mb-4">
             Start writing about your reading adventures!
