@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, KeyboardEvent } from "react";
 import {
   PenTool,
   Plus,
@@ -8,6 +8,7 @@ import {
   Edit,
   Trash2,
   X,
+  Tag,
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import type { BlogPost } from "../types";
@@ -33,6 +34,8 @@ const Blog: React.FC = () => {
     tags: [],
     emoji: "📚",
   });
+  const [tagInput, setTagInput] = useState("");
+  const [editTagInput, setEditTagInput] = useState("");
 
   const templates = {
     free: {
@@ -135,6 +138,51 @@ const Blog: React.FC = () => {
     });
   };
 
+  // Handle adding tags for new post
+  const handleAddTag = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      const tag = tagInput.trim().replace(/,/g, "");
+      if (tag && !(newPost.tags || []).includes(tag)) {
+        setNewPost({ ...newPost, tags: [...(newPost.tags || []), tag] });
+      }
+      setTagInput("");
+    }
+  };
+
+  // Handle removing tag from new post
+  const handleRemoveTag = (tagToRemove: string) => {
+    setNewPost({
+      ...newPost,
+      tags: (newPost.tags || []).filter((tag) => tag !== tagToRemove),
+    });
+  };
+
+  // Handle adding tags for editing post
+  const handleEditAddTag = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (!editingPost) return;
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      const tag = editTagInput.trim().replace(/,/g, "");
+      if (tag && !(editingPost.tags || []).includes(tag)) {
+        setEditingPost({
+          ...editingPost,
+          tags: [...(editingPost.tags || []), tag],
+        });
+      }
+      setEditTagInput("");
+    }
+  };
+
+  // Handle removing tag from editing post
+  const handleEditRemoveTag = (tagToRemove: string) => {
+    if (!editingPost) return;
+    setEditingPost({
+      ...editingPost,
+      tags: (editingPost.tags || []).filter((tag) => tag !== tagToRemove),
+    });
+  };
+
   const handleCreatePost = () => {
     if (newPost.title && newPost.content) {
       const post: BlogPost = {
@@ -156,6 +204,7 @@ const Blog: React.FC = () => {
         tags: [],
         emoji: "📚",
       });
+      setTagInput("");
       setShowNewPost(false);
     }
   };
@@ -167,6 +216,7 @@ const Blog: React.FC = () => {
         dateModified: new Date().toISOString(),
       });
       setEditingPost(null);
+      setEditTagInput("");
     }
   };
 
@@ -300,7 +350,9 @@ const Blog: React.FC = () => {
                   </div>
 
                   <div className="prose prose-sm max-w-none mb-4">
-                    <p className="text-stone-700 line-clamp-3">{post.content}</p>
+                    <p className="text-stone-700 line-clamp-3">
+                      {post.content}
+                    </p>
                   </div>
 
                   <div className="flex items-center justify-between text-sm text-stone-500">
@@ -426,6 +478,42 @@ const Blog: React.FC = () => {
                 </select>
               </div>
 
+              {/* Tags Input */}
+              <div>
+                <label className="block text-sm font-medium text-stone-700 mb-1">
+                  <Tag className="w-4 h-4 inline mr-1" />
+                  Tags (optional)
+                </label>
+                <p className="text-xs text-stone-500 mb-2">
+                  Press Enter or comma to add a tag
+                </p>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {(newPost.tags || []).map((tag, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center gap-1 text-sm bg-sage-100 text-sage-800 px-3 py-1 rounded-full"
+                    >
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveTag(tag)}
+                        className="hover:bg-sage-200 rounded-full p-0.5 transition-colors"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                <input
+                  type="text"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={handleAddTag}
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
+                  placeholder="Type a tag and press Enter..."
+                />
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-stone-700 mb-1">
                   Your thoughts:
@@ -502,7 +590,9 @@ const Blog: React.FC = () => {
       {editingPost && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold text-stone-800 mb-4">Edit Post</h2>
+            <h2 className="text-2xl font-bold text-stone-800 mb-4">
+              Edit Post
+            </h2>
 
             <div className="space-y-4">
               {/* Post Emoji */}
@@ -529,6 +619,42 @@ const Blog: React.FC = () => {
                     setEditingPost({ ...editingPost, title: e.target.value })
                   }
                   className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
+                />
+              </div>
+
+              {/* Tags Input for Edit */}
+              <div>
+                <label className="block text-sm font-medium text-stone-700 mb-1">
+                  <Tag className="w-4 h-4 inline mr-1" />
+                  Tags
+                </label>
+                <p className="text-xs text-stone-500 mb-2">
+                  Press Enter or comma to add a tag
+                </p>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {(editingPost.tags || []).map((tag, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center gap-1 text-sm bg-sage-100 text-sage-800 px-3 py-1 rounded-full"
+                    >
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => handleEditRemoveTag(tag)}
+                        className="hover:bg-sage-200 rounded-full p-0.5 transition-colors"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                <input
+                  type="text"
+                  value={editTagInput}
+                  onChange={(e) => setEditTagInput(e.target.value)}
+                  onKeyDown={handleEditAddTag}
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
+                  placeholder="Type a tag and press Enter..."
                 />
               </div>
 
