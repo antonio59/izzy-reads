@@ -218,14 +218,16 @@ const Dashboard: React.FC = () => {
             color="primary"
           />
         </StaggerItem>
-        <StaggerItem>
-          <StatCard
-            label="Reader Reactions"
-            value={totalReactions}
-            icon={<span className="text-xl">❤️</span>}
-            color="accent"
-          />
-        </StaggerItem>
+        {totalReactions > 0 && (
+          <StaggerItem>
+            <StatCard
+              label="Reader Reactions"
+              value={totalReactions}
+              icon={<span className="text-xl">❤️</span>}
+              color="accent"
+            />
+          </StaggerItem>
+        )}
       </StaggerContainer>
 
       {/* Main Content Grid */}
@@ -260,13 +262,15 @@ const Dashboard: React.FC = () => {
             />
           </FadeIn>
 
-          {/* Most Loved Books */}
-          <FadeIn delay={0.35}>
-            <MostLovedBooks
-              books={mostLovedBooks}
-              totalReactions={totalReactions}
-            />
-          </FadeIn>
+          {/* Most Loved Books - only show when there are reactions */}
+          {totalReactions > 0 && (
+            <FadeIn delay={0.35}>
+              <MostLovedBooks
+                books={mostLovedBooks}
+                totalReactions={totalReactions}
+              />
+            </FadeIn>
+          )}
         </div>
 
         {/* Right Column - 1/3 width */}
