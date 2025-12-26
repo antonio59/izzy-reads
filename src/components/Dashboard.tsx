@@ -271,14 +271,14 @@ const Dashboard: React.FC = () => {
 
         {/* Right Column - 1/3 width */}
         <div className="space-y-6">
-          {/* Genre Distribution */}
+          {/* Quick Actions */}
           <FadeIn delay={0.2}>
-            <GenrePieChart data={genreData} />
+            <QuickActions actions={quickActions} />
           </FadeIn>
 
-          {/* Quick Actions */}
+          {/* Genre Distribution */}
           <FadeIn delay={0.3}>
-            <QuickActions actions={quickActions} />
+            <GenrePieChart data={genreData} />
           </FadeIn>
 
           {/* Weekly Quote */}

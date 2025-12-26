@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useGamification } from "../contexts/GamificationContext";
+import { LevelModal } from "./LevelModal";
 
 // Simplified to 4 core navigation items
 const mainNavItems = [
@@ -27,8 +28,9 @@ const Navigation: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut } = useAuth();
-  const { level } = useGamification();
+  const { level, totalXP } = useGamification();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showLevelModal, setShowLevelModal] = useState(false);
 
   const handleLogout = async () => {
     await signOut();
@@ -60,14 +62,20 @@ const Navigation: React.FC = () => {
               <span className="text-xl font-display font-bold text-stone-900">
                 Izzy's Bookshelf
               </span>
-              {/* Level indicator */}
-              <div className="hidden lg:flex items-center gap-1 ml-2 px-2 py-1 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full">
-                <span className="text-sm">{level.icon}</span>
-                <span className="text-xs font-medium text-purple-700">
-                  Lvl {level.level}
-                </span>
-              </div>
             </Link>
+            {/* Level indicator - clickable */}
+            <motion.button
+              onClick={() => setShowLevelModal(true)}
+              className="hidden lg:flex items-center gap-1 ml-2 px-2.5 py-1.5 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full hover:from-purple-200 hover:to-pink-200 transition-colors cursor-pointer"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              title="View your reading level"
+            >
+              <span className="text-sm">{level.icon}</span>
+              <span className="text-xs font-medium text-purple-700">
+                Lvl {level.level}
+              </span>
+            </motion.button>
 
             {/* Main Navigation - Simplified to 4 items */}
             <div className="flex items-center bg-stone-50 rounded-xl p-1">
@@ -233,6 +241,13 @@ const Navigation: React.FC = () => {
           )}
         </AnimatePresence>
       </nav>
+
+      {/* Level Progress Modal */}
+      <LevelModal
+        isOpen={showLevelModal}
+        onClose={() => setShowLevelModal(false)}
+        totalXP={totalXP}
+      />
     </>
   );
 };
