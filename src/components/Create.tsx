@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { PenTool, Feather, Plus, Edit, Trash2, Heart } from "lucide-react";
+import {
+  PenTool,
+  Feather,
+  Plus,
+  Edit,
+  Trash2,
+  Heart,
+  Sparkles,
+  FileText,
+} from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import PoetryEditor from "./PoetryEditor";
 import type { Poem, BlogPost } from "../types";
@@ -121,6 +130,44 @@ const Create: React.FC = () => {
           <PenTool className="w-4 h-4" />
           Posts ({blogPosts.length})
         </button>
+      </div>
+
+      {/* Tab Description */}
+      <div className="bg-gradient-to-r from-stone-50 to-stone-100 rounded-xl p-4 border border-stone-200">
+        <div className="flex items-start gap-3">
+          <div className="p-2 bg-white rounded-lg shadow-sm">
+            {activeTab === "poems" ? (
+              <Feather className="w-5 h-5 text-purple-500" />
+            ) : (
+              <FileText className="w-5 h-5 text-pink-500" />
+            )}
+          </div>
+          <div>
+            {activeTab === "poems" ? (
+              <>
+                <h3 className="font-semibold text-stone-800 flex items-center gap-2">
+                  My Poems <Sparkles className="w-4 h-4 text-purple-500" />
+                </h3>
+                <p className="text-sm text-stone-600 mt-0.5">
+                  Write poems about anything you like! They can be about books
+                  you've read, things you love, or just how you're feeling. Use
+                  fun templates or write your own style!
+                </p>
+              </>
+            ) : (
+              <>
+                <h3 className="font-semibold text-stone-800 flex items-center gap-2">
+                  My Blog Posts <Sparkles className="w-4 h-4 text-pink-500" />
+                </h3>
+                <p className="text-sm text-stone-600 mt-0.5">
+                  Share longer stories and thoughts! Write book reviews, talk
+                  about your favorite characters, or tell stories about your
+                  reading adventures. Your posts will appear on your website!
+                </p>
+              </>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Content */}

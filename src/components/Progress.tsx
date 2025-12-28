@@ -79,6 +79,25 @@ const Progress: React.FC = () => {
         </div>
       </div>
 
+      {/* Page Description */}
+      <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-4 border border-amber-200">
+        <div className="flex items-start gap-3">
+          <div className="p-2 bg-white rounded-lg shadow-sm">
+            <Target className="w-5 h-5 text-amber-500" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-stone-800 flex items-center gap-2">
+              Your Reading Adventure Stats! <span className="text-lg">🌟</span>
+            </h3>
+            <p className="text-sm text-stone-600 mt-0.5">
+              See how many books you've read, earn XP points by reading more,
+              and unlock special badges! Set your reading goals and watch your
+              progress grow. The more you read, the more rewards you get!
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard
@@ -146,7 +165,9 @@ const Progress: React.FC = () => {
         {/* Unlocked */}
         {unlockedList.length > 0 && (
           <div className="mb-6">
-            <h3 className="text-sm font-medium text-stone-500 mb-3">Unlocked</h3>
+            <h3 className="text-sm font-medium text-stone-500 mb-3">
+              Unlocked
+            </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {unlockedList.map((achievement: Achievement) => (
                 <AchievementBadge
