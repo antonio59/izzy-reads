@@ -211,7 +211,6 @@ export function AvatarPreview({
     HAIR_STYLES.find((h) => h.id === config.hairStyle) || HAIR_STYLES[0];
   const background =
     BACKGROUNDS.find((b) => b.id === config.background) || BACKGROUNDS[0];
-  const accessory = ACCESSORIES.find((a) => a.id === config.accessory);
   const outfitColor =
     OUTFIT_COLORS.find((o) => o.id === config.outfitColor)?.color ||
     OUTFIT_COLORS[3].color;
