@@ -75,7 +75,7 @@ const PublicPortfolio = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-4">
               {/* Avatar - properly sized */}
               <div className="flex-shrink-0 shadow-lg ring-2 ring-primary-100 rounded-full overflow-hidden">
                 <AvatarPreview config={userAvatar} size="md" />
@@ -83,16 +83,16 @@ const PublicPortfolio = () => {
 
               {/* Hero Content */}
               <div className="flex-1 min-w-0">
-                <h1 className="text-xl md:text-2xl font-display font-extrabold text-stone-800">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-display font-extrabold text-stone-800">
                   Hi, I'm Izzy! 👋
                 </h1>
-                <p className="text-sm text-stone-500 mt-0.5 hidden sm:block">
+                <p className="text-xs sm:text-sm text-stone-500 mt-0.5 line-clamp-2">
                   Welcome to my bookshelf - reviews, poems & bookish adventures
                 </p>
               </div>
 
-              {/* Action Buttons - Enhanced CTAs */}
-              <div className="flex-shrink-0 hidden md:flex gap-3">
+              {/* Action Buttons - Enhanced CTAs (desktop only) */}
+              <div className="flex-shrink-0 hidden lg:flex gap-3">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}

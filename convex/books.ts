@@ -112,6 +112,49 @@ export const remove = mutation({
   },
 });
 
+// Get books grouped by userId (for debugging/cleanup)
+export const getBooksByUserGroups = query({
+  args: {},
+  handler: async (ctx) => {
+    const books = await ctx.db.query("books").collect();
+    const groups: Record<string, { count: number; titles: string[] }> = {};
+
+    for (const book of books) {
+      const key = book.userId;
+      if (!groups[key]) {
+        groups[key] = { count: 0, titles: [] };
+      }
+      groups[key].count++;
+      groups[key].titles.push(book.title);
+    }
+
+    return groups;
+  },
+});
+
+// Transfer all books to a specific user (for cleanup)
+export const transferAllBooksToUser = mutation({
+  args: { targetUserId: v.id("users") },
+  handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    const books = await ctx.db.query("books").collect();
+    let transferred = 0;
+
+    for (const book of books) {
+      if (book.userId !== args.targetUserId) {
+        await ctx.db.patch(book._id, { userId: args.targetUserId });
+        transferred++;
+      }
+    }
+
+    return { transferred, total: books.length };
+  },
+});
+
 // Bulk add books - requires authentication
 export const bulkAdd = mutation({
   args: {

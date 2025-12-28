@@ -192,42 +192,20 @@ function convexChallengeToChallenge(
 export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
   const { convexUserId } = useAuth();
 
-  // For public pages (when not authenticated), fetch ALL data
-  // This is Izzy's personal site, so all data is hers and public
-  const allBooksData = useQuery(api.books.getAll, convexUserId ? "skip" : {});
-  const allWishlistData = useQuery(
-    api.wishlist.getAll,
-    convexUserId ? "skip" : {},
-  );
-  const allPoemsData = useQuery(api.poems.getAll, convexUserId ? "skip" : {});
+  // This is Izzy's personal site - ALL data belongs to her regardless of who's logged in
+  // Parents/family log in to help manage the site, but all content is Izzy's
+  const booksData = useQuery(api.books.getAll);
+  const wishlistData = useQuery(api.wishlist.getAll);
+  const poemsData = useQuery(api.poems.getAll);
 
-  // Convex queries - when authenticated, get user's data
-  const userBooksData = useQuery(
-    api.books.getByUser,
-    convexUserId ? { userId: convexUserId } : "skip",
-  );
-  const userWishlistData = useQuery(
-    api.wishlist.getByUser,
-    convexUserId ? { userId: convexUserId } : "skip",
-  );
-  const userPoemsData = useQuery(
-    api.poems.getByUser,
-    convexUserId ? { userId: convexUserId } : "skip",
-  );
-  const userBlogPostsData = useQuery(
-    api.blogPosts.getByUser,
-    convexUserId ? { userId: convexUserId } : "skip",
-  );
+  // Blog posts - get all for the site
+  const blogPostsData = useQuery(api.blogPosts.getAll);
+
+  // Reading challenges - these are user-specific goals
   const challengesData = useQuery(
     api.readingChallenges.getByUser,
     convexUserId ? { userId: convexUserId } : "skip",
   );
-
-  // Use user data if authenticated, otherwise public data
-  const booksData = convexUserId ? userBooksData : allBooksData;
-  const wishlistData = convexUserId ? userWishlistData : allWishlistData;
-  const poemsData = convexUserId ? userPoemsData : allPoemsData;
-  const blogPostsData = userBlogPostsData; // Blog posts only for authenticated users
 
   // Convex mutations
   const addBookMutation = useMutation(api.books.add);

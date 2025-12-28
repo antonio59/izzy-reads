@@ -24,6 +24,14 @@ export const getPublished = query({
   },
 });
 
+// Get all blog posts (for authenticated users managing the site)
+export const getAll = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db.query("blogPosts").collect();
+  },
+});
+
 // Add a blog post - requires authentication
 export const add = mutation({
   args: {
