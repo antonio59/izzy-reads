@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { BookOpen, ChevronRight, Calendar } from "lucide-react";

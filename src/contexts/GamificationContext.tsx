@@ -4,6 +4,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useMemo,
 } from "react";
 import type { ReactNode } from "react";
 import { useBooks } from "./BookContext";
@@ -82,18 +83,28 @@ export const GamificationProvider: React.FC<GamificationProviderProps> = ({
   >([]);
 
   // Calculate user stats from book context
-  const stats: UserStats = {
-    booksRead: books.filter((b) => b.isRead).length,
-    pagesRead: books
-      .filter((b) => b.isRead)
-      .reduce((sum, b) => sum + (b.pageCount || 0), 0),
-    streakWeeks: readingStats.readingStreak,
-    genresRead: new Set(books.filter((b) => b.isRead).map((b) => b.genre)).size,
-    poemsWritten: poems.length,
-    postsWritten: blogPosts.length,
-    ratingsGiven: books.filter((b) => b.rating && b.rating > 0).length,
-    challengesCompleted: readingChallenges.filter((c) => c.completed).length,
-  };
+  const stats: UserStats = useMemo(
+    () => ({
+      booksRead: books.filter((b) => b.isRead).length,
+      pagesRead: books
+        .filter((b) => b.isRead)
+        .reduce((sum, b) => sum + (b.pageCount || 0), 0),
+      streakWeeks: readingStats.readingStreak,
+      genresRead: new Set(books.filter((b) => b.isRead).map((b) => b.genre))
+        .size,
+      poemsWritten: poems.length,
+      postsWritten: blogPosts.length,
+      ratingsGiven: books.filter((b) => b.rating && b.rating > 0).length,
+      challengesCompleted: readingChallenges.filter((c) => c.completed).length,
+    }),
+    [
+      books,
+      readingStats.readingStreak,
+      poems.length,
+      blogPosts.length,
+      readingChallenges,
+    ],
+  );
 
   // Load saved state from localStorage
   useEffect(() => {
@@ -139,6 +150,7 @@ export const GamificationProvider: React.FC<GamificationProviderProps> = ({
     if (calculatedXP > totalXP) {
       setTotalXP(calculatedXP);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stats, unlockedAchievements, books, blogPosts]);
 
   // Check for new achievements when stats change
@@ -154,6 +166,7 @@ export const GamificationProvider: React.FC<GamificationProviderProps> = ({
       ]);
       setRecentlyUnlocked((prev) => [...prev, ...newAchievements]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stats]);
 
   const levelProgress = getLevelProgress(totalXP);
