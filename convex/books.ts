@@ -49,7 +49,7 @@ export const add = mutation({
   },
 });
 
-// Update a book - requires authentication and ownership verification
+// Update a book - requires authentication (any authenticated user can edit - they're family/parents)
 export const update = mutation({
   args: {
     id: v.id("books"),
@@ -73,13 +73,9 @@ export const update = mutation({
       throw new Error("Not authenticated");
     }
 
-    // Verify ownership
     const book = await ctx.db.get(args.id);
     if (!book) {
       throw new Error("Book not found");
-    }
-    if (book.userId !== userId) {
-      throw new Error("Not authorized to update this book");
     }
 
     const { id, ...updates } = args;
@@ -90,7 +86,7 @@ export const update = mutation({
   },
 });
 
-// Remove a book - requires authentication and ownership verification
+// Remove a book - requires authentication (any authenticated user can delete - they're family/parents)
 export const remove = mutation({
   args: { id: v.id("books") },
   handler: async (ctx, args) => {
@@ -99,13 +95,9 @@ export const remove = mutation({
       throw new Error("Not authenticated");
     }
 
-    // Verify ownership
     const book = await ctx.db.get(args.id);
     if (!book) {
       throw new Error("Book not found");
-    }
-    if (book.userId !== userId) {
-      throw new Error("Not authorized to delete this book");
     }
 
     await ctx.db.delete(args.id);

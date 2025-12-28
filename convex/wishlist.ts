@@ -43,7 +43,7 @@ export const add = mutation({
   },
 });
 
-// Remove from wishlist - requires authentication and ownership verification
+// Remove from wishlist - requires authentication (any authenticated user can delete - they're family/parents)
 export const remove = mutation({
   args: { id: v.id("wishlist") },
   handler: async (ctx, args) => {
@@ -52,13 +52,9 @@ export const remove = mutation({
       throw new Error("Not authenticated");
     }
 
-    // Verify ownership
     const item = await ctx.db.get(args.id);
     if (!item) {
       throw new Error("Wishlist item not found");
-    }
-    if (item.userId !== userId) {
-      throw new Error("Not authorized to remove this item");
     }
 
     await ctx.db.delete(args.id);

@@ -53,7 +53,7 @@ export const add = mutation({
   },
 });
 
-// Update a blog post - requires authentication and ownership verification
+// Update a blog post - requires authentication (any authenticated user can edit - they're family/parents)
 export const update = mutation({
   args: {
     id: v.id("blogPosts"),
@@ -71,13 +71,9 @@ export const update = mutation({
       throw new Error("Not authenticated");
     }
 
-    // Verify ownership
     const post = await ctx.db.get(args.id);
     if (!post) {
       throw new Error("Blog post not found");
-    }
-    if (post.userId !== userId) {
-      throw new Error("Not authorized to update this post");
     }
 
     const { id, ...updates } = args;
@@ -88,7 +84,7 @@ export const update = mutation({
   },
 });
 
-// Remove a blog post - requires authentication and ownership verification
+// Remove a blog post - requires authentication (any authenticated user can delete - they're family/parents)
 export const remove = mutation({
   args: { id: v.id("blogPosts") },
   handler: async (ctx, args) => {
@@ -97,13 +93,9 @@ export const remove = mutation({
       throw new Error("Not authenticated");
     }
 
-    // Verify ownership
     const post = await ctx.db.get(args.id);
     if (!post) {
       throw new Error("Blog post not found");
-    }
-    if (post.userId !== userId) {
-      throw new Error("Not authorized to delete this post");
     }
 
     await ctx.db.delete(args.id);

@@ -40,7 +40,7 @@ export const add = mutation({
   },
 });
 
-// Update a poem - requires authentication and ownership verification
+// Update a poem - requires authentication (any authenticated user can edit - they're family/parents)
 export const update = mutation({
   args: {
     id: v.id("poems"),
@@ -56,13 +56,9 @@ export const update = mutation({
       throw new Error("Not authenticated");
     }
 
-    // Verify ownership
     const poem = await ctx.db.get(args.id);
     if (!poem) {
       throw new Error("Poem not found");
-    }
-    if (poem.userId !== userId) {
-      throw new Error("Not authorized to update this poem");
     }
 
     const { id, ...updates } = args;
@@ -73,7 +69,7 @@ export const update = mutation({
   },
 });
 
-// Remove a poem - requires authentication and ownership verification
+// Remove a poem - requires authentication (any authenticated user can delete - they're family/parents)
 export const remove = mutation({
   args: { id: v.id("poems") },
   handler: async (ctx, args) => {
@@ -82,13 +78,9 @@ export const remove = mutation({
       throw new Error("Not authenticated");
     }
 
-    // Verify ownership
     const poem = await ctx.db.get(args.id);
     if (!poem) {
       throw new Error("Poem not found");
-    }
-    if (poem.userId !== userId) {
-      throw new Error("Not authorized to delete this poem");
     }
 
     await ctx.db.delete(args.id);
