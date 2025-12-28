@@ -111,7 +111,7 @@ const MyBooks: React.FC = () => {
     setShowSearch(false);
   };
 
-  const handleMoveToRead = async (bookId: string) => {
+  const _handleMoveToRead = async (bookId: string) => {
     await moveToBookshelf(bookId);
   };
 

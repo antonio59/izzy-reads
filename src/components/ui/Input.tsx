@@ -175,10 +175,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 SearchInput.displayName = "SearchInput";
 
 // Password Input variant
-interface PasswordInputProps extends Omit<
-  InputProps,
-  "type" | "icon" | "iconPosition"
-> {}
+type PasswordInputProps = Omit<InputProps, "type" | "icon" | "iconPosition">;
 
 export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
   (props, ref) => {
