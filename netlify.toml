@@ -29,7 +29,13 @@
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://openlibrary.org https://covers.openlibrary.org https://www.googleapis.com https://api.giphy.com https://*.giphy.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
 
-# Cache static assets
+# Never cache index.html - ensures users always get latest version after deploy
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# Cache static assets (they have hashed filenames so immutable is safe)
 [[headers]]
   for = "/assets/*"
   [headers.values]
