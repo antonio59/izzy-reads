@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Book,
@@ -7,8 +8,11 @@ import {
   Star,
   LayoutDashboard,
   FileText,
+  Menu,
+  X,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Custom book logo SVG component
 export function BookLogo({ className }: { className?: string }) {
@@ -74,6 +78,7 @@ export function PublicNav() {
   const location = useLocation();
   const { user } = useAuth();
   const isAuthenticated = !!user;
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems: NavItem[] = [
     { id: "home", label: "My Books", icon: Book, path: "/", show: true },
@@ -98,6 +103,8 @@ export function PublicNav() {
 
   const visibleItems = navItems.filter((item) => item.show);
 
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+
   return (
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-cream-300 shadow-sm">
       <div className="max-w-5xl mx-auto px-4 py-3">
@@ -110,8 +117,8 @@ export function PublicNav() {
             </span>
           </Link>
 
-          {/* Navigation Items */}
-          <div className="flex items-center gap-1">
+          {/* Desktop Navigation Items */}
+          <div className="hidden md:flex items-center gap-1">
             {visibleItems.map((item) => {
               const Icon = item.icon;
               const isActive =
@@ -129,7 +136,7 @@ export function PublicNav() {
                   }`}
                 >
                   <Icon className="w-4 h-4" />
-                  <span className="hidden sm:inline">{item.label}</span>
+                  <span>{item.label}</span>
                 </Link>
               );
             })}
@@ -141,12 +148,75 @@ export function PublicNav() {
                 className="ml-2 px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2 bg-primary-500 text-white hover:bg-primary-600 transition-all"
               >
                 <LayoutDashboard className="w-4 h-4" />
-                <span className="hidden sm:inline">Dashboard</span>
+                <span>Dashboard</span>
               </Link>
             )}
           </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg text-stone-600 hover:bg-cream-200 transition-colors"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden bg-white border-t border-cream-200 overflow-hidden"
+          >
+            <div className="px-4 py-3 space-y-1">
+              {visibleItems.map((item) => {
+                const Icon = item.icon;
+                const isActive =
+                  location.pathname === item.path ||
+                  (item.path === "/" && location.pathname === "/");
+
+                return (
+                  <Link
+                    key={item.id}
+                    to={item.path}
+                    onClick={closeMobileMenu}
+                    className={`px-4 py-3 rounded-lg text-base font-medium flex items-center gap-3 transition-all ${
+                      isActive
+                        ? "bg-primary-100 text-primary-700"
+                        : "text-stone-600 hover:bg-cream-200 hover:text-stone-700"
+                    }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+
+              {/* Dashboard link for logged-in users */}
+              {isAuthenticated && (
+                <Link
+                  to="/dashboard"
+                  onClick={closeMobileMenu}
+                  className="px-4 py-3 rounded-lg text-base font-medium flex items-center gap-3 bg-primary-500 text-white hover:bg-primary-600 transition-all"
+                >
+                  <LayoutDashboard className="w-5 h-5" />
+                  <span>Dashboard</span>
+                </Link>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
