@@ -11,6 +11,7 @@ export interface AvatarConfig {
   background: string;
   outfit: string;
   outfitColor: string;
+  expression?: string;
 }
 
 const SKIN_TONES = [
@@ -53,6 +54,35 @@ const HAIR_STYLES = [
     name: "Bun",
     path: "M50,25 Q35,28 32,45 L32,55 L68,55 L68,45 Q65,28 50,25 M50,15 Q60,12 65,18 Q68,28 60,32 Q50,35 40,32 Q32,28 35,18 Q40,12 50,15",
   },
+  {
+    id: "pigtails",
+    name: "Pigtails",
+    path: "M50,25 Q35,28 32,45 L32,55 L68,55 L68,45 Q65,28 50,25 M28,45 Q18,50 15,70 Q15,85 25,90 Q30,85 28,70 Q28,55 32,50 M72,45 Q82,50 85,70 Q85,85 75,90 Q70,85 72,70 Q72,55 68,50",
+  },
+  {
+    id: "wavy",
+    name: "Wavy",
+    path: "M50,25 Q30,28 25,45 Q22,60 25,75 Q28,90 30,100 L70,100 Q72,90 75,75 Q78,60 75,45 Q70,28 50,25 M28,50 Q24,55 26,62 M72,50 Q76,55 74,62 M26,70 Q22,75 25,82 M74,70 Q78,75 75,82",
+  },
+  {
+    id: "spiky",
+    name: "Spiky",
+    path: "M50,25 Q40,20 35,30 L30,15 L35,35 Q30,32 25,40 L20,25 L28,45 L28,55 L72,55 L72,45 L80,25 L75,40 Q70,32 65,35 L70,15 L65,30 Q60,20 50,25",
+  },
+  {
+    id: "bob",
+    name: "Bob",
+    path: "M50,25 Q32,28 28,45 Q25,60 30,70 L70,70 Q75,60 72,45 Q68,28 50,25",
+  },
+];
+
+const EXPRESSIONS = [
+  { id: "happy", name: "Happy", emoji: "😊" },
+  { id: "excited", name: "Excited", emoji: "🤩" },
+  { id: "cool", name: "Cool", emoji: "😎" },
+  { id: "wink", name: "Wink", emoji: "😉" },
+  { id: "surprised", name: "Surprised", emoji: "😮" },
+  { id: "thinking", name: "Thinking", emoji: "🤔" },
 ];
 
 const HAIR_COLORS = [
@@ -77,11 +107,17 @@ const ACCESSORIES = [
   { id: "none", name: "None", emoji: "" },
   { id: "glasses", name: "Glasses", emoji: "👓" },
   { id: "sunglasses", name: "Sunglasses", emoji: "🕶️" },
+  { id: "round-glasses", name: "Round Glasses", emoji: "🤓" },
   { id: "bow", name: "Hair Bow", emoji: "🎀" },
   { id: "crown", name: "Crown", emoji: "👑" },
+  { id: "tiara", name: "Tiara", emoji: "👸" },
   { id: "headphones", name: "Headphones", emoji: "🎧" },
   { id: "flower", name: "Flower", emoji: "🌸" },
-  { id: "star", name: "Star", emoji: "⭐" },
+  { id: "star", name: "Star Clip", emoji: "⭐" },
+  { id: "cat-ears", name: "Cat Ears", emoji: "🐱" },
+  { id: "bunny-ears", name: "Bunny Ears", emoji: "🐰" },
+  { id: "heart-glasses", name: "Heart Glasses", emoji: "💕" },
+  { id: "freckles", name: "Freckles", emoji: "✨" },
 ];
 
 const BACKGROUNDS = [
@@ -94,6 +130,20 @@ const BACKGROUNDS = [
     id: "rainbow",
     gradient: "from-red-300 via-yellow-300 to-blue-300",
     name: "Rainbow",
+  },
+  { id: "mint", gradient: "from-emerald-200 to-teal-300", name: "Mint" },
+  { id: "coral", gradient: "from-rose-300 to-orange-200", name: "Coral" },
+  {
+    id: "lavender",
+    gradient: "from-violet-200 to-purple-300",
+    name: "Lavender",
+  },
+  { id: "sky", gradient: "from-sky-200 to-blue-300", name: "Sky" },
+  { id: "peach", gradient: "from-orange-200 to-rose-200", name: "Peach" },
+  {
+    id: "aurora",
+    gradient: "from-green-300 via-blue-300 to-purple-300",
+    name: "Aurora",
   },
 ];
 
@@ -130,6 +180,7 @@ const defaultConfig: AvatarConfig = {
   background: "pink",
   outfit: "tshirt",
   outfitColor: "purple",
+  expression: "happy",
 };
 
 // Avatar Preview Component
@@ -189,27 +240,119 @@ export function AvatarPreview({
           <path d="M35,88 L30,100 L70,100 L65,88" fill={outfitColor} />
         )}
 
-        {/* Eyes */}
-        <ellipse cx="42" cy="52" rx="5" ry="6" fill="white" />
-        <ellipse cx="58" cy="52" rx="5" ry="6" fill="white" />
-        <circle cx="42" cy="53" r="3" fill={eyeColor} />
-        <circle cx="58" cy="53" r="3" fill={eyeColor} />
-        <circle cx="43" cy="52" r="1" fill="white" />
-        <circle cx="59" cy="52" r="1" fill="white" />
+        {/* Eyes - varies by expression */}
+        {config.expression === "wink" ? (
+          <>
+            {/* Left eye open */}
+            <ellipse cx="42" cy="52" rx="5" ry="6" fill="white" />
+            <circle cx="42" cy="53" r="3" fill={eyeColor} />
+            <circle cx="43" cy="52" r="1" fill="white" />
+            {/* Right eye winking */}
+            <path
+              d="M53,52 Q58,50 63,52"
+              stroke={hairColor}
+              strokeWidth="2"
+              fill="none"
+            />
+          </>
+        ) : config.expression === "surprised" ? (
+          <>
+            <ellipse cx="42" cy="52" rx="6" ry="7" fill="white" />
+            <ellipse cx="58" cy="52" rx="6" ry="7" fill="white" />
+            <circle cx="42" cy="53" r="4" fill={eyeColor} />
+            <circle cx="58" cy="53" r="4" fill={eyeColor} />
+            <circle cx="43" cy="51" r="1.5" fill="white" />
+            <circle cx="59" cy="51" r="1.5" fill="white" />
+          </>
+        ) : config.expression === "excited" ? (
+          <>
+            <ellipse cx="42" cy="52" rx="5" ry="6" fill="white" />
+            <ellipse cx="58" cy="52" rx="5" ry="6" fill="white" />
+            <circle cx="42" cy="53" r="3" fill={eyeColor} />
+            <circle cx="58" cy="53" r="3" fill={eyeColor} />
+            <circle cx="43" cy="51" r="1.5" fill="white" />
+            <circle cx="59" cy="51" r="1.5" fill="white" />
+            {/* Sparkles */}
+            <path d="M32,48 L34,46 L36,48 L34,50 Z" fill="#FFD700" />
+            <path d="M64,48 L66,46 L68,48 L66,50 Z" fill="#FFD700" />
+          </>
+        ) : config.expression === "cool" ? (
+          <>
+            {/* Half-closed cool eyes */}
+            <ellipse cx="42" cy="52" rx="5" ry="4" fill="white" />
+            <ellipse cx="58" cy="52" rx="5" ry="4" fill="white" />
+            <ellipse cx="42" cy="53" rx="3" ry="2" fill={eyeColor} />
+            <ellipse cx="58" cy="53" rx="3" ry="2" fill={eyeColor} />
+          </>
+        ) : config.expression === "thinking" ? (
+          <>
+            <ellipse cx="42" cy="52" rx="5" ry="6" fill="white" />
+            <ellipse cx="58" cy="52" rx="5" ry="6" fill="white" />
+            {/* Looking up/to the side */}
+            <circle cx="44" cy="51" r="3" fill={eyeColor} />
+            <circle cx="60" cy="51" r="3" fill={eyeColor} />
+            <circle cx="45" cy="50" r="1" fill="white" />
+            <circle cx="61" cy="50" r="1" fill="white" />
+          </>
+        ) : (
+          <>
+            {/* Default happy eyes */}
+            <ellipse cx="42" cy="52" rx="5" ry="6" fill="white" />
+            <ellipse cx="58" cy="52" rx="5" ry="6" fill="white" />
+            <circle cx="42" cy="53" r="3" fill={eyeColor} />
+            <circle cx="58" cy="53" r="3" fill={eyeColor} />
+            <circle cx="43" cy="52" r="1" fill="white" />
+            <circle cx="59" cy="52" r="1" fill="white" />
+          </>
+        )}
 
-        {/* Eyebrows */}
-        <path
-          d="M37,46 Q42,44 47,46"
-          stroke={hairColor}
-          strokeWidth="1.5"
-          fill="none"
-        />
-        <path
-          d="M53,46 Q58,44 63,46"
-          stroke={hairColor}
-          strokeWidth="1.5"
-          fill="none"
-        />
+        {/* Eyebrows - varies by expression */}
+        {config.expression === "surprised" ? (
+          <>
+            <path
+              d="M37,43 Q42,40 47,43"
+              stroke={hairColor}
+              strokeWidth="1.5"
+              fill="none"
+            />
+            <path
+              d="M53,43 Q58,40 63,43"
+              stroke={hairColor}
+              strokeWidth="1.5"
+              fill="none"
+            />
+          </>
+        ) : config.expression === "thinking" ? (
+          <>
+            <path
+              d="M37,45 Q42,44 47,46"
+              stroke={hairColor}
+              strokeWidth="1.5"
+              fill="none"
+            />
+            <path
+              d="M53,44 Q58,42 63,44"
+              stroke={hairColor}
+              strokeWidth="1.5"
+              fill="none"
+            />
+          </>
+        ) : (
+          <>
+            <path
+              d="M37,46 Q42,44 47,46"
+              stroke={hairColor}
+              strokeWidth="1.5"
+              fill="none"
+            />
+            <path
+              d="M53,46 Q58,44 63,46"
+              stroke={hairColor}
+              strokeWidth="1.5"
+              fill="none"
+            />
+          </>
+        )}
 
         {/* Nose */}
         <path
@@ -220,14 +363,42 @@ export function AvatarPreview({
           opacity="0.5"
         />
 
-        {/* Smile */}
-        <path
-          d="M42,68 Q50,75 58,68"
-          stroke="#d97706"
-          strokeWidth="2"
-          fill="none"
-          strokeLinecap="round"
-        />
+        {/* Mouth - varies by expression */}
+        {config.expression === "surprised" ? (
+          <ellipse cx="50" cy="70" rx="4" ry="5" fill="#d97706" />
+        ) : config.expression === "excited" ? (
+          <path
+            d="M40,66 Q50,78 60,66"
+            stroke="#d97706"
+            strokeWidth="2"
+            fill="#fff"
+            strokeLinecap="round"
+          />
+        ) : config.expression === "cool" ? (
+          <path
+            d="M44,68 L56,68"
+            stroke="#d97706"
+            strokeWidth="2"
+            fill="none"
+            strokeLinecap="round"
+          />
+        ) : config.expression === "thinking" ? (
+          <path
+            d="M45,70 Q50,68 55,70"
+            stroke="#d97706"
+            strokeWidth="2"
+            fill="none"
+            strokeLinecap="round"
+          />
+        ) : (
+          <path
+            d="M42,68 Q50,75 58,68"
+            stroke="#d97706"
+            strokeWidth="2"
+            fill="none"
+            strokeLinecap="round"
+          />
+        )}
 
         {/* Blush */}
         <ellipse cx="35" cy="62" rx="5" ry="3" fill="#fca5a5" opacity="0.5" />
@@ -258,6 +429,31 @@ export function AvatarPreview({
           </>
         )}
 
+        {/* Round Glasses */}
+        {config.accessory === "round-glasses" && (
+          <>
+            <circle
+              cx="42"
+              cy="52"
+              r="7"
+              fill="none"
+              stroke="#8B4513"
+              strokeWidth="2"
+            />
+            <circle
+              cx="58"
+              cy="52"
+              r="7"
+              fill="none"
+              stroke="#8B4513"
+              strokeWidth="2"
+            />
+            <path d="M49,52 L51,52" stroke="#8B4513" strokeWidth="2" />
+            <path d="M35,52 L28,50" stroke="#8B4513" strokeWidth="2" />
+            <path d="M65,52 L72,50" stroke="#8B4513" strokeWidth="2" />
+          </>
+        )}
+
         {/* Sunglasses */}
         {config.accessory === "sunglasses" && (
           <>
@@ -268,29 +464,158 @@ export function AvatarPreview({
             <path d="M67,50 L75,48" stroke="#1f2937" strokeWidth="2" />
           </>
         )}
-      </svg>
 
-      {/* Emoji accessories (rendered on top) */}
-      {accessory &&
-        accessory.id !== "none" &&
-        accessory.id !== "glasses" &&
-        accessory.id !== "sunglasses" && (
-          <span
-            className="absolute text-lg"
-            style={{
-              top:
-                accessory.id === "crown" ||
-                accessory.id === "bow" ||
-                accessory.id === "flower" ||
-                accessory.id === "star"
-                  ? "5%"
-                  : "25%",
-              right: accessory.id === "headphones" ? "10%" : "15%",
-            }}
-          >
-            {accessory.emoji}
-          </span>
+        {/* Heart Glasses */}
+        {config.accessory === "heart-glasses" && (
+          <>
+            <path
+              d="M42,48 C38,44 32,48 36,54 L42,60 L48,54 C52,48 46,44 42,48"
+              fill="#ff69b4"
+              opacity="0.8"
+            />
+            <path
+              d="M58,48 C54,44 48,48 52,54 L58,60 L64,54 C68,48 62,44 58,48"
+              fill="#ff69b4"
+              opacity="0.8"
+            />
+            <path d="M48,52 L52,52" stroke="#ff69b4" strokeWidth="2" />
+            <path d="M34,50 L28,48" stroke="#ff69b4" strokeWidth="2" />
+            <path d="M66,50 L72,48" stroke="#ff69b4" strokeWidth="2" />
+          </>
         )}
+
+        {/* Hair Bow - on top of head */}
+        {config.accessory === "bow" && (
+          <>
+            <ellipse cx="65" cy="28" rx="8" ry="5" fill="#ff69b4" />
+            <ellipse cx="75" cy="28" rx="8" ry="5" fill="#ff69b4" />
+            <circle cx="70" cy="28" r="3" fill="#ff1493" />
+          </>
+        )}
+
+        {/* Crown - on top of head */}
+        {config.accessory === "crown" && (
+          <path
+            d="M35,22 L40,12 L45,20 L50,8 L55,20 L60,12 L65,22 L65,28 L35,28 Z"
+            fill="#FFD700"
+            stroke="#DAA520"
+            strokeWidth="1"
+          />
+        )}
+
+        {/* Tiara */}
+        {config.accessory === "tiara" && (
+          <>
+            <path
+              d="M35,26 Q40,18 45,24 Q50,14 55,24 Q60,18 65,26"
+              fill="none"
+              stroke="#C0C0C0"
+              strokeWidth="2"
+            />
+            <circle cx="50" cy="18" r="3" fill="#87CEEB" />
+            <circle cx="42" cy="22" r="2" fill="#FFB6C1" />
+            <circle cx="58" cy="22" r="2" fill="#FFB6C1" />
+          </>
+        )}
+
+        {/* Headphones - on sides of head */}
+        {config.accessory === "headphones" && (
+          <>
+            <path
+              d="M28,45 Q28,25 50,22 Q72,25 72,45"
+              fill="none"
+              stroke="#374151"
+              strokeWidth="3"
+            />
+            <ellipse cx="28" cy="50" rx="5" ry="8" fill="#374151" />
+            <ellipse cx="72" cy="50" rx="5" ry="8" fill="#374151" />
+            <ellipse cx="28" cy="50" rx="3" ry="5" fill="#6366f1" />
+            <ellipse cx="72" cy="50" rx="3" ry="5" fill="#6366f1" />
+          </>
+        )}
+
+        {/* Flower - on side of head */}
+        {config.accessory === "flower" && (
+          <>
+            <circle cx="75" cy="35" r="4" fill="#ff69b4" />
+            <circle cx="70" cy="32" r="4" fill="#ff69b4" />
+            <circle cx="70" cy="38" r="4" fill="#ff69b4" />
+            <circle cx="80" cy="32" r="4" fill="#ff69b4" />
+            <circle cx="80" cy="38" r="4" fill="#ff69b4" />
+            <circle cx="75" cy="35" r="3" fill="#ffeb3b" />
+          </>
+        )}
+
+        {/* Star Clip - on side of head */}
+        {config.accessory === "star" && (
+          <path
+            d="M75,25 L77,31 L83,31 L78,35 L80,41 L75,37 L70,41 L72,35 L67,31 L73,31 Z"
+            fill="#FFD700"
+            stroke="#FFA500"
+            strokeWidth="0.5"
+          />
+        )}
+
+        {/* Cat Ears */}
+        {config.accessory === "cat-ears" && (
+          <>
+            <path
+              d="M28,35 L35,15 L42,35"
+              fill={hairColor}
+              stroke={hairColor}
+              strokeWidth="1"
+            />
+            <path
+              d="M58,35 L65,15 L72,35"
+              fill={hairColor}
+              stroke={hairColor}
+              strokeWidth="1"
+            />
+            <path d="M32,30 L35,20 L38,30" fill="#ffb6c1" />
+            <path d="M62,30 L65,20 L68,30" fill="#ffb6c1" />
+          </>
+        )}
+
+        {/* Bunny Ears */}
+        {config.accessory === "bunny-ears" && (
+          <>
+            <ellipse
+              cx="35"
+              cy="10"
+              rx="6"
+              ry="18"
+              fill="#fce4ec"
+              stroke="#ffb6c1"
+              strokeWidth="1"
+            />
+            <ellipse
+              cx="65"
+              cy="10"
+              rx="6"
+              ry="18"
+              fill="#fce4ec"
+              stroke="#ffb6c1"
+              strokeWidth="1"
+            />
+            <ellipse cx="35" cy="10" rx="3" ry="12" fill="#ffb6c1" />
+            <ellipse cx="65" cy="10" rx="3" ry="12" fill="#ffb6c1" />
+          </>
+        )}
+
+        {/* Freckles */}
+        {config.accessory === "freckles" && (
+          <>
+            <circle cx="35" cy="58" r="1" fill="#c4a484" />
+            <circle cx="38" cy="60" r="1" fill="#c4a484" />
+            <circle cx="33" cy="62" r="1" fill="#c4a484" />
+            <circle cx="37" cy="64" r="1" fill="#c4a484" />
+            <circle cx="65" cy="58" r="1" fill="#c4a484" />
+            <circle cx="62" cy="60" r="1" fill="#c4a484" />
+            <circle cx="67" cy="62" r="1" fill="#c4a484" />
+            <circle cx="63" cy="64" r="1" fill="#c4a484" />
+          </>
+        )}
+      </svg>
     </div>
   );
 }
@@ -304,7 +629,13 @@ export default function AvatarCreator({
     initialConfig || defaultConfig,
   );
   const [activeTab, setActiveTab] = useState<
-    "skin" | "hair" | "eyes" | "accessories" | "outfit" | "background"
+    | "skin"
+    | "hair"
+    | "eyes"
+    | "expression"
+    | "accessories"
+    | "outfit"
+    | "background"
   >("skin");
 
   const updateConfig = (key: keyof AvatarConfig, value: string) => {
@@ -315,6 +646,11 @@ export default function AvatarCreator({
     { id: "skin", label: "Skin", icon: <Palette className="w-4 h-4" /> },
     { id: "hair", label: "Hair", icon: <Sparkles className="w-4 h-4" /> },
     { id: "eyes", label: "Eyes", icon: <Eye className="w-4 h-4" /> },
+    {
+      id: "expression",
+      label: "Face",
+      icon: <span className="text-sm">😊</span>,
+    },
     {
       id: "accessories",
       label: "Extras",
@@ -502,6 +838,30 @@ export default function AvatarCreator({
                           style={{ backgroundColor: color.color }}
                           title={color.name}
                         />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "expression" && (
+                  <div>
+                    <h3 className="text-sm font-semibold text-stone-700 mb-3">
+                      Expression
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {EXPRESSIONS.map((expr) => (
+                        <button
+                          key={expr.id}
+                          onClick={() => updateConfig("expression", expr.id)}
+                          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
+                            config.expression === expr.id
+                              ? "bg-violet-500 text-white"
+                              : "bg-stone-100 text-stone-700 hover:bg-stone-200"
+                          }`}
+                        >
+                          <span className="text-lg">{expr.emoji}</span>
+                          {expr.name}
+                        </button>
                       ))}
                     </div>
                   </div>
