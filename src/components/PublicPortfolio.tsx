@@ -345,10 +345,6 @@ const PublicPortfolio = () => {
                       {poem.content}
                     </p>
                     <div className="flex items-center gap-4 mt-5 pt-5 border-t border-cream-200">
-                      <button className="flex items-center gap-2 text-stone-500 hover:text-primary-500 transition-colors">
-                        <Heart className="w-5 h-5" />
-                        <span className="font-medium">{poem.likes || 0}</span>
-                      </button>
                       {poem.template && (
                         <span className="text-sm text-accent-600 bg-accent-100 px-3 py-1 rounded-full">
                           {poem.template}
@@ -554,12 +550,6 @@ const PublicPortfolio = () => {
                                 { month: "short", day: "numeric" },
                               )}
                             </span>
-                            <div className="flex items-center gap-1 text-stone-400">
-                              <Heart className="w-4 h-4" />
-                              <span className="text-xs font-medium">
-                                {poem.likes || 0}
-                              </span>
-                            </div>
                           </div>
                         </div>
                       </Link>

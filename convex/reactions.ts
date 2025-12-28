@@ -191,3 +191,15 @@ export const getAllBookReactionStats = query({
     };
   },
 });
+
+// Reset all reactions - admin function (requires auth)
+export const resetAllReactions = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const reactions = await ctx.db.query("bookReactions").collect();
+    for (const reaction of reactions) {
+      await ctx.db.delete(reaction._id);
+    }
+    return { deleted: reactions.length };
+  },
+});

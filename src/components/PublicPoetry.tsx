@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Feather, Heart, X, Sparkles } from "lucide-react";
+import { Feather, X, Sparkles } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
@@ -19,20 +19,6 @@ const PublicPoetry = () => {
   const [selectedPoem, setSelectedPoem] = useState<(typeof poems)[0] | null>(
     null,
   );
-  const [likedPoems, setLikedPoems] = useState<Set<string>>(new Set());
-
-  const handleLike = (poemId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setLikedPoems((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(poemId)) {
-        newSet.delete(poemId);
-      } else {
-        newSet.add(poemId);
-      }
-      return newSet;
-    });
-  };
 
   const sortedPoems = [...poems].sort(
     (a, b) =>
@@ -71,12 +57,6 @@ const PublicPoetry = () => {
                   {poems.length}
                 </span>
                 <span className="text-sm text-stone-500">poems</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
-                <Heart className="w-4 h-4 text-fuchsia-500" />
-                <span className="text-2xl font-bold text-fuchsia-600">
-                  {poems.reduce((sum, p) => sum + (p.likes || 0), 0)}
-                </span>
               </div>
             </div>
           </motion.div>
@@ -171,23 +151,6 @@ const PublicPoetry = () => {
                             },
                           )}
                         </span>
-
-                        <button
-                          onClick={(e) => handleLike(poem.id, e)}
-                          className="flex items-center gap-1.5 text-stone-400 hover:text-rose-500 transition-colors"
-                        >
-                          <Heart
-                            className={`w-5 h-5 transition-all ${
-                              likedPoems.has(poem.id)
-                                ? "fill-rose-500 text-rose-500 scale-110"
-                                : "hover:scale-110"
-                            }`}
-                          />
-                          <span className="font-medium text-sm">
-                            {(poem.likes || 0) +
-                              (likedPoems.has(poem.id) ? 1 : 0)}
-                          </span>
-                        </button>
                       </div>
                     </div>
                   </div>
@@ -318,7 +281,7 @@ const PublicPoetry = () => {
                   </div>
 
                   {/* Footer */}
-                  <div className="flex items-center justify-between mt-8 pt-6 border-t border-stone-100">
+                  <div className="flex items-center justify-center mt-8 pt-6 border-t border-stone-100">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-lg">
                         I
@@ -332,22 +295,6 @@ const PublicPoetry = () => {
                         </p>
                       </div>
                     </div>
-
-                    <button
-                      onClick={(e) => handleLike(selectedPoem.id, e)}
-                      className={`flex items-center gap-2 px-6 py-3 rounded-full font-bold transition-all ${
-                        likedPoems.has(selectedPoem.id)
-                          ? "bg-rose-500 text-white"
-                          : "bg-rose-100 text-rose-600 hover:bg-rose-200"
-                      }`}
-                    >
-                      <Heart
-                        className={`w-5 h-5 ${likedPoems.has(selectedPoem.id) ? "fill-white" : ""}`}
-                      />
-                      {(selectedPoem.likes || 0) +
-                        (likedPoems.has(selectedPoem.id) ? 1 : 0)}{" "}
-                      Likes
-                    </button>
                   </div>
                 </div>
               </div>

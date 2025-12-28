@@ -105,3 +105,20 @@ export const like = mutation({
     }
   },
 });
+
+// Reset all poem likes to 0 - admin function
+export const resetAllLikes = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    const poems = await ctx.db.query("poems").collect();
+    for (const poem of poems) {
+      await ctx.db.patch(poem._id, { likes: 0 });
+    }
+    return { reset: poems.length };
+  },
+});

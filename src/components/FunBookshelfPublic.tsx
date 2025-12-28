@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Book } from "../types";
-import { BookReactionButtons, BookReactionCountBadge } from "./ReactionButtons";
+import { BookReactionButtons } from "./ReactionButtons";
 import { ShareBookButton } from "./ShareButton";
 
 interface FunBookshelfPublicProps {
@@ -371,11 +371,6 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                       </span>
                     </div>
                   )}
-
-                  {/* Reaction count badge */}
-                  <div className="absolute top-2 left-2">
-                    <BookReactionCountBadge bookId={book.id} />
-                  </div>
 
                   {/* Genre tag */}
                   {book.genre && (
