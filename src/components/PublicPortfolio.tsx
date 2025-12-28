@@ -10,6 +10,8 @@ import {
   Sparkles,
   BookOpen,
   Heart,
+  Star,
+  User,
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { useUser } from "../contexts/UserContext";
@@ -88,9 +90,11 @@ const PublicPortfolio = () => {
                 </p>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex-shrink-0 hidden md:flex gap-2">
-                <button
+              {/* Action Buttons - Enhanced CTAs */}
+              <div className="flex-shrink-0 hidden md:flex gap-3">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => {
                     setActiveTab("reviews");
                     setTimeout(() => {
@@ -99,17 +103,20 @@ const PublicPortfolio = () => {
                         ?.scrollIntoView({ behavior: "smooth" });
                     }, 100);
                   }}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-xl font-bold text-sm shadow-md hover:bg-primary-600 transition-all"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary-500 to-accent-500 text-white rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all"
                 >
-                  <BookOpen className="w-4 h-4" />
-                  Reviews
-                </button>
-                <a
+                  <Star className="w-5 h-5" />
+                  Read My Reviews
+                </motion.button>
+                <motion.a
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   href="/about"
-                  className="inline-flex items-center gap-2 px-4 py-2 text-stone-500 rounded-xl font-medium text-sm hover:bg-cream-200 transition-all border border-cream-300"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-stone-700 rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all border border-stone-200"
                 >
-                  About Me
-                </a>
+                  <User className="w-5 h-5" />
+                  Learn About Izzy
+                </motion.a>
               </div>
             </div>
           </motion.div>

@@ -10,6 +10,7 @@ import {
   Gift,
   Smile,
   ChevronDown,
+  Camera,
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { useToastActions } from "./ui/Toast";
@@ -121,8 +122,10 @@ export function EditBookModal({
   const [showGiftSuggestions, setShowGiftSuggestions] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [activeEmojiCategory, setActiveEmojiCategory] = useState("Reactions");
+  const [coverUrl, setCoverUrl] = useState("");
   const notesRef = useRef<HTMLTextAreaElement>(null);
   const giftInputRef = useRef<HTMLInputElement>(null);
+  const coverInputRef = useRef<HTMLInputElement>(null);
 
   // Get unique gift givers from all books
   const existingGiftGivers = useMemo(() => {
@@ -160,6 +163,7 @@ export function EditBookModal({
       setRating(book.rating || 0);
       setNotes(book.notes || "");
       setGiftFrom(book.giftFrom || "");
+      setCoverUrl(book.coverUrl || "");
 
       // Parse existing date (could be YYYY-MM-DD or YYYY-MM format)
       if (book.dateRead) {
@@ -174,6 +178,22 @@ export function EditBookModal({
       }
     }
   }, [book]);
+
+  // Handle cover image upload
+  const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error("Image too large", "Please use an image under 2MB");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCoverUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // Combine month and year into dateRead format
   const dateRead = useMemo(() => {
@@ -193,6 +213,7 @@ export function EditBookModal({
         notes,
         dateRead,
         giftFrom: giftFrom || undefined,
+        coverUrl: coverUrl || undefined,
       });
       toast.success("Changes saved!", `Updated "${book.title}"`);
       onClose();
@@ -242,11 +263,22 @@ export function EditBookModal({
               </button>
 
               <div className="flex items-start gap-4">
-                {/* Book Cover */}
-                <div className="w-20 h-28 rounded-lg overflow-hidden shadow-lg flex-shrink-0 bg-white/20">
-                  {book.coverUrl ? (
+                {/* Book Cover - clickable to upload */}
+                <input
+                  ref={coverInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleCoverUpload}
+                />
+                <div
+                  onClick={() => coverInputRef.current?.click()}
+                  className="w-20 h-28 rounded-lg overflow-hidden shadow-lg flex-shrink-0 bg-white/20 cursor-pointer hover:ring-2 hover:ring-white/50 transition-all relative group"
+                  title="Click to upload cover"
+                >
+                  {coverUrl ? (
                     <img
-                      src={book.coverUrl}
+                      src={coverUrl}
                       alt={book.title}
                       className="w-full h-full object-cover"
                     />
@@ -255,6 +287,9 @@ export function EditBookModal({
                       <BookOpen className="w-8 h-8 text-white/70" />
                     </div>
                   )}
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Camera className="w-6 h-6 text-white" />
+                  </div>
                 </div>
 
                 <div className="flex-1 min-w-0">

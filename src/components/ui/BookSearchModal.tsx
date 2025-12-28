@@ -1,6 +1,15 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, BookOpen, Loader2, X, Plus, Heart } from "lucide-react";
+import {
+  Search,
+  BookOpen,
+  Loader2,
+  X,
+  Plus,
+  Heart,
+  Upload,
+  PenLine,
+} from "lucide-react";
 import {
   searchBooks,
   suggestGenre,
@@ -9,6 +18,23 @@ import {
 } from "../../services/bookApi";
 import { useToastActions } from "./Toast";
 import type { Book } from "../../types";
+
+const GENRES = [
+  "Fiction",
+  "Fantasy",
+  "Adventure",
+  "Mystery",
+  "Humor",
+  "Graphic Novel",
+  "Non-Fiction",
+  "Science Fiction",
+  "Romance",
+  "Horror",
+  "Historical Fiction",
+  "Biography",
+  "Poetry",
+  "Other",
+];
 
 export type BookSearchMode = "bookshelf" | "wishlist";
 
@@ -51,26 +77,91 @@ export function BookSearchModal({
   const [loading, setLoading] = useState(false);
   const [selectedBook, setSelectedBook] = useState<UnifiedBook | null>(null);
   const [adding, setAdding] = useState(false);
+  const [showManualEntry, setShowManualEntry] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [manualBook, setManualBook] = useState({
+    title: "",
+    author: "",
+    coverUrl: "",
+    genre: "Fiction",
+    pageCount: "",
+    description: "",
+  });
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const toast = useToastActions();
 
   const config = modeConfig[mode];
   const ButtonIcon = config.buttonIcon;
 
+  const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error("Image too large", "Please use an image under 2MB");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setManualBook({ ...manualBook, coverUrl: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSearch = async () => {
     if (!query.trim()) return;
 
     setLoading(true);
+    setHasSearched(true);
     try {
       const books = await searchBooks(query, 12);
       setResults(books);
       if (books.length === 0) {
-        toast.info("No books found", "Try a different search term.");
+        toast.info(
+          "No books found",
+          "Try a different search term or add manually.",
+        );
       }
     } catch (error) {
       console.error("Search failed:", error);
       toast.error("Search failed", "Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAddManualBook = async () => {
+    if (!manualBook.title.trim() || !manualBook.author.trim()) {
+      toast.error("Missing info", "Please enter at least a title and author.");
+      return;
+    }
+
+    setAdding(true);
+    try {
+      const today = new Date().toISOString().split("T")[0];
+      const newBook: Omit<Book, "id"> = {
+        title: manualBook.title.trim(),
+        author: manualBook.author.trim(),
+        coverUrl: manualBook.coverUrl || undefined,
+        genre: manualBook.genre,
+        pageCount: manualBook.pageCount
+          ? parseInt(manualBook.pageCount)
+          : undefined,
+        description: manualBook.description || undefined,
+        ageRating: "8+",
+        dateAdded: today,
+        dateRead: mode === "bookshelf" ? today : undefined,
+        isRead: mode === "bookshelf",
+      };
+
+      await onAddBook(newBook);
+      handleClose();
+      toast.success("Book added!", `"${manualBook.title}" has been added.`);
+    } catch (error) {
+      console.error("Failed to add book:", error);
+      toast.error("Failed to add book", "Please try again.");
+    } finally {
+      setAdding(false);
     }
   };
 
@@ -118,6 +209,16 @@ export function BookSearchModal({
     setQuery("");
     setResults([]);
     setSelectedBook(null);
+    setShowManualEntry(false);
+    setHasSearched(false);
+    setManualBook({
+      title: "",
+      author: "",
+      coverUrl: "",
+      genre: "Fiction",
+      pageCount: "",
+      description: "",
+    });
     onClose();
   };
 
@@ -202,7 +303,185 @@ export function BookSearchModal({
             style={{ maxHeight: "calc(90vh - 200px)" }}
           >
             <AnimatePresence mode="wait">
-              {selectedBook ? (
+              {showManualEntry ? (
+                // Manual Entry Form
+                <motion.div
+                  key="manual"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-6"
+                >
+                  <button
+                    onClick={() => setShowManualEntry(false)}
+                    className="text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
+                  >
+                    ← Back to search
+                  </button>
+
+                  <div className="flex gap-6">
+                    {/* Cover Upload */}
+                    <div className="flex-shrink-0">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleCoverUpload}
+                      />
+                      <div
+                        onClick={() => fileInputRef.current?.click()}
+                        className="w-48 h-72 rounded-xl border-2 border-dashed border-stone-300 hover:border-primary-400 transition-colors cursor-pointer flex flex-col items-center justify-center bg-stone-50 hover:bg-primary-50 overflow-hidden"
+                      >
+                        {manualBook.coverUrl ? (
+                          <img
+                            src={manualBook.coverUrl}
+                            alt="Book cover"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <>
+                            <Upload className="w-10 h-10 text-stone-400 mb-2" />
+                            <p className="text-sm text-stone-500 text-center px-4">
+                              Click to upload cover image
+                            </p>
+                            <p className="text-xs text-stone-400 mt-1">
+                              (Optional)
+                            </p>
+                          </>
+                        )}
+                      </div>
+                      {manualBook.coverUrl && (
+                        <button
+                          onClick={() =>
+                            setManualBook({ ...manualBook, coverUrl: "" })
+                          }
+                          className="mt-2 text-xs text-red-500 hover:text-red-600 w-full text-center"
+                        >
+                          Remove cover
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Book Details Form */}
+                    <div className="flex-1 space-y-4">
+                      <div>
+                        <label className="block text-sm font-semibold text-stone-700 mb-1">
+                          Book Title *
+                        </label>
+                        <input
+                          type="text"
+                          value={manualBook.title}
+                          onChange={(e) =>
+                            setManualBook({
+                              ...manualBook,
+                              title: e.target.value,
+                            })
+                          }
+                          placeholder="Enter book title..."
+                          className="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-semibold text-stone-700 mb-1">
+                          Author *
+                        </label>
+                        <input
+                          type="text"
+                          value={manualBook.author}
+                          onChange={(e) =>
+                            setManualBook({
+                              ...manualBook,
+                              author: e.target.value,
+                            })
+                          }
+                          placeholder="Enter author name..."
+                          className="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-semibold text-stone-700 mb-1">
+                            Genre
+                          </label>
+                          <select
+                            value={manualBook.genre}
+                            onChange={(e) =>
+                              setManualBook({
+                                ...manualBook,
+                                genre: e.target.value,
+                              })
+                            }
+                            className="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                          >
+                            {GENRES.map((genre) => (
+                              <option key={genre} value={genre}>
+                                {genre}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-stone-700 mb-1">
+                            Pages
+                          </label>
+                          <input
+                            type="number"
+                            value={manualBook.pageCount}
+                            onChange={(e) =>
+                              setManualBook({
+                                ...manualBook,
+                                pageCount: e.target.value,
+                              })
+                            }
+                            placeholder="Optional"
+                            className="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-semibold text-stone-700 mb-1">
+                          Description (optional)
+                        </label>
+                        <textarea
+                          value={manualBook.description}
+                          onChange={(e) =>
+                            setManualBook({
+                              ...manualBook,
+                              description: e.target.value,
+                            })
+                          }
+                          placeholder="What's this book about?"
+                          rows={3}
+                          className="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+                        />
+                      </div>
+
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={handleAddManualBook}
+                        disabled={
+                          adding ||
+                          !manualBook.title.trim() ||
+                          !manualBook.author.trim()
+                        }
+                        className={`w-full bg-gradient-to-r ${config.buttonGradient} text-white py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-50`}
+                      >
+                        {adding ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <ButtonIcon className="w-5 h-5" />
+                        )}
+                        {adding ? "Adding..." : config.buttonText}
+                      </motion.button>
+                    </div>
+                  </div>
+                </motion.div>
+              ) : selectedBook ? (
                 // Book Details View
                 <motion.div
                   key="details"
@@ -321,37 +600,53 @@ export function BookSearchModal({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+                  className="space-y-4"
                 >
-                  {results.map((book, index) => (
-                    <motion.div
-                      key={book.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      onClick={() => handleSelectBook(book)}
-                      className="cursor-pointer group"
-                    >
-                      <div className="relative overflow-hidden rounded-xl shadow-md group-hover:shadow-xl transition-all transform group-hover:scale-105">
-                        <img
-                          src={book.coverUrl || "/placeholder-book-cover.png"}
-                          alt={book.title}
-                          className="w-full h-64 object-cover"
-                          onError={(e) => {
-                            e.currentTarget.src = "/placeholder-book-cover.png";
-                          }}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-                          <div className="text-white text-sm">
-                            <p className="font-bold truncate">{book.title}</p>
-                            <p className="text-xs truncate opacity-90">
-                              {book.author}
-                            </p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {results.map((book, index) => (
+                      <motion.div
+                        key={book.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        onClick={() => handleSelectBook(book)}
+                        className="cursor-pointer group"
+                      >
+                        <div className="relative overflow-hidden rounded-xl shadow-md group-hover:shadow-xl transition-all transform group-hover:scale-105">
+                          <img
+                            src={book.coverUrl || "/placeholder-book-cover.png"}
+                            alt={book.title}
+                            className="w-full h-64 object-cover"
+                            onError={(e) => {
+                              e.currentTarget.src =
+                                "/placeholder-book-cover.png";
+                            }}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
+                            <div className="text-white text-sm">
+                              <p className="font-bold truncate">{book.title}</p>
+                              <p className="text-xs truncate opacity-90">
+                                {book.author}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </motion.div>
-                  ))}
+                      </motion.div>
+                    ))}
+                  </div>
+                  {/* Manual entry option */}
+                  <div className="text-center pt-4 border-t border-stone-200">
+                    <p className="text-sm text-stone-500 mb-2">
+                      Can't find your book?
+                    </p>
+                    <button
+                      onClick={() => setShowManualEntry(true)}
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-medium text-sm transition-colors"
+                    >
+                      <PenLine className="w-4 h-4" />
+                      Add it manually
+                    </button>
+                  </div>
                 </motion.div>
               ) : (
                 // Empty State
@@ -366,11 +661,24 @@ export function BookSearchModal({
                   <p className="text-stone-500 text-lg">
                     {loading
                       ? "Searching..."
-                      : "Search for books to add to your collection!"}
+                      : hasSearched
+                        ? "No books found"
+                        : "Search for books to add to your collection!"}
                   </p>
                   <p className="text-stone-400 text-sm mt-2">
-                    Try searching for your favorite book or author
+                    {hasSearched
+                      ? "Try a different search term or add it manually"
+                      : "Try searching for your favorite book or author"}
                   </p>
+                  {hasSearched && (
+                    <button
+                      onClick={() => setShowManualEntry(true)}
+                      className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary-500 to-accent-500 text-white rounded-xl font-bold text-sm shadow-md hover:from-primary-600 hover:to-accent-600 transition-all"
+                    >
+                      <PenLine className="w-4 h-4" />
+                      Add book manually
+                    </button>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
