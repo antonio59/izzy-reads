@@ -230,17 +230,29 @@ export function PublicReviews() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16">
-              <div className="w-24 h-24 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MessageSquare className="w-12 h-12 text-stone-300" />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center py-16 px-4"
+            >
+              <div className="w-28 h-28 bg-gradient-to-br from-primary-100 to-accent-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-5xl">📝</span>
               </div>
-              <h3 className="text-xl font-semibold text-stone-600 mb-2">
-                No reviews yet
+              <h3 className="text-2xl font-display font-bold text-stone-700 mb-3">
+                Reviews Coming Soon!
               </h3>
-              <p className="text-stone-500">
-                Check back soon for Izzy's book reviews!
+              <p className="text-stone-500 max-w-md mx-auto mb-6">
+                I'm working on writing my first book reviews. Check out my
+                favourite books on the homepage while you wait!
               </p>
-            </div>
+              <a
+                href="/"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-500 to-accent-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all"
+              >
+                <BookOpen className="w-5 h-5" />
+                See My Bookshelf
+              </a>
+            </motion.div>
           )}
         </div>
       </main>

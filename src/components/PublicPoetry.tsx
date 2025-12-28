@@ -83,8 +83,27 @@ const PublicPoetry = () => {
         </div>
       </section>
 
+      {/* Intro Section */}
+      <section className="py-8 px-4">
+        <div className="max-w-2xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white rounded-2xl shadow-sm border border-violet-100 p-6 text-center"
+          >
+            <span className="text-4xl mb-3 block">✨</span>
+            <p className="text-stone-600 leading-relaxed">
+              This is where I share my own poems - words from my heart about
+              books, adventures, feelings, and all the magical things I love to
+              write about!
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Poems Grid */}
-      <section className="py-16 px-4">
+      <section className="py-8 px-4">
         <div className="max-w-6xl mx-auto">
           {sortedPoems.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

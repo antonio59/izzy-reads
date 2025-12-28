@@ -9,22 +9,94 @@ interface FunBookshelfPublicProps {
   showFilters?: boolean;
 }
 
-// All genres use accent teal for consistency
+// Genre styles with distinct colors for badges
 const GENRE_STYLES: Record<
   string,
-  { bg: string; text: string; emoji: string }
+  {
+    bg: string;
+    text: string;
+    emoji: string;
+    badgeColor: string;
+    textColor: string;
+  }
 > = {
-  Fantasy: { bg: "bg-accent-100", text: "text-accent-600", emoji: "🧙‍♂️" },
-  Adventure: { bg: "bg-accent-100", text: "text-accent-600", emoji: "🗺️" },
-  Mystery: { bg: "bg-accent-100", text: "text-accent-600", emoji: "🔍" },
-  Fiction: { bg: "bg-accent-100", text: "text-accent-600", emoji: "📖" },
+  Fantasy: {
+    bg: "bg-purple-100",
+    text: "text-purple-600",
+    emoji: "🧙‍♂️",
+    badgeColor: "#ddd6fe",
+    textColor: "#7c3aed",
+  },
+  Adventure: {
+    bg: "bg-orange-100",
+    text: "text-orange-600",
+    emoji: "🗺️",
+    badgeColor: "#fed7aa",
+    textColor: "#ea580c",
+  },
+  Mystery: {
+    bg: "bg-slate-100",
+    text: "text-slate-600",
+    emoji: "🔍",
+    badgeColor: "#e2e8f0",
+    textColor: "#475569",
+  },
+  Fiction: {
+    bg: "bg-blue-100",
+    text: "text-blue-600",
+    emoji: "📖",
+    badgeColor: "#dbeafe",
+    textColor: "#2563eb",
+  },
   "Science Fiction": {
+    bg: "bg-cyan-100",
+    text: "text-cyan-600",
+    emoji: "🚀",
+    badgeColor: "#cffafe",
+    textColor: "#0891b2",
+  },
+  "Non-Fiction": {
+    bg: "bg-emerald-100",
+    text: "text-emerald-600",
+    emoji: "🎓",
+    badgeColor: "#d1fae5",
+    textColor: "#059669",
+  },
+  Humor: {
+    bg: "bg-yellow-100",
+    text: "text-yellow-600",
+    emoji: "😂",
+    badgeColor: "#fef3c7",
+    textColor: "#d97706",
+  },
+  "Graphic Novel": {
+    bg: "bg-pink-100",
+    text: "text-pink-600",
+    emoji: "🎨",
+    badgeColor: "#fce7f3",
+    textColor: "#db2777",
+  },
+  Horror: {
+    bg: "bg-red-100",
+    text: "text-red-600",
+    emoji: "👻",
+    badgeColor: "#fee2e2",
+    textColor: "#dc2626",
+  },
+  Romance: {
+    bg: "bg-rose-100",
+    text: "text-rose-600",
+    emoji: "💕",
+    badgeColor: "#ffe4e6",
+    textColor: "#e11d48",
+  },
+  default: {
     bg: "bg-accent-100",
     text: "text-accent-600",
-    emoji: "🚀",
+    emoji: "📖",
+    badgeColor: "#ccfbf1",
+    textColor: "#0d9488",
   },
-  "Non-Fiction": { bg: "bg-accent-100", text: "text-accent-600", emoji: "🎓" },
-  default: { bg: "bg-accent-100", text: "text-accent-600", emoji: "📖" },
 };
 
 function getBookGradient(title: string): [string, string] {
@@ -89,8 +161,12 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
     <div>
       {/* Filters */}
       {showFilters && (
-        <div className="mb-10">
-          <div className="max-w-md mx-auto mb-6">
+        <div className="mb-10 bg-white rounded-2xl shadow-sm border border-cream-300 p-5">
+          {/* Search Bar */}
+          <div className="max-w-md mx-auto mb-5">
+            <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wide mb-2">
+              🔍 Search Books
+            </label>
             <div className="relative">
               <svg
                 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400"
@@ -107,10 +183,10 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
               </svg>
               <input
                 type="text"
-                placeholder="Search books..."
+                placeholder="Type a book title or author..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-12 py-3 bg-white border border-cream-300 rounded-xl text-base text-stone-700 placeholder:text-stone-400 focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-all"
+                className="w-full pl-12 pr-12 py-3 bg-cream-50 border border-cream-300 rounded-xl text-base text-stone-700 placeholder:text-stone-400 focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:bg-white transition-all"
               />
               {searchQuery && (
                 <button
@@ -134,63 +210,74 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
               )}
             </div>
           </div>
-          {/* Sort Options */}
-          <div className="flex justify-center gap-2 mb-4">
-            <button
-              onClick={() => setSortBy("title")}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                sortBy === "title"
-                  ? "bg-stone-800 text-white"
-                  : "bg-white text-stone-500 hover:bg-stone-100"
-              }`}
-            >
-              A-Z
-            </button>
-            <button
-              onClick={() => setSortBy("rating")}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
-                sortBy === "rating"
-                  ? "bg-primary-500 text-white"
-                  : "bg-white text-stone-500 hover:bg-primary-50 hover:text-primary-600"
-              }`}
-            >
-              <span>⭐</span> Highest Rated
-            </button>
-          </div>
 
-          {/* Filter Pills - clearly clickable with obvious selected state */}
-          <div
-            className="flex flex-wrap justify-center gap-2"
-            role="group"
-            aria-label="Filter by genre"
-          >
-            <button
-              onClick={() => setSelectedGenre(null)}
-              aria-pressed={!selectedGenre}
-              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
-                !selectedGenre
-                  ? "bg-primary-500 text-white shadow-lg shadow-primary-500/30 ring-2 ring-primary-500 ring-offset-2"
-                  : "bg-white text-stone-600 border-2 border-cream-300 hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600 active:scale-95"
-              }`}
-            >
-              All Books
-            </button>
-            {genres.map((genre) => (
+          {/* Sort Options */}
+          <div className="mb-5">
+            <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wide mb-2 text-center">
+              📊 Sort By
+            </label>
+            <div className="flex justify-center gap-2">
               <button
-                key={genre}
-                onClick={() =>
-                  setSelectedGenre(selectedGenre === genre ? null : genre)
-                }
-                aria-pressed={selectedGenre === genre}
-                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
-                  selectedGenre === genre
-                    ? "bg-primary-500 text-white shadow-lg shadow-primary-500/30 ring-2 ring-primary-500 ring-offset-2"
-                    : "bg-white text-stone-600 border-2 border-cream-300 hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600 active:scale-95"
+                onClick={() => setSortBy("title")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  sortBy === "title"
+                    ? "bg-stone-800 text-white"
+                    : "bg-cream-100 text-stone-500 hover:bg-stone-100"
                 }`}
               >
-                {genre}
+                A-Z
               </button>
-            ))}
+              <button
+                onClick={() => setSortBy("rating")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
+                  sortBy === "rating"
+                    ? "bg-primary-500 text-white"
+                    : "bg-cream-100 text-stone-500 hover:bg-primary-50 hover:text-primary-600"
+                }`}
+              >
+                <span>⭐</span> Highest Rated
+              </button>
+            </div>
+          </div>
+
+          {/* Filter Pills */}
+          <div>
+            <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wide mb-2 text-center">
+              📚 Filter by Genre
+            </label>
+            <div
+              className="flex flex-wrap justify-center gap-2"
+              role="group"
+              aria-label="Filter by genre"
+            >
+              <button
+                onClick={() => setSelectedGenre(null)}
+                aria-pressed={!selectedGenre}
+                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
+                  !selectedGenre
+                    ? "bg-primary-500 text-white shadow-lg shadow-primary-500/30 ring-2 ring-primary-500 ring-offset-2"
+                    : "bg-cream-100 text-stone-600 border-2 border-cream-300 hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600 active:scale-95"
+                }`}
+              >
+                All Books
+              </button>
+              {genres.map((genre) => (
+                <button
+                  key={genre}
+                  onClick={() =>
+                    setSelectedGenre(selectedGenre === genre ? null : genre)
+                  }
+                  aria-pressed={selectedGenre === genre}
+                  className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
+                    selectedGenre === genre
+                      ? "bg-primary-500 text-white shadow-lg shadow-primary-500/30 ring-2 ring-primary-500 ring-offset-2"
+                      : "bg-cream-100 text-stone-600 border-2 border-cream-300 hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600 active:scale-95"
+                  }`}
+                >
+                  {genre}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -290,6 +377,21 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                     <BookReactionCountBadge bookId={book.id} />
                   </div>
 
+                  {/* Genre tag */}
+                  {book.genre && (
+                    <div className="absolute top-2 right-2">
+                      <span
+                        className="px-2 py-0.5 rounded-full text-[10px] font-bold shadow-md"
+                        style={{
+                          backgroundColor: getGenreStyle(book.genre).badgeColor,
+                          color: getGenreStyle(book.genre).textColor,
+                        }}
+                      >
+                        {book.genre}
+                      </span>
+                    </div>
+                  )}
+
                   {/* Desktop hover overlay with title */}
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-3 pt-10 hidden sm:block opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <p className="text-white text-xs font-semibold leading-tight line-clamp-2 drop-shadow-lg">
@@ -298,11 +400,6 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                     <p className="text-white/70 text-[10px] mt-1">
                       {book.author}
                     </p>
-                  </div>
-
-                  {/* Sparkle effect on hover */}
-                  <div className="absolute top-2 right-2 text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    ✨
                   </div>
                 </motion.div>
               </motion.div>

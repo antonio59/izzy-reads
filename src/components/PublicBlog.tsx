@@ -186,20 +186,31 @@ const PublicBlog = () => {
             </div>
           ) : (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-20"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center py-20 px-4"
             >
               <div className="w-32 h-32 bg-gradient-to-br from-rose-100 to-orange-100 rounded-full flex items-center justify-center mx-auto mb-8">
-                <PenTool className="w-16 h-16 text-rose-400" />
+                <span className="text-6xl">✍️</span>
               </div>
               <h3 className="text-2xl font-display font-bold text-stone-800 mb-3">
                 Writing Coming Soon!
               </h3>
-              <p className="text-stone-500 max-w-md mx-auto">
-                Izzy is busy writing about reading adventures. Check back soon
-                for exciting posts!
+              <p className="text-stone-500 max-w-md mx-auto mb-6">
+                Soon I'll be sharing reading challenges, book adventures, and
+                stories here. It's going to be fun!
               </p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <div className="bg-rose-50 px-4 py-2 rounded-full text-sm text-rose-600 font-medium">
+                  📚 Reading Challenges
+                </div>
+                <div className="bg-orange-50 px-4 py-2 rounded-full text-sm text-orange-600 font-medium">
+                  ✨ Book Adventures
+                </div>
+                <div className="bg-amber-50 px-4 py-2 rounded-full text-sm text-amber-600 font-medium">
+                  💭 My Thoughts
+                </div>
+              </div>
             </motion.div>
           )}
         </div>

@@ -211,20 +211,27 @@ const PublicWishlist = () => {
             </motion.div>
           ) : (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-20"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center py-20 px-4"
             >
-              <div className="w-32 h-32 bg-gradient-to-br from-primary-100 to-primary-200 rounded-full flex items-center justify-center mx-auto mb-8">
-                <Gift className="w-16 h-16 text-primary-400" />
+              <div className="w-32 h-32 bg-gradient-to-br from-primary-100 to-accent-100 rounded-full flex items-center justify-center mx-auto mb-8">
+                <span className="text-6xl">🎁</span>
               </div>
               <h3 className="text-2xl font-display font-bold text-stone-800 mb-3">
-                Wishlist Coming Soon!
+                My Wishlist is Empty!
               </h3>
-              <p className="text-stone-500 max-w-md mx-auto">
-                I'm always discovering new books to add to my reading list.
-                Check back soon!
+              <p className="text-stone-500 max-w-md mx-auto mb-4">
+                I'm always looking for new books to read! Have a suggestion? Ask
+                a grown-up to help you send me a book idea.
               </p>
+              <div className="bg-cream-100 rounded-2xl p-4 max-w-sm mx-auto">
+                <p className="text-sm text-stone-600">
+                  <span className="text-lg mr-2">💡</span>
+                  <span className="font-medium">Tip:</span> Check back soon -
+                  I'll be adding books I'd love to read!
+                </p>
+              </div>
             </motion.div>
           )}
         </div>
