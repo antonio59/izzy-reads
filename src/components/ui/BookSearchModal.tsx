@@ -9,6 +9,8 @@ import {
   Heart,
   Upload,
   PenLine,
+  CheckCircle2,
+  BookMarked,
 } from "lucide-react";
 import {
   searchBooks,
@@ -18,6 +20,8 @@ import {
 } from "../../services/bookApi";
 import { useToastActions } from "./Toast";
 import type { Book } from "../../types";
+
+export type BookDestination = "read" | "reading" | "wishlist";
 
 const GENRES = [
   "Fiction",
@@ -41,27 +45,44 @@ export type BookSearchMode = "bookshelf" | "wishlist";
 interface BookSearchModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddBook: (book: Omit<Book, "id">) => void | Promise<void>;
-  mode: BookSearchMode;
+  onAddBook: (
+    book: Omit<Book, "id">,
+    destination: BookDestination,
+  ) => void | Promise<void>;
+  mode?: BookSearchMode; // Optional now, we use destination selector
   title?: string;
 }
 
-const modeConfig = {
-  bookshelf: {
-    title: "Add Book to Bookshelf",
-    buttonText: "Add to My Bookshelf",
-    buttonIcon: Plus,
-    gradient: "from-primary-500 to-accent-500",
-    buttonGradient:
-      "from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600",
+const destinationConfig = {
+  read: {
+    label: "Finished",
+    description: "I've read this book",
+    icon: CheckCircle2,
+    color: "bg-green-500",
+    hoverColor: "hover:bg-green-600",
+    ringColor: "ring-green-500",
+    bgLight: "bg-green-50",
+    textColor: "text-green-700",
+  },
+  reading: {
+    label: "Reading",
+    description: "I'm reading this now",
+    icon: BookMarked,
+    color: "bg-blue-500",
+    hoverColor: "hover:bg-blue-600",
+    ringColor: "ring-blue-500",
+    bgLight: "bg-blue-50",
+    textColor: "text-blue-700",
   },
   wishlist: {
-    title: "Add Book to Wishlist",
-    buttonText: "Add to Wishlist",
-    buttonIcon: Heart,
-    gradient: "from-accent-500 to-primary-500",
-    buttonGradient:
-      "from-accent-500 to-primary-500 hover:from-accent-600 hover:to-primary-600",
+    label: "Wishlist",
+    description: "I want to read this",
+    icon: Heart,
+    color: "bg-pink-500",
+    hoverColor: "hover:bg-pink-600",
+    ringColor: "ring-pink-500",
+    bgLight: "bg-pink-50",
+    textColor: "text-pink-700",
   },
 };
 
@@ -69,7 +90,6 @@ export function BookSearchModal({
   isOpen,
   onClose,
   onAddBook,
-  mode,
   title,
 }: BookSearchModalProps) {
   const [query, setQuery] = useState("");
@@ -79,6 +99,8 @@ export function BookSearchModal({
   const [adding, setAdding] = useState(false);
   const [showManualEntry, setShowManualEntry] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const [selectedDestination, setSelectedDestination] =
+    useState<BookDestination>("read");
   const [manualBook, setManualBook] = useState({
     title: "",
     author: "",
@@ -89,9 +111,6 @@ export function BookSearchModal({
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const toast = useToastActions();
-
-  const config = modeConfig[mode];
-  const ButtonIcon = config.buttonIcon;
 
   const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -139,6 +158,9 @@ export function BookSearchModal({
     setAdding(true);
     try {
       const today = new Date().toISOString().split("T")[0];
+      const isRead = selectedDestination === "read";
+      const isReading = selectedDestination === "reading";
+
       const newBook: Omit<Book, "id"> = {
         title: manualBook.title.trim(),
         author: manualBook.author.trim(),
@@ -150,13 +172,17 @@ export function BookSearchModal({
         description: manualBook.description || undefined,
         ageRating: "8+",
         dateAdded: today,
-        dateRead: mode === "bookshelf" ? today : undefined,
-        isRead: mode === "bookshelf",
+        dateRead: isRead ? today : undefined,
+        isRead: isRead || isReading ? isRead : false, // For wishlist, doesn't matter as it goes to separate table
       };
 
-      await onAddBook(newBook);
+      await onAddBook(newBook, selectedDestination);
       handleClose();
-      toast.success("Book added!", `"${manualBook.title}" has been added.`);
+      const destLabel = destinationConfig[selectedDestination].label;
+      toast.success(
+        "Book added!",
+        `"${manualBook.title}" added to ${destLabel}.`,
+      );
     } catch (error) {
       console.error("Failed to add book:", error);
       toast.error("Failed to add book", "Please try again.");
@@ -181,6 +207,9 @@ export function BookSearchModal({
     setAdding(true);
     try {
       const today = new Date().toISOString().split("T")[0];
+      const isRead = selectedDestination === "read";
+      const isReading = selectedDestination === "reading";
+
       const newBook: Omit<Book, "id"> = {
         title: selectedBook.title,
         author: selectedBook.author,
@@ -191,15 +220,20 @@ export function BookSearchModal({
         description: selectedBook.description,
         ageRating: determineAgeRating(selectedBook),
         dateAdded: today,
-        dateRead: mode === "bookshelf" ? today : undefined,
-        isRead: mode === "bookshelf",
+        dateRead: isRead ? today : undefined,
+        isRead: isRead || isReading ? isRead : false,
       };
 
-      await onAddBook(newBook);
+      await onAddBook(newBook, selectedDestination);
       handleClose();
+      const destLabel = destinationConfig[selectedDestination].label;
+      toast.success(
+        "Book added!",
+        `"${selectedBook.title}" added to ${destLabel}.`,
+      );
     } catch (error) {
       console.error("Failed to add book:", error);
-      // Don't show toast here - parent component should handle it
+      toast.error("Failed to add book", "Please try again.");
     } finally {
       setAdding(false);
     }
@@ -211,6 +245,7 @@ export function BookSearchModal({
     setSelectedBook(null);
     setShowManualEntry(false);
     setHasSearched(false);
+    setSelectedDestination("read");
     setManualBook({
       title: "",
       author: "",
@@ -249,11 +284,11 @@ export function BookSearchModal({
           className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
         >
           {/* Header */}
-          <div className={`bg-gradient-to-r ${config.gradient} p-6 text-white`}>
+          <div className="bg-gradient-to-r from-primary-500 to-accent-500 p-6 text-white">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold flex items-center gap-2">
                 <BookOpen className="w-8 h-8" />
-                {title || config.title}
+                {title || "Add a Book"}
               </h2>
               <button
                 onClick={handleClose}
@@ -460,6 +495,41 @@ export function BookSearchModal({
                         />
                       </div>
 
+                      {/* Destination Selector */}
+                      <div>
+                        <label className="block text-sm font-semibold text-stone-700 mb-2">
+                          Add to:
+                        </label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {(
+                            Object.keys(destinationConfig) as BookDestination[]
+                          ).map((dest) => {
+                            const config = destinationConfig[dest];
+                            const Icon = config.icon;
+                            const isSelected = selectedDestination === dest;
+                            return (
+                              <button
+                                key={dest}
+                                type="button"
+                                onClick={() => setSelectedDestination(dest)}
+                                className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-1 ${
+                                  isSelected
+                                    ? `${config.bgLight} ${config.textColor} border-current ring-2 ${config.ringColor}`
+                                    : "border-stone-200 hover:border-stone-300 text-stone-600"
+                                }`}
+                              >
+                                <Icon
+                                  className={`w-5 h-5 ${isSelected ? "" : "text-stone-400"}`}
+                                />
+                                <span className="text-sm font-medium">
+                                  {config.label}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
@@ -469,14 +539,16 @@ export function BookSearchModal({
                           !manualBook.title.trim() ||
                           !manualBook.author.trim()
                         }
-                        className={`w-full bg-gradient-to-r ${config.buttonGradient} text-white py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-50`}
+                        className={`w-full ${destinationConfig[selectedDestination].color} ${destinationConfig[selectedDestination].hoverColor} text-white py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-50`}
                       >
                         {adding ? (
                           <Loader2 className="w-5 h-5 animate-spin" />
                         ) : (
-                          <ButtonIcon className="w-5 h-5" />
+                          <Plus className="w-5 h-5" />
                         )}
-                        {adding ? "Adding..." : config.buttonText}
+                        {adding
+                          ? "Adding..."
+                          : `Add to ${destinationConfig[selectedDestination].label}`}
                       </motion.button>
                     </div>
                   </div>
@@ -576,19 +648,56 @@ export function BookSearchModal({
                           </div>
                         )}
 
+                      {/* Destination Selector */}
+                      <div>
+                        <label className="block text-sm font-semibold text-stone-700 mb-2">
+                          Add to:
+                        </label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {(
+                            Object.keys(destinationConfig) as BookDestination[]
+                          ).map((dest) => {
+                            const destConfig = destinationConfig[dest];
+                            const Icon = destConfig.icon;
+                            const isSelected = selectedDestination === dest;
+                            return (
+                              <button
+                                key={dest}
+                                type="button"
+                                onClick={() => setSelectedDestination(dest)}
+                                className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-1 ${
+                                  isSelected
+                                    ? `${destConfig.bgLight} ${destConfig.textColor} border-current ring-2 ${destConfig.ringColor}`
+                                    : "border-stone-200 hover:border-stone-300 text-stone-600"
+                                }`}
+                              >
+                                <Icon
+                                  className={`w-5 h-5 ${isSelected ? "" : "text-stone-400"}`}
+                                />
+                                <span className="text-sm font-medium">
+                                  {destConfig.label}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={handleAddBook}
                         disabled={adding}
-                        className={`w-full bg-gradient-to-r ${config.buttonGradient} text-white py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-50`}
+                        className={`w-full ${destinationConfig[selectedDestination].color} ${destinationConfig[selectedDestination].hoverColor} text-white py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-50`}
                       >
                         {adding ? (
                           <Loader2 className="w-5 h-5 animate-spin" />
                         ) : (
-                          <ButtonIcon className="w-5 h-5" />
+                          <Plus className="w-5 h-5" />
                         )}
-                        {adding ? "Adding..." : config.buttonText}
+                        {adding
+                          ? "Adding..."
+                          : `Add to ${destinationConfig[selectedDestination].label}`}
                       </motion.button>
                     </div>
                   </div>

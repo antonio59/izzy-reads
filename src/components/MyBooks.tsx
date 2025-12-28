@@ -22,6 +22,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import BookSearch from "./BookSearch";
+import type { BookDestination } from "./ui/BookSearchModal";
 import { BookDetailModal } from "./BookDetailModal";
 import { EditBookModal } from "./EditBookModal";
 import { BookSuggestionsList } from "./BookSuggestionsList";
@@ -96,15 +97,14 @@ const MyBooks: React.FC = () => {
       book.author.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  const handleAddBook = async (book: Book) => {
-    if (activeTab === "wishlist") {
+  const handleAddBook = async (book: Book, destination: BookDestination) => {
+    if (destination === "wishlist") {
       await addToWishlist(book);
     } else {
-      // For "read" or "reading" tab, add to books
-      // If on "read" tab, mark as read; if on "reading" tab, mark as not read
+      // For "read" or "reading", add to books with appropriate isRead status
       const bookWithStatus = {
         ...book,
-        isRead: activeTab === "read",
+        isRead: destination === "read",
       };
       await addBook(bookWithStatus);
     }
