@@ -123,47 +123,72 @@ const PublicPortfolio = () => {
         </div>
       </section>
 
-      {/* Stats Cards */}
+      {/* Reading Stats Card */}
       <section className="py-6 bg-cream-100">
         <div className="max-w-5xl mx-auto px-4">
-          <div className="grid grid-cols-3 gap-3 sm:gap-4 max-w-2xl mx-auto">
-            {/* Books Read Card */}
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-cream-300 text-center">
-              <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-2">
-                <Book className="w-5 h-5 text-primary-500" />
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="bg-white rounded-2xl shadow-md border border-cream-300 p-5 max-w-2xl mx-auto"
+          >
+            {/* Card Header */}
+            <div className="flex items-center gap-2 mb-4 pb-3 border-b border-cream-200">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-white" />
               </div>
-              <p className="text-2xl font-extrabold text-stone-800">
-                {readBooks.length}
-              </p>
-              <p className="text-xs text-stone-400 font-medium">Books Read</p>
+              <h3 className="font-display font-bold text-stone-700">
+                Reading Stats
+              </h3>
             </div>
 
-            {/* Pages Read Card */}
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-cream-300 text-center">
-              <div className="w-10 h-10 bg-star-light rounded-xl flex items-center justify-center mx-auto mb-2">
-                <BookOpen className="w-5 h-5 text-star" />
+            {/* Stats Row */}
+            <div className="grid grid-cols-3 gap-4">
+              {/* Books Read */}
+              <div className="text-center">
+                <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                  <Book className="w-5 h-5 text-primary-500" />
+                </div>
+                <p className="text-2xl font-extrabold text-stone-800">
+                  {readBooks.length}
+                </p>
+                <p className="text-xs text-stone-400 font-medium">Books Read</p>
               </div>
-              <p className="text-2xl font-extrabold text-stone-800">
-                {readBooks
-                  .reduce((sum, b) => sum + (b.pageCount || 0), 0)
-                  .toLocaleString()}
-              </p>
-              <p className="text-xs text-stone-400 font-medium">Pages Read</p>
-            </div>
 
-            {/* Favorite Genre Card */}
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-cream-300 text-center">
-              <div className="w-10 h-10 bg-accent-100 rounded-xl flex items-center justify-center mx-auto mb-2">
-                <Sparkles className="w-5 h-5 text-accent-500" />
+              {/* Divider */}
+              <div className="relative">
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px h-12 bg-cream-300" />
+                {/* Pages Read */}
+                <div className="text-center">
+                  <div className="w-10 h-10 bg-star-light rounded-xl flex items-center justify-center mx-auto mb-2">
+                    <BookOpen className="w-5 h-5 text-star" />
+                  </div>
+                  <p className="text-2xl font-extrabold text-stone-800">
+                    {readBooks
+                      .reduce((sum, b) => sum + (b.pageCount || 0), 0)
+                      .toLocaleString()}
+                  </p>
+                  <p className="text-xs text-stone-400 font-medium">
+                    Pages Read
+                  </p>
+                </div>
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-px h-12 bg-cream-300" />
               </div>
-              <p className="text-lg font-extrabold text-stone-800 truncate">
-                Fantasy
-              </p>
-              <p className="text-xs text-stone-400 font-medium">
-                Favourite Genre
-              </p>
+
+              {/* Favorite Genre */}
+              <div className="text-center">
+                <div className="w-10 h-10 bg-accent-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                  <Heart className="w-5 h-5 text-accent-500" />
+                </div>
+                <p className="text-lg font-extrabold text-stone-800 truncate">
+                  Fantasy
+                </p>
+                <p className="text-xs text-stone-400 font-medium">
+                  Favourite Genre
+                </p>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
