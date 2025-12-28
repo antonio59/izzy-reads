@@ -168,11 +168,21 @@ const Dashboard: React.FC = () => {
                   Welcome back, {user?.name || "Reader"}!
                 </h1>
                 <p className="text-stone-600 max-w-md">
-                  Ready for another reading adventure? You've read{" "}
-                  <span className="font-semibold text-primary-600">
-                    {readingStats.booksThisMonth} books
-                  </span>{" "}
-                  this month. Keep it up!
+                  {readingStats.booksThisMonth === 0 ? (
+                    <>
+                      Ready to start a new reading adventure this month? Pick up
+                      a book and let the magic begin!
+                    </>
+                  ) : (
+                    <>
+                      Amazing! You've read{" "}
+                      <span className="font-semibold text-primary-600">
+                        {readingStats.booksThisMonth}{" "}
+                        {readingStats.booksThisMonth === 1 ? "book" : "books"}
+                      </span>{" "}
+                      this month. Keep it up!
+                    </>
+                  )}
                 </p>
               </div>
             </div>
