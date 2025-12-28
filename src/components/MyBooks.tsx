@@ -13,6 +13,9 @@ import {
   Library,
   Edit3,
   Gift,
+  BookMarked,
+  CheckCircle2,
+  Sparkles,
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { useAuth } from "../contexts/AuthContext";
@@ -25,7 +28,7 @@ import { BookSuggestionsList } from "./BookSuggestionsList";
 import type { Book } from "../types";
 import type { Id } from "../../convex/_generated/dataModel";
 
-type TabType = "read" | "want-to-read";
+type TabType = "read" | "reading" | "wishlist";
 
 const MyBooks: React.FC = () => {
   const {
@@ -57,6 +60,7 @@ const MyBooks: React.FC = () => {
   const removeSuggestion = useMutation(api.bookSuggestions.remove);
 
   const readBooks = books.filter((book) => book.isRead);
+  const readingBooks = books.filter((book) => !book.isRead);
 
   // Get unique gift givers for filter
   const giftGivers = useMemo(() => {
@@ -79,6 +83,13 @@ const MyBooks: React.FC = () => {
     return matchesSearch && matchesGiftFilter;
   });
 
+  const filteredReadingBooks = readingBooks.filter((book) => {
+    const matchesSearch =
+      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSearch;
+  });
+
   const filteredWishlist = wishlist.filter(
     (book) =>
       book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -86,10 +97,16 @@ const MyBooks: React.FC = () => {
   );
 
   const handleAddBook = async (book: Book) => {
-    if (activeTab === "read") {
-      await addBook(book);
-    } else {
+    if (activeTab === "wishlist") {
       await addToWishlist(book);
+    } else {
+      // For "read" or "reading" tab, add to books
+      // If on "read" tab, mark as read; if on "reading" tab, mark as not read
+      const bookWithStatus = {
+        ...book,
+        isRead: activeTab === "read",
+      };
+      await addBook(bookWithStatus);
     }
     setShowSearch(false);
   };
@@ -143,7 +160,8 @@ const MyBooks: React.FC = () => {
               My Books
             </h1>
             <p className="text-white/90 mt-1">
-              {readBooks.length} books read · {wishlist.length} on your list
+              {readBooks.length} finished · {readingBooks.length} reading ·{" "}
+              {wishlist.length} on wishlist
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -172,29 +190,99 @@ const MyBooks: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 bg-stone-100 p-1.5 rounded-xl w-fit">
+      <div className="flex flex-wrap gap-2 bg-stone-100 p-1.5 rounded-xl w-fit">
         <button
           onClick={() => setActiveTab("read")}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all ${
             activeTab === "read"
-              ? "bg-white text-purple-600 shadow-sm"
+              ? "bg-white text-green-600 shadow-sm"
               : "text-stone-600 hover:text-stone-900"
           }`}
         >
-          <BookOpen className="w-4 h-4" />
-          Read ({readBooks.length})
+          <CheckCircle2 className="w-4 h-4" />
+          <span className="hidden sm:inline">Finished</span> ({readBooks.length}
+          )
         </button>
         <button
-          onClick={() => setActiveTab("want-to-read")}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
-            activeTab === "want-to-read"
+          onClick={() => setActiveTab("reading")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all ${
+            activeTab === "reading"
+              ? "bg-white text-blue-600 shadow-sm"
+              : "text-stone-600 hover:text-stone-900"
+          }`}
+        >
+          <BookMarked className="w-4 h-4" />
+          <span className="hidden sm:inline">Reading</span> (
+          {readingBooks.length})
+        </button>
+        <button
+          onClick={() => setActiveTab("wishlist")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all ${
+            activeTab === "wishlist"
               ? "bg-white text-pink-600 shadow-sm"
               : "text-stone-600 hover:text-stone-900"
           }`}
         >
           <Heart className="w-4 h-4" />
-          Want to Read ({wishlist.length})
+          <span className="hidden sm:inline">Wishlist</span> ({wishlist.length})
         </button>
+      </div>
+
+      {/* Tab Description */}
+      <div className="bg-gradient-to-r from-stone-50 to-stone-100 rounded-xl p-4 border border-stone-200">
+        <div className="flex items-start gap-3">
+          <div className="p-2 bg-white rounded-lg shadow-sm">
+            {activeTab === "read" && (
+              <CheckCircle2 className="w-5 h-5 text-green-500" />
+            )}
+            {activeTab === "reading" && (
+              <BookMarked className="w-5 h-5 text-blue-500" />
+            )}
+            {activeTab === "wishlist" && (
+              <Heart className="w-5 h-5 text-pink-500" />
+            )}
+          </div>
+          <div>
+            {activeTab === "read" && (
+              <>
+                <h3 className="font-semibold text-stone-800 flex items-center gap-2">
+                  Books I've Finished{" "}
+                  <Sparkles className="w-4 h-4 text-amber-500" />
+                </h3>
+                <p className="text-sm text-stone-600 mt-0.5">
+                  These are all the books you've finished reading! You can write
+                  reviews, give star ratings, and share your thoughts about each
+                  one.
+                </p>
+              </>
+            )}
+            {activeTab === "reading" && (
+              <>
+                <h3 className="font-semibold text-stone-800 flex items-center gap-2">
+                  Currently Reading{" "}
+                  <BookOpen className="w-4 h-4 text-blue-500" />
+                </h3>
+                <p className="text-sm text-stone-600 mt-0.5">
+                  Books you're reading right now! When you finish one, click "I
+                  Finished!" to move it to your finished books and write a
+                  review.
+                </p>
+              </>
+            )}
+            {activeTab === "wishlist" && (
+              <>
+                <h3 className="font-semibold text-stone-800 flex items-center gap-2">
+                  My Wishlist <Gift className="w-4 h-4 text-pink-500" />
+                </h3>
+                <p className="text-sm text-stone-600 mt-0.5">
+                  Books you want to read someday! Add books here that look
+                  interesting. When you start reading one, click "Start Reading"
+                  to move it to your reading list.
+                </p>
+              </>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Search and Filter */}
@@ -308,8 +396,8 @@ const MyBooks: React.FC = () => {
       )}
 
       {/* Book Grid */}
-      {activeTab === "read" ? (
-        filteredReadBooks.length > 0 ? (
+      {activeTab === "read" &&
+        (filteredReadBooks.length > 0 ? (
           <AnimatedGrid className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {filteredReadBooks.map((book) => (
               <ReadBookCard
@@ -324,14 +412,44 @@ const MyBooks: React.FC = () => {
           </AnimatedGrid>
         ) : (
           <EmptyState
-            icon={BookOpen}
-            title="No books yet"
-            description="Start adding books you've read!"
-            actionLabel="Add Your First Book"
+            icon={CheckCircle2}
+            title="No finished books yet"
+            description="When you finish reading a book, it will appear here! You can write reviews and give star ratings."
+            actionLabel="Add a Finished Book"
             onAction={() => setShowSearch(true)}
           />
-        )
-      ) : (
+        ))}
+
+      {activeTab === "reading" &&
+        (filteredReadingBooks.length > 0 ? (
+          <AnimatedGrid className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {filteredReadingBooks.map((book) => (
+              <ReadingBookCard
+                key={book.id}
+                book={book}
+                onMarkFinished={async () => {
+                  await updateBook(book.id, {
+                    isRead: true,
+                    dateRead: new Date().toISOString().slice(0, 7),
+                  });
+                }}
+                onRemove={() => handleDeleteBook(book.id)}
+                onEdit={() => setEditingBook(book)}
+                onClick={() => setSelectedBook(book)}
+              />
+            ))}
+          </AnimatedGrid>
+        ) : (
+          <EmptyState
+            icon={BookMarked}
+            title="Not reading anything right now"
+            description="Add a book you're currently reading, or pick one from your wishlist to start!"
+            actionLabel="Add a Book I'm Reading"
+            onAction={() => setShowSearch(true)}
+          />
+        ))}
+
+      {activeTab === "wishlist" && (
         <>
           {/* Book Suggestions Section */}
           {suggestions && suggestions.length > 0 && (
@@ -356,7 +474,10 @@ const MyBooks: React.FC = () => {
                 <WishlistCard
                   key={book.id}
                   book={book}
-                  onMarkRead={() => handleMoveToRead(book.id)}
+                  onStartReading={async () => {
+                    await moveToBookshelf(book.id);
+                    // The book will be added with isRead: false by default
+                  }}
                   onRemove={() => handleRemoveFromWishlist(book.id)}
                   onClick={() => setSelectedBook(book)}
                 />
@@ -365,9 +486,9 @@ const MyBooks: React.FC = () => {
           ) : (
             <EmptyState
               icon={Heart}
-              title="Your reading list is empty"
-              description="Add books you want to read next!"
-              actionLabel="Find Books"
+              title="Your wishlist is empty"
+              description="Add books you want to read someday! Ask family and friends for recommendations too."
+              actionLabel="Find Books to Add"
               onAction={() => setShowSearch(true)}
             />
           )}
@@ -553,23 +674,111 @@ const ReadBookCard: React.FC<ReadBookCardProps> = ({
   );
 };
 
+// Reading Book Card Component (Currently Reading)
+interface ReadingBookCardProps {
+  book: Book;
+  onMarkFinished: () => void;
+  onRemove: () => void;
+  onEdit: () => void;
+  onClick: () => void;
+}
+
+const ReadingBookCard: React.FC<ReadingBookCardProps> = ({
+  book,
+  onMarkFinished,
+  onRemove,
+  onEdit,
+  onClick,
+}) => {
+  return (
+    <motion.div
+      className="bg-white rounded-xl shadow-sm border border-blue-100 overflow-hidden group cursor-pointer hover:shadow-lg"
+      variants={staggerItem}
+      whileHover={{ y: -4 }}
+      onClick={onClick}
+    >
+      {/* Cover */}
+      <div className="aspect-[2/3] bg-gradient-to-br from-blue-100 to-indigo-100 relative">
+        {book.coverUrl ? (
+          <img
+            src={book.coverUrl}
+            alt={book.title}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <BookMarked className="w-12 h-12 text-blue-300" />
+          </div>
+        )}
+        {/* Currently reading badge */}
+        <div className="absolute top-2 left-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
+          <BookOpen className="w-3 h-3" />
+          Reading
+        </div>
+      </div>
+
+      {/* Info */}
+      <div className="p-3">
+        <h3 className="font-semibold text-stone-900 text-sm line-clamp-1">
+          {book.title}
+        </h3>
+        <p className="text-stone-500 text-xs line-clamp-1">{book.author}</p>
+
+        {/* Actions */}
+        <div className="flex gap-2 mt-3">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onMarkFinished();
+            }}
+            className="flex-1 text-xs bg-green-500 text-white py-1.5 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center gap-1"
+          >
+            <CheckCircle2 className="w-3 h-3" />
+            Finished!
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit();
+            }}
+            className="px-2 py-1.5 text-stone-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+            title="Edit"
+          >
+            <Edit3 className="w-3 h-3" />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemove();
+            }}
+            className="px-2 py-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            title="Remove"
+          >
+            <Trash2 className="w-3 h-3" />
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 // Wishlist Card Component
 interface WishlistCardProps {
   book: Book;
-  onMarkRead: () => void;
+  onStartReading: () => void;
   onRemove: () => void;
   onClick: () => void;
 }
 
 const WishlistCard: React.FC<WishlistCardProps> = ({
   book,
-  onMarkRead,
+  onStartReading,
   onRemove,
   onClick,
 }) => {
   return (
     <motion.div
-      className="bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden group cursor-pointer hover:shadow-lg"
+      className="bg-white rounded-xl shadow-sm border border-pink-100 overflow-hidden group cursor-pointer hover:shadow-lg"
       variants={staggerItem}
       whileHover={{ y: -4 }}
       onClick={onClick}
@@ -587,6 +796,11 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
             <Heart className="w-12 h-12 text-pink-300" />
           </div>
         )}
+        {/* Wishlist badge */}
+        <div className="absolute top-2 left-2 bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
+          <Heart className="w-3 h-3" />
+          Want
+        </div>
       </div>
 
       {/* Info */}
@@ -601,11 +815,12 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              onMarkRead();
+              onStartReading();
             }}
-            className="flex-1 text-xs bg-green-500 text-white py-1.5 rounded-lg font-medium hover:bg-green-600 transition-colors"
+            className="flex-1 text-xs bg-blue-500 text-white py-1.5 rounded-lg font-medium hover:bg-blue-600 transition-colors flex items-center justify-center gap-1"
           >
-            I Read It!
+            <BookOpen className="w-3 h-3" />
+            Start Reading
           </button>
           <button
             onClick={(e) => {
@@ -613,8 +828,9 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
               onRemove();
             }}
             className="px-2 py-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            title="Remove from wishlist"
           >
-            ×
+            <Trash2 className="w-3 h-3" />
           </button>
         </div>
       </div>
