@@ -111,10 +111,6 @@ const MyBooks: React.FC = () => {
     setShowSearch(false);
   };
 
-  const _handleMoveToRead = async (bookId: string) => {
-    await moveToBookshelf(bookId);
-  };
-
   const handleRemoveFromWishlist = async (bookId: string) => {
     await removeFromWishlist(bookId);
   };
