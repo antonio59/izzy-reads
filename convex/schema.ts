@@ -35,6 +35,7 @@ export default defineSchema({
         background: v.string(),
         outfit: v.string(),
         outfitColor: v.string(),
+        expression: v.optional(v.string()),
       }),
     ),
   }).index("by_userId", ["userId"]),

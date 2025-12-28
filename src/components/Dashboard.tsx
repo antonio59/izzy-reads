@@ -56,6 +56,7 @@ const Dashboard: React.FC = () => {
     background: "pink",
     outfit: "tshirt",
     outfitColor: "purple",
+    expression: "happy",
   };
 
   const handleSaveAvatar = async (config: AvatarConfig) => {

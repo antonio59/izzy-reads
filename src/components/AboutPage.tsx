@@ -50,6 +50,7 @@ export function AboutPage({ aboutData }: AboutPageProps) {
     background: "pink",
     outfit: "tshirt",
     outfitColor: "purple",
+    expression: "happy",
   };
 
   const userAvatar = user?.avatar || defaultAvatar;

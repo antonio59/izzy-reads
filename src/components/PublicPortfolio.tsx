@@ -37,6 +37,7 @@ const PublicPortfolio = () => {
     background: "pink",
     outfit: "tshirt",
     outfitColor: "purple",
+    expression: "happy",
   };
 
   const userAvatar = user?.avatar || defaultAvatar;

@@ -227,16 +227,83 @@ export function AvatarPreview({
         <ellipse cx="50" cy="55" rx="25" ry="28" fill={skinTone} />
 
         {/* Outfit/Body */}
-        <ellipse cx="50" cy="95" rx="30" ry="15" fill={outfitColor} />
+        {config.outfit === "tshirt" && (
+          <>
+            <ellipse cx="50" cy="92" rx="22" ry="12" fill={outfitColor} />
+            {/* Collar */}
+            <path
+              d="M44,82 Q50,86 56,82"
+              stroke={outfitColor}
+              strokeWidth="3"
+              fill="none"
+            />
+          </>
+        )}
         {config.outfit === "hoodie" && (
-          <path
-            d="M35,85 Q50,80 65,85 L68,100 L32,100 Z"
-            fill={outfitColor}
-            opacity="0.8"
-          />
+          <>
+            <ellipse cx="50" cy="92" rx="24" ry="14" fill={outfitColor} />
+            {/* Hood */}
+            <path
+              d="M32,85 Q32,78 40,76 L60,76 Q68,78 68,85"
+              fill={outfitColor}
+              stroke={outfitColor}
+            />
+            {/* Hood opening */}
+            <path
+              d="M40,80 Q50,84 60,80"
+              stroke="white"
+              strokeWidth="1.5"
+              fill="none"
+              opacity="0.5"
+            />
+            {/* Pocket */}
+            <path
+              d="M40,94 L60,94"
+              stroke="white"
+              strokeWidth="1"
+              opacity="0.3"
+            />
+          </>
         )}
         {config.outfit === "dress" && (
-          <path d="M35,88 L30,100 L70,100 L65,88" fill={outfitColor} />
+          <>
+            <ellipse cx="50" cy="88" rx="18" ry="10" fill={outfitColor} />
+            {/* Dress skirt flare */}
+            <path d="M32,88 L28,100 L72,100 L68,88" fill={outfitColor} />
+            {/* Collar detail */}
+            <path
+              d="M44,80 L50,84 L56,80"
+              stroke="white"
+              strokeWidth="1"
+              fill="none"
+              opacity="0.5"
+            />
+          </>
+        )}
+        {config.outfit === "sweater" && (
+          <>
+            <ellipse cx="50" cy="92" rx="24" ry="14" fill={outfitColor} />
+            {/* Ribbed collar */}
+            <path
+              d="M40,80 Q50,84 60,80"
+              stroke={outfitColor}
+              strokeWidth="4"
+              fill="none"
+            />
+            {/* Texture lines */}
+            <path
+              d="M35,90 L65,90"
+              stroke="white"
+              strokeWidth="0.5"
+              opacity="0.3"
+            />
+            <path
+              d="M36,94 L64,94"
+              stroke="white"
+              strokeWidth="0.5"
+              opacity="0.3"
+            />
+          </>
         )}
 
         {/* Eyes - varies by expression */}
@@ -486,9 +553,9 @@ export function AvatarPreview({
         {/* Hair Bow - on top of head */}
         {config.accessory === "bow" && (
           <>
-            <ellipse cx="65" cy="28" rx="8" ry="5" fill="#ff69b4" />
-            <ellipse cx="75" cy="28" rx="8" ry="5" fill="#ff69b4" />
-            <circle cx="70" cy="28" r="3" fill="#ff1493" />
+            <ellipse cx="62" cy="30" rx="7" ry="4" fill="#ff69b4" />
+            <ellipse cx="72" cy="30" rx="7" ry="4" fill="#ff69b4" />
+            <circle cx="67" cy="30" r="3" fill="#ff1493" />
           </>
         )}
 
@@ -536,12 +603,12 @@ export function AvatarPreview({
         {/* Flower - on side of head */}
         {config.accessory === "flower" && (
           <>
-            <circle cx="75" cy="35" r="4" fill="#ff69b4" />
-            <circle cx="70" cy="32" r="4" fill="#ff69b4" />
-            <circle cx="70" cy="38" r="4" fill="#ff69b4" />
-            <circle cx="80" cy="32" r="4" fill="#ff69b4" />
-            <circle cx="80" cy="38" r="4" fill="#ff69b4" />
-            <circle cx="75" cy="35" r="3" fill="#ffeb3b" />
+            <circle cx="70" cy="30" r="4" fill="#ff69b4" />
+            <circle cx="65" cy="27" r="4" fill="#ff69b4" />
+            <circle cx="65" cy="33" r="4" fill="#ff69b4" />
+            <circle cx="75" cy="27" r="4" fill="#ff69b4" />
+            <circle cx="75" cy="33" r="4" fill="#ff69b4" />
+            <circle cx="70" cy="30" r="3" fill="#ffeb3b" />
           </>
         )}
 
@@ -579,25 +646,25 @@ export function AvatarPreview({
         {config.accessory === "bunny-ears" && (
           <>
             <ellipse
-              cx="35"
-              cy="10"
-              rx="6"
-              ry="18"
+              cx="32"
+              cy="25"
+              rx="5"
+              ry="14"
               fill="#fce4ec"
               stroke="#ffb6c1"
               strokeWidth="1"
             />
             <ellipse
-              cx="65"
-              cy="10"
-              rx="6"
-              ry="18"
+              cx="68"
+              cy="25"
+              rx="5"
+              ry="14"
               fill="#fce4ec"
               stroke="#ffb6c1"
               strokeWidth="1"
             />
-            <ellipse cx="35" cy="10" rx="3" ry="12" fill="#ffb6c1" />
-            <ellipse cx="65" cy="10" rx="3" ry="12" fill="#ffb6c1" />
+            <ellipse cx="32" cy="25" rx="2.5" ry="9" fill="#ffb6c1" />
+            <ellipse cx="68" cy="25" rx="2.5" ry="9" fill="#ffb6c1" />
           </>
         )}
 
