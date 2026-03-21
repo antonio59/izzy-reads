@@ -140,7 +140,7 @@ export async function getBestCoverUrl(options: {
   title: string;
   size?: "S" | "M" | "L";
 }): Promise<string | null> {
-  const { openLibraryId, isbn, googleCoverUrl, title, size = "M" } = options;
+  const { openLibraryId, isbn, googleCoverUrl, size = "M" } = options;
   
   // Priority 1: Try Google Books cover if available
   if (googleCoverUrl && isLikelyValidCover(googleCoverUrl)) {

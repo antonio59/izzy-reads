@@ -371,7 +371,6 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
           }}
         >
           {filteredBooks.map((book) => {
-            const [color1, color2] = getBookGradient(book.title);
             return (
               <motion.div
                 key={book.id}
