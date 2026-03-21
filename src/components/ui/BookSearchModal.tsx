@@ -20,6 +20,7 @@ import {
 } from "../../services/bookApi";
 import { useToastActions } from "./Toast";
 import type { Book } from "../../types";
+import { preloadImage } from "../../utils/coverHelpers";
 
 export type BookDestination = "read" | "reading" | "wishlist";
 
@@ -206,6 +207,26 @@ export function BookSearchModal({
 
     setAdding(true);
     try {
+      // Verify cover URL works before saving
+      let verifiedCoverUrl = selectedBook.coverUrl;
+      if (selectedBook.coverUrl) {
+        const isValid = await preloadImage(selectedBook.coverUrl);
+        if (!isValid) {
+          // Try to get cover by ISBN as fallback
+          if (selectedBook.isbn) {
+            const isbnUrl = `https://covers.openlibrary.org/b/isbn/${selectedBook.isbn}-M.jpg`;
+            const isbnValid = await preloadImage(isbnUrl);
+            if (isbnValid) {
+              verifiedCoverUrl = isbnUrl;
+            } else {
+              verifiedCoverUrl = ""; // Will trigger gradient fallback
+            }
+          } else {
+            verifiedCoverUrl = ""; // Will trigger gradient fallback
+          }
+        }
+      }
+
       const today = new Date().toISOString().split("T")[0];
       const isRead = selectedDestination === "read";
       const isReading = selectedDestination === "reading";
@@ -213,7 +234,7 @@ export function BookSearchModal({
       const newBook: Omit<Book, "id"> = {
         title: selectedBook.title,
         author: selectedBook.author,
-        coverUrl: selectedBook.coverUrl,
+        coverUrl: verifiedCoverUrl || undefined,
         isbn: selectedBook.isbn,
         genre: suggestGenre(selectedBook),
         pageCount: selectedBook.pageCount,
