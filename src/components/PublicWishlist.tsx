@@ -24,6 +24,74 @@ function getBookGradient(title: string): [string, string] {
   return colors[hash % colors.length];
 }
 
+// Book Cover Component with error handling
+function BookCoverImage({
+  book,
+  className = "",
+}: {
+  book: Book;
+  className?: string;
+}) {
+  const [hasError, setHasError] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const [color1, color2] = getBookGradient(book.title);
+
+  const showFallback = !book.coverUrl || hasError;
+
+  return (
+    <div className={`relative overflow-hidden ${className}`}>
+      {!showFallback && (
+        <>
+          {/* Loading skeleton */}
+          {!hasLoaded && (
+            <div
+              className="absolute inset-0 animate-pulse"
+              style={{
+                background: `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`,
+              }}
+            />
+          )}
+          <img
+            src={book.coverUrl}
+            alt={book.title}
+            className={`w-full h-full object-cover transition-opacity duration-300 ${
+              hasLoaded ? "opacity-100" : "opacity-0"
+            }`}
+            onLoad={() => setHasLoaded(true)}
+            onError={() => setHasError(true)}
+          />
+        </>
+      )}
+
+      {showFallback && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="w-full h-full flex flex-col items-center justify-center p-4 text-white"
+          style={{
+            background: `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`,
+          }}
+        >
+          <motion.span
+            className="text-4xl mb-3"
+            animate={{ rotate: [0, -10, 10, 0] }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              repeatDelay: 3,
+            }}
+          >
+            🎁
+          </motion.span>
+          <span className="text-sm font-bold text-center leading-tight line-clamp-3">
+            {book.title}
+          </span>
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
 const PublicWishlist = () => {
   const { wishlist } = useBooks();
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
@@ -40,7 +108,7 @@ const PublicWishlist = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-cream-100 to-accent-50">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-cream-100 to-accent-50 flex flex-col">
       {/* Navigation */}
       <PublicNav />
 
@@ -94,7 +162,7 @@ const PublicWishlist = () => {
       </section>
 
       {/* Wishlist Grid - Book Covers */}
-      <section className="py-12 px-4">
+      <section className="py-12 px-4 flex-1">
         <div className="max-w-7xl mx-auto">
           {sortedWishlist.length > 0 ? (
             <motion.div
@@ -116,7 +184,6 @@ const PublicWishlist = () => {
               }}
             >
               {sortedWishlist.map((book) => {
-                const [color1, color2] = getBookGradient(book.title);
                 return (
                   <motion.div
                     key={book.id}
@@ -152,38 +219,7 @@ const PublicWishlist = () => {
                       }}
                       style={{ transformStyle: "preserve-3d" }}
                     >
-                      {book.coverUrl ? (
-                        <motion.img
-                          src={book.coverUrl}
-                          alt={book.title}
-                          className="w-full h-full object-cover"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ duration: 0.3 }}
-                        />
-                      ) : (
-                        <div
-                          className="w-full h-full flex flex-col items-center justify-center p-4 text-white"
-                          style={{
-                            background: `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`,
-                          }}
-                        >
-                          <motion.span
-                            className="text-4xl mb-3"
-                            animate={{ rotate: [0, -10, 10, 0] }}
-                            transition={{
-                              duration: 2,
-                              repeat: Infinity,
-                              repeatDelay: 3,
-                            }}
-                          >
-                            🎁
-                          </motion.span>
-                          <span className="text-sm font-bold text-center leading-tight line-clamp-3">
-                            {book.title}
-                          </span>
-                        </div>
-                      )}
+                      <BookCoverImage book={book} className="w-full h-full" />
 
                       {/* Wishlist badge */}
                       <div className="absolute top-2 left-2 w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center shadow-lg">
@@ -259,24 +295,9 @@ const PublicWishlist = () => {
             >
               {/* Cover */}
               <div className="relative h-72 bg-gradient-to-br from-cream-100 to-cream-200 flex items-center justify-center p-6">
-                {selectedBook.coverUrl ? (
-                  <img
-                    src={selectedBook.coverUrl}
-                    alt={selectedBook.title}
-                    className="h-56 w-auto shadow-2xl rounded-sm object-cover"
-                  />
-                ) : (
-                  <div
-                    className="h-56 w-40 shadow-2xl flex items-center justify-center text-white p-4 rounded"
-                    style={{
-                      background: `linear-gradient(135deg, ${getBookGradient(selectedBook.title)[0]} 0%, ${getBookGradient(selectedBook.title)[1]} 100%)`,
-                    }}
-                  >
-                    <span className="text-xl font-bold text-center">
-                      {selectedBook.title}
-                    </span>
-                  </div>
-                )}
+                <div className="h-56 w-40 shadow-2xl rounded-sm overflow-hidden">
+                  <BookCoverImage book={selectedBook} className="w-full h-full" />
+                </div>
 
                 {/* Wishlist badge */}
                 <div className="absolute top-4 left-4 flex items-center gap-2 bg-primary-500 text-white px-3 py-1.5 rounded-full shadow-lg">
