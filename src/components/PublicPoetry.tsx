@@ -82,7 +82,7 @@ const PublicPoetry = () => {
               <div className="flex items-center gap-2 bg-white px-5 py-2.5 rounded-full shadow-sm">
                 <span className="text-2xl font-bold text-violet-600">{poems.length}</span>
                 <span className="text-stone-500">poems</span>
-              </div⏎
+              </div>
               <div className="hidden sm:flex items-center gap-2 bg-white px-5 py-2.5 rounded-full shadow-sm">
                 <Quote className="w-4 h-4 text-violet-500" />
                 <span className="text-stone-500">Original works</span>
