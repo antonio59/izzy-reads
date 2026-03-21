@@ -27,6 +27,9 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 const Login = lazy(() => import("./components/Login"));
 const Signup = lazy(() => import("./components/Signup"));
 
+// Lazy load poem detail page
+const PoemDetail = lazy(() => import("./components/PoemDetail"));
+
 // Lazy load admin/protected pages - NEW SIMPLIFIED STRUCTURE
 const Dashboard = lazy(() => import("./components/Dashboard"));
 const MyBooks = lazy(() => import("./components/MyBooks"));
@@ -82,6 +85,16 @@ function App() {
                       element={
                         <PublicLayout>
                           <PublicPoetry />
+                        </PublicLayout>
+                      }
+                    />
+                    <Route
+                      path="/poetry/:poemId"
+                      element={
+                        <PublicLayout>
+                          <Suspense fallback={<PageLoader />}>
+                            <PoemDetail />
+                          </Suspense>
                         </PublicLayout>
                       }
                     />
