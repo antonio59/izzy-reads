@@ -20,7 +20,6 @@ import {
 } from "../../services/bookApi";
 import { useToastActions } from "./Toast";
 import type { Book } from "../../types";
-import { preloadImage } from "../../utils/coverHelpers";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
