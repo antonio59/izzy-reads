@@ -4,6 +4,74 @@ import type { Book } from "../types";
 import { BookReactionButtons } from "./ReactionButtons";
 import { ShareBookButton } from "./ShareButton";
 
+// Book Cover Component with error handling
+function BookCoverImage({
+  book,
+  className = "",
+}: {
+  book: Book;
+  className?: string;
+}) {
+  const [hasError, setHasError] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const [color1, color2] = getBookGradient(book.title);
+
+  const showFallback = !book.coverUrl || hasError;
+
+  return (
+    <div className={`relative overflow-hidden ${className}`}>
+      {!showFallback && (
+        <>
+          {/* Loading skeleton */}
+          {!hasLoaded && (
+            <div
+              className="absolute inset-0 animate-pulse"
+              style={{
+                background: `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`,
+              }}
+            />
+          )}
+          <img
+            src={book.coverUrl}
+            alt={book.title}
+            className={`w-full h-full object-cover transition-opacity duration-300 ${
+              hasLoaded ? "opacity-100" : "opacity-0"
+            }`}
+            onLoad={() => setHasLoaded(true)}
+            onError={() => setHasError(true)}
+          />
+        </>
+      )}
+
+      {showFallback && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="w-full h-full flex flex-col items-center justify-center p-4 text-white"
+          style={{
+            background: `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`,
+          }}
+        >
+          <motion.span
+            className="text-4xl mb-3"
+            animate={{ rotate: [0, -10, 10, 0] }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              repeatDelay: 3,
+            }}
+          >
+            📖
+          </motion.span>
+          <span className="text-sm font-bold text-center leading-tight line-clamp-3">
+            {book.title}
+          </span>
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
 interface FunBookshelfPublicProps {
   books: Book[];
   showFilters?: boolean;
@@ -339,38 +407,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                   }}
                   style={{ transformStyle: "preserve-3d" }}
                 >
-                  {book.coverUrl ? (
-                    <motion.img
-                      src={book.coverUrl}
-                      alt={book.title}
-                      className="w-full h-full object-cover"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  ) : (
-                    <div
-                      className="w-full h-full flex flex-col items-center justify-center p-4 text-white"
-                      style={{
-                        background: `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`,
-                      }}
-                    >
-                      <motion.span
-                        className="text-4xl mb-3"
-                        animate={{ rotate: [0, -10, 10, 0] }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          repeatDelay: 3,
-                        }}
-                      >
-                        📖
-                      </motion.span>
-                      <span className="text-sm font-bold text-center leading-tight line-clamp-3">
-                        {book.title}
-                      </span>
-                    </div>
-                  )}
+                  <BookCoverImage book={book} className="w-full h-full" />
 
                   {/* Desktop hover overlay with title and genre */}
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-3 pt-10 hidden sm:block opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -465,6 +502,20 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                     src={selectedBook.coverUrl}
                     alt={selectedBook.title}
                     className="h-56 w-auto shadow-2xl rounded-sm"
+                    onError={(e) => {
+                      // If image fails, replace with gradient fallback
+                      const target = e.currentTarget;
+                      target.style.display = 'none';
+                      const parent = target.parentElement;
+                      if (parent) {
+                        const fallback = document.createElement('div');
+                        fallback.className = 'h-56 w-40 shadow-2xl flex items-center justify-center text-white p-4 rounded';
+                        const [c1, c2] = getBookGradient(selectedBook.title);
+                        fallback.style.background = `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`;
+                        fallback.innerHTML = `<span class="text-xl font-bold text-center">${selectedBook.title}</span>`;
+                        parent.appendChild(fallback);
+                      }
+                    }}
                   />
                 ) : (
                   <div
