@@ -15,15 +15,23 @@ export function CoverMigrationPanel() {
       processed: number;
       successful: number;
       failed: number;
-      results: Array<{ bookId: string; title: string; success: boolean; error?: string }>;
+      skipped: number;
+      totalPending: number;
+      hasMore: boolean;
+      nextOffset?: number;
+      results: Array<{ bookId: string; title: string; success: boolean; oldUrl?: string; newUrl?: string; error?: string }>;
     };
     wishlist?: {
       processed: number;
       successful: number;
       failed: number;
-      results: Array<{ wishlistId: string; title: string; success: boolean; error?: string }>;
+      skipped: number;
+      totalPending: number;
+      hasMore: boolean;
+      nextOffset?: number;
+      results: Array<{ wishlistId: string; title: string; success: boolean; oldUrl?: string; newUrl?: string; error?: string }>;
     };
-  }}> | null>(null);
+  } | null>(null);
 
   const runMigration = async () => {
     setIsRunning(true);
@@ -38,6 +46,10 @@ export function CoverMigrationPanel() {
           processed: bookResults.processed,
           successful: bookResults.successful,
           failed: bookResults.failed,
+          skipped: bookResults.skipped,
+          totalPending: bookResults.totalPending,
+          hasMore: bookResults.hasMore,
+          nextOffset: bookResults.nextOffset,
           results: bookResults.results,
         },
       }));
@@ -50,6 +62,10 @@ export function CoverMigrationPanel() {
           processed: wishlistResults.processed,
           successful: wishlistResults.successful,
           failed: wishlistResults.failed,
+          skipped: wishlistResults.skipped,
+          totalPending: wishlistResults.totalPending,
+          hasMore: wishlistResults.hasMore,
+          nextOffset: wishlistResults.nextOffset,
           results: wishlistResults.results,
         },
       }));
@@ -173,13 +189,24 @@ export function CoverMigrationPanel() {
                 <div className="flex gap-4 mb-3">
                   <div className="text-sm">
                     <span className="text-green-600 font-semibold">{results.books.successful}</span>{" "}
-                    <span className="text-stone-500">success</span>
+                    <span className="text-stone-500">migrated</span>
                   </div>
                   <div className="text-sm">
                     <span className="text-red-600 font-semibold">{results.books.failed}</span>{" "}
                     <span className="text-stone-500">failed</span>
                   </div>
+                  {results.books.skipped > 0 && (
+                    <div className="text-sm">
+                      <span className="text-stone-400 font-semibold">{results.books.skipped}</span>{" "}
+                      <span className="text-stone-400">already done</span>
+                    </div>
+                  )}
                 </div>
+                {results.books.hasMore && (
+                  <p className="text-xs text-amber-600 mb-2">
+                    ⚠️ {results.books.totalPending - results.books.processed} more books remaining — run migration again to continue.
+                  </p>
+                )}
                 {results.books.failed > 0 && (
                   <div className="space-y-1 max-h-32 overflow-y-auto">
                     {results.books.results
@@ -201,13 +228,24 @@ export function CoverMigrationPanel() {
                 <div className="flex gap-4 mb-3">
                   <div className="text-sm">
                     <span className="text-green-600 font-semibold">{results.wishlist.successful}</span>{" "}
-                    <span className="text-stone-500">success</span>
+                    <span className="text-stone-500">migrated</span>
                   </div>
                   <div className="text-sm">
                     <span className="text-red-600 font-semibold">{results.wishlist.failed}</span>{" "}
                     <span className="text-stone-500">failed</span>
                   </div>
+                  {results.wishlist.skipped > 0 && (
+                    <div className="text-sm">
+                      <span className="text-stone-400 font-semibold">{results.wishlist.skipped}</span>{" "}
+                      <span className="text-stone-400">already done</span>
+                    </div>
+                  )}
                 </div>
+                {results.wishlist.hasMore && (
+                  <p className="text-xs text-amber-600">
+                    ⚠️ {results.wishlist.totalPending - results.wishlist.processed} more items remaining — run migration again to continue.
+                  </p>
+                )}
               </div>
             )}
           </motion.div>
