@@ -21,6 +21,8 @@ import {
 import { useToastActions } from "./Toast";
 import type { Book } from "../../types";
 import { preloadImage } from "../../utils/coverHelpers";
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 export type BookDestination = "read" | "reading" | "wishlist";
 
@@ -112,6 +114,9 @@ export function BookSearchModal({
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const toast = useToastActions();
+
+  // Convex mutation for storing cover images permanently
+  const storeCoverImage = useMutation(api.covers.storeCoverImage);
 
   const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -207,24 +212,13 @@ export function BookSearchModal({
 
     setAdding(true);
     try {
-      // Verify cover URL works before saving
-      let verifiedCoverUrl = selectedBook.coverUrl;
+      // Store cover in Convex storage for permanence
+      let permanentCoverUrl: string | null = null;
       if (selectedBook.coverUrl) {
-        const isValid = await preloadImage(selectedBook.coverUrl);
-        if (!isValid) {
-          // Try to get cover by ISBN as fallback
-          if (selectedBook.isbn) {
-            const isbnUrl = `https://covers.openlibrary.org/b/isbn/${selectedBook.isbn}-M.jpg`;
-            const isbnValid = await preloadImage(isbnUrl);
-            if (isbnValid) {
-              verifiedCoverUrl = isbnUrl;
-            } else {
-              verifiedCoverUrl = ""; // Will trigger gradient fallback
-            }
-          } else {
-            verifiedCoverUrl = ""; // Will trigger gradient fallback
-          }
-        }
+        permanentCoverUrl = await storeCoverImage({
+          externalUrl: selectedBook.coverUrl,
+          bookTitle: selectedBook.title,
+        });
       }
 
       const today = new Date().toISOString().split("T")[0];
@@ -234,7 +228,7 @@ export function BookSearchModal({
       const newBook: Omit<Book, "id"> = {
         title: selectedBook.title,
         author: selectedBook.author,
-        coverUrl: verifiedCoverUrl || undefined,
+        coverUrl: permanentCoverUrl || undefined,
         isbn: selectedBook.isbn,
         genre: suggestGenre(selectedBook),
         pageCount: selectedBook.pageCount,

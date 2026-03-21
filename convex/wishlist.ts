@@ -2,6 +2,36 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
 
+// Get wishlist item by ID
+export const getById = query({
+  args: { wishlistId: v.id("wishlist") },
+  handler: async (ctx, { wishlistId }) => {
+    return await ctx.db.get(wishlistId);
+  },
+});
+
+// Update just the cover URL
+export const updateCover = mutation({
+  args: {
+    wishlistId: v.id("wishlist"),
+    coverUrl: v.string(),
+  },
+  handler: async (ctx, { wishlistId, coverUrl }) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    const item = await ctx.db.get(wishlistId);
+    if (!item) {
+      throw new Error("Wishlist item not found");
+    }
+
+    await ctx.db.patch(wishlistId, { coverUrl });
+    return wishlistId;
+  },
+});
+
 // Get wishlist for a specific user
 export const getByUser = query({
   args: { userId: v.id("users") },

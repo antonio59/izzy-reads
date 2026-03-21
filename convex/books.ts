@@ -2,6 +2,36 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
 
+// Get a book by ID
+export const getBookById = query({
+  args: { bookId: v.id("books") },
+  handler: async (ctx, { bookId }) => {
+    return await ctx.db.get(bookId);
+  },
+});
+
+// Update just the cover URL
+export const updateBookCover = mutation({
+  args: {
+    bookId: v.id("books"),
+    coverUrl: v.string(),
+  },
+  handler: async (ctx, { bookId, coverUrl }) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    const book = await ctx.db.get(bookId);
+    if (!book) {
+      throw new Error("Book not found");
+    }
+
+    await ctx.db.patch(bookId, { coverUrl });
+    return bookId;
+  },
+});
+
 // Get books for the authenticated user
 export const getByUser = query({
   args: { userId: v.id("users") },
