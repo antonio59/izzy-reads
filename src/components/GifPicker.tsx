@@ -43,6 +43,15 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
     }
   }, [isOpen]);
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
+
   // Load trending GIFs when opened
   useEffect(() => {
     if (isOpen && !hasSearched && gifs.length === 0 && giphyAvailable) {

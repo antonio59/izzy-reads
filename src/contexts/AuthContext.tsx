@@ -70,6 +70,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, [currentUser, isAuthenticated, isLoading]);
 
+  // Create profile for new users after signup
+  useEffect(() => {
+    const createProfileIfNeeded = async () => {
+      if (isAuthenticated && user && !currentUser && !isLoading) {
+        // New user just signed up, create their profile
+        try {
+          await createUserProfile({
+            name: user.name || user.email.split("@")[0],
+            isParent: false,
+            theme: "colorful",
+            readingGoal: 20,
+            notifications: true,
+            requireApproval: true,
+            contentFilter: true,
+            allowedGenres: [
+              "Fiction",
+              "Fantasy",
+              "Adventure",
+              "Mystery",
+              "Science Fiction",
+            ],
+          });
+        } catch {
+          // Profile may already exist or will be created on next action
+          console.log("Profile creation handled or will retry");
+        }
+      }
+    };
+
+    createProfileIfNeeded();
+  }, [isAuthenticated, user, currentUser, isLoading, createUserProfile]);
+
   const signIn = async (email: string, password: string) => {
     try {
       const formData = new FormData();
@@ -117,32 +149,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       await convexSignIn("password", formData);
 
-      // Create user profile after successful signup
-      // Wait a moment for auth to settle
-      setTimeout(async () => {
-        try {
-          await createUserProfile({
-            name: name || email.split("@")[0],
-            isParent: false,
-            theme: "colorful",
-            readingGoal: 20,
-            notifications: true,
-            requireApproval: true,
-            contentFilter: true,
-            allowedGenres: [
-              "Fiction",
-              "Fantasy",
-              "Adventure",
-              "Mystery",
-              "Science Fiction",
-            ],
-          });
-        } catch {
-          console.log(
-            "Profile may already exist or will be created on next action",
-          );
-        }
-      }, 500);
+      // Profile will be created by useEffect when currentUser becomes available
+      // This is more reliable than setTimeout which could race
     } catch (error: unknown) {
       console.error("Sign up error:", error);
 
