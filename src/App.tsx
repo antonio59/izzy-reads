@@ -37,6 +37,7 @@ const Create = lazy(() => import("./components/Create"));
 const BlogPostEditor = lazy(() => import("./components/BlogPostEditor"));
 const Progress = lazy(() => import("./components/Progress"));
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
+const AdminPage = lazy(() => import("./pages/AdminPage"));
 
 // Legacy routes kept for direct access
 const SeriesTracker = lazy(() => import("./components/SeriesTracker"));
@@ -216,6 +217,17 @@ function App() {
                             <Layout>
                               <Progress />
                             </Layout>
+                          </ProtectedRoute>
+                        </Suspense>
+                      }
+                    />
+                    {/* Admin Routes */}
+                    <Route
+                      path="/admin"
+                      element={
+                        <Suspense fallback={<PageLoader />}>
+                          <ProtectedRoute>
+                            <AdminPage />
                           </ProtectedRoute>
                         </Suspense>
                       }
