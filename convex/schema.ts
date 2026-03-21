@@ -160,6 +160,20 @@ export default defineSchema({
     createdAt: v.string(),
   }).index("by_user", ["userId"]),
 
+  // Persistent audit log for cover migrations
+  migrationLogs: defineTable({
+    entityType: v.union(v.literal("book"), v.literal("wishlist")),
+    entityId: v.string(),
+    title: v.string(),
+    success: v.boolean(),
+    oldUrl: v.string(),
+    newUrl: v.optional(v.string()),
+    error: v.optional(v.string()),
+    migratedAt: v.string(),
+  })
+    .index("by_entity", ["entityType", "entityId"])
+    .index("by_success", ["success"]),
+
   // About/Profile page content
   aboutProfile: defineTable({
     userId: v.id("users"),
