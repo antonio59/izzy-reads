@@ -4,7 +4,7 @@
 import { query, mutation, action } from "./_generated/server";
 import { v } from "convex/values";
 import { api } from "./_generated/api";
-import type { Id } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
 
 // Duplicate here to avoid import issues with Convex runtime
 const isConvexStorageUrl = (url?: string): boolean => {
@@ -392,10 +392,10 @@ export const bulkMigrateBookCovers = action({
     ),
   }),
   handler: async (ctx, { batchSize = 10, offset = 0, dryRun = false, maxRetries = 3 }) => {
-    const books = await ctx.runQuery(api.books.getAll);
+    const books = (await ctx.runQuery(api.books.getAll)) as Doc<"books">[];
 
     const booksToMigrate = books.filter(
-      (book) => book.coverUrl && !isConvexStorageUrl(book.coverUrl),
+      (book: Doc<"books">) => book.coverUrl && !isConvexStorageUrl(book.coverUrl),
     );
 
     const totalPending = booksToMigrate.length;
@@ -513,10 +513,10 @@ export const bulkMigrateWishlistCovers = action({
     ),
   }),
   handler: async (ctx, { batchSize = 10, offset = 0, dryRun = false, maxRetries = 3 }) => {
-    const wishlist = await ctx.runQuery(api.wishlist.getAll);
+    const wishlist = (await ctx.runQuery(api.wishlist.getAll)) as Doc<"wishlist">[];
 
     const itemsToMigrate = wishlist.filter(
-      (item) => item.coverUrl && !isConvexStorageUrl(item.coverUrl),
+      (item: Doc<"wishlist">) => item.coverUrl && !isConvexStorageUrl(item.coverUrl),
     );
 
     const totalPending = itemsToMigrate.length;

@@ -2,6 +2,7 @@
 import { v } from "convex/values";
 import { mutation, action } from "./_generated/server";
 import { api } from "./_generated/api";
+import type { Doc } from "./_generated/dataModel";
 
 /**
  * Store a book cover image in Convex storage
@@ -106,13 +107,13 @@ export const migrateCoverToStorage = action({
     }
 
     // Store in Convex
-    const book = await ctx.runQuery(api.books.getBookById, { bookId });
+    const book = (await ctx.runQuery(api.books.getBookById, { bookId })) as Doc<"books"> | null;
     if (!book) return null;
 
-    const newUrl = await ctx.runAction(api.covers.storeCoverImage, {
+    const newUrl = (await ctx.runAction(api.covers.storeCoverImage, {
       externalUrl,
       bookTitle: book.title,
-    });
+    })) as string | null;
 
     if (newUrl) {
       // Update the book with the new URL
