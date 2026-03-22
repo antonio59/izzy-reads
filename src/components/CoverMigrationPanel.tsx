@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useAction } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { api } from "../../convex/_generated/api";
 import { motion, AnimatePresence } from "framer-motion";
 import { Database, ArrowRight, CheckCircle, AlertCircle, Loader2, ImageIcon } from "lucide-react";
 

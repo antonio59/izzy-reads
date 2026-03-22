@@ -20,7 +20,7 @@ import {
 } from "../../services/bookApi";
 import { useToastActions } from "./Toast";
 import type { Book } from "../../types";
-import { useMutation } from "convex/react";
+import { useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
 export type BookDestination = "read" | "reading" | "wishlist";
@@ -115,7 +115,7 @@ export function BookSearchModal({
   const toast = useToastActions();
 
   // Convex mutation for storing cover images permanently
-  const storeCoverImage = useMutation(api.covers.storeCoverImage);
+  const storeCoverImage = useAction(api.covers.storeCoverImage);
 
   const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
