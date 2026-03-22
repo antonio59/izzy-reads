@@ -115,14 +115,14 @@ export function isLikelyValidCover(url?: string): boolean {
     return false;
   }
   
-  // Open Library covers with ID should be valid
-  if (url.includes("covers.openlibrary.org")) {
-    return true;
-  }
-  
-  // Google Books covers should be valid
-  if (url.includes("books.google.com")) {
-    return true;
+  // Parse the URL and check hostname exactly to prevent substring spoofing
+  // e.g. https://evil.com/?q=covers.openlibrary.org would bypass an includes() check
+  try {
+    const { hostname } = new URL(url);
+    if (hostname === "covers.openlibrary.org") return true;
+    if (hostname === "books.google.com") return true;
+  } catch {
+    return false;
   }
   
   // Check if URL looks like a valid image
