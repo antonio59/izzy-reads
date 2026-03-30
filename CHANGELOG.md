@@ -57,6 +57,7 @@ All notable changes to this project will be documented in this file.
 ### CI/CD
 
 - Add automatic changelog workflow
+- Add automatic changelog workflow
 - Bump actions/upload-artifact from 6 to 7 (#74)
 - Bump actions/checkout from 5 to 6
 - Bump peter-evans/create-pull-request from 7 to 8
@@ -489,6 +490,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 ### Chores
 
 - Add git-cliff config for changelog generation
+- Add git-cliff config for changelog generation
 - Update dependencies (#56)
 - **deps-dev**: Update @types/react requirement (#75)
 - **deps-dev**: Update typescript-eslint requirement (#70)
@@ -515,6 +517,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update README and CHANGELOG for v1.1.0
 - Add guide for closing Dependabot PRs
 - Add final project summary
