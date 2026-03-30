@@ -58,6 +58,7 @@ All notable changes to this project will be documented in this file.
 
 - Add automatic changelog workflow
 - Add automatic changelog workflow
+- Add automatic changelog workflow
 - Bump actions/upload-artifact from 6 to 7 (#74)
 - Bump actions/checkout from 5 to 6
 - Bump peter-evans/create-pull-request from 7 to 8
