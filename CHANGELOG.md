@@ -491,6 +491,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 - Add git-cliff config for changelog generation
 - Add git-cliff config for changelog generation
+- Add git-cliff config for changelog generation
 - Update dependencies (#56)
 - **deps-dev**: Update @types/react requirement (#75)
 - **deps-dev**: Update typescript-eslint requirement (#70)
@@ -517,6 +518,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update README and CHANGELOG for v1.1.0
 - Add guide for closing Dependabot PRs
