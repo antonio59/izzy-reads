@@ -67,6 +67,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #80 from antonio59/dependabot/npm_and_yarn/lightningcss-darwin-arm64-tw-1.32.0
+
+chore(deps-dev): update lightningcss-darwin-arm64 requirement from ^1.30.2 to ^1.32.0
 - Merge pull request #76 from antonio59/dependabot/npm_and_yarn/vite-e429c122fc
 
 chore(deps-dev): bump the vite group with 2 updates
@@ -493,6 +496,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- **deps-dev**: Update lightningcss-darwin-arm64 requirement
 - **deps-dev**: Bump the vite group with 2 updates
 - Add git-cliff config for changelog generation
 - Add git-cliff config for changelog generation
@@ -523,6 +527,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
