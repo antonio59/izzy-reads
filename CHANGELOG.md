@@ -67,6 +67,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #76 from antonio59/dependabot/npm_and_yarn/vite-e429c122fc
+
+chore(deps-dev): bump the vite group with 2 updates
 - Show encouraging message when 0 books read this month
 - Prevent index.html caching to fix stale chunk errors after deploys
 - Add destination selector when adding books - lets user choose Finished, Reading, or Wishlist
@@ -490,6 +493,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- **deps-dev**: Bump the vite group with 2 updates
 - Add git-cliff config for changelog generation
 - Add git-cliff config for changelog generation
 - Add git-cliff config for changelog generation
@@ -519,6 +523,8 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update README and CHANGELOG for v1.1.0
