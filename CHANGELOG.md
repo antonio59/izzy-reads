@@ -67,6 +67,12 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #84 from antonio59/dependabot/npm_and_yarn/esbuild/darwin-arm64-0.27.4
+
+chore(deps-dev): bump @esbuild/darwin-arm64 from 0.27.2 to 0.27.4
+- Merge pull request #81 from antonio59/dependabot/npm_and_yarn/rollup/rollup-darwin-arm64-tw-4.60.0
+
+chore(deps-dev): update @rollup/rollup-darwin-arm64 requirement from ^4.55.1 to ^4.60.0
 - Merge pull request #80 from antonio59/dependabot/npm_and_yarn/lightningcss-darwin-arm64-tw-1.32.0
 
 chore(deps-dev): update lightningcss-darwin-arm64 requirement from ^1.30.2 to ^1.32.0
@@ -496,6 +502,9 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- Upgrade all dependencies to latest versions
+- **deps-dev**: Bump @esbuild/darwin-arm64 from 0.27.2 to 0.27.4
+- **deps-dev**: Update @rollup/rollup-darwin-arm64 requirement
 - **deps-dev**: Update lightningcss-darwin-arm64 requirement
 - **deps-dev**: Bump the vite group with 2 updates
 - Add git-cliff config for changelog generation
@@ -527,6 +536,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
