@@ -182,7 +182,7 @@ export const migrateSingleBookCover = action({
       if (storageId) {
         try {
           await ctx.storage.delete(storageId);
-        } catch {}
+        } catch { /* cleanup failure is non-critical */ }
       }
 
       await logFailure(err);
@@ -286,7 +286,7 @@ export const migrateSingleWishlistCover = action({
       if (storageId) {
         try {
           await ctx.storage.delete(storageId);
-        } catch {}
+        } catch { /* cleanup failure is non-critical */ }
       }
 
       await logFailure(err);

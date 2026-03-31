@@ -19,6 +19,11 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      // New rules from react-hooks v7 - downgrade to warn for incremental adoption
+      "react-hooks/purity": "warn",
+      "react-hooks/set-state-in-effect": "warn",
+      "react-hooks/static-components": "warn",
+      "react-hooks/error-boundaries": "warn",
       "react-refresh/only-export-components": [
         "warn",
         {

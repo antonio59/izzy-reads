@@ -20,22 +20,28 @@ export default defineConfig({
     chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
-        manualChunks: {
-          // Vendor chunks
-          "vendor-react": ["react", "react-dom", "react-router-dom"],
-          "vendor-framer": ["framer-motion"],
-          "vendor-recharts": ["recharts"],
-          "vendor-giphy": ["@giphy/js-fetch-api", "@giphy/react-components"],
-          "vendor-emoji": ["@emoji-mart/react", "@emoji-mart/data"],
-          // Feature chunks
-          "feature-auth": [
-            "./src/components/Login.tsx",
-            "./src/components/Signup.tsx",
-          ],
-          "feature-admin": [
-            "./src/components/Dashboard.tsx",
-            "./src/components/EnhancedBookshelf.tsx",
-          ],
+        manualChunks(id: string) {
+          if (id.includes("node_modules/react-dom") || id.includes("node_modules/react/") || id.includes("node_modules/react-router-dom")) {
+            return "vendor-react";
+          }
+          if (id.includes("node_modules/framer-motion")) {
+            return "vendor-framer";
+          }
+          if (id.includes("node_modules/recharts")) {
+            return "vendor-recharts";
+          }
+          if (id.includes("node_modules/@giphy")) {
+            return "vendor-giphy";
+          }
+          if (id.includes("node_modules/@emoji-mart")) {
+            return "vendor-emoji";
+          }
+          if (id.includes("components/Login") || id.includes("components/Signup")) {
+            return "feature-auth";
+          }
+          if (id.includes("components/Dashboard") || id.includes("components/EnhancedBookshelf")) {
+            return "feature-admin";
+          }
         },
       },
     },

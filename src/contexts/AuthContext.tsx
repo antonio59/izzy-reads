@@ -124,16 +124,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       ) {
         throw new Error(
           "No account found with this email. Please sign up first.",
+          { cause: error },
         );
       }
       if (
         errMessage.includes("InvalidSecret") ||
         errMessage.includes("password")
       ) {
-        throw new Error("Incorrect password. Please try again.");
+        throw new Error("Incorrect password. Please try again.", { cause: error });
       }
 
-      throw new Error("Unable to sign in. Please check your credentials.");
+      throw new Error("Unable to sign in. Please check your credentials.", { cause: error });
     }
   };
 
@@ -163,15 +164,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       ) {
         throw new Error(
           "An account with this email already exists. Please sign in instead.",
+          { cause: error },
         );
       }
       if (errMessage.includes("weak") || errMessage.includes("password")) {
         throw new Error(
           "Password is too weak. Please use at least 8 characters with a mix of letters and numbers.",
+          { cause: error },
         );
       }
 
-      throw new Error("Unable to create account. Please try again.");
+      throw new Error("Unable to create account. Please try again.", { cause: error });
     }
   };
 
