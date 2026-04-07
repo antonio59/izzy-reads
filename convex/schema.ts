@@ -110,6 +110,24 @@ export default defineSchema({
     badge: v.optional(v.string()),
   }).index("by_user", ["userId"]),
 
+  // Book discovery swipe decisions (Tinder-style recommendations)
+  bookSwipes: defineTable({
+    userId: v.id("users"),
+    googleBookId: v.string(),
+    title: v.string(),
+    author: v.string(),
+    coverUrl: v.optional(v.string()),
+    genre: v.optional(v.string()),
+    pageCount: v.optional(v.number()),
+    description: v.optional(v.string()),
+    action: v.union(v.literal("liked"), v.literal("passed")),
+    addedToWishlist: v.boolean(),
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_action", ["userId", "action"])
+    .index("by_user_googleBookId", ["userId", "googleBookId"]),
+
   // Book suggestions from visitors
   bookSuggestions: defineTable({
     title: v.string(),
