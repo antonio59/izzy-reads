@@ -43,6 +43,7 @@ const AdminPage = lazy(() => import("./pages/AdminPage"));
 const SeriesTracker = lazy(() => import("./components/SeriesTracker"));
 
 const ProfileEditor = lazy(() => import("./components/ProfileEditor"));
+const Discover = lazy(() => import("./components/Discover"));
 
 // Loading spinner for lazy-loaded components
 const PageLoader = () => (
@@ -216,6 +217,18 @@ function App() {
                           <ProtectedRoute>
                             <Layout>
                               <Progress />
+                            </Layout>
+                          </ProtectedRoute>
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/discover"
+                      element={
+                        <Suspense fallback={<PageLoader />}>
+                          <ProtectedRoute>
+                            <Layout>
+                              <Discover />
                             </Layout>
                           </ProtectedRoute>
                         </Suspense>

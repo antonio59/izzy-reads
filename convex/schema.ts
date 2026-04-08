@@ -56,7 +56,11 @@ export default defineSchema({
     isRead: v.boolean(),
     notes: v.optional(v.string()),
     giftFrom: v.optional(v.string()), // Who gave this book as a gift
-  }).index("by_user", ["userId"]),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_isRead", ["userId", "isRead"])
+    .index("by_user_genre", ["userId", "genre"])
+    .index("by_user_rating", ["userId", "rating"]),
 
   wishlist: defineTable({
     userId: v.id("users"),
@@ -109,6 +113,24 @@ export default defineSchema({
     completed: v.boolean(),
     badge: v.optional(v.string()),
   }).index("by_user", ["userId"]),
+
+  // Book discovery swipe decisions (Tinder-style recommendations)
+  bookSwipes: defineTable({
+    userId: v.id("users"),
+    googleBookId: v.string(),
+    title: v.string(),
+    author: v.string(),
+    coverUrl: v.optional(v.string()),
+    genre: v.optional(v.string()),
+    pageCount: v.optional(v.number()),
+    description: v.optional(v.string()),
+    action: v.union(v.literal("liked"), v.literal("passed")),
+    addedToWishlist: v.boolean(),
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_action", ["userId", "action"])
+    .index("by_user_googleBookId", ["userId", "googleBookId"]),
 
   // Book suggestions from visitors
   bookSuggestions: defineTable({
