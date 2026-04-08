@@ -1,8 +1,9 @@
 // Bulk migration script to move book covers from external URLs to Convex storage
 // Run this once to migrate all existing books
 
-import { query, mutation, action } from "./_generated/server";
+import { query, mutation, action, internalMutation, internalAction } from "./_generated/server";
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 import { api } from "./_generated/api";
 import type { Doc, Id } from "./_generated/dataModel";
 
@@ -599,5 +600,149 @@ export const bulkMigrateWishlistCovers = action({
     }
 
     return { processed, successful, failed, skipped, totalPending, hasMore, nextOffset, results };
+  },
+});
+
+// --- Replace Open Library covers with Google Books high-res covers ---
+
+/**
+ * Internal mutation to update a book's coverUrl directly (no auth required).
+ */
+export const patchBookCover = internalMutation({
+  args: { bookId: v.id("books"), coverUrl: v.string() },
+  handler: async (ctx, { bookId, coverUrl }) => {
+    await ctx.db.patch(bookId, { coverUrl });
+  },
+});
+
+/**
+ * Internal mutation to update a wishlist item's coverUrl directly.
+ */
+export const patchWishlistCover = internalMutation({
+  args: { wishlistId: v.id("wishlist"), coverUrl: v.string() },
+  handler: async (ctx, { wishlistId, coverUrl }) => {
+    await ctx.db.patch(wishlistId, { coverUrl });
+  },
+});
+
+/**
+ * Replace Open Library placeholder covers with Google Books high-res covers.
+ *
+ * Open Library returns valid JPEG images even when no cover exists - the image
+ * visually shows "image not available" text. This migration searches Google Books
+ * by title+author for each affected book and replaces the URL with a zoom=3
+ * high-res cover.
+ *
+ * Run via: npx convex run --prod migration:upgradeOpenLibraryCovers
+ */
+export const upgradeOpenLibraryCovers = internalAction({
+  args: {},
+  handler: async (ctx) => {
+    const books = await ctx.runQuery(api.books.getAll);
+    const results: Array<{ title: string; status: string; oldUrl?: string; newUrl?: string }> = [];
+
+    for (const book of books) {
+      if (!book.coverUrl || !book.coverUrl.includes("openlibrary.org")) {
+        continue;
+      }
+
+      try {
+        const q = encodeURIComponent(`${book.title} ${book.author}`);
+        const resp = await fetch(
+          `https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1`
+        );
+        if (!resp.ok) {
+          results.push({ title: book.title, status: `Google API error: ${resp.status}` });
+          continue;
+        }
+
+        const data = await resp.json();
+        const item = data.items?.[0];
+        const thumbnail = item?.volumeInfo?.imageLinks?.thumbnail;
+
+        if (!thumbnail) {
+          results.push({ title: book.title, status: "No Google Books cover found", oldUrl: book.coverUrl });
+          continue;
+        }
+
+        const url = new URL(thumbnail.replace("http://", "https://"));
+        url.searchParams.set("zoom", "3");
+        url.searchParams.delete("edge");
+        const newCoverUrl = url.toString();
+
+        await ctx.runMutation(internal.migration.patchBookCover, {
+          bookId: book._id,
+          coverUrl: newCoverUrl,
+        });
+
+        results.push({
+          title: book.title,
+          status: "upgraded",
+          oldUrl: book.coverUrl,
+          newUrl: newCoverUrl,
+        });
+
+        await new Promise((r) => setTimeout(r, 200));
+      } catch (err) {
+        results.push({
+          title: book.title,
+          status: `Error: ${err instanceof Error ? err.message : String(err)}`,
+        });
+      }
+    }
+
+    // Also do wishlist items
+    const wishlistItems = await ctx.runQuery(api.wishlist.getAll);
+    for (const wItem of wishlistItems) {
+      if (!wItem.coverUrl || !wItem.coverUrl.includes("openlibrary.org")) {
+        continue;
+      }
+
+      try {
+        const q = encodeURIComponent(`${wItem.title} ${wItem.author}`);
+        const resp = await fetch(
+          `https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1`
+        );
+        if (!resp.ok) {
+          results.push({ title: wItem.title, status: `Google API error: ${resp.status}` });
+          continue;
+        }
+
+        const data = await resp.json();
+        const volItem = data.items?.[0];
+        const thumbnail = volItem?.volumeInfo?.imageLinks?.thumbnail;
+
+        if (!thumbnail) {
+          results.push({ title: wItem.title, status: "No Google Books cover (wishlist)", oldUrl: wItem.coverUrl });
+          continue;
+        }
+
+        const url = new URL(thumbnail.replace("http://", "https://"));
+        url.searchParams.set("zoom", "3");
+        url.searchParams.delete("edge");
+        const newCoverUrl = url.toString();
+
+        await ctx.runMutation(internal.migration.patchWishlistCover, {
+          wishlistId: wItem._id,
+          coverUrl: newCoverUrl,
+        });
+
+        results.push({
+          title: wItem.title,
+          status: "upgraded (wishlist)",
+          oldUrl: wItem.coverUrl,
+          newUrl: newCoverUrl,
+        });
+
+        await new Promise((r) => setTimeout(r, 200));
+      } catch (err) {
+        results.push({
+          title: wItem.title,
+          status: `Error: ${err instanceof Error ? err.message : String(err)}`,
+        });
+      }
+    }
+
+    return results;
   },
 });
