@@ -502,6 +502,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- Fix npm vulnerabilities [skip ci]
 - Upgrade all dependencies to latest versions
 - **deps-dev**: Bump @esbuild/darwin-arm64 from 0.27.2 to 0.27.4
 - **deps-dev**: Update @rollup/rollup-darwin-arm64 requirement
@@ -542,6 +543,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 - Update README and CHANGELOG for v1.1.0
 - Add guide for closing Dependabot PRs
 - Add final project summary
@@ -558,6 +560,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Features
 
+- Discover page with Tinder-style book swipe recommendations (#94)
 - Add admin page with cover migration panel
 - Bulk migration system for book covers
 - Store book covers in Convex storage for permanence
