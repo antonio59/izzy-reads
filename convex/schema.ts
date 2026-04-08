@@ -56,7 +56,11 @@ export default defineSchema({
     isRead: v.boolean(),
     notes: v.optional(v.string()),
     giftFrom: v.optional(v.string()), // Who gave this book as a gift
-  }).index("by_user", ["userId"]),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_isRead", ["userId", "isRead"])
+    .index("by_user_genre", ["userId", "genre"])
+    .index("by_user_rating", ["userId", "rating"]),
 
   wishlist: defineTable({
     userId: v.id("users"),

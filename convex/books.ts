@@ -2,11 +2,15 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
 
-// Get a book by ID
+// Get a book by ID (auth-gated)
 export const getBookById = query({
   args: { bookId: v.id("books") },
   handler: async (ctx, { bookId }) => {
-    return await ctx.db.get(bookId);
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+    const book = await ctx.db.get(bookId);
+    if (!book) return null;
+    return book;
   },
 });
 

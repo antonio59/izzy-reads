@@ -1,13 +1,28 @@
+declare const process: { env: Record<string, string | undefined> };
 import { convexAuth } from "@convex-dev/auth/server";
 import { Password } from "@convex-dev/auth/providers/Password";
 import type { DataModel } from "./_generated/dataModel";
 
-// Custom password provider with better error handling
+// Only these emails can sign up / sign in — stored as Convex env var
+const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "")
+  .split(",")
+  .map((e: string) => e.trim().toLowerCase())
+  .filter(Boolean);
+
 const CustomPassword = Password<DataModel>({
   profile(params) {
+    const email = (params.email as string).toLowerCase().trim();
+    if (ALLOWED_EMAILS.length > 0 && !ALLOWED_EMAILS.includes(email)) {
+      throw new Error(
+        JSON.stringify({
+          error: "Access denied. This site is invite-only.",
+          code: "EMAIL_NOT_ALLOWED",
+        }),
+      );
+    }
     return {
-      email: params.email as string,
-      name: (params.name as string) || (params.email as string).split("@")[0],
+      email,
+      name: (params.name as string) || email.split("@")[0],
     };
   },
 });
