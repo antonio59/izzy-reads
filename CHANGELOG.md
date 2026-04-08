@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Use DOMParser for HTML sanitization instead of regex (CodeQL #7)
 - Correct import path and action/mutation mismatch
 - Resolve CodeQL URL sanitization alerts and missing api.d.ts modules
 - Correct useState type syntax error in CoverMigrationPanel
@@ -537,6 +538,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
