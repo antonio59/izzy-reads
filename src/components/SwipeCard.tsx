@@ -40,9 +40,12 @@ function SwipeCard({ book, onSwipe, isTop }: SwipeCardProps) {
     }
   };
 
-  // Strip HTML tags from description
+  // Strip HTML tags from description using DOMParser for safe sanitization
   const cleanDescription = book.description
-    ? book.description.replace(/<[^>]*>/g, "")
+    ? (() => {
+        const doc = new DOMParser().parseFromString(book.description, "text/html");
+        return doc.body.textContent || "";
+      })()
     : "";
 
   return (
