@@ -503,6 +503,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- Clean up netlify.toml for single production site
 - Fix npm vulnerabilities [skip ci]
 - Upgrade all dependencies to latest versions
 - **deps-dev**: Bump @esbuild/darwin-arm64 from 0.27.2 to 0.27.4
@@ -538,6 +539,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
