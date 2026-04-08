@@ -1,16 +1,15 @@
 # Netlify Configuration for Izzy's Bookshelf
 #
-# Two Netlify sites:
-# - izzysbookshelf (production) - production branch → izzysbookshelf.com
-# - izzysbookshelf-staging (staging) - main branch → izzysbookshelf.antoniosmith.xyz
-#
-# Set VITE_CONVEX_URL in each site's environment variables:
-# - Production: https://loyal-vulture-39.convex.cloud
-# - Staging: https://aware-gecko-889.convex.cloud
+# Production site: izzysbookshelf → izzysbookshelf.com
+# Set VITE_CONVEX_URL in Netlify environment variables:
+#   https://loyal-vulture-39.convex.cloud
 
 [build]
   command = "bun run build"
   publish = "dist"
+
+[context.production]
+  environment = { NODE_VERSION = "22" }
 
 # SPA routing - redirect all routes to index.html
 [[redirects]]
