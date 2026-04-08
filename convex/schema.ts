@@ -73,6 +73,8 @@ export default defineSchema({
     description: v.optional(v.string()),
     ageRating: v.string(),
     dateAdded: v.string(),
+    boughtBy: v.optional(v.string()),
+    boughtAt: v.optional(v.number()),
   }).index("by_user", ["userId"]),
 
   poems: defineTable({

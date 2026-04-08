@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Gift, BookOpen, Sparkles, X, Lightbulb } from "lucide-react";
+import { Gift, BookOpen, Sparkles, X, Lightbulb, Share2, Check, ShoppingBag } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
+import { useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import type { Book } from "../types";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
@@ -96,6 +98,54 @@ const PublicWishlist = () => {
   const { wishlist } = useBooks();
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [showSuggestionForm, setShowSuggestionForm] = useState(false);
+  const [buyingBookId, setBuyingBookId] = useState<string | null>(null);
+  const [buyerName, setBuyerName] = useState("");
+  const [buyError, setBuyError] = useState("");
+  const [buySuccess, setBuySuccess] = useState(false);
+  const [shareStatus, setShareStatus] = useState<"idle" | "copied">("idle");
+  const markAsBought = useMutation(api.wishlist.markAsBought);
+
+  const handleMarkAsBought = async (bookId: string) => {
+    if (!buyerName.trim()) {
+      setBuyError("Please enter your name");
+      return;
+    }
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await markAsBought({ id: bookId as any, boughtBy: buyerName.trim() });
+      setBuySuccess(true);
+      setTimeout(() => {
+        setBuyingBookId(null);
+        setBuyerName("");
+        setBuyError("");
+        setBuySuccess(false);
+      }, 2000);
+    } catch (e) {
+      setBuyError(e instanceof Error ? e.message : "Something went wrong");
+    }
+  };
+
+  const handleShare = async () => {
+    const url = `${window.location.origin}/my-wishlist`;
+    const shareData = {
+      title: "Izzy's Book Wishlist",
+      text: "Check out Izzy's book wishlist! Know a great book? Suggest one!",
+      url,
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(url);
+        setShareStatus("copied");
+        setTimeout(() => setShareStatus("idle"), 2000);
+      }
+    } catch {
+      await navigator.clipboard.writeText(url);
+      setShareStatus("copied");
+      setTimeout(() => setShareStatus("idle"), 2000);
+    }
+  };
 
   // Sort alphabetically by title
   const sortedWishlist = [...wishlist].sort((a, b) =>
@@ -155,6 +205,24 @@ const PublicWishlist = () => {
               >
                 <Lightbulb className="w-4 h-4" />
                 Suggest a Book
+              </motion.button>
+              <motion.button
+                onClick={handleShare}
+                className="flex items-center gap-2 px-4 py-2 bg-white text-stone-600 font-bold rounded-full shadow-sm hover:shadow-md transition-all text-sm border border-stone-200"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {shareStatus === "copied" ? (
+                  <>
+                    <Check className="w-4 h-4 text-green-500" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="w-4 h-4" />
+                    Share Wishlist
+                  </>
+                )}
               </motion.button>
             </div>
           </motion.div>
@@ -221,25 +289,40 @@ const PublicWishlist = () => {
                     >
                       <BookCoverImage book={book} className="w-full h-full" />
 
-                      {/* Wishlist badge */}
-                      <div className="absolute top-2 left-2 w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center shadow-lg">
-                        <Gift className="w-4 h-4 text-white" />
-                      </div>
+                      {/* Bought overlay */}
+                      {book.boughtBy ? (
+                        <div className="absolute inset-0 bg-green-900/60 flex flex-col items-center justify-center">
+                          <div className="bg-green-500 rounded-full p-2 mb-2 shadow-lg">
+                            <Check className="w-5 h-5 text-white" />
+                          </div>
+                          <span className="text-white text-xs font-bold drop-shadow">Bought!</span>
+                          <span className="text-white/80 text-[10px] mt-0.5 drop-shadow">
+                            by {book.boughtBy}
+                          </span>
+                        </div>
+                      ) : (
+                        <>
+                          {/* Wishlist badge */}
+                          <div className="absolute top-2 left-2 w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center shadow-lg">
+                            <Gift className="w-4 h-4 text-white" />
+                          </div>
 
-                      {/* Desktop hover overlay with title */}
-                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-3 pt-10 hidden sm:block opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        <p className="text-white text-xs font-semibold leading-tight line-clamp-2 drop-shadow-lg">
-                          {book.title}
-                        </p>
-                        <p className="text-white/70 text-[10px] mt-1">
-                          {book.author}
-                        </p>
-                      </div>
+                          {/* Desktop hover overlay with title */}
+                          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-3 pt-10 hidden sm:block opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            <p className="text-white text-xs font-semibold leading-tight line-clamp-2 drop-shadow-lg">
+                              {book.title}
+                            </p>
+                            <p className="text-white/70 text-[10px] mt-1">
+                              {book.author}
+                            </p>
+                          </div>
 
-                      {/* Sparkle effect on hover */}
-                      <div className="absolute top-2 right-2 text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        ✨
-                      </div>
+                          {/* Sparkle effect on hover */}
+                          <div className="absolute top-2 right-2 text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            ✨
+                          </div>
+                        </>
+                      )}
                     </motion.div>
                   </motion.div>
                 );
@@ -373,11 +456,72 @@ const PublicWishlist = () => {
                   </div>
                 )}
 
-                <div className="text-center pt-4 border-t border-cream-200">
-                  <p className="text-stone-400 text-sm">
-                    Know someone who has this book? Let them know I'd love to
-                    borrow it!
-                  </p>
+                {/* Bought status / Buy button */}
+                <div className="pt-4 border-t border-cream-200">
+                  {selectedBook.boughtBy ? (
+                    <div className="flex items-center gap-3 bg-green-50 rounded-xl p-4 border border-green-200">
+                      <div className="bg-green-500 rounded-full p-2">
+                        <Check className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-green-700 font-semibold text-sm">Someone got this!</p>
+                        <p className="text-green-600 text-xs">
+                          Bought by {selectedBook.boughtBy}
+                        </p>
+                      </div>
+                    </div>
+                  ) : buyingBookId === selectedBook.id ? (
+                    <div className="space-y-3">
+                      {buySuccess ? (
+                        <div className="flex items-center gap-2 justify-center bg-green-50 rounded-xl p-4">
+                          <Check className="w-5 h-5 text-green-500" />
+                          <span className="text-green-700 font-semibold">Thank you!</span>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-sm text-stone-500 text-center">
+                            Enter your name so we know who's getting this book!
+                          </p>
+                          <input
+                            type="text"
+                            value={buyerName}
+                            onChange={(e) => { setBuyerName(e.target.value); setBuyError(""); }}
+                            placeholder="Your name"
+                            className="w-full px-4 py-2 rounded-lg border border-stone-200 focus:border-primary-400 focus:ring-2 focus:ring-primary-100 outline-none text-sm"
+                            autoFocus
+                          />
+                          {buyError && (
+                            <p className="text-red-500 text-xs">{buyError}</p>
+                          )}
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleMarkAsBought(selectedBook.id)}
+                              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-colors text-sm"
+                            >
+                              <Check className="w-4 h-4" />
+                              Confirm
+                            </button>
+                            <button
+                              onClick={() => { setBuyingBookId(null); setBuyerName(""); setBuyError(""); }}
+                              className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-lg transition-colors text-sm"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ) : (
+                    <motion.button
+                      onClick={() => setBuyingBookId(selectedBook.id)}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold rounded-xl shadow-sm hover:shadow-md transition-all text-sm"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <ShoppingBag className="w-4 h-4" />
+                      I Bought This!
+                    </motion.button>
+                  )}
                 </div>
               </div>
             </motion.div>

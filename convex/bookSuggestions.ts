@@ -77,7 +77,7 @@ export const submit = mutation({
       throw new Error("Your name is required");
     }
 
-    return await ctx.db.insert("bookSuggestions", {
+    const suggestionId = await ctx.db.insert("bookSuggestions", {
       title: args.title.trim(),
       author: args.author.trim(),
       suggestedBy: args.suggestedBy.trim(),
@@ -86,6 +86,23 @@ export const submit = mutation({
       dateSubmitted: new Date().toISOString().split("T")[0],
       status: "pending",
     });
+
+    // Send email notification (fire-and-forget)
+    try {
+      const { internal } = await import("./_generated/api");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await ctx.scheduler.runAfter(0, (internal as any).emails.sendSuggestionNotification, {
+        title: args.title.trim(),
+        author: args.author.trim(),
+        suggestedBy: args.suggestedBy.trim(),
+        reason: args.reason?.trim(),
+        genre: args.genre,
+      });
+    } catch (e) {
+      console.warn("Email notification scheduling failed:", e);
+    }
+
+    return suggestionId;
   },
 });
 

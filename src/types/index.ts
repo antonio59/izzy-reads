@@ -15,6 +15,8 @@ export interface Book {
   notes?: string;
   review?: string;
   giftFrom?: string; // Who gave this book as a gift
+  boughtBy?: string; // Visitor who bought this wishlist item
+  boughtAt?: number; // When it was marked as bought
   reactions?: BookReactions;
   reviewReactions?: ReviewReactions;
 }

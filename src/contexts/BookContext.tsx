@@ -143,6 +143,8 @@ function convexWishlistToBook(doc: Doc<"wishlist">): Book {
     ageRating: doc.ageRating,
     dateAdded: doc.dateAdded,
     isRead: false,
+    boughtBy: doc.boughtBy,
+    boughtAt: doc.boughtAt,
   };
 }
 

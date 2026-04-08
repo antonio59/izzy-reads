@@ -73,6 +73,45 @@ export const add = mutation({
   },
 });
 
+// Mark a wishlist item as bought (public - no auth required)
+export const markAsBought = mutation({
+  args: {
+    id: v.id("wishlist"),
+    boughtBy: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const name = args.boughtBy.trim();
+    if (name.length < 1) {
+      throw new Error("Please enter your name");
+    }
+
+    const item = await ctx.db.get(args.id);
+    if (!item) throw new Error("Wishlist item not found");
+    if (item.boughtBy) {
+      throw new Error("This book has already been marked as bought!");
+    }
+
+    await ctx.db.patch(args.id, {
+      boughtBy: name,
+      boughtAt: Date.now(),
+    });
+  },
+});
+
+// Clear bought status (requires auth - admin only)
+export const clearBought = mutation({
+  args: { id: v.id("wishlist") },
+  handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
+    await ctx.db.patch(args.id, {
+      boughtBy: undefined,
+      boughtAt: undefined,
+    });
+  },
+});
+
 // Remove from wishlist - requires authentication (any authenticated user can delete - they're family/parents)
 export const remove = mutation({
   args: { id: v.id("wishlist") },
