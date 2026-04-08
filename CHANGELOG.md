@@ -555,6 +555,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 - Update README and CHANGELOG for v1.1.0
 - Add guide for closing Dependabot PRs
 - Add final project summary
@@ -571,6 +572,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Features
 
+- Add migration to replace OpenLibrary covers with Google Books
 - Email notifications, mark-as-bought on wishlist, share wishlist link
 - Discover page with Tinder-style book swipe recommendations (#94)
 - Add admin page with cover migration panel
