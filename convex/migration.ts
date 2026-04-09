@@ -746,3 +746,13 @@ export const upgradeOpenLibraryCovers = internalAction({
     return results;
   },
 });
+
+/**
+ * Internal mutation to clear a book's coverUrl (triggers gradient fallback).
+ */
+export const clearBookCover = internalMutation({
+  args: { bookId: v.id("books") },
+  handler: async (ctx, { bookId }) => {
+    await ctx.db.patch(bookId, { coverUrl: undefined });
+  },
+});
