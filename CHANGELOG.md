@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Replace all Google Books grey placeholder covers
 - Remove platform-specific devDependencies for Netlify compatibility
 - Add .npmrc with legacy-peer-deps for Netlify builds
 - Add process type declaration to auth.config.ts
@@ -542,6 +543,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
