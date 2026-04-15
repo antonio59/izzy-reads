@@ -510,6 +510,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- Send suggestion emails from verified domain
 - **deps**: Bump convex from 1.34.1 to 1.35.1 (#97)
 - **deps-dev**: Bump @types/node from 25.5.2 to 25.6.0 (#99)
 - Weekly dependency updates (#101)
@@ -549,6 +550,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
