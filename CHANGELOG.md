@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- **security**: Resolve incomplete URL substring sanitization in migration.ts
 - Replace all Google Books grey placeholder covers
 - Remove platform-specific devDependencies for Netlify compatibility
 - Add .npmrc with legacy-peer-deps for Netlify builds
@@ -507,6 +508,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- **deps**: Bump convex from 1.34.1 to 1.35.1 (#97)
 - **deps-dev**: Bump @types/node from 25.5.2 to 25.6.0 (#99)
 - Weekly dependency updates (#101)
 - Clean up netlify.toml for single production site
@@ -545,6 +547,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
