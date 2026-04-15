@@ -1,5 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -25,6 +26,12 @@ export function PageTransition({
   children,
   className = "",
 }: PageTransitionProps) {
+  const { prefersReducedMotion } = useMotionPreference();
+
+  if (prefersReducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
       variants={pageVariants}

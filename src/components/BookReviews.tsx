@@ -126,7 +126,7 @@ const BookReviews: React.FC = () => {
                         <h2 className="text-xl font-bold text-stone-700 mb-2">No reviews yet</h2>
                         <p className="text-stone-500 mb-6">Read some books and add your thoughts to see them here!</p>
                         <Link
-                            to="/bookshelf"
+                            to="/books"
                             className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-primary-700 transition-colors"
                         >
                             Go to Bookshelf <ArrowRight className="w-4 h-4" />

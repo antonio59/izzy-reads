@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useMotionPreference } from '../contexts/MotionPreferenceContext'
 import type { Achievement, AchievementRarity } from '../lib/achievements'
 import { Badge } from './ui/Badge'
 
@@ -91,6 +92,7 @@ export function AchievementUnlock({
   autoClose = true,
   autoCloseDelay = 4000,
 }: AchievementUnlockProps) {
+  const { prefersReducedMotion } = useMotionPreference()
   const [isVisible, setIsVisible] = useState(false)
 
   // Trigger visibility during render when a new achievement appears
@@ -121,151 +123,130 @@ export function AchievementUnlock({
       {isVisible && achievement && (
         <motion.div
           className="fixed inset-0 z-[100] flex items-center justify-center"
-          initial={{ opacity: 0 }}
+          initial={prefersReducedMotion ? undefined : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          exit={prefersReducedMotion ? undefined : { opacity: 0 }}
         >
           {/* Backdrop */}
           <motion.div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
+            initial={prefersReducedMotion ? undefined : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            exit={prefersReducedMotion ? undefined : { opacity: 0 }}
             onClick={() => {
               setIsVisible(false)
-              setTimeout(onClose, 500)
+              setTimeout(onClose, prefersReducedMotion ? 0 : 500)
             }}
           />
 
           {/* Achievement card */}
           <motion.div
             className="relative z-10"
-            initial={{ scale: 0, rotate: -10 }}
+            initial={prefersReducedMotion ? undefined : { scale: 0, rotate: -10 }}
             animate={{ scale: 1, rotate: 0 }}
-            exit={{ scale: 0, opacity: 0, y: 50 }}
+            exit={prefersReducedMotion ? undefined : { scale: 0, opacity: 0, y: 50 }}
             transition={{ type: 'spring', stiffness: 400, damping: 20 }}
           >
             {/* Starburst behind */}
-            <Starburst color={`bg-gradient-to-t ${rarityColors[achievement.rarity]}`} />
+            {!prefersReducedMotion && (
+              <Starburst color={`bg-gradient-to-t ${rarityColors[achievement.rarity]}`} />
+            )}
 
             {/* Confetti */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-              {Array.from({ length: 30 }).map((_, i) => (
-                <ConfettiParticle
-                  key={i}
-                  delay={0.3 + i * 0.05}
-                  color={confettiColors[i % confettiColors.length]}
-                />
-              ))}
-            </div>
+            {!prefersReducedMotion && (
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                {Array.from({ length: 30 }).map((_, i) => (
+                  <ConfettiParticle
+                    key={i}
+                    delay={0.3 + i * 0.05}
+                    color={confettiColors[i % confettiColors.length]}
+                  />
+                ))}
+              </div>
+            )}
 
             {/* Card */}
-            <motion.div
+            <div
               className={`
                 relative bg-white rounded-3xl p-8 shadow-2xl ${rarityGlow[achievement.rarity]}
                 min-w-[300px] max-w-[400px] text-center overflow-hidden
               `}
-              initial={{ y: 20 }}
-              animate={{ y: 0 }}
             >
               {/* Gradient header */}
-              <motion.div
+              <div
                 className={`
                   absolute top-0 left-0 right-0 h-24
                   bg-gradient-to-br ${rarityColors[achievement.rarity]}
                 `}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
               />
 
               {/* Unlock text */}
-              <motion.div
-                className="relative z-10 -mt-2 mb-2"
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-              >
+              <div className="relative z-10 -mt-2 mb-2">
                 <span className="text-sm font-bold text-white/90 uppercase tracking-wider">
                   Achievement Unlocked!
                 </span>
-              </motion.div>
+              </div>
 
               {/* Icon */}
-              <motion.div
-                className="relative z-10 text-6xl mb-4"
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.5 }}
-              >
-                <motion.div
-                  animate={{
-                    y: [0, -5, 0],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
-                >
-                  {achievement.icon}
-                </motion.div>
-              </motion.div>
+              <div className="relative z-10 text-6xl mb-4">
+                {prefersReducedMotion ? (
+                  achievement.icon
+                ) : (
+                  <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.5 }}
+                  >
+                    <motion.div
+                      animate={{
+                        y: [0, -5, 0],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                      }}
+                    >
+                      {achievement.icon}
+                    </motion.div>
+                  </motion.div>
+                )}
+              </div>
 
               {/* Title */}
-              <motion.h2
-                className="text-2xl font-display font-bold text-stone-900 mb-2"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.6 }}
-              >
+              <h2 className="text-2xl font-display font-bold text-stone-900 mb-2">
                 {achievement.name}
-              </motion.h2>
+              </h2>
 
               {/* Description */}
-              <motion.p
-                className="text-stone-600 mb-4"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.7 }}
-              >
+              <p className="text-stone-600 mb-4">
                 {achievement.description}
-              </motion.p>
+              </p>
 
               {/* Badges */}
-              <motion.div
-                className="flex items-center justify-center gap-2"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.8 }}
-              >
+              <div className="flex items-center justify-center gap-2">
                 <Badge variant="iris" className="text-sm">
                   +{achievement.xpReward} XP
                 </Badge>
                 <Badge variant="outline" className="text-sm capitalize">
                   {achievement.rarity}
                 </Badge>
-              </motion.div>
+              </div>
 
               {/* Close hint */}
-              <motion.p
-                className="text-xs text-stone-400 mt-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.5 }}
-              >
+              <p className="text-xs text-stone-400 mt-6">
                 Tap anywhere to continue
-              </motion.p>
+              </p>
 
               {/* Shimmer effect for legendary */}
-              {achievement.rarity === 'legendary' && (
+              {!prefersReducedMotion && achievement.rarity === 'legendary' && (
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
                   animate={{ x: ['-100%', '200%'] }}
                   transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2, delay: 1 }}
                 />
               )}
-            </motion.div>
+            </div>
           </motion.div>
         </motion.div>
       )}
@@ -291,18 +272,19 @@ export function LevelUp({
   autoClose = true,
   autoCloseDelay = 4000,
 }: LevelUpProps) {
+  const { prefersReducedMotion } = useMotionPreference()
   const [isVisible, setIsVisible] = useState(true)
 
   useEffect(() => {
     if (autoClose) {
       const timer = setTimeout(() => {
         setIsVisible(false)
-        setTimeout(onClose, 500)
+        setTimeout(onClose, prefersReducedMotion ? 0 : 500)
       }, autoCloseDelay)
 
       return () => clearTimeout(timer)
     }
-  }, [autoClose, autoCloseDelay, onClose])
+  }, [autoClose, autoCloseDelay, onClose, prefersReducedMotion])
 
   const confettiColors = [
     'bg-iris-400',
@@ -317,102 +299,93 @@ export function LevelUp({
       {isVisible && (
         <motion.div
           className="fixed inset-0 z-[100] flex items-center justify-center"
-          initial={{ opacity: 0 }}
+          initial={prefersReducedMotion ? undefined : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          exit={prefersReducedMotion ? undefined : { opacity: 0 }}
         >
           {/* Backdrop */}
           <motion.div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => {
               setIsVisible(false)
-              setTimeout(onClose, 500)
+              setTimeout(onClose, prefersReducedMotion ? 0 : 500)
             }}
           />
 
           <motion.div
             className="relative z-10"
-            initial={{ scale: 0 }}
+            initial={prefersReducedMotion ? undefined : { scale: 0 }}
             animate={{ scale: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
+            exit={prefersReducedMotion ? undefined : { scale: 0, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 400, damping: 20 }}
           >
             {/* Confetti */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-              {Array.from({ length: 40 }).map((_, i) => (
-                <ConfettiParticle
-                  key={i}
-                  delay={0.2 + i * 0.04}
-                  color={confettiColors[i % confettiColors.length]}
-                />
-              ))}
-            </div>
+            {!prefersReducedMotion && (
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                {Array.from({ length: 40 }).map((_, i) => (
+                  <ConfettiParticle
+                    key={i}
+                    delay={0.2 + i * 0.04}
+                    color={confettiColors[i % confettiColors.length]}
+                  />
+                ))}
+              </div>
+            )}
 
             {/* Card */}
-            <motion.div
-              className="relative bg-gradient-to-br from-iris-500 to-coral-500 rounded-3xl p-8 shadow-2xl text-white text-center overflow-hidden"
-              initial={{ y: 20 }}
-              animate={{ y: 0 }}
-            >
+            <div className="relative bg-gradient-to-br from-iris-500 to-coral-500 rounded-3xl p-8 shadow-2xl text-white text-center overflow-hidden">
               {/* Level up text */}
-              <motion.div
-                className="mb-4"
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3 }}
-              >
+              <div className="mb-4">
                 <span className="text-lg font-bold uppercase tracking-wider text-white/90">
                   Level Up!
                 </span>
-              </motion.div>
+              </div>
 
               {/* Level number */}
-              <motion.div
-                className="relative inline-flex items-center justify-center w-24 h-24 rounded-full bg-white/20 mb-4"
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.4 }}
-              >
-                <motion.span
-                  className="text-5xl"
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  {icon}
-                </motion.span>
-              </motion.div>
+              <div className="relative inline-flex items-center justify-center w-24 h-24 rounded-full bg-white/20 mb-4">
+                {prefersReducedMotion ? (
+                  <span className="text-5xl">{icon}</span>
+                ) : (
+                  <motion.span
+                    className="text-5xl"
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.4 }}
+                  >
+                    <motion.span
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      {icon}
+                    </motion.span>
+                  </motion.span>
+                )}
+              </div>
 
               {/* Level info */}
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.6 }}
-              >
+              <div>
                 <div className="text-5xl font-display font-bold mb-2">
                   {newLevel}
                 </div>
                 <div className="text-lg font-medium text-white/90">
                   {title}
                 </div>
-              </motion.div>
+              </div>
 
               {/* Close hint */}
-              <motion.p
-                className="text-xs text-white/60 mt-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.5 }}
-              >
+              <p className="text-xs text-white/60 mt-6">
                 Tap anywhere to continue
-              </motion.p>
+              </p>
 
               {/* Shimmer */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                animate={{ x: ['-100%', '200%'] }}
-                transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2, delay: 1 }}
-              />
-            </motion.div>
+              {!prefersReducedMotion && (
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                  animate={{ x: ['-100%', '200%'] }}
+                  transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2, delay: 1 }}
+                />
+              )}
+            </div>
           </motion.div>
         </motion.div>
       )}

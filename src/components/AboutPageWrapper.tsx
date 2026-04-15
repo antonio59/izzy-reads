@@ -58,11 +58,8 @@ class AboutErrorBoundary extends Component<
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error) {
-    console.warn(
-      "AboutPageWrapper caught error, using defaults:",
-      error.message,
-    );
+  componentDidCatch() {
+    // Silently fall back to default about page when Convex errors
   }
 
   render() {

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 
 // Custom book logo SVG component
 export function BookLogo({ className }: { className?: string }) {
@@ -79,6 +80,7 @@ export function PublicNav() {
   const { user } = useAuth();
   const isAuthenticated = !!user;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { prefersReducedMotion } = useMotionPreference();
 
   const navItems: NavItem[] = [
     { id: "home", label: "Portfolio", icon: Book, path: "/", show: true },
@@ -172,10 +174,10 @@ export function PublicNav() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
+            initial={prefersReducedMotion ? undefined : { opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
+            exit={prefersReducedMotion ? undefined : { opacity: 0, height: 0 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
             className="md:hidden bg-white border-t border-cream-200 overflow-hidden"
           >
             <div className="px-4 py-3 space-y-1">

@@ -292,7 +292,7 @@ export function RecentBooks({
             Start your reading journey today
           </p>
           <Link
-            to="/bookshelf"
+            to="/books"
             className="inline-block mt-4 px-4 py-2 bg-purple-100 text-purple-700 rounded-xl font-medium hover:bg-purple-200 transition-colors"
           >
             Add Your First Book

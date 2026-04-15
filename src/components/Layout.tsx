@@ -1,4 +1,3 @@
-import { AnimatePresence } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import Navigation from "./Navigation";
 import { PageTransition } from "./PageTransition";
@@ -6,6 +5,7 @@ import { ToastProvider } from "./ui/Toast";
 import SkipToContent from "./SkipToContent";
 import { AccessibleAnnouncerProvider } from "./AccessibleAnnouncer";
 import AchievementNotification from "./AchievementNotification";
+import { ReducedMotionAnimatePresence } from "../contexts/MotionPreferenceContext";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -20,7 +20,7 @@ export function Layout({ children }: LayoutProps) {
         <div className="min-h-screen bg-hero pb-20 md:pb-0">
           <SkipToContent />
           <Navigation />
-          <AnimatePresence mode="wait">
+          <ReducedMotionAnimatePresence>
             <PageTransition key={location.pathname}>
               <main
                 id="main-content"
@@ -32,7 +32,7 @@ export function Layout({ children }: LayoutProps) {
                 {children}
               </main>
             </PageTransition>
-          </AnimatePresence>
+          </ReducedMotionAnimatePresence>
           <AchievementNotification />
         </div>
       </ToastProvider>
@@ -59,7 +59,7 @@ export function PublicLayout({
           className={`min-h-screen ${showBackground ? "bg-hero" : "bg-stone-50"}`}
         >
           <SkipToContent />
-          <AnimatePresence mode="wait">
+          <ReducedMotionAnimatePresence>
             <PageTransition key={location.pathname}>
               <main
                 id="main-content"
@@ -70,7 +70,7 @@ export function PublicLayout({
                 {children}
               </main>
             </PageTransition>
-          </AnimatePresence>
+          </ReducedMotionAnimatePresence>
         </div>
       </ToastProvider>
     </AccessibleAnnouncerProvider>
