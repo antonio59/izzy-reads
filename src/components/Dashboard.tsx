@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import {
   BookOpen,
@@ -50,18 +50,16 @@ const Dashboard: React.FC = () => {
   const [showAvatarCreator, setShowAvatarCreator] = useState(false);
   const [showTour, setShowTour] = useState(false);
 
-  // Show onboarding on first visit
+  // Show onboarding on first visit (sync during render to avoid effect setState)
   const shouldShowOnboarding =
     userProfile !== undefined &&
     userProfile !== null &&
     userProfile.hasSeenOnboarding !== true &&
     !showTour;
 
-  useEffect(() => {
-    if (shouldShowOnboarding) {
-      setShowTour(true);
-    }
-  }, [shouldShowOnboarding]);
+  if (shouldShowOnboarding && !showTour) {
+    setShowTour(true);
+  }
 
   const handleTourComplete = useCallback(async () => {
     setShowTour(false);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Home, BookOpen, Sparkles, ArrowLeft } from "lucide-react";
@@ -52,10 +52,14 @@ const FloatingBook = ({
   delay,
   x,
   size,
+  emoji,
+  duration,
 }: {
   delay: number;
   x: number;
   size: number;
+  emoji: string;
+  duration: number;
 }) => (
   <motion.div
     className="absolute text-4xl pointer-events-none select-none"
@@ -67,18 +71,18 @@ const FloatingBook = ({
       rotate: [0, 10, -10, 0],
     }}
     transition={{
-      duration: 8 + Math.random() * 4,
+      duration,
       delay,
       repeat: Infinity,
       ease: "linear",
     }}
   >
-    {["📕", "📗", "📘", "📙", "📚", "📖"][Math.floor(Math.random() * 6)]}
+    {emoji}
   </motion.div>
 );
 
 // Sparkle effect
-const Sparkle = ({ x, y }: { x: number; y: number }) => (
+const Sparkle = ({ x, y, repeatDelay }: { x: number; y: number; repeatDelay: number }) => (
   <motion.div
     className="absolute w-2 h-2 bg-yellow-400 rounded-full pointer-events-none"
     style={{ left: `${x}%`, top: `${y}%` }}
@@ -90,16 +94,22 @@ const Sparkle = ({ x, y }: { x: number; y: number }) => (
     transition={{
       duration: 0.8,
       repeat: Infinity,
-      repeatDelay: Math.random() * 2,
+      repeatDelay,
     }}
   />
 );
 
 const NotFound: React.FC = () => {
   const [messageIndex, setMessageIndex] = useState(0);
-  const [sparkles, setSparkles] = useState<
+  const [sparkles] = useState<
     { id: number; x: number; y: number }[]
-  >([]);
+  >(() =>
+    Array.from({ length: 15 }, (_, i) => ({
+      id: i,
+      x: (i * 17 + 3) % 100,
+      y: (i * 23 + 7) % 100,
+    })),
+  );
 
   // Rotate messages
   useEffect(() => {
@@ -109,33 +119,46 @@ const NotFound: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Generate sparkles on mount
-  useEffect(() => {
-    const newSparkles = Array.from({ length: 15 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-    }));
-    setSparkles(newSparkles);
-  }, []);
-
   const currentMessage = MESSAGES[messageIndex];
+
+  const floatingBooks = useMemo(
+    () =>
+      Array.from({ length: 8 }, (_, i) => ({
+        delay: i * 1.5,
+        x: 10 + i * 12,
+        size: 2 + (i % 3) * 0.7 + 0.5,
+        emoji: ["📕", "📗", "📘", "📙", "📚", "📖"][i % 6],
+        duration: 8 + (i % 4) + 1,
+      })),
+    [],
+  );
+
+  const sparkleData = useMemo(
+    () =>
+      sparkles.map((s) => ({
+        ...s,
+        repeatDelay: (s.id % 5) * 0.4 + 0.2,
+      })),
+    [sparkles],
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-orange-100 flex items-center justify-center p-4 overflow-hidden relative">
       {/* Floating books background */}
-      {Array.from({ length: 8 }).map((_, i) => (
+      {floatingBooks.map((book, i) => (
         <FloatingBook
           key={i}
-          delay={i * 1.5}
-          x={10 + i * 12}
-          size={2 + Math.random() * 2}
+          delay={book.delay}
+          x={book.x}
+          size={book.size}
+          emoji={book.emoji}
+          duration={book.duration}
         />
       ))}
 
       {/* Sparkles */}
-      {sparkles.map((sparkle) => (
-        <Sparkle key={sparkle.id} x={sparkle.x} y={sparkle.y} />
+      {sparkleData.map((sparkle) => (
+        <Sparkle key={sparkle.id} x={sparkle.x} y={sparkle.y} repeatDelay={sparkle.repeatDelay} />
       ))}
 
       {/* Main content */}

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo } from "react";
 import type { ReactNode } from "react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
@@ -37,9 +37,6 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { isAuthenticated, isLoading } = useConvexAuth();
   const { signIn: convexSignIn, signOut: convexSignOut } = useAuthActions();
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [convexUserId, setConvexUserId] = useState<Id<"users"> | null>(null);
-  const [initialCheckDone, setInitialCheckDone] = useState(false);
 
   // Query to get current user profile
   const currentUser = useQuery(
@@ -49,25 +46,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const createUserProfile = useMutation(api.users.createProfile);
 
-  useEffect(() => {
-    // Mark initial check as done once we have a definitive auth state
-    if (!isLoading) {
-      setInitialCheckDone(true);
-    }
-  }, [isLoading]);
-
-  useEffect(() => {
+  // Derive auth user directly from Convex query to avoid setState in effect
+  const user: AuthUser | null = useMemo(() => {
     if (currentUser) {
-      setUser({
+      return {
         id: currentUser._id,
         email: currentUser.email || "",
         name: currentUser.name,
-      });
-      setConvexUserId(currentUser._id);
-    } else if (!isAuthenticated && !isLoading) {
-      setUser(null);
-      setConvexUserId(null);
+      };
     }
+    if (!isAuthenticated && !isLoading) {
+      return null;
+    }
+    return null;
+  }, [currentUser, isAuthenticated, isLoading]);
+
+  const convexUserId: Id<"users"> | null = useMemo(() => {
+    if (currentUser) return currentUser._id;
+    if (!isAuthenticated && !isLoading) return null;
+    return null;
   }, [currentUser, isAuthenticated, isLoading]);
 
   // Create profile for new users after signup
@@ -94,7 +91,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           });
         } catch {
           // Profile may already exist or will be created on next action
-          console.log("Profile creation handled or will retry");
         }
       }
     };
@@ -181,22 +177,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signOut = async () => {
     try {
       await convexSignOut();
-      setUser(null);
-      setConvexUserId(null);
+      // user and convexUserId are derived from currentUser/isAuthenticated,
+      // so they will automatically become null once auth state updates.
     } catch (error) {
       console.error("Sign out error:", error);
       throw error;
     }
   };
 
-  // Consider loading if:
-  // 1. Initial auth check hasn't completed
-  // 2. Convex auth is still loading
-  // 3. We're authenticated but user data hasn't loaded yet
-  const loading =
-    !initialCheckDone ||
-    isLoading ||
-    (isAuthenticated && currentUser === undefined);
+  // Consider loading if auth is still resolving or user data hasn't loaded yet
+  const loading = isLoading || (isAuthenticated && currentUser === undefined);
 
   const value = {
     user,

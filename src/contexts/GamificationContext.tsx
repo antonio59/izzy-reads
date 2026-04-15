@@ -73,14 +73,47 @@ export const GamificationProvider: React.FC<GamificationProviderProps> = ({
   const { books, poems, blogPosts, readingStats, readingChallenges } =
     useBooks();
 
-  const [totalXP, setTotalXP] = useState(0);
+  const [totalXP, setTotalXP] = useState(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.totalXP || 0;
+      } catch {
+        return 0;
+      }
+    }
+    return 0;
+  });
   const [unlockedAchievements, setUnlockedAchievements] = useState<string[]>(
-    [],
+    () => {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          return parsed.unlockedAchievements || [];
+        } catch {
+          return [];
+        }
+      }
+      return [];
+    },
   );
   const [recentlyUnlocked, setRecentlyUnlocked] = useState<Achievement[]>([]);
   const [xpHistory, setXPHistory] = useState<
     { amount: number; reason: string; date: string }[]
-  >([]);
+  >(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.xpHistory || [];
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  });
 
   // Calculate user stats from book context
   const stats: UserStats = useMemo(
@@ -106,29 +139,14 @@ export const GamificationProvider: React.FC<GamificationProviderProps> = ({
     ],
   );
 
-  // Load saved state from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setTotalXP(parsed.totalXP || 0);
-        setUnlockedAchievements(parsed.unlockedAchievements || []);
-        setXPHistory(parsed.xpHistory || []);
-      } catch (e) {
-        console.error("Failed to parse gamification state:", e);
-      }
-    }
-  }, []);
-
   // Save state to localStorage
   useEffect(() => {
     const state = { totalXP, unlockedAchievements, xpHistory };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [totalXP, unlockedAchievements, xpHistory]);
 
-  // Calculate XP from reading activity
-  useEffect(() => {
+  // Calculate derived XP from reading activity during render
+  const calculatedXP = useMemo(() => {
     const activity: ReadingActivity = {
       booksRead: stats.booksRead,
       pagesRead: stats.pagesRead,
@@ -144,30 +162,26 @@ export const GamificationProvider: React.FC<GamificationProviderProps> = ({
     };
 
     const achievementXP = calculateAchievementXP(unlockedAchievements);
-    const calculatedXP = calculateTotalXP(activity, achievementXP);
-
-    // Only update if XP has increased (don't decrease)
-    if (calculatedXP > totalXP) {
-      setTotalXP(calculatedXP);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return calculateTotalXP(activity, achievementXP);
   }, [stats, unlockedAchievements, books, blogPosts]);
 
-  // Check for new achievements when stats change
-  useEffect(() => {
-    const newAchievements = getNewlyUnlockedAchievements(
-      unlockedAchievements,
-      stats,
-    );
-    if (newAchievements.length > 0) {
-      setUnlockedAchievements((prev) => [
-        ...prev,
-        ...newAchievements.map((a) => a.id),
-      ]);
-      setRecentlyUnlocked((prev) => [...prev, ...newAchievements]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stats]);
+  // Sync calculated XP during render (React will bail out if unchanged)
+  if (calculatedXP > totalXP) {
+    setTotalXP(calculatedXP);
+  }
+
+  // Check for new achievements during render
+  const newAchievements = useMemo(
+    () => getNewlyUnlockedAchievements(unlockedAchievements, stats),
+    [unlockedAchievements, stats],
+  );
+  if (newAchievements.length > 0) {
+    setUnlockedAchievements((prev) => [
+      ...prev,
+      ...newAchievements.map((a) => a.id),
+    ]);
+    setRecentlyUnlocked((prev) => [...prev, ...newAchievements]);
+  }
 
   const levelProgress = getLevelProgress(totalXP);
 
@@ -186,7 +200,6 @@ export const GamificationProvider: React.FC<GamificationProviderProps> = ({
       const newLevel = checkLevelUp(previousXP, newXP);
       if (newLevel) {
         // Level up notification could be handled here
-        console.log(`Level up! Now level ${newLevel.level}: ${newLevel.title}`);
       }
     },
     [totalXP],

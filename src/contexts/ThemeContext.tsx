@@ -27,17 +27,13 @@ interface ThemeProviderProps {
 const STORAGE_KEY = "izzys-bookshelf-theme";
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>("colorful");
-
-  // Initialize theme from localStorage or system preference
-  useEffect(() => {
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === "undefined") return "colorful";
     const saved = localStorage.getItem(STORAGE_KEY) as Theme | null;
-    if (saved) {
-      setThemeState(saved);
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      setThemeState("dark");
-    }
-  }, []);
+    if (saved) return saved;
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) return "dark";
+    return "colorful";
+  });
 
   // Apply theme to document
   useEffect(() => {

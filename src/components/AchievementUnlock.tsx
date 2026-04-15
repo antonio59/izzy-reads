@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Achievement, AchievementRarity } from '../lib/achievements'
 import { Badge } from './ui/Badge'
@@ -26,8 +26,13 @@ const rarityGlow: Record<AchievementRarity, string> = {
 
 // Confetti particle component
 function ConfettiParticle({ delay, color }: { delay: number; color: string }) {
-  const randomX = Math.random() * 200 - 100
-  const randomRotate = Math.random() * 360
+  const { randomX, randomRotate } = useMemo(() => {
+    const seed = Math.round(delay * 1000)
+    return {
+      randomX: (seed * 37 % 200) - 100,
+      randomRotate: (seed * 53 % 360),
+    }
+  }, [delay])
 
   return (
     <motion.div
@@ -88,20 +93,20 @@ export function AchievementUnlock({
 }: AchievementUnlockProps) {
   const [isVisible, setIsVisible] = useState(false)
 
+  // Trigger visibility during render when a new achievement appears
+  if (achievement && !isVisible) {
+    setIsVisible(true)
+  }
+
   useEffect(() => {
-    if (achievement) {
-      setIsVisible(true)
+    if (!achievement || !autoClose || !isVisible) return
+    const timer = setTimeout(() => {
+      setIsVisible(false)
+      setTimeout(onClose, 500) // Wait for exit animation
+    }, autoCloseDelay)
 
-      if (autoClose) {
-        const timer = setTimeout(() => {
-          setIsVisible(false)
-          setTimeout(onClose, 500) // Wait for exit animation
-        }, autoCloseDelay)
-
-        return () => clearTimeout(timer)
-      }
-    }
-  }, [achievement, autoClose, autoCloseDelay, onClose])
+    return () => clearTimeout(timer)
+  }, [achievement, autoClose, autoCloseDelay, onClose, isVisible])
 
   const confettiColors = [
     'bg-iris-400',

@@ -9,7 +9,7 @@ const STATIC_ASSETS = ["/", "/index.html", "/manifest.json"];
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(STATIC_CACHE).then((cache) => {
-      console.log("Caching static assets");
+      // Caching static assets
       return cache.addAll(STATIC_ASSETS);
     }),
   );
@@ -79,39 +79,6 @@ self.addEventListener("fetch", (event) => {
   );
 });
 
-// Background sync for offline actions
-self.addEventListener("sync", (event) => {
-  if (event.tag === "sync-books") {
-    event.waitUntil(syncBooks());
-  }
-});
-
-async function syncBooks() {
-  // Sync any pending book additions when back online
-  const pendingBooks = await getPendingBooks();
-  for (const book of pendingBooks) {
-    try {
-      // Send to server
-      await fetch("/api/books", {
-        method: "POST",
-        body: JSON.stringify(book),
-      });
-      await removePendingBook(book.id);
-    } catch (error) {
-      console.error("Failed to sync book:", error);
-    }
-  }
-}
-
-async function getPendingBooks() {
-  // Get from IndexedDB
-  return [];
-}
-
-async function removePendingBook(id) {
-  // Remove from IndexedDB
-}
-
 // Push notifications
 self.addEventListener("push", (event) => {
   if (!event.data) return;
@@ -120,8 +87,8 @@ self.addEventListener("push", (event) => {
 
   const options = {
     body: data.body,
-    icon: "/icons/icon-192x192.png",
-    badge: "/icons/badge-72x72.png",
+    icon: "/icons/icon.svg",
+    badge: "/icons/icon.svg",
     vibrate: [100, 50, 100],
     data: {
       url: data.url || "/",

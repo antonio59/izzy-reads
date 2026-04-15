@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Trophy, Star } from "lucide-react";
 import { useGamification } from "../contexts/GamificationContext";
@@ -49,6 +49,46 @@ const AchievementNotification: React.FC = () => {
       return () => clearTimeout(timer);
     }
   }, [currentAchievement]);
+
+function CelebrationParticles() {
+  const particles = useMemo(
+    () =>
+      Array.from({ length: 10 }, (_, i) => ({
+        left: 10 + (i * 8 + 4) % 80,
+        top: 10 + (i * 12 + 3) % 80,
+      })),
+    [],
+  );
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {particles.map((p, i) => (
+        <motion.span
+          key={i}
+          className="absolute text-lg"
+          style={{
+            left: `${p.left}%`,
+            top: `${p.top}%`,
+          }}
+          initial={{ scale: 0, opacity: 1 }}
+          animate={{
+            scale: [0, 1, 0],
+            opacity: [1, 1, 0],
+            y: [0, -20],
+          }}
+          transition={{
+            duration: 1,
+            delay: 0.3 + i * 0.1,
+            repeat: 2,
+            repeatDelay: 0.5,
+          }}
+        >
+          {["✨", "⭐", "🌟", "💫"][i % 4]}
+        </motion.span>
+      ))}
+    </div>
+  );
+}
 
   const handleDismiss = () => {
     setCurrentAchievement(null);
@@ -161,32 +201,7 @@ const AchievementNotification: React.FC = () => {
             {/* Celebration particles for epic and legendary */}
             {(currentAchievement.rarity === "epic" ||
               currentAchievement.rarity === "legendary") && (
-              <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                {[...Array(10)].map((_, i) => (
-                  <motion.span
-                    key={i}
-                    className="absolute text-lg"
-                    style={{
-                      left: `${10 + Math.random() * 80}%`,
-                      top: `${10 + Math.random() * 80}%`,
-                    }}
-                    initial={{ scale: 0, opacity: 1 }}
-                    animate={{
-                      scale: [0, 1, 0],
-                      opacity: [1, 1, 0],
-                      y: [0, -20],
-                    }}
-                    transition={{
-                      duration: 1,
-                      delay: 0.3 + i * 0.1,
-                      repeat: 2,
-                      repeatDelay: 0.5,
-                    }}
-                  >
-                    {["✨", "⭐", "🌟", "💫"][i % 4]}
-                  </motion.span>
-                ))}
-              </div>
+              <CelebrationParticles />
             )}
           </div>
 

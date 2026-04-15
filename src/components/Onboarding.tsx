@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronRight,
@@ -121,6 +121,18 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
     }));
   };
 
+  const floatingDecorations = useMemo(
+    () =>
+      Array.from({ length: 10 }, (_, i) => ({
+        left: (i * 11 + 3) % 100,
+        top: (i * 13 + 2) % 100,
+        duration: 3 + (i % 3) * 0.7 + 0.5,
+        delay: (i % 4) * 0.5,
+        emoji: ["📚", "✨", "🌟", "📖", "🎯", "🦋", "🌈", "💫", "⭐", "🏆"][i],
+      })),
+    [],
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-orange-100 flex items-center justify-center p-4">
       {/* Floating decorations */}
@@ -129,25 +141,25 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
-        {[...Array(10)].map((_, i) => (
+        {floatingDecorations.map((d, i) => (
           <motion.span
             key={i}
             className="absolute text-4xl opacity-20"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${d.left}%`,
+              top: `${d.top}%`,
             }}
             animate={{
               y: [0, -20, 0],
               rotate: [0, 10, -10, 0],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: d.duration,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: d.delay,
             }}
           >
-            {["📚", "✨", "🌟", "📖", "🎯", "🦋", "🌈", "💫", "⭐", "🏆"][i]}
+            {d.emoji}
           </motion.span>
         ))}
       </motion.div>
@@ -429,29 +441,25 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                 </div>
 
                 {/* Celebration confetti */}
-                {[...Array(20)].map((_, i) => (
+                {Array.from({ length: 20 }, (_, i) => (
                   <motion.span
                     key={i}
                     className="absolute text-2xl pointer-events-none"
-                    style={{ left: `${Math.random() * 100}%` }}
+                    style={{ left: `${(i * 19 + 3) % 100}%` }}
                     initial={{ top: "-10%", opacity: 1 }}
                     animate={{
                       top: "110%",
-                      rotate: 360 * (Math.random() > 0.5 ? 1 : -1),
+                      rotate: 360 * (i % 2 === 0 ? 1 : -1),
                       opacity: [1, 1, 0],
                     }}
                     transition={{
-                      duration: 2 + Math.random(),
-                      delay: Math.random() * 0.5,
+                      duration: 2 + (i % 3) * 0.3 + 0.4,
+                      delay: (i % 6) * 0.08,
                       repeat: Infinity,
                       repeatDelay: 2,
                     }}
                   >
-                    {
-                      ["🎉", "⭐", "✨", "🌟", "💫", "🎊"][
-                        Math.floor(Math.random() * 6)
-                      ]
-                    }
+                    {["🎉", "⭐", "✨", "🌟", "💫", "🎊"][i % 6]}
                   </motion.span>
                 ))}
               </motion.div>

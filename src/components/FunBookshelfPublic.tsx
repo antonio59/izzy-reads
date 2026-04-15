@@ -4,6 +4,40 @@ import type { Book } from "../types";
 import { BookReactionButtons } from "./ReactionButtons";
 import { ShareBookButton } from "./ShareButton";
 
+function ConfettiParticles() {
+  const particles = useMemo(
+    () =>
+      Array.from({ length: 20 }, (_, i) => ({
+        top: (i * 17) % 100,
+        left: (i * 23) % 100,
+        rotate: (i * 18) % 360,
+        emoji: ["⭐", "✨", "💖", "🎉", "🌟"][i % 5],
+      })),
+    [],
+  );
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+      {particles.map((p, i) => (
+        <motion.div
+          key={i}
+          className="absolute text-2xl"
+          initial={{ top: "50%", left: "50%", scale: 0 }}
+          animate={{
+            top: `${p.top}%`,
+            left: `${p.left}%`,
+            scale: [0, 1, 0],
+            rotate: p.rotate,
+          }}
+          transition={{ duration: 1 }}
+        >
+          {p.emoji}
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
 // Book Cover Component with error handling
 function BookCoverImage({
   book,
@@ -458,30 +492,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            {showConfetti && (
-              <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
-                {[...Array(20)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute text-2xl"
-                    initial={{ top: "50%", left: "50%", scale: 0 }}
-                    animate={{
-                      top: `${Math.random() * 100}%`,
-                      left: `${Math.random() * 100}%`,
-                      scale: [0, 1, 0],
-                      rotate: Math.random() * 360,
-                    }}
-                    transition={{ duration: 1 }}
-                  >
-                    {
-                      ["⭐", "✨", "💖", "🎉", "🌟"][
-                        Math.floor(Math.random() * 5)
-                      ]
-                    }
-                  </motion.div>
-                ))}
-              </div>
-            )}
+            {showConfetti && <ConfettiParticles />}
 
             <motion.div
               className="absolute inset-0 bg-black/50 backdrop-blur-sm"

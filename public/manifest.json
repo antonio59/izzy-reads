@@ -27,13 +27,13 @@
       "name": "My Bookshelf",
       "short_name": "Bookshelf",
       "description": "View your book collection",
-      "url": "/bookshelf"
+      "url": "/books"
     },
     {
       "name": "Add Book",
       "short_name": "Add Book",
       "description": "Add a new book to your collection",
-      "url": "/bookshelf?action=add"
+      "url": "/books?action=add"
     }
   ]
 }

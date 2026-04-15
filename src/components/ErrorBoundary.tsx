@@ -1,6 +1,14 @@
-import { Component, type ErrorInfo, type ReactNode } from "react";
+import { Component, useId, useMemo, type ErrorInfo, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { RefreshCw, Home, AlertTriangle } from "lucide-react";
+
+const funMessages = [
+  { emoji: "📖", message: "Oops! This page got a paper cut!" },
+  { emoji: "🔮", message: "Even magic has its limits!" },
+  { emoji: "🐛", message: "A tiny bug is causing trouble!" },
+  { emoji: "🌪️", message: "A wild error appeared!" },
+  { emoji: "🎭", message: "Plot twist: Something went wrong!" },
+];
 
 interface Props {
   children: ReactNode;
@@ -70,16 +78,16 @@ function ErrorFallback({
   onGoHome: () => void;
   onTryAgain: () => void;
 }) {
-  const funMessages = [
-    { emoji: "📖", message: "Oops! This page got a paper cut!" },
-    { emoji: "🔮", message: "Even magic has its limits!" },
-    { emoji: "🐛", message: "A tiny bug is causing trouble!" },
-    { emoji: "🌪️", message: "A wild error appeared!" },
-    { emoji: "🎭", message: "Plot twist: Something went wrong!" },
-  ];
-
-  const randomMessage =
-    funMessages[Math.floor(Math.random() * funMessages.length)];
+  const id = useId();
+  const randomMessage = useMemo(() => {
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) {
+      hash = ((hash << 5) - hash) + id.charCodeAt(i);
+      hash |= 0;
+    }
+    const index = Math.abs(hash) % funMessages.length;
+    return funMessages[index];
+  }, [id]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-rose-50 to-purple-50 flex items-center justify-center p-4">

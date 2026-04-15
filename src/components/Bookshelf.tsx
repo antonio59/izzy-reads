@@ -3,6 +3,25 @@ import { BookOpen, Star, Plus, Edit, Trash2, Calendar, User } from 'lucide-react
 import { useBooks } from '../contexts/BookContext'
 import type { Book } from '../types'
 
+interface StarRatingProps {
+  rating: number
+  onRatingChange?: (rating: number) => void
+  readonly?: boolean
+}
+
+const StarRating = ({ rating, onRatingChange, readonly = false }: StarRatingProps) => (
+  <div className="flex items-center space-x-1">
+    {[1, 2, 3, 4, 5].map((star) => (
+      <Star
+        key={star}
+        className={`h-5 w-5 cursor-pointer transition-colors ${star <= rating ? 'text-amber-400 fill-current' : 'text-stone-300'
+          }`}
+        onClick={() => !readonly && onRatingChange && onRatingChange(star)}
+      />
+    ))}
+  </div>
+)
+
 const Bookshelf: React.FC = () => {
   const { books, addBook, updateBook, deleteBook } = useBooks()
   const [showAddForm, setShowAddForm] = useState(false)
@@ -59,23 +78,6 @@ const Bookshelf: React.FC = () => {
       setEditingBook(null)
     }
   }
-
-  const StarRating = ({ rating, onRatingChange, readonly = false }: {
-    rating: number,
-    onRatingChange?: (rating: number) => void,
-    readonly?: boolean
-  }) => (
-    <div className="flex items-center space-x-1">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <Star
-          key={star}
-          className={`h-5 w-5 cursor-pointer transition-colors ${star <= rating ? 'text-amber-400 fill-current' : 'text-stone-300'
-            }`}
-          onClick={() => !readonly && onRatingChange && onRatingChange(star)}
-        />
-      ))}
-    </div>
-  )
 
   return (
     <div className="space-y-6">

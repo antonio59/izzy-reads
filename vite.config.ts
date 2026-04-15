@@ -17,7 +17,7 @@ export default defineConfig({
     port: 5000,
   },
   build: {
-    chunkSizeWarningLimit: 600,
+    chunkSizeWarningLimit: 800,
     rollupOptions: {
       output: {
         manualChunks(id: string) {
@@ -34,7 +34,11 @@ export default defineConfig({
             return "vendor-giphy";
           }
           if (id.includes("node_modules/@emoji-mart")) {
-            return "vendor-emoji";
+            // Keep @emoji-mart/react in vendor-emoji, but let @emoji-mart/data
+            // split into its own dynamic chunk since we lazy-load it
+            if (!id.includes("@emoji-mart/data")) {
+              return "vendor-emoji";
+            }
           }
           if (id.includes("components/Login") || id.includes("components/Signup")) {
             return "feature-auth";

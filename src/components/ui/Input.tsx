@@ -1,4 +1,4 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, useId, useState } from "react";
 import { Eye, EyeOff, Search, X } from "lucide-react";
 
 export type InputSize = "sm" | "md" | "lg";
@@ -68,7 +68,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
-    const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
+    const fallbackId = useId();
+    const inputId = id || fallbackId;
     const styles = sizeStyles[size];
     const hasLeftIcon = icon && iconPosition === "left";
     const hasRightIcon = icon && iconPosition === "right";
@@ -237,7 +238,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     },
     ref,
   ) => {
-    const inputId = id || `textarea-${Math.random().toString(36).substr(2, 9)}`;
+    const fallbackId = useId();
+    const inputId = id || fallbackId;
     const styles = sizeStyles[size];
     const charCount = typeof value === "string" ? value.length : 0;
 
@@ -326,7 +328,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     },
     ref,
   ) => {
-    const inputId = id || `select-${Math.random().toString(36).substr(2, 9)}`;
+    const fallbackId = useId();
+    const inputId = id || fallbackId;
     const styles = sizeStyles[size];
 
     return (

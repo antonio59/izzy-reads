@@ -1,8 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Smile, X } from "lucide-react";
-import data from "@emoji-mart/data";
+import { Smile, X, Loader2 } from "lucide-react";
 import Picker from "@emoji-mart/react";
+
+// Dynamically import emoji data to reduce initial bundle size
+let emojiDataPromise: Promise<typeof import("@emoji-mart/data")> | null = null;
+function getEmojiData() {
+  if (!emojiDataPromise) {
+    emojiDataPromise = import("@emoji-mart/data");
+  }
+  return emojiDataPromise;
+}
 
 interface EmojiPickerProps {
   onSelect: (emoji: string) => void;
@@ -22,7 +30,14 @@ export function EmojiPicker({
   pickerPosition = "bottom",
 }: EmojiPickerProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [emojiData, setEmojiData] = useState<unknown>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isOpen && !emojiData) {
+      getEmojiData().then((mod) => setEmojiData(mod as any));
+    }
+  }, [isOpen, emojiData]);
 
   // Close picker when clicking outside
   useEffect(() => {
@@ -81,25 +96,31 @@ export function EmojiPicker({
               >
                 <X className="w-4 h-4" />
               </button>
-              <Picker
-                data={data}
-                onEmojiSelect={handleEmojiSelect}
-                theme="light"
-                previewPosition="none"
-                skinTonePosition="none"
-                maxFrequentRows={2}
-                perLine={8}
-                categories={[
-                  "frequent",
-                  "people",
-                  "nature",
-                  "foods",
-                  "activity",
-                  "places",
-                  "objects",
-                  "symbols",
-                ]}
-              />
+              {emojiData ? (
+                <Picker
+                  data={emojiData}
+                  onEmojiSelect={handleEmojiSelect}
+                  theme="light"
+                  previewPosition="none"
+                  skinTonePosition="none"
+                  maxFrequentRows={2}
+                  perLine={8}
+                  categories={[
+                    "frequent",
+                    "people",
+                    "nature",
+                    "foods",
+                    "activity",
+                    "places",
+                    "objects",
+                    "symbols",
+                  ]}
+                />
+              ) : (
+                <div className="w-[352px] h-[435px] flex items-center justify-center bg-white rounded-xl">
+                  <Loader2 className="w-8 h-8 text-stone-400 animate-spin" />
+                </div>
+              )}
             </div>
           </motion.div>
         )}
@@ -121,7 +142,14 @@ export function EmojiButton({
   size = "md",
 }: EmojiButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [emojiData, setEmojiData] = useState<unknown>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isOpen && !emojiData) {
+      getEmojiData().then((mod) => setEmojiData(mod as any));
+    }
+  }, [isOpen, emojiData]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -180,15 +208,21 @@ export function EmojiButton({
               >
                 <X className="w-4 h-4" />
               </button>
-              <Picker
-                data={data}
-                onEmojiSelect={handleEmojiSelect}
-                theme="light"
-                previewPosition="none"
-                skinTonePosition="none"
-                maxFrequentRows={2}
-                perLine={8}
-              />
+              {emojiData ? (
+                <Picker
+                  data={emojiData}
+                  onEmojiSelect={handleEmojiSelect}
+                  theme="light"
+                  previewPosition="none"
+                  skinTonePosition="none"
+                  maxFrequentRows={2}
+                  perLine={8}
+                />
+              ) : (
+                <div className="w-[352px] h-[435px] flex items-center justify-center bg-white rounded-xl">
+                  <Loader2 className="w-8 h-8 text-stone-400 animate-spin" />
+                </div>
+              )}
             </div>
           </motion.div>
         )}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 interface FloatingElement {
   id: number
@@ -12,45 +12,35 @@ interface FloatingElement {
 
 // Simplified: Only 4 subtle elements at low opacity
 const FloatingDecorations = () => {
-  const [elements, setElements] = useState<FloatingElement[]>([])
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  })
 
+  // Listen for prefers-reduced-motion changes
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReducedMotion(mediaQuery.matches)
-
     const handleChange = (e: MediaQueryListEvent) => {
       setPrefersReducedMotion(e.matches)
     }
-
     mediaQuery.addEventListener('change', handleChange)
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
 
-  useEffect(() => {
-    if (prefersReducedMotion) {
-      setElements([])
-      return
-    }
+  const elements = useMemo<FloatingElement[]>(() => {
+    if (prefersReducedMotion) return []
 
-    // Reduced to just 4 subtle book-related emojis
     const emojis = ['📚', '✨', '⭐', '📖']
-    const newElements: FloatingElement[] = []
-
-    // Only 4 elements for subtle decoration
-    for (let i = 0; i < 4; i++) {
-      newElements.push({
-        id: i,
-        emoji: emojis[i],
-        // Position in corners to avoid content interference
-        left: i < 2 ? 5 + Math.random() * 10 : 85 + Math.random() * 10,
-        top: i % 2 === 0 ? 10 + Math.random() * 20 : 70 + Math.random() * 20,
-        size: 16 + Math.random() * 8, // Smaller size range
-        delay: i * 2, // Staggered delays
-        duration: 8 + Math.random() * 4, // Slower, more subtle movement
-      })
-    }
-    setElements(newElements)
+    // Use a seeded random based on emoji index to avoid Math.random in render warnings
+    return Array.from({ length: 4 }, (_, i) => ({
+      id: i,
+      emoji: emojis[i],
+      left: i < 2 ? 5 + (i * 3.3 + 2) : 85 + (i * 2.5 + 1),
+      top: i % 2 === 0 ? 10 + (i * 6.5 + 3) : 70 + (i * 4.2 + 2),
+      size: 16 + (i * 2.5 + 2),
+      delay: i * 2,
+      duration: 8 + (i * 1.3 + 1.5),
+    }))
   }, [prefersReducedMotion])
 
   if (prefersReducedMotion || elements.length === 0) {

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useMemo } from "react";
 
 interface SkeletonProps {
   className?: string;
@@ -111,6 +112,11 @@ export function DashboardStatsSkeleton() {
 }
 
 export function ChartSkeleton() {
+  const heights = useMemo(
+    () => Array.from({ length: 12 }, (_, i) => `${20 + ((i * 7 + 3) % 80)}%`),
+    [],
+  );
+
   return (
     <div className="bg-white rounded-2xl p-6 shadow-soft">
       <div className="flex items-center justify-between mb-6">
@@ -121,12 +127,12 @@ export function ChartSkeleton() {
         <Skeleton variant="rounded" className="h-6 w-20" animation="wave" />
       </div>
       <div className="h-48 flex items-end gap-2">
-        {Array.from({ length: 12 }).map((_, i) => (
+        {heights.map((height, i) => (
           <Skeleton
             key={i}
             variant="rounded"
             className="flex-1"
-            height={`${20 + Math.random() * 80}%`}
+            height={height}
             animation="wave"
           />
         ))}

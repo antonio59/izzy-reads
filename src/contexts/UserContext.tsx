@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
 import type { User, UserSettings, AvatarConfig } from "../types";
 
@@ -29,12 +29,8 @@ interface UserProviderProps {
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isParentMode, setIsParentMode] = useState(false);
-
-  // Initialize with default user and load saved avatar on mount
-  useEffect(() => {
-    // Try to load saved profile first
+  const [user, setUser] = useState<User | null>(() => {
+    // Load saved avatar at initialization to avoid setState in effect
     let savedAvatar: AvatarConfig | undefined;
     const savedProfile = localStorage.getItem("userProfile");
     if (savedProfile) {
@@ -48,12 +44,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       }
     }
 
-    const defaultUser: User = {
+    return {
       id: "1",
       name: "Isabella",
       age: 10,
       isParent: false,
-      avatar: savedAvatar, // Include avatar immediately
+      avatar: savedAvatar,
       settings: {
         theme: "colorful",
         readingGoal: 20,
@@ -71,8 +67,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         },
       },
     };
-    setUser(defaultUser);
-  }, []);
+  });
+  const [isParentMode, setIsParentMode] = useState(false);
 
   const updateUserSettings = (newSettings: Partial<UserSettings>) => {
     if (user) {
