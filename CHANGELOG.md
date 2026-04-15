@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Remaining legacy links, reduced-motion gaps and stray logs
 - Address all outstanding PWA, lint, accessibility and bundle issues
 - **security**: Resolve incomplete URL substring sanitization in migration.ts
 - Replace all Google Books grey placeholder covers
@@ -548,6 +549,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
