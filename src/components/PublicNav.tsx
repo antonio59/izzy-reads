@@ -81,7 +81,7 @@ export function PublicNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems: NavItem[] = [
-    { id: "home", label: "My Books", icon: Book, path: "/", show: true },
+    { id: "home", label: "Portfolio", icon: Book, path: "/", show: true },
     {
       id: "reviews",
       label: "Reviews",

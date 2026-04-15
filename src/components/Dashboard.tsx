@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
-import { AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   BookOpen,
   TrendingUp,
@@ -10,6 +10,7 @@ import {
   Star,
   User,
   BarChart3,
+  Activity,
 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -20,7 +21,7 @@ import { getWeeklyQuote } from "../utils/readingQuotes";
 import { Card, StatCard } from "./ui/Card";
 import { StreakBadge } from "./ui/Badge";
 import { ChallengeProgress } from "./ui/Progress";
-import { StaggerContainer, StaggerItem, FadeIn } from "./PageTransition";
+import { StaggerContainer, StaggerItem } from "./PageTransition";
 import { BookGrid } from "./BookGrid";
 import { BookDetailModal } from "./BookDetailModal";
 import AvatarCreator, {
@@ -39,6 +40,7 @@ import {
   generateGenreData,
 } from "./DashboardWidgets";
 import type { Book } from "../types";
+import { ReducedMotionAnimatePresence } from "../contexts/MotionPreferenceContext";
 
 const Dashboard: React.FC = () => {
   const { books, wishlist, readingChallenges, readingStats } = useBooks();
@@ -157,10 +159,16 @@ const Dashboard: React.FC = () => {
     },
   ];
 
+  const [activeTab, setActiveTab] = useState<"activity" | "insights">("activity");
+
   return (
     <div className="space-y-6">
       {/* Hero Section */}
-      <FadeIn>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
         <Card
           variant="gradient"
           padding="lg"
@@ -224,7 +232,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         </Card>
-      </FadeIn>
+      </motion.div>
 
       {/* Stats Grid */}
       <StaggerContainer className="grid grid-cols-2 lg:grid-cols-5 gap-4">
@@ -280,83 +288,145 @@ const Dashboard: React.FC = () => {
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Left Column - 2/3 width */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Reading Challenge */}
-          {currentChallenge && (
-            <FadeIn delay={0.1}>
-              <ChallengeProgress
-                title={currentChallenge.title}
-                current={currentChallenge.current}
-                target={currentChallenge.target}
-                icon={currentChallenge.badge}
-                color="accent"
-                dueDate={currentChallenge.endDate}
-              />
-            </FadeIn>
-          )}
+          {/* Tabs */}
+          <div className="bg-white rounded-2xl p-1.5 shadow-sm border border-stone-100 flex gap-1">
+            <button
+              onClick={() => setActiveTab("activity")}
+              className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                activeTab === "activity"
+                  ? "bg-primary-50 text-primary-700 shadow-sm"
+                  : "text-stone-600 hover:bg-stone-50"
+              }`}
+            >
+              <Activity className="w-4 h-4" />
+              Activity
+            </button>
+            <button
+              onClick={() => setActiveTab("insights")}
+              className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                activeTab === "insights"
+                  ? "bg-accent-50 text-accent-700 shadow-sm"
+                  : "text-stone-600 hover:bg-stone-50"
+              }`}
+            >
+              <BarChart3 className="w-4 h-4" />
+              Insights
+            </button>
+          </div>
 
-          {/* Reading Activity Chart */}
-          <FadeIn delay={0.2}>
-            <ReadingActivityChart data={monthlyReadingData} />
-          </FadeIn>
+          {activeTab === "activity" ? (
+            <div className="space-y-6">
+              {/* Reading Challenge */}
+              {currentChallenge && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <ChallengeProgress
+                    title={currentChallenge.title}
+                    current={currentChallenge.current}
+                    target={currentChallenge.target}
+                    icon={currentChallenge.badge}
+                    color="accent"
+                    dueDate={currentChallenge.endDate}
+                  />
+                </motion.div>
+              )}
 
-          {/* Recent Books */}
-          <FadeIn delay={0.3}>
-            <RecentBooks
-              books={recentBooks}
-              onBookClick={setSelectedBook}
-              BookGridComponent={BookGrid}
-            />
-          </FadeIn>
+              {/* Recent Books */}
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, delay: 0.05 }}
+              >
+                <RecentBooks
+                  books={recentBooks}
+                  onBookClick={setSelectedBook}
+                  BookGridComponent={BookGrid}
+                />
+              </motion.div>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Reading Activity Chart */}
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
+              >
+                <ReadingActivityChart data={monthlyReadingData} />
+              </motion.div>
 
-          {/* Most Loved Books - only show when there are reactions */}
-          {totalReactions > 0 && (
-            <FadeIn delay={0.35}>
-              <MostLovedBooks
-                books={mostLovedBooks}
-                totalReactions={totalReactions}
-              />
-            </FadeIn>
+              {/* Most Loved Books */}
+              {totalReactions > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25, delay: 0.05 }}
+                >
+                  <MostLovedBooks
+                    books={mostLovedBooks}
+                    totalReactions={totalReactions}
+                  />
+                </motion.div>
+              )}
+
+              {/* Analytics Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, delay: 0.1 }}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
+                    <BarChart3 className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-display font-bold text-stone-900">
+                      Reviews & Engagement
+                    </h2>
+                    <p className="text-stone-600 text-sm">
+                      See how readers engage with your books
+                    </p>
+                  </div>
+                </div>
+                <ReviewAnalytics />
+              </motion.div>
+            </div>
           )}
         </div>
 
         {/* Right Column - 1/3 width */}
         <div className="space-y-6">
           {/* Quick Actions */}
-          <FadeIn delay={0.2}>
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25 }}
+          >
             <QuickActions actions={quickActions} />
-          </FadeIn>
+          </motion.div>
 
           {/* Genre Distribution */}
-          <FadeIn delay={0.3}>
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25, delay: 0.05 }}
+          >
             <GenrePieChart data={genreData} />
-          </FadeIn>
+          </motion.div>
 
           {/* Weekly Quote */}
-          <FadeIn delay={0.4}>
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25, delay: 0.1 }}
+          >
             <WeeklyQuote quote={getWeeklyQuote()} />
-          </FadeIn>
+          </motion.div>
         </div>
       </div>
-
-      {/* Analytics Section */}
-      <FadeIn delay={0.5}>
-        <div className="mt-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
-              <BarChart3 className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-display font-bold text-stone-900">
-                Analytics & Insights
-              </h2>
-              <p className="text-stone-500">
-                See how readers engage with your books and reviews
-              </p>
-            </div>
-          </div>
-          <ReviewAnalytics />
-        </div>
-      </FadeIn>
 
       {/* Onboarding Tour */}
       {showTour && (
@@ -377,7 +447,7 @@ const Dashboard: React.FC = () => {
       )}
 
       {/* Avatar Creator Modal */}
-      <AnimatePresence>
+      <ReducedMotionAnimatePresence>
         {showAvatarCreator && (
           <AvatarCreator
             initialConfig={userAvatar}
@@ -385,7 +455,7 @@ const Dashboard: React.FC = () => {
             onClose={() => setShowAvatarCreator(false)}
           />
         )}
-      </AnimatePresence>
+      </ReducedMotionAnimatePresence>
     </div>
   );
 };

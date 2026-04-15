@@ -22,6 +22,7 @@ import { UserProvider } from "./contexts/UserContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { GamificationProvider } from "./contexts/GamificationContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { MotionPreferenceProvider } from "./contexts/MotionPreferenceContext";
 
 // Lazy load auth pages
 const Login = lazy(() => import("./components/Login"));
@@ -59,11 +60,12 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider>
-        <AuthProvider>
-          <UserProvider>
-            <BookProvider>
-              <GamificationProvider>
-                <Router>
+        <MotionPreferenceProvider>
+          <AuthProvider>
+            <UserProvider>
+              <BookProvider>
+                <GamificationProvider>
+                  <Router>
                   <Routes>
                     {/* Public Routes */}
                     <Route
@@ -303,7 +305,8 @@ function App() {
             </BookProvider>
           </UserProvider>
         </AuthProvider>
-      </ThemeProvider>
+      </MotionPreferenceProvider>
+    </ThemeProvider>
     </ErrorBoundary>
   );
 }

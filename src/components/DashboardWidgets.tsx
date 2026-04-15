@@ -110,7 +110,7 @@ export function GenrePieChart({ data }: GenrePieChartProps) {
           Genre Mix
         </h3>
         <div className="text-center py-8">
-          <p className="text-stone-400 text-sm">
+          <p className="text-stone-500 text-sm">
             Read more books to see your genre mix!
           </p>
         </div>
@@ -288,7 +288,7 @@ export function RecentBooks({
             <BookOpen className="w-12 h-12 text-stone-300 mx-auto mb-3" />
           </motion.div>
           <p className="text-stone-500 font-medium">No books read yet!</p>
-          <p className="text-sm text-stone-400">
+          <p className="text-sm text-stone-500">
             Start your reading journey today
           </p>
           <Link

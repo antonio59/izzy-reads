@@ -6,14 +6,9 @@ import {
   BookOpen,
   Sparkles,
   PenTool,
-  Heart,
-  Star,
-  Compass,
-  Trophy,
-  Bookmark,
   X,
-  User,
 } from "lucide-react";
+import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 
 interface OnboardingTourProps {
   onComplete: () => void;
@@ -30,98 +25,29 @@ interface TourStep {
 
 const TOUR_STEPS: TourStep[] = [
   {
-    title: "Welcome, Izzy!",
+    title: "Welcome to your Bookshelf!",
     content:
-      "As your uncle I created this site to give you an outlet to share the things you love to do -- read, write, and draw! This is YOUR special place on the internet where you can show off your reading adventures. Let me give you the grand tour!",
+      "This is YOUR special place to share the things you love — books, poems, and stories. Let’s show you around so you can get started right away.",
     emoji: "💜",
     icon: <Sparkles className="w-8 h-8" />,
     color: "from-purple-500 to-pink-500",
   },
   {
-    title: "Your Bookshelf",
+    title: "Track & Share Books",
     content:
-      "This is where all your books live! Add books you have finished, ones you are reading right now, or books on your wishlist. You can rate them with stars, write reviews, and even note if someone gave you a book as a gift.",
+      "Add books you have read, write reviews, and build your public bookshelf. Friends and family can leave fun reactions on your favourites!",
     emoji: "📚",
     icon: <BookOpen className="w-8 h-8" />,
     color: "from-purple-500 to-purple-600",
   },
   {
-    title: "Poetry & Blog",
+    title: "You are all set!",
     content:
-      "Write poems using fun templates like haiku, acrostic, and free verse! You can also write blog posts about your reading adventures. Customize them with backgrounds, fonts, and emojis to make them uniquely yours.",
-    emoji: "✍️",
+      "Write poems, blog about adventures, create your avatar, and level up as you read. Have fun — this is your reading adventure!",
+    emoji: "🚀",
     icon: <PenTool className="w-8 h-8" />,
-    color: "from-pink-500 to-rose-500",
-  },
-  {
-    title: "Reviews & Reactions",
-    content:
-      "Share what you think about books with reviews! Visitors can leave fun reactions on your books and reviews -- hearts, stars, fire emojis, and more. It is exciting to see what people think of your picks!",
-    emoji: "⭐",
-    icon: <Star className="w-8 h-8" />,
-    color: "from-amber-500 to-orange-500",
-  },
-  {
-    title: "Discover New Books",
-    content:
-      "Swipe through book recommendations like a fun game! Like a book? Add it to your wishlist. Not your style? Swipe past it. The more you use it, the better the suggestions get.",
-    emoji: "🧭",
-    icon: <Compass className="w-8 h-8" />,
     color: "from-teal-500 to-emerald-500",
   },
-  {
-    title: "Wishlist & Suggestions",
-    content:
-      "Your wishlist is public so family and friends know what books to get you! They can also suggest books they think you will love. You get to approve or decline each one.",
-    emoji: "🎁",
-    icon: <Heart className="w-8 h-8" />,
-    color: "from-pink-500 to-fuchsia-500",
-  },
-  {
-    title: "Series Tracker",
-    content:
-      "Never lose your place in a book series again! Track series like Harry Potter, Percy Jackson, Diary of a Wimpy Kid, and more. See your completion percentage and know exactly which book comes next.",
-    emoji: "📖",
-    icon: <Bookmark className="w-8 h-8" />,
-    color: "from-indigo-500 to-blue-500",
-  },
-  {
-    title: "Your Avatar",
-    content:
-      "Create your own custom avatar! Choose your skin tone, hair style, accessories, outfit, and more. You can even pick cat ears, a crown, or heart glasses. Make it look just like you -- or however you want!",
-    emoji: "🎭",
-    icon: <User className="w-8 h-8" />,
-    color: "from-violet-500 to-purple-500",
-  },
-  {
-    title: "Level Up & Achievements",
-    content:
-      "Earn XP for reading books, writing poems, and more! Level up from Curious Reader all the way to Ultimate Bibliophile. Unlock cool achievement badges along the way. Can you collect them all?",
-    emoji: "🏆",
-    icon: <Trophy className="w-8 h-8" />,
-    color: "from-amber-500 to-yellow-500",
-  },
-  {
-    title: "You are Ready!",
-    content:
-      "That is the full tour! Remember, this is YOUR reading adventure. Read books, write poems, blog about your favorites, and have fun. I am so proud of you. Now go explore!",
-    emoji: "🚀",
-    icon: <Sparkles className="w-8 h-8" />,
-    color: "from-purple-500 to-pink-500",
-  },
-];
-
-const FLOATING_EMOJIS = [
-  "📚",
-  "✨",
-  "🌟",
-  "📖",
-  "🎯",
-  "🦋",
-  "🌈",
-  "💫",
-  "⭐",
-  "🏆",
 ];
 
 const OnboardingTour: React.FC<OnboardingTourProps> = ({
@@ -129,6 +55,7 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
   onSkip,
 }) => {
   const [step, setStep] = useState(0);
+  const { prefersReducedMotion } = useMotionPreference();
 
   const currentStep = TOUR_STEPS[step];
   const isLastStep = step === TOUR_STEPS.length - 1;
@@ -150,38 +77,9 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      {/* Floating decorations */}
       <motion.div
-        className="fixed inset-0 pointer-events-none overflow-hidden"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
-        {FLOATING_EMOJIS.map((emoji, i) => (
-          <motion.span
-            key={i}
-            className="absolute text-3xl opacity-15"
-            style={{
-              left: `${10 + (i * 8.5) % 80}%`,
-              top: `${5 + (i * 11) % 85}%`,
-            }}
-            animate={{
-              y: [0, -15, 0],
-              rotate: [0, 8, -8, 0],
-            }}
-            transition={{
-              duration: 3 + (i % 3),
-              repeat: Infinity,
-              delay: i * 0.3,
-            }}
-          >
-            {emoji}
-          </motion.span>
-        ))}
-      </motion.div>
-
-      <motion.div
-        className="relative max-w-lg w-full bg-white rounded-3xl shadow-2xl overflow-hidden"
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        className="relative max-w-md w-full bg-white rounded-3xl shadow-2xl overflow-hidden"
+        initial={prefersReducedMotion ? undefined : { opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
       >
@@ -198,13 +96,9 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
 
         {/* Progress bar */}
         <div className="h-1.5 bg-stone-100">
-          <motion.div
-            className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
-            initial={{ width: 0 }}
-            animate={{
-              width: `${((step + 1) / TOUR_STEPS.length) * 100}%`,
-            }}
-            transition={{ duration: 0.3 }}
+          <div
+            className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300"
+            style={{ width: `${((step + 1) / TOUR_STEPS.length) * 100}%` }}
           />
         </div>
 
@@ -213,36 +107,21 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
           <AnimatePresence mode="wait">
             <motion.div
               key={step}
-              initial={{ opacity: 0, x: 30 }}
+              initial={prefersReducedMotion ? undefined : { opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-              transition={{ duration: 0.25 }}
+              exit={prefersReducedMotion ? undefined : { opacity: 0, x: -30 }}
+              transition={{ duration: 0.2 }}
               className="text-center"
             >
               {/* Icon */}
-              <motion.div
+              <div
                 className={`w-20 h-20 mx-auto mb-6 bg-gradient-to-br ${currentStep.color} rounded-2xl flex items-center justify-center text-white shadow-lg`}
-                animate={{
-                  rotate: [0, 5, -5, 0],
-                  scale: [1, 1.05, 1],
-                }}
-                transition={{ duration: 2.5, repeat: Infinity }}
               >
                 {currentStep.icon}
-              </motion.div>
+              </div>
 
               {/* Emoji accent */}
-              <motion.span
-                className="text-4xl block mb-3"
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  repeatDelay: 1,
-                }}
-              >
-                {currentStep.emoji}
-              </motion.span>
+              <span className="text-4xl block mb-3">{currentStep.emoji}</span>
 
               {/* Title */}
               <h2 className="text-2xl md:text-3xl font-display font-bold text-stone-900 mb-4">
@@ -250,7 +129,7 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
               </h2>
 
               {/* Description */}
-              <p className="text-stone-600 text-base md:text-lg leading-relaxed max-w-md mx-auto">
+              <p className="text-stone-600 text-base md:text-lg leading-relaxed max-w-sm mx-auto">
                 {currentStep.content}
               </p>
 
@@ -258,19 +137,9 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
               {isLastStep && (
                 <div className="mt-6 flex justify-center gap-3">
                   {["📚", "✍️", "🏆", "⭐", "💜"].map((emoji, i) => (
-                    <motion.span
-                      key={i}
-                      className="text-2xl"
-                      animate={{ y: [0, -12, 0] }}
-                      transition={{
-                        duration: 0.6,
-                        delay: i * 0.1,
-                        repeat: Infinity,
-                        repeatDelay: 1.5,
-                      }}
-                    >
+                    <span key={i} className="text-2xl">
                       {emoji}
-                    </motion.span>
+                    </span>
                   ))}
                 </div>
               )}
@@ -309,15 +178,13 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
             ))}
           </div>
 
-          <motion.button
+          <button
             onClick={handleNext}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all shadow-md"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
           >
             {isLastStep ? "Start Reading!" : "Next"}
             <ChevronRight className="w-5 h-5" />
-          </motion.button>
+          </button>
         </div>
       </motion.div>
     </div>

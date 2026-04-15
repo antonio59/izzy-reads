@@ -35,7 +35,7 @@ export function EmojiPicker({
 
   useEffect(() => {
     if (isOpen && !emojiData) {
-      getEmojiData().then((mod) => setEmojiData(mod as any));
+      getEmojiData().then((mod) => setEmojiData(mod as unknown as object));
     }
   }, [isOpen, emojiData]);
 
@@ -147,7 +147,7 @@ export function EmojiButton({
 
   useEffect(() => {
     if (isOpen && !emojiData) {
-      getEmojiData().then((mod) => setEmojiData(mod as any));
+      getEmojiData().then((mod) => setEmojiData(mod as unknown as object));
     }
   }, [isOpen, emojiData]);
 

@@ -12,6 +12,9 @@ import {
   Globe,
   Menu,
   X,
+  Library,
+  User,
+  Shield,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useGamification } from "../contexts/GamificationContext";
@@ -222,6 +225,39 @@ const Navigation: React.FC = () => {
                     <Globe className="h-5 w-5 text-primary-500" />
                     <span className="font-medium text-stone-700">
                       My Public Portfolio
+                    </span>
+                  </Link>
+
+                  <Link
+                    to="/series"
+                    onClick={() => setShowMobileMenu(false)}
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-stone-50 transition-colors"
+                  >
+                    <Library className="h-5 w-5 text-accent-500" />
+                    <span className="font-medium text-stone-700">
+                      Series Tracker
+                    </span>
+                  </Link>
+
+                  <Link
+                    to="/profile"
+                    onClick={() => setShowMobileMenu(false)}
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-stone-50 transition-colors"
+                  >
+                    <User className="h-5 w-5 text-sage-500" />
+                    <span className="font-medium text-stone-700">
+                      Edit Profile
+                    </span>
+                  </Link>
+
+                  <Link
+                    to="/admin"
+                    onClick={() => setShowMobileMenu(false)}
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-stone-50 transition-colors"
+                  >
+                    <Shield className="h-5 w-5 text-stone-500" />
+                    <span className="font-medium text-stone-700">
+                      Admin
                     </span>
                   </Link>
 

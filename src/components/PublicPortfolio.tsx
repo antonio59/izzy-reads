@@ -23,7 +23,7 @@ import { PublicFooter } from "./PublicFooter";
 type TabId = "reviews" | "poems" | "blog" | "wishlist";
 
 const PublicPortfolio = () => {
-  const { books, poems, blogPosts, wishlist } = useBooks();
+  const { books, poems, blogPosts, wishlist, isLoading } = useBooks();
   const { user } = useUser();
   const [activeTab, setActiveTab] = useState<TabId>("reviews");
 
@@ -60,6 +60,51 @@ const PublicPortfolio = () => {
         new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
     )
     .slice(0, 3);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-cream-100">
+        <PublicNav />
+        <div className="max-w-5xl mx-auto px-4 pt-6 pb-12 space-y-8">
+          {/* Hero skeleton */}
+          <div className="bg-white rounded-2xl shadow-md p-5 md:p-6 border border-cream-300">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full bg-stone-100 animate-pulse" />
+              <div className="flex-1 space-y-2">
+                <div className="h-5 w-32 bg-stone-100 rounded animate-pulse" />
+                <div className="h-4 w-48 bg-stone-100 rounded animate-pulse" />
+              </div>
+            </div>
+          </div>
+          {/* Stats skeleton */}
+          <div className="bg-white rounded-2xl shadow-md border border-cream-300 p-5 max-w-2xl mx-auto">
+            <div className="grid grid-cols-3 gap-4">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="text-center space-y-2">
+                  <div className="w-10 h-10 rounded-xl bg-stone-100 mx-auto animate-pulse" />
+                  <div className="h-6 w-12 bg-stone-100 rounded mx-auto animate-pulse" />
+                  <div className="h-3 w-16 bg-stone-100 rounded mx-auto animate-pulse" />
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Sections skeleton */}
+          <div className="space-y-6">
+            <div className="h-8 w-40 bg-stone-100 rounded animate-pulse" />
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className="aspect-[2/3] rounded-xl bg-stone-100 animate-pulse"
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+        <PublicFooter />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-cream-100">
@@ -153,7 +198,7 @@ const PublicPortfolio = () => {
                 <p className="text-2xl font-extrabold text-stone-800">
                   {readBooks.length}
                 </p>
-                <p className="text-xs text-stone-400 font-medium">Books Read</p>
+                <p className="text-xs text-stone-500 font-medium">Books Read</p>
               </div>
 
               {/* Divider */}
@@ -169,7 +214,7 @@ const PublicPortfolio = () => {
                       .reduce((sum, b) => sum + (b.pageCount || 0), 0)
                       .toLocaleString()}
                   </p>
-                  <p className="text-xs text-stone-400 font-medium">
+                  <p className="text-xs text-stone-500 font-medium">
                     Pages Read
                   </p>
                 </div>
@@ -184,7 +229,7 @@ const PublicPortfolio = () => {
                 <p className="text-lg font-extrabold text-stone-800 truncate">
                   Fantasy
                 </p>
-                <p className="text-xs text-stone-400 font-medium">
+                <p className="text-xs text-stone-500 font-medium">
                   Favourite Genre
                 </p>
               </div>
@@ -206,7 +251,7 @@ const PublicPortfolio = () => {
                   <h2 className="text-3xl md:text-4xl font-display font-extrabold text-stone-800">
                     Izzy's Picks
                   </h2>
-                  <p className="text-sm text-stone-400 mt-1">
+                  <p className="text-sm text-stone-500 mt-1">
                     {Math.min(3, featuredBooks.length)} of my absolute
                     favourites
                   </p>
@@ -233,7 +278,7 @@ const PublicPortfolio = () => {
                   <h2 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800">
                     Latest Poem
                   </h2>
-                  <p className="text-sm text-stone-400 mt-1">
+                  <p className="text-sm text-stone-500 mt-1">
                     Writing from my heart
                   </p>
                 </div>
@@ -284,7 +329,7 @@ const PublicPortfolio = () => {
                 <h2 className="text-3xl md:text-4xl font-display font-extrabold text-stone-800">
                   Books I've Read
                 </h2>
-                <p className="text-sm text-stone-400 mt-1">
+                <p className="text-sm text-stone-500 mt-1">
                   {readBooks.length} books · Tap a cover to see more!
                 </p>
               </div>
@@ -313,7 +358,7 @@ const PublicPortfolio = () => {
                   <h2 className="text-3xl md:text-4xl font-display font-extrabold text-stone-800">
                     My Poetry
                   </h2>
-                  <p className="text-sm text-stone-400 mt-1">
+                  <p className="text-sm text-stone-500 mt-1">
                     {poems.length} {poems.length === 1 ? "poem" : "poems"}{" "}
                     written from my heart
                   </p>
@@ -369,7 +414,7 @@ const PublicPortfolio = () => {
                 <h2 className="text-3xl md:text-4xl font-display font-extrabold text-stone-800">
                   My Writing
                 </h2>
-                <p className="text-sm text-stone-400 mt-1">
+                <p className="text-sm text-stone-500 mt-1">
                   Thoughts about reading and life
                 </p>
               </div>
@@ -425,7 +470,7 @@ const PublicPortfolio = () => {
                 <h2 className="text-3xl md:text-4xl font-display font-extrabold text-stone-800">
                   My Wishlist
                 </h2>
-                <p className="text-sm text-stone-400 mt-1">
+                <p className="text-sm text-stone-500 mt-1">
                   {wishlist.length} books I'd love to read next!
                 </p>
               </div>
@@ -474,7 +519,7 @@ const PublicPortfolio = () => {
                   <h2 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800">
                     My Poetry
                   </h2>
-                  <p className="text-sm text-stone-400 mt-1">
+                  <p className="text-sm text-stone-500 mt-1">
                     Words from my heart
                   </p>
                 </div>
@@ -545,7 +590,7 @@ const PublicPortfolio = () => {
                             {poem.content}
                           </p>
                           <div className="flex items-center justify-between mt-3 pt-3 border-t border-stone-100">
-                            <span className="text-xs text-stone-400">
+                            <span className="text-xs text-stone-500">
                               {new Date(poem.dateCreated).toLocaleDateString(
                                 "en-US",
                                 { month: "short", day: "numeric" },
@@ -577,7 +622,7 @@ const PublicPortfolio = () => {
                   <h2 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800">
                     My Wishlist
                   </h2>
-                  <p className="text-sm text-stone-400 mt-1">
+                  <p className="text-sm text-stone-500 mt-1">
                     Books I can't wait to read!
                   </p>
                 </div>
