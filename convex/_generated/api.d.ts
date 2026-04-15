@@ -15,6 +15,7 @@ import type * as bookSuggestions from "../bookSuggestions.js";
 import type * as books from "../books.js";
 import type * as covers from "../covers.js";
 import type * as discover from "../discover.js";
+import type * as emails from "../emails.js";
 import type * as http from "../http.js";
 import type * as migration from "../migration.js";
 import type * as poems from "../poems.js";
@@ -39,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   books: typeof books;
   covers: typeof covers;
   discover: typeof discover;
+  emails: typeof emails;
   http: typeof http;
   migration: typeof migration;
   poems: typeof poems;

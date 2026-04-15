@@ -38,6 +38,7 @@ export default defineSchema({
         expression: v.optional(v.string()),
       }),
     ),
+    hasSeenOnboarding: v.optional(v.boolean()),
   }).index("by_userId", ["userId"]),
 
   books: defineTable({

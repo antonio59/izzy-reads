@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import {
   BookOpen,
@@ -11,8 +11,9 @@ import {
   User,
   BarChart3,
 } from "lucide-react";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import OnboardingTour from "./OnboardingTour";
 import { useBooks } from "../contexts/BookContext";
 import { useUser } from "../contexts/UserContext";
 import { getWeeklyQuote } from "../utils/readingQuotes";
@@ -43,8 +44,34 @@ const Dashboard: React.FC = () => {
   const { books, wishlist, readingChallenges, readingStats } = useBooks();
   const reactionStats = useQuery(api.reactions.getAllBookReactionStats);
   const { user, updateUserProfile } = useUser();
+  const userProfile = useQuery(api.users.getCurrentProfile);
+  const setOnboardingSeen = useMutation(api.users.setOnboardingSeen);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [showAvatarCreator, setShowAvatarCreator] = useState(false);
+  const [showTour, setShowTour] = useState(false);
+
+  // Show onboarding on first visit
+  const shouldShowOnboarding =
+    userProfile !== undefined &&
+    userProfile !== null &&
+    userProfile.hasSeenOnboarding !== true &&
+    !showTour;
+
+  useEffect(() => {
+    if (shouldShowOnboarding) {
+      setShowTour(true);
+    }
+  }, [shouldShowOnboarding]);
+
+  const handleTourComplete = useCallback(async () => {
+    setShowTour(false);
+    await setOnboardingSeen();
+  }, [setOnboardingSeen]);
+
+  const handleTourSkip = useCallback(async () => {
+    setShowTour(false);
+    await setOnboardingSeen();
+  }, [setOnboardingSeen]);
 
   // Get avatar from user profile or use default
   const userAvatar: AvatarConfig = user?.avatar || {
@@ -186,7 +213,17 @@ const Dashboard: React.FC = () => {
                 </p>
               </div>
             </div>
-            <StreakBadge days={readingStats.readingStreak} />
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setShowTour(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium text-purple-600 bg-purple-50 hover:bg-purple-100 transition-colors"
+                title="Take the tour again"
+              >
+                <Sparkles className="w-4 h-4" />
+                Tour
+              </button>
+              <StreakBadge days={readingStats.readingStreak} />
+            </div>
           </div>
         </Card>
       </FadeIn>
@@ -322,6 +359,14 @@ const Dashboard: React.FC = () => {
           <ReviewAnalytics />
         </div>
       </FadeIn>
+
+      {/* Onboarding Tour */}
+      {showTour && (
+        <OnboardingTour
+          onComplete={handleTourComplete}
+          onSkip={handleTourSkip}
+        />
+      )}
 
       {/* Book Detail Modal */}
       {selectedBook && (

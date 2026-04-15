@@ -118,6 +118,24 @@ export const updateProfile = mutation({
   },
 });
 
+// Mark onboarding as seen
+export const setOnboardingSeen = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
+    const profile = await ctx.db
+      .query("userProfiles")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .first();
+
+    if (!profile) throw new Error("Profile not found");
+
+    await ctx.db.patch(profile._id, { hasSeenOnboarding: true });
+  },
+});
+
 // Legacy compatibility - get user by email (from auth users table)
 export const getByEmail = query({
   args: { email: v.string() },
