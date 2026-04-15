@@ -507,6 +507,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- Weekly dependency updates (#101)
 - Clean up netlify.toml for single production site
 - Fix npm vulnerabilities [skip ci]
 - Upgrade all dependencies to latest versions
@@ -543,6 +544,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
