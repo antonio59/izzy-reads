@@ -10,7 +10,27 @@ import type { Doc, Id } from "./_generated/dataModel";
 // Duplicate here to avoid import issues with Convex runtime
 const isConvexStorageUrl = (url?: string): boolean => {
   if (!url) return false;
-  return url.includes("convex.site/api/storage") || url.includes("convex.cloud/api/storage");
+  try {
+    const hostname = new URL(url).hostname;
+    return (
+      hostname === "convex.site" ||
+      hostname.endsWith(".convex.site") ||
+      hostname === "convex.cloud" ||
+      hostname.endsWith(".convex.cloud")
+    );
+  } catch {
+    return false;
+  }
+};
+
+const isOpenLibraryUrl = (url?: string): boolean => {
+  if (!url) return false;
+  try {
+    const hostname = new URL(url).hostname;
+    return hostname === "openlibrary.org" || hostname.endsWith(".openlibrary.org");
+  } catch {
+    return false;
+  }
 };
 
 /**
@@ -642,7 +662,7 @@ export const upgradeOpenLibraryCovers = internalAction({
     const results: Array<{ title: string; status: string; oldUrl?: string; newUrl?: string }> = [];
 
     for (const book of books) {
-      if (!book.coverUrl || !book.coverUrl.includes("openlibrary.org")) {
+      if (!isOpenLibraryUrl(book.coverUrl)) {
         continue;
       }
 
@@ -694,7 +714,7 @@ export const upgradeOpenLibraryCovers = internalAction({
     // Also do wishlist items
     const wishlistItems = await ctx.runQuery(api.wishlist.getAll);
     for (const wItem of wishlistItems) {
-      if (!wItem.coverUrl || !wItem.coverUrl.includes("openlibrary.org")) {
+      if (!isOpenLibraryUrl(wItem.coverUrl)) {
         continue;
       }
 
