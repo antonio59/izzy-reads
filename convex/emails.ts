@@ -83,7 +83,7 @@ export const sendSuggestionNotification = internalAction({
 </html>`;
 
     await resend.emails.send({
-      from: "Izzy's Bookshelf <onboarding@resend.dev>",
+      from: "Izzy's Bookshelf <suggestions@izzysbookshelf.com>",
       to: notificationEmail,
       subject: `📚 Someone suggested "${args.title}" by ${args.author}!`,
       html,
