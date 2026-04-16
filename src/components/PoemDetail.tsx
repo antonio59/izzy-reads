@@ -1,10 +1,13 @@
 import { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Feather, Calendar, Sparkles, Heart } from "lucide-react";
+import { ArrowLeft, Feather, Calendar, Sparkles, Share2 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
+import { useUser } from "../contexts/UserContext";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
+import { AvatarPreview, type AvatarConfig } from "./AvatarCreator";
+import { PoemReactionButtons } from "./ReactionButtons";
 
 const BACKGROUND_PATTERNS = [
   "from-violet-100 via-purple-50 to-fuchsia-100",
@@ -19,9 +22,24 @@ const PoemDetail = () => {
   const { poemId } = useParams<{ poemId: string }>();
   const navigate = useNavigate();
   const { poems } = useBooks();
+  const { user } = useUser();
 
-  const poem = poems.find((p) => p.id === poemId);
-  const poemIndex = poems.findIndex((p) => p.id === poemId);
+  // Support both slug and id for backward compatibility
+  const poem = poems.find((p) => p.slug === poemId || p.id === poemId);
+  const poemIndex = poems.findIndex((p) => p.slug === poemId || p.id === poemId);
+
+  const defaultAvatar: AvatarConfig = {
+    skinTone: "fair",
+    hairStyle: "long",
+    hairColor: "brown",
+    eyeColor: "brown",
+    accessory: "none",
+    background: "pink",
+    outfit: "tshirt",
+    outfitColor: "purple",
+    expression: "happy",
+  };
+  const userAvatar = user?.avatar || defaultAvatar;
 
   // Scroll to top when poem loads
   useEffect(() => {
@@ -121,7 +139,7 @@ const PoemDetail = () => {
               {poem.title}
             </h1>
 
-            <div className="flex items-center justify-center gap-4 text-stone-500">
+            <div className="flex items-center justify-center gap-4 text-stone-500 flex-wrap">
               <span className="flex items-center gap-1.5">
                 <Calendar className="w-4 h-4" />
                 {new Date(poem.dateCreated).toLocaleDateString("en-US", {
@@ -131,12 +149,6 @@ const PoemDetail = () => {
                   day: "numeric",
                 })}
               </span>
-              {poem.likes > 0 && (
-                <span className="flex items-center gap-1.5">
-                  <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
-                  {poem.likes} likes
-                </span>
-              )}
             </div>
           </motion.div>
         </div>
@@ -164,13 +176,50 @@ const PoemDetail = () => {
             {/* Author signature */}
             <div className="mt-12 pt-8 border-t border-stone-100">
               <div className="flex items-center justify-center gap-4">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                  I
+                <div className="w-14 h-14 rounded-full overflow-hidden shadow-lg ring-2 ring-violet-100">
+                  <AvatarPreview config={userAvatar} size="md" />
                 </div>
                 <div className="text-center">
                   <p className="font-bold text-stone-800 text-lg">Written by Izzy</p>
                   <p className="text-stone-500">Young Poet & Dreamer</p>
                 </div>
+              </div>
+            </div>
+
+            {/* Reactions & Share */}
+            <div className="mt-10 pt-8 border-t border-stone-100">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div className="text-center sm:text-left">
+                  <p className="text-sm font-semibold text-stone-600 mb-3">
+                    What do you think of this poem?
+                  </p>
+                  <PoemReactionButtons poemId={poem.id} />
+                </div>
+                <motion.button
+                  onClick={async () => {
+                    const url = `${window.location.origin}/poetry/${poem.slug || poem.id}`;
+                    const shareData = {
+                      title: poem.title,
+                      text: `Check out "${poem.title}" by Izzy on Izzy's Bookshelf!`,
+                      url,
+                    };
+                    if (navigator.share) {
+                      try {
+                        await navigator.share(shareData);
+                      } catch {
+                        await navigator.clipboard.writeText(url);
+                      }
+                    } else {
+                      await navigator.clipboard.writeText(url);
+                    }
+                  }}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-violet-100 hover:bg-violet-200 text-violet-700 rounded-full font-medium transition-colors"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Share2 className="w-4 h-4" />
+                  Share Poem
+                </motion.button>
               </div>
             </div>
           </motion.div>
@@ -191,7 +240,7 @@ const PoemDetail = () => {
                 .map((otherPoem, idx) => (
                   <Link
                     key={otherPoem.id}
-                    to={`/poetry/${otherPoem.id}`}
+                    to={`/poetry/${otherPoem.slug || otherPoem.id}`}
                     className="group"
                   >
                     <motion.div

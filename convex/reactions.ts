@@ -192,6 +192,36 @@ export const getAllBookReactionStats = query({
   },
 });
 
+// Get reaction stats for all reviews (for summary emails)
+export const getAllReviewReactionStats = query({
+  args: {},
+  handler: async (ctx) => {
+    const allReactions = await ctx.db
+      .query("bookReactions")
+      .filter((q) => q.eq(q.field("isReviewReaction"), true))
+      .collect();
+
+    const reviewReactions: Record<string, number> = {};
+    let totalReactions = 0;
+
+    for (const r of allReactions) {
+      const bookId = r.bookId as string;
+      reviewReactions[bookId] = (reviewReactions[bookId] || 0) + 1;
+      totalReactions++;
+    }
+
+    const topReviews = Object.entries(reviewReactions)
+      .map(([bookId, count]) => ({ bookId, count }))
+      .sort((a, b) => b.count - a.count);
+
+    return {
+      totalReactions,
+      topReviews,
+      reactionsByReview: reviewReactions,
+    };
+  },
+});
+
 // Reset all reactions - admin function (requires auth)
 export const resetAllReactions = mutation({
   args: {},

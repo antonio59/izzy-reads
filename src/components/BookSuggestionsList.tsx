@@ -6,6 +6,7 @@ interface BookSuggestion {
   _id: Id<"bookSuggestions">;
   title: string;
   author: string;
+  coverUrl?: string;
   genre?: string;
   suggestedBy: string;
   reason?: string;
@@ -124,7 +125,14 @@ function SuggestionCard({
       animate={{ opacity: 1, x: 0 }}
       layout
     >
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-4">
+        {suggestion.coverUrl && (
+          <img
+            src={suggestion.coverUrl}
+            alt={suggestion.title}
+            className="w-14 h-20 object-cover rounded-lg shadow-sm flex-shrink-0"
+          />
+        )}
         <div className="flex-1">
           <h4 className="font-bold text-lg">{suggestion.title}</h4>
           <p className="text-stone-600 text-sm">by {suggestion.author}</p>

@@ -442,13 +442,26 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                 >
                   <BookCoverImage book={book} className="w-full h-full" />
 
-                  {/* Desktop hover overlay with title and genre */}
+                  {/* Desktop hover overlay with title, genre, and rating */}
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-3 pt-10 hidden sm:block opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     {/* Genre tag - only visible on hover */}
                     {book.genre && (
                       <span className="inline-block px-2 py-0.5 mb-1.5 rounded-full text-[9px] font-medium bg-white/20 text-white/90 backdrop-blur-sm">
                         {book.genre}
                       </span>
+                    )}
+                    {/* Star rating on hover */}
+                    {book.rating && book.rating > 0 && (
+                      <div className="flex items-center gap-0.5 mb-1.5">
+                        {[...Array(5)].map((_, i) => (
+                          <span
+                            key={i}
+                            className={`text-[10px] ${i < book.rating! ? "text-amber-300" : "text-white/30"}`}
+                          >
+                            ★
+                          </span>
+                        ))}
+                      </div>
                     )}
                     <p className="text-white text-xs font-semibold leading-tight line-clamp-2 drop-shadow-lg">
                       {book.title}

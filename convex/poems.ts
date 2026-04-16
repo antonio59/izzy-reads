@@ -1,6 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import type { Id } from "./_generated/dataModel";
 
 // Get poems for a specific user
 export const getByUser = query({
@@ -21,6 +22,41 @@ export const getAll = query({
   },
 });
 
+// Get a poem by slug
+export const getBySlug = query({
+  args: { slug: v.string() },
+  handler: async (ctx, args) => {
+    const poem = await ctx.db
+      .query("poems")
+      .withIndex("by_slug", (q) => q.eq("slug", args.slug))
+      .first();
+    if (poem) return poem;
+    // Fallback: try to find by ID for backward compatibility
+    try {
+      return await ctx.db.get(args.slug as Id<"poems">);
+    } catch {
+      return null;
+    }
+  },
+});
+
+// Helper to create a URL-friendly slug
+function createSlug(title: string, existingSlugs: string[]): string {
+  const base = title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .substring(0, 50);
+  let slug = base;
+  let counter = 1;
+  while (existingSlugs.includes(slug)) {
+    slug = `${base}-${counter}`;
+    counter++;
+  }
+  return slug;
+}
+
 // Add a poem - requires authentication
 export const add = mutation({
   args: {
@@ -36,7 +72,10 @@ export const add = mutation({
     if (!userId) {
       throw new Error("Not authenticated");
     }
-    return await ctx.db.insert("poems", { ...args, userId });
+    const allPoems = await ctx.db.query("poems").collect();
+    const existingSlugs = allPoems.map((p) => p.slug).filter(Boolean) as string[];
+    const slug = createSlug(args.title, existingSlugs);
+    return await ctx.db.insert("poems", { ...args, userId, slug });
   },
 });
 

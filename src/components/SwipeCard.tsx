@@ -21,12 +21,14 @@ interface SwipeCardProps {
   book: BookCandidate;
   onSwipe: (direction: "left" | "right") => void;
   isTop: boolean;
+  onClick?: () => void;
 }
 
 const SWIPE_THRESHOLD = 120;
 
-function SwipeCard({ book, onSwipe, isTop }: SwipeCardProps) {
+function SwipeCard({ book, onSwipe, isTop, onClick }: SwipeCardProps) {
   const [expanded, setExpanded] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-300, 0, 300], [-15, 0, 15]);
   const likeOpacity = useTransform(x, [0, 100], [0, 1]);
@@ -67,19 +69,31 @@ function SwipeCard({ book, onSwipe, isTop }: SwipeCardProps) {
       <div className="w-full h-full bg-white rounded-3xl shadow-xl border border-stone-200 overflow-hidden flex flex-col">
         {/* Cover Image */}
         <div
-          className="relative flex-shrink-0 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center"
+          className="relative flex-shrink-0 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center cursor-pointer"
           style={{ height: expanded ? "35%" : "55%" }}
+          onClick={() => onClick?.()}
         >
-          {book.coverUrl ? (
+          {book.coverUrl && !imageError ? (
             <img
               src={book.coverUrl}
               alt={book.title}
-              className="h-full w-auto object-contain drop-shadow-lg"
+              className="h-full w-auto max-w-[80%] object-contain drop-shadow-2xl rounded-sm"
               draggable={false}
+              onError={() => setImageError(true)}
             />
           ) : (
-            <div className="w-32 h-48 rounded-lg bg-white/50 flex items-center justify-center">
-              <BookOpen className="w-12 h-12 text-stone-300" />
+            <div className="w-32 h-48 rounded-lg bg-white/60 flex flex-col items-center justify-center p-4 text-center">
+              <BookOpen className="w-12 h-12 text-stone-400 mb-2" />
+              <span className="text-xs font-semibold text-stone-500 line-clamp-2">
+                {book.title}
+              </span>
+            </div>
+          )}
+
+          {/* Tap hint */}
+          {isTop && (
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-black/30 backdrop-blur-sm rounded-full text-white/90 text-xs font-medium">
+              Tap for details
             </div>
           )}
 

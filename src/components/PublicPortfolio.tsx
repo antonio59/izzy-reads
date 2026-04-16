@@ -9,7 +9,6 @@ import {
   ArrowRight,
   Sparkles,
   BookOpen,
-  Heart,
   Star,
   User,
 } from "lucide-react";
@@ -19,6 +18,7 @@ import FunBookshelfPublic from "./FunBookshelfPublic";
 import { AvatarPreview, type AvatarConfig } from "./AvatarCreator";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
+import { WritingReactionButtons } from "./ReactionButtons";
 
 type TabId = "reviews" | "poems" | "blog" | "wishlist";
 
@@ -221,17 +221,19 @@ const PublicPortfolio = () => {
                 <div className="absolute right-0 top-1/2 -translate-y-1/2 w-px h-12 bg-cream-300" />
               </div>
 
-              {/* Favorite Genre */}
+              {/* Total Reviews */}
               <div className="text-center">
-                <div className="w-10 h-10 bg-accent-100 rounded-xl flex items-center justify-center mx-auto mb-2">
-                  <Heart className="w-5 h-5 text-accent-500" />
-                </div>
-                <p className="text-lg font-extrabold text-stone-800 truncate">
-                  Fantasy
-                </p>
-                <p className="text-xs text-stone-500 font-medium">
-                  Favourite Genre
-                </p>
+                <Link to="/reviews" className="block group">
+                  <div className="w-10 h-10 bg-accent-100 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:bg-accent-200 transition-colors">
+                    <Star className="w-5 h-5 text-accent-500" />
+                  </div>
+                  <p className="text-2xl font-extrabold text-stone-800 group-hover:text-accent-600 transition-colors">
+                    {books.filter((b) => b.isRead && (b.notes || b.review)).length}
+                  </p>
+                  <p className="text-xs text-stone-500 font-medium">
+                    Reviews
+                  </p>
+                </Link>
               </div>
             </div>
           </motion.div>
@@ -307,7 +309,7 @@ const PublicPortfolio = () => {
                   </span>
                 )}
                 <Link
-                  to="/poetry"
+                  to={`/poetry/${latestPoems[0].slug || latestPoems[0].id}`}
                   className="block mt-4 text-primary-500 font-medium hover:text-primary-600"
                 >
                   Read full poem →
@@ -454,6 +456,9 @@ const PublicPortfolio = () => {
                   <p className="text-stone-500 leading-relaxed text-lg">
                     {post.content}
                   </p>
+                  <div className="mt-6 pt-6 border-t border-cream-200">
+                    <WritingReactionButtons postId={post.id} />
+                  </div>
                 </motion.article>
               ))}
             </div>
@@ -551,7 +556,7 @@ const PublicPortfolio = () => {
                       className="flex-shrink-0 w-72 snap-start"
                     >
                       <Link
-                        to="/poetry"
+                        to={`/poetry/${poem.slug || poem.id}`}
                         className="block bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-stone-100 hover:-translate-y-1 group"
                       >
                         {/* Poem Header */}

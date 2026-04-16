@@ -152,6 +152,7 @@ function convexPoemToPoem(doc: Doc<"poems">): Poem {
   return {
     id: doc._id,
     title: doc.title,
+    slug: doc.slug,
     content: doc.content,
     emoji: doc.emoji,
     dateCreated: doc.dateCreated,

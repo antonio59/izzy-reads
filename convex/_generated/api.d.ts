@@ -11,13 +11,16 @@
 import type * as aboutProfile from "../aboutProfile.js";
 import type * as auth from "../auth.js";
 import type * as blogPosts from "../blogPosts.js";
+import type * as bookClubs from "../bookClubs.js";
 import type * as bookSuggestions from "../bookSuggestions.js";
 import type * as books from "../books.js";
 import type * as covers from "../covers.js";
+import type * as crons from "../crons.js";
 import type * as discover from "../discover.js";
 import type * as emails from "../emails.js";
 import type * as http from "../http.js";
 import type * as migration from "../migration.js";
+import type * as poemReactions from "../poemReactions.js";
 import type * as poems from "../poems.js";
 import type * as reactions from "../reactions.js";
 import type * as readingChallenges from "../readingChallenges.js";
@@ -25,6 +28,7 @@ import type * as seed from "../seed.js";
 import type * as series from "../series.js";
 import type * as users from "../users.js";
 import type * as wishlist from "../wishlist.js";
+import type * as writingReactions from "../writingReactions.js";
 
 import type {
   ApiFromModules,
@@ -36,13 +40,16 @@ declare const fullApi: ApiFromModules<{
   aboutProfile: typeof aboutProfile;
   auth: typeof auth;
   blogPosts: typeof blogPosts;
+  bookClubs: typeof bookClubs;
   bookSuggestions: typeof bookSuggestions;
   books: typeof books;
   covers: typeof covers;
+  crons: typeof crons;
   discover: typeof discover;
   emails: typeof emails;
   http: typeof http;
   migration: typeof migration;
+  poemReactions: typeof poemReactions;
   poems: typeof poems;
   reactions: typeof reactions;
   readingChallenges: typeof readingChallenges;
@@ -50,6 +57,7 @@ declare const fullApi: ApiFromModules<{
   series: typeof series;
   users: typeof users;
   wishlist: typeof wishlist;
+  writingReactions: typeof writingReactions;
 }>;
 
 /**

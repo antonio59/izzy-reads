@@ -123,7 +123,7 @@ const PublicPoetry = () => {
               {filteredPoems.map((poem, index) => (
                 <Link
                   key={poem.id}
-                  to={`/poetry/${poem.id}`}
+                  to={`/poetry/${poem.slug || poem.id}`}
                   className="group block"
                 >
                   <motion.article

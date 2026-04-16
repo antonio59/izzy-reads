@@ -43,6 +43,7 @@ export function SuggestionFormModal({
   const [suggestionForm, setSuggestionForm] = useState({
     title: "",
     author: "",
+    coverUrl: "",
     suggestedBy: "",
     reason: "",
     genre: "Fiction",
@@ -97,6 +98,7 @@ export function SuggestionFormModal({
       ...suggestionForm,
       title: book.title,
       author: book.author,
+      coverUrl: book.coverUrl || "",
       genre: suggestGenre(book),
     });
     setSearchQuery(book.title);
@@ -119,6 +121,7 @@ export function SuggestionFormModal({
       await submitSuggestion({
         title: suggestionForm.title,
         author: suggestionForm.author,
+        coverUrl: suggestionForm.coverUrl || undefined,
         suggestedBy: suggestionForm.suggestedBy,
         reason: suggestionForm.reason || undefined,
         genre: suggestionForm.genre || undefined,
@@ -127,6 +130,7 @@ export function SuggestionFormModal({
       setSuggestionForm({
         title: "",
         author: "",
+        coverUrl: "",
         suggestedBy: "",
         reason: "",
         genre: "Fiction",
@@ -152,6 +156,7 @@ export function SuggestionFormModal({
         setSuggestionForm({
           title: "",
           author: "",
+          coverUrl: "",
           suggestedBy: "",
           reason: "",
           genre: "Fiction",

@@ -10,10 +10,13 @@ import {
   FileText,
   Menu,
   X,
+  Users,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 // Custom book logo SVG component
 export function BookLogo({ className }: { className?: string }) {
@@ -82,6 +85,8 @@ export function PublicNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { prefersReducedMotion } = useMotionPreference();
 
+  const activeClub = useQuery(api.bookClubs.getActive);
+
   const navItems: NavItem[] = [
     { id: "home", label: "Portfolio", icon: Book, path: "/", show: true },
     {
@@ -93,6 +98,13 @@ export function PublicNav() {
     },
     { id: "poems", label: "Poems", icon: PenTool, path: "/poetry", show: true },
     { id: "blog", label: "Writing", icon: FileText, path: "/blog", show: true },
+    {
+      id: "bookclub",
+      label: "Book Club",
+      icon: Users,
+      path: "/book-club",
+      show: !!activeClub,
+    },
     {
       id: "wishlist",
       label: "Wishlist",

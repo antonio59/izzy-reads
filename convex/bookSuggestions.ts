@@ -61,6 +61,7 @@ export const submit = mutation({
   args: {
     title: v.string(),
     author: v.string(),
+    coverUrl: v.optional(v.string()),
     suggestedBy: v.string(),
     reason: v.optional(v.string()),
     genre: v.optional(v.string()),
@@ -80,6 +81,7 @@ export const submit = mutation({
     const suggestionId = await ctx.db.insert("bookSuggestions", {
       title: args.title.trim(),
       author: args.author.trim(),
+      coverUrl: args.coverUrl,
       suggestedBy: args.suggestedBy.trim(),
       reason: args.reason?.trim() || undefined,
       genre: args.genre || undefined,
@@ -164,6 +166,7 @@ export const addToWishlist = mutation({
       userId,
       title: suggestion.title,
       author: suggestion.author,
+      coverUrl: suggestion.coverUrl,
       genre: suggestion.genre || "Fiction",
       description: suggestion.reason
         ? `Suggested by ${suggestion.suggestedBy}: "${suggestion.reason}"`

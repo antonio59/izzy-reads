@@ -112,6 +112,7 @@ export interface ReadingStats {
 export interface Poem {
   id: string;
   title: string;
+  slug?: string;
   content: string;
   emoji?: string;
   dateCreated: string;

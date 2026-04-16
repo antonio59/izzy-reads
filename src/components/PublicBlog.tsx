@@ -4,6 +4,7 @@ import { PenTool, Calendar, X, Sparkles } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
+import { WritingReactionButtons } from "./ReactionButtons";
 
 const BACKGROUND_PATTERNS = [
   "from-rose-100 via-pink-50 to-fuchsia-100",
@@ -309,6 +310,14 @@ const PublicBlog = () => {
                   {/* Post Content */}
                   <div className="prose prose-lg max-w-none text-stone-700 leading-relaxed">
                     {renderContent(selectedPost.content)}
+                  </div>
+
+                  {/* Reactions */}
+                  <div className="mt-8 pt-6 border-t border-stone-100">
+                    <p className="text-sm font-semibold text-stone-600 mb-3">
+                      What do you think?
+                    </p>
+                    <WritingReactionButtons postId={selectedPost.id} />
                   </div>
 
                   {/* Footer */}

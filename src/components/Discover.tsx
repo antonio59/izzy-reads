@@ -100,6 +100,8 @@ function Discover() {
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
   const [lastSwipeAction, setLastSwipeAction] = useState<"liked" | "passed" | null>(null);
+  const [selectedBook, setSelectedBook] = useState<BookCandidate | null>(null);
+  const [modalImageError, setModalImageError] = useState(false);
   const queryIndexRef = useRef(0);
   const searchQueriesRef = useRef<string[]>([]);
 
@@ -355,6 +357,10 @@ function Discover() {
                 book={book}
                 onSwipe={handleSwipe}
                 isTop={index === 0}
+                onClick={() => {
+                  setModalImageError(false);
+                  setSelectedBook(book);
+                }}
               />
             ))}
           </AnimatePresence>
@@ -367,6 +373,107 @@ function Discover() {
           Swipe or use the buttons. Right = want it, Left = pass.
         </p>
       )}
+
+      {/* Book Detail Modal */}
+      <AnimatePresence>
+        {selectedBook && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              onClick={() => setSelectedBook(null)}
+            />
+            <motion.div
+              className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto"
+              initial={{ scale: 0.9, y: 50 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 50 }}
+            >
+              {/* Cover */}
+              <div className="relative h-64 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center p-6">
+                {selectedBook.coverUrl && !modalImageError ? (
+                  <img
+                    src={selectedBook.coverUrl}
+                    alt={selectedBook.title}
+                    className="h-56 w-auto object-contain rounded shadow-2xl"
+                    onError={() => setModalImageError(true)}
+                  />
+                ) : (
+                  <div className="h-56 w-40 bg-white/60 rounded flex flex-col items-center justify-center p-4 text-center">
+                    <BookOpen className="w-12 h-12 text-stone-400 mb-2" />
+                    <span className="text-sm font-semibold text-stone-500 line-clamp-3">
+                      {selectedBook.title}
+                    </span>
+                  </div>
+                )}
+                <button
+                  onClick={() => setSelectedBook(null)}
+                  className="absolute top-4 right-4 w-10 h-10 bg-white hover:bg-cream-100 rounded-full flex items-center justify-center shadow-lg transition-colors"
+                >
+                  <X className="w-5 h-5 text-stone-600" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="p-6">
+                <h2 className="text-2xl font-bold text-stone-800 mb-1">{selectedBook.title}</h2>
+                <p className="text-stone-500 mb-4">by {selectedBook.author}</p>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {selectedBook.genre && selectedBook.genre !== "Other" && (
+                    <span className="px-3 py-1 rounded-full bg-primary-100 text-primary-700 text-xs font-medium">
+                      {selectedBook.genre}
+                    </span>
+                  )}
+                  {selectedBook.pageCount && selectedBook.pageCount > 0 && (
+                    <span className="px-3 py-1 rounded-full bg-stone-100 text-stone-600 text-xs font-medium">
+                      {selectedBook.pageCount} pages
+                    </span>
+                  )}
+                </div>
+
+                {selectedBook.description && (
+                  <div className="bg-stone-50 rounded-xl p-4 border border-stone-100">
+                    <p className="text-sm text-stone-600 leading-relaxed">
+                      {(() => {
+                        const doc = new DOMParser().parseFromString(selectedBook.description, "text/html");
+                        return doc.body.textContent || "";
+                      })()}
+                    </p>
+                  </div>
+                )}
+
+                <div className="flex gap-2 mt-6">
+                  <button
+                    onClick={() => {
+                      setSelectedBook(null);
+                      handleSwipe("left");
+                    }}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-red-50 hover:bg-red-100 text-red-500 rounded-xl font-semibold transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                    Pass
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedBook(null);
+                      handleSwipe("right");
+                    }}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-50 hover:bg-green-100 text-green-600 rounded-xl font-semibold transition-colors"
+                  >
+                    <Heart className="w-4 h-4" />
+                    Want it
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

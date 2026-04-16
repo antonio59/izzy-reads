@@ -172,3 +172,145 @@ export function useReviewReactions(bookId: string | undefined) {
     isLoading: reactionCounts === undefined,
   };
 }
+
+// Types for poem reactions
+export type PoemReactionType =
+  | "love"
+  | "beautiful"
+  | "inspiring"
+  | "funny"
+  | "relatable";
+
+export interface PoemReactionCounts {
+  love: number;
+  beautiful: number;
+  inspiring: number;
+  funny: number;
+  relatable: number;
+}
+
+// Hook for poem reactions
+export function usePoemReactions(poemId: string | undefined) {
+  const [visitorId] = useState(() => getVisitorId());
+
+  const reactionCounts = useQuery(
+    api.poemReactions.getPoemReactions,
+    poemId ? { poemId: poemId as Id<"poems"> } : "skip",
+  );
+
+  const visitorReaction = useQuery(
+    api.poemReactions.getVisitorReaction,
+    poemId
+      ? { poemId: poemId as Id<"poems">, visitorId }
+      : "skip",
+  );
+
+  const addReactionMutation = useMutation(api.poemReactions.addReaction);
+
+  const addReaction = useCallback(
+    async (reactionType: PoemReactionType) => {
+      if (!poemId) return;
+
+      try {
+        await addReactionMutation({
+          poemId: poemId as Id<"poems">,
+          visitorId,
+          reactionType,
+        });
+      } catch (error) {
+        console.error("Failed to add poem reaction:", error);
+      }
+    },
+    [poemId, visitorId, addReactionMutation],
+  );
+
+  const totalReactions =
+    reactionCounts !== undefined
+      ? Object.values(reactionCounts).reduce((sum, count) => sum + count, 0)
+      : 0;
+
+  return {
+    counts: reactionCounts ?? {
+      love: 0,
+      beautiful: 0,
+      inspiring: 0,
+      funny: 0,
+      relatable: 0,
+    },
+    visitorReaction: visitorReaction ?? null,
+    totalReactions,
+    addReaction,
+    isLoading: reactionCounts === undefined,
+  };
+}
+
+// Types for writing/blog post reactions
+export type WritingReactionType =
+  | "love"
+  | "greatRead"
+  | "inspiring"
+  | "funny"
+  | "agree";
+
+export interface WritingReactionCounts {
+  love: number;
+  greatRead: number;
+  inspiring: number;
+  funny: number;
+  agree: number;
+}
+
+// Hook for writing reactions
+export function useWritingReactions(postId: string | undefined) {
+  const [visitorId] = useState(() => getVisitorId());
+
+  const reactionCounts = useQuery(
+    api.writingReactions.getWritingReactions,
+    postId ? { postId: postId as Id<"blogPosts"> } : "skip",
+  );
+
+  const visitorReaction = useQuery(
+    api.writingReactions.getVisitorReaction,
+    postId
+      ? { postId: postId as Id<"blogPosts">, visitorId }
+      : "skip",
+  );
+
+  const addReactionMutation = useMutation(api.writingReactions.addReaction);
+
+  const addReaction = useCallback(
+    async (reactionType: WritingReactionType) => {
+      if (!postId) return;
+
+      try {
+        await addReactionMutation({
+          postId: postId as Id<"blogPosts">,
+          visitorId,
+          reactionType,
+        });
+      } catch (error) {
+        console.error("Failed to add writing reaction:", error);
+      }
+    },
+    [postId, visitorId, addReactionMutation],
+  );
+
+  const totalReactions =
+    reactionCounts !== undefined
+      ? Object.values(reactionCounts).reduce((sum, count) => sum + count, 0)
+      : 0;
+
+  return {
+    counts: reactionCounts ?? {
+      love: 0,
+      greatRead: 0,
+      inspiring: 0,
+      funny: 0,
+      agree: 0,
+    },
+    visitorReaction: visitorReaction ?? null,
+    totalReactions,
+    addReaction,
+    isLoading: reactionCounts === undefined,
+  };
+}

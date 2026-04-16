@@ -81,12 +81,13 @@ export default defineSchema({
   poems: defineTable({
     userId: v.id("users"),
     title: v.string(),
+    slug: v.optional(v.string()),
     content: v.string(),
     emoji: v.optional(v.string()),
     dateCreated: v.string(),
     likes: v.number(),
     template: v.optional(v.string()),
-  }).index("by_user", ["userId"]),
+  }).index("by_user", ["userId"]).index("by_slug", ["slug"]),
 
   blogPosts: defineTable({
     userId: v.id("users"),
@@ -139,6 +140,7 @@ export default defineSchema({
   bookSuggestions: defineTable({
     title: v.string(),
     author: v.string(),
+    coverUrl: v.optional(v.string()),
     suggestedBy: v.string(), // Name of the person suggesting
     reason: v.optional(v.string()), // Why they think Izzy would like it
     genre: v.optional(v.string()),
@@ -174,6 +176,76 @@ export default defineSchema({
     .index("by_book", ["bookId"])
     .index("by_visitor", ["visitorId"])
     .index("by_book_visitor", ["bookId", "visitorId"]),
+
+  // Reactions from visitors on poems
+  poemReactions: defineTable({
+    poemId: v.id("poems"),
+    visitorId: v.string(),
+    reactionType: v.union(
+      v.literal("love"),
+      v.literal("beautiful"),
+      v.literal("inspiring"),
+      v.literal("funny"),
+      v.literal("relatable"),
+    ),
+    createdAt: v.string(),
+  })
+    .index("by_poem", ["poemId"])
+    .index("by_visitor", ["visitorId"])
+    .index("by_poem_visitor", ["poemId", "visitorId"]),
+
+  // Reactions from visitors on blog posts / writing
+  writingReactions: defineTable({
+    postId: v.id("blogPosts"),
+    visitorId: v.string(),
+    reactionType: v.union(
+      v.literal("love"),
+      v.literal("greatRead"),
+      v.literal("inspiring"),
+      v.literal("funny"),
+      v.literal("agree"),
+    ),
+    createdAt: v.string(),
+  })
+    .index("by_post", ["postId"])
+    .index("by_visitor", ["visitorId"])
+    .index("by_post_visitor", ["postId", "visitorId"]),
+
+  // Book clubs - Izzy selects a book for friends/followers to read
+  bookClubs: defineTable({
+    userId: v.id("users"),
+    bookId: v.optional(v.id("books")),
+    title: v.string(),
+    author: v.string(),
+    coverUrl: v.optional(v.string()),
+    description: v.optional(v.string()),
+    endDate: v.string(), // ISO date string
+    isActive: v.boolean(),
+    createdAt: v.string(),
+  }).index("by_user", ["userId"]).index("by_active", ["isActive"]),
+
+  // Book club comments - visitors can comment using name + passcode
+  bookClubComments: defineTable({
+    clubId: v.id("bookClubs"),
+    visitorName: v.string(),
+    passcode: v.string(), // 6 digit passcode
+    content: v.string(),
+    createdAt: v.string(),
+  }).index("by_club", ["clubId"]),
+
+  // Book club reactions - visitors can react to the club pick
+  bookClubReactions: defineTable({
+    clubId: v.id("bookClubs"),
+    visitorName: v.string(),
+    passcode: v.string(),
+    reactionType: v.union(
+      v.literal("excited"),
+      v.literal("reading"),
+      v.literal("finished"),
+      v.literal("love"),
+    ),
+    createdAt: v.string(),
+  }).index("by_club", ["clubId"]).index("by_club_visitor", ["clubId", "visitorName", "passcode"]),
 
   // Book series for tracking series progress
   bookSeries: defineTable({

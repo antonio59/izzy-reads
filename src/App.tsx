@@ -31,6 +31,9 @@ const Signup = lazy(() => import("./components/Signup"));
 // Lazy load poem detail page
 const PoemDetail = lazy(() => import("./components/PoemDetail"));
 
+// Lazy load book club page
+const PublicBookClub = lazy(() => import("./components/PublicBookClub"));
+
 // Lazy load admin/protected pages - NEW SIMPLIFIED STRUCTURE
 const Dashboard = lazy(() => import("./components/Dashboard"));
 const MyBooks = lazy(() => import("./components/MyBooks"));
@@ -131,6 +134,16 @@ function App() {
                       element={
                         <PublicLayout>
                           <PublicReviews />
+                        </PublicLayout>
+                      }
+                    />
+                    <Route
+                      path="/book-club"
+                      element={
+                        <PublicLayout>
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicBookClub />
+                          </Suspense>
                         </PublicLayout>
                       }
                     />
