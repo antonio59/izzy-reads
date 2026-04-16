@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PenTool, Calendar, X, Sparkles } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 import { useBooks } from "../contexts/BookContext";
+import { useUser } from "../contexts/UserContext";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
 import { WritingReactionButtons } from "./ReactionButtons";
+import { AvatarPreview, type AvatarConfig } from "./AvatarCreator";
 
 const BACKGROUND_PATTERNS = [
   "from-rose-100 via-pink-50 to-fuchsia-100",
@@ -17,9 +20,23 @@ const BACKGROUND_PATTERNS = [
 
 const PublicBlog = () => {
   const { blogPosts } = useBooks();
+  const { user } = useUser();
   const [selectedPost, setSelectedPost] = useState<
     (typeof blogPosts)[0] | null
   >(null);
+
+  const defaultAvatar: AvatarConfig = {
+    skinTone: "fair",
+    hairStyle: "long",
+    hairColor: "brown",
+    eyeColor: "brown",
+    accessory: "none",
+    background: "pink",
+    outfit: "tshirt",
+    outfitColor: "purple",
+    expression: "happy",
+  };
+  const userAvatar = user?.avatar || defaultAvatar;
 
   const sortedPosts = [...blogPosts]
     .filter((post) => post.status === "published")
@@ -62,8 +79,22 @@ const PublicBlog = () => {
     return content.replace(/!\[GIF\]\([^)]+\)/g, "").trim();
   };
 
+  const pageUrl = `${window.location.origin}/blog`;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-orange-50">
+      <Helmet>
+        <title>Izzy's Writing | Izzy's Bookshelf</title>
+        <meta name="description" content="Thoughts, reading adventures, and stories from Izzy's reading journey." />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Izzy's Writing" />
+        <meta property="og:description" content="Thoughts, reading adventures, and stories from Izzy's reading journey." />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:image" content={`${window.location.origin}/og-image.png`} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Izzy's Writing" />
+        <meta name="twitter:description" content="Thoughts, reading adventures, and stories from Izzy's reading journey." />
+      </Helmet>
       {/* Navigation */}
       <PublicNav />
 
@@ -322,8 +353,8 @@ const PublicBlog = () => {
 
                   {/* Footer */}
                   <div className="flex items-center gap-3 mt-8 pt-6 border-t border-stone-100">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center text-white font-bold text-lg">
-                      I
+                    <div className="w-12 h-12 rounded-full overflow-hidden shadow-sm ring-2 ring-rose-100">
+                      <AvatarPreview config={userAvatar} size="md" />
                     </div>
                     <div>
                       <p className="font-bold text-stone-800">

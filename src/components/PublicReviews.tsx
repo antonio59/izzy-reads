@@ -11,6 +11,7 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 import { useBooks } from "../contexts/BookContext";
 import { useUser } from "../contexts/UserContext";
 import { PublicNav } from "./PublicNav";
@@ -93,9 +94,23 @@ export function PublicReviews() {
     return <SingleReviewView book={selectedBook} userAvatar={userAvatar} />;
   }
 
+  const pageUrl = `${window.location.origin}/reviews`;
+
   // Reviews list view
   return (
     <div className="min-h-screen bg-cream-100 flex flex-col">
+      <Helmet>
+        <title>Izzy's Book Reviews | Izzy's Bookshelf</title>
+        <meta name="description" content="Honest book reviews from a young reader. Discover what Izzy thinks about fantasy, adventure, mystery and more!" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Izzy's Book Reviews" />
+        <meta property="og:description" content="Honest book reviews from a young reader. Discover what Izzy thinks about fantasy, adventure, mystery and more!" />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:image" content={`${window.location.origin}/og-image.png`} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Izzy's Book Reviews" />
+        <meta name="twitter:description" content="Honest book reviews from a young reader. Discover what Izzy thinks about fantasy, adventure, mystery and more!" />
+      </Helmet>
       {/* Navigation */}
       <PublicNav />
 
@@ -273,9 +288,22 @@ function SingleReviewView({
 }) {
   const [imageError, setImageError] = useState(false);
   const reviewText = book.notes || book.review;
+  const reviewUrl = `${window.location.origin}/reviews/${book.id}`;
 
   return (
     <div className="min-h-screen bg-cream-100 flex flex-col">
+      <Helmet>
+        <title>{`Izzy's Review: ${book.title} | Izzy's Bookshelf`}</title>
+        <meta name="description" content={`Read Izzy's review of "${book.title}" by ${book.author}.`} />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={`Izzy's Review: ${book.title}`} />
+        <meta property="og:description" content={`Read Izzy's review of "${book.title}" by ${book.author}.`} />
+        <meta property="og:url" content={reviewUrl} />
+        <meta property="og:image" content={book.coverUrl || `${window.location.origin}/og-image.png`} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`Izzy's Review: ${book.title}`} />
+        <meta name="twitter:description" content={`Read Izzy's review of "${book.title}" by ${book.author}.`} />
+      </Helmet>
       {/* Navigation */}
       <nav className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-cream-300 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-3">

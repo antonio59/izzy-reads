@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Feather, Calendar, Sparkles, Share2 } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 import { useBooks } from "../contexts/BookContext";
 import { useUser } from "../contexts/UserContext";
 import { PublicNav } from "./PublicNav";
@@ -80,8 +81,22 @@ const PoemDetail = () => {
 
   const backgroundPattern = BACKGROUND_PATTERNS[poemIndex % BACKGROUND_PATTERNS.length];
 
+  const poemUrl = `${window.location.origin}/poetry/${poem.slug || poem.id}`;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-rose-50">
+      <Helmet>
+        <title>{`${poem.title} | Izzy's Poetry Corner`}</title>
+        <meta name="description" content={`Read "${poem.title}" - a poem by Izzy on Izzy's Bookshelf.`} />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={`${poem.title} | Izzy's Poetry Corner`} />
+        <meta property="og:description" content={`Read "${poem.title}" - a poem by Izzy on Izzy's Bookshelf.`} />
+        <meta property="og:url" content={poemUrl} />
+        <meta property="og:image" content={`${window.location.origin}/og-image.png`} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${poem.title} | Izzy's Poetry Corner`} />
+        <meta name="twitter:description" content={`Read "${poem.title}" - a poem by Izzy on Izzy's Bookshelf.`} />
+      </Helmet>
       <PublicNav />
 
       {/* Hero Section */}

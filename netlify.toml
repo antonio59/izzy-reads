@@ -11,6 +11,23 @@
 [context.production]
   environment = { NODE_VERSION = "22" }
 
+# Edge function for social media crawlers on poem/review pages
+[[edge_functions]]
+  function = "social-meta"
+  path = "/poetry/*"
+
+[[edge_functions]]
+  function = "social-meta"
+  path = "/reviews/*"
+
+[[edge_functions]]
+  function = "social-meta"
+  path = "/blog"
+
+[[edge_functions]]
+  function = "social-meta"
+  path = "/reviews"
+
 # SPA routing - redirect all routes to index.html
 [[redirects]]
   from = "/*"

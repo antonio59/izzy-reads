@@ -153,3 +153,29 @@ export const resetAllLikes = mutation({
     return { reset: poems.length };
   },
 });
+
+// Backfill slugs for existing poems - admin function
+export const backfillSlugs = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    const allPoems = await ctx.db.query("poems").collect();
+    const existingSlugs = allPoems.map((p) => p.slug).filter(Boolean) as string[];
+    let updated = 0;
+
+    for (const poem of allPoems) {
+      if (!poem.slug) {
+        const slug = createSlug(poem.title, existingSlugs);
+        existingSlugs.push(slug);
+        await ctx.db.patch(poem._id, { slug });
+        updated++;
+      }
+    }
+
+    return { updated, total: allPoems.length };
+  },
+});
