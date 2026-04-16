@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Show loading skeleton in PublicWishlist while data loads
 - Escape quotes in social meta edge function HTML
 - Add cache-busting headers to social meta edge function
 - Poem slugs backfilled, social meta tags, avatar in writing
@@ -561,6 +562,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
