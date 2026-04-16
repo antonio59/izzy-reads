@@ -78,7 +78,12 @@ export default async (request: Request, context: Context) => {
       buildMetaHtml({ title, description, url: request.url, image: ogImage }),
       {
         status: 200,
-        headers: { "Content-Type": "text/html" },
+        headers: {
+          "Content-Type": "text/html",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+        },
       }
     );
   }
