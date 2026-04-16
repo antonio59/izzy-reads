@@ -78,6 +78,14 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Redesign poem detail page and fix book suggestion cover fallbacks
+
+- PoemDetail: compact layout with sticky top bar, quote glyphs, prev/next nav,
+  copy poem button, read time, and horizontal more-poems scroll
+- BookSuggestionsList: use BookCover component for graceful fallback on broken covers
+- SuggestionFormModal: add placeholder-image detection in search results
+- BookCover/FunBookshelfPublic/PublicWishlist: detect Google Books 1x1 placeholder
+  images by checking naturalWidth/naturalHeight and show gradient fallback
 - Merge pull request #84 from antonio59/dependabot/npm_and_yarn/esbuild/darwin-arm64-0.27.4
 
 chore(deps-dev): bump @esbuild/darwin-arm64 from 0.27.2 to 0.27.4
@@ -553,6 +561,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
