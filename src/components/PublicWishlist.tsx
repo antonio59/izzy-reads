@@ -102,7 +102,7 @@ function BookCoverImage({
 }
 
 const PublicWishlist = () => {
-  const { wishlist } = useBooks();
+  const { wishlist, isLoading } = useBooks();
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [showSuggestionForm, setShowSuggestionForm] = useState(false);
   const [buyingBookId, setBuyingBookId] = useState<string | null>(null);
@@ -239,7 +239,16 @@ const PublicWishlist = () => {
       {/* Wishlist Grid - Book Covers */}
       <section className="py-12 px-4 flex-1">
         <div className="max-w-7xl mx-auto">
-          {sortedWishlist.length > 0 ? (
+          {isLoading ? (
+            <div className="grid gap-4 sm:gap-5 md:gap-6" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))" }}>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="aspect-[2/3] rounded-xl bg-stone-200 animate-pulse"
+                />
+              ))}
+            </div>
+          ) : sortedWishlist.length > 0 ? (
             <motion.div
               className="grid gap-4 sm:gap-5 md:gap-6"
               style={{
