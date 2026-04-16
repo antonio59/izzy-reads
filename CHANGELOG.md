@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Poem slugs backfilled, social meta tags, avatar in writing
 - Remaining legacy links, reduced-motion gaps and stray logs
 - Address all outstanding PWA, lint, accessibility and bundle issues
 - **security**: Resolve incomplete URL substring sanitization in migration.ts
@@ -550,6 +551,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
