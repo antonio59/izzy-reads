@@ -89,10 +89,17 @@ export function BookCover({
     "1/1": "aspect-square",
   };
 
-  const handleLoad = useCallback(() => {
+  const handleLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    // Google Books sometimes returns a 1x1 placeholder or "no cover" image with HTTP 200
+    if (img.naturalWidth < 30 || img.naturalHeight < 30) {
+      setImageState("error");
+      onError?.();
+      return;
+    }
     setImageState("loaded");
     onLoad?.();
-  }, [onLoad]);
+  }, [onLoad, onError]);
 
   const handleError = useCallback(() => {
     setImageState("error");

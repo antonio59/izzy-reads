@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Lightbulb, Check, X, MessageCircle } from "lucide-react";
 import type { Id } from "../../convex/_generated/dataModel";
+import { BookCover } from "./BookCover";
 
 interface BookSuggestion {
   _id: Id<"bookSuggestions">;
@@ -126,13 +127,17 @@ function SuggestionCard({
       layout
     >
       <div className="flex items-start justify-between gap-4">
-        {suggestion.coverUrl && (
-          <img
-            src={suggestion.coverUrl}
-            alt={suggestion.title}
-            className="w-14 h-20 object-cover rounded-lg shadow-sm flex-shrink-0"
+        <div className="w-14 flex-shrink-0">
+          <BookCover
+            title={suggestion.title}
+            author={suggestion.author}
+            coverUrl={suggestion.coverUrl}
+            genre={suggestion.genre}
+            aspectRatio="2/3"
+            showTitle={false}
+            className="rounded-lg shadow-sm"
           />
-        )}
+        </div>
         <div className="flex-1">
           <h4 className="font-bold text-lg">{suggestion.title}</h4>
           <p className="text-stone-600 text-sm">by {suggestion.author}</p>

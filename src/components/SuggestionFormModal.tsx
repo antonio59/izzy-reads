@@ -9,6 +9,32 @@ import {
   Search,
   Loader2,
 } from "lucide-react";
+
+// Small cover component with error fallback for search results
+function SearchResultCover({ src, title }: { src?: string; title: string }) {
+  const [hasError, setHasError] = useState(false);
+  if (!src || hasError) {
+    return (
+      <div className="w-10 h-14 bg-gradient-to-br from-primary-400 to-accent-400 rounded flex items-center justify-center flex-shrink-0">
+        <BookOpen className="w-5 h-5 text-white" />
+      </div>
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt={title}
+      className="w-10 h-14 object-cover rounded shadow-sm flex-shrink-0"
+      onLoad={(e) => {
+        const img = e.currentTarget;
+        if (img.naturalWidth < 30 || img.naturalHeight < 30) {
+          setHasError(true);
+        }
+      }}
+      onError={() => setHasError(true)}
+    />
+  );
+}
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import {
@@ -279,17 +305,7 @@ export function SuggestionFormModal({
                             onClick={() => handleSelectSearchResult(book)}
                             className="w-full flex items-center gap-3 p-3 hover:bg-primary-50 transition-colors text-left border-b border-stone-100 last:border-b-0"
                           >
-                            {book.coverUrl ? (
-                              <img
-                                src={book.coverUrl}
-                                alt={book.title}
-                                className="w-10 h-14 object-cover rounded shadow-sm flex-shrink-0"
-                              />
-                            ) : (
-                              <div className="w-10 h-14 bg-gradient-to-br from-primary-400 to-accent-400 rounded flex items-center justify-center flex-shrink-0">
-                                <BookOpen className="w-5 h-5 text-white" />
-                              </div>
-                            )}
+                            <SearchResultCover src={book.coverUrl} title={book.title} />
                             <div className="flex-1 min-w-0">
                               <p className="font-medium text-stone-800 truncate">
                                 {book.title}

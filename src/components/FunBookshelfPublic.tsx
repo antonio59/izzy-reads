@@ -71,7 +71,14 @@ function BookCoverImage({
             className={`w-full h-full object-cover transition-opacity duration-300 ${
               hasLoaded ? "opacity-100" : "opacity-0"
             }`}
-            onLoad={() => setHasLoaded(true)}
+            onLoad={(e) => {
+              const img = e.currentTarget;
+              if (img.naturalWidth < 30 || img.naturalHeight < 30) {
+                setHasError(true);
+              } else {
+                setHasLoaded(true);
+              }
+            }}
             onError={() => setHasError(true)}
           />
         </>
