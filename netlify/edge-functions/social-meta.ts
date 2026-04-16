@@ -29,32 +29,45 @@ function slugToTitle(slug: string): string {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function buildMetaHtml(params: {
   title: string;
   description: string;
   url: string;
   image: string;
 }): string {
+  const title = escapeHtml(params.title);
+  const description = escapeHtml(params.description);
+  const url = escapeHtml(params.url);
+  const image = escapeHtml(params.image);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${params.title}</title>
-  <meta name="description" content="${params.description}" />
+  <title>${title}</title>
+  <meta name="description" content="${description}" />
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="${params.title}" />
-  <meta property="og:description" content="${params.description}" />
-  <meta property="og:url" content="${params.url}" />
-  <meta property="og:image" content="${params.image}" />
+  <meta property="og:title" content="${title}" />
+  <meta property="og:description" content="${description}" />
+  <meta property="og:url" content="${url}" />
+  <meta property="og:image" content="${image}" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="${params.title}" />
-  <meta name="twitter:description" content="${params.description}" />
-  <meta name="twitter:image" content="${params.image}" />
+  <meta name="twitter:title" content="${title}" />
+  <meta name="twitter:description" content="${description}" />
+  <meta name="twitter:image" content="${image}" />
 </head>
 <body>
-  <p>Redirecting to ${params.title}...</p>
-  <script>window.location.href="${params.url}"</script>
+  <p>Redirecting to ${title}...</p>
+  <script>window.location.href="${url}"</script>
 </body>
 </html>`;
 }
