@@ -68,6 +68,7 @@ All notable changes to this project will be documented in this file.
 
 ### CI/CD
 
+- Add OSV Scanner workflow for dependency vulnerability scanning
 - Add automatic changelog workflow
 - Add automatic changelog workflow
 - Add automatic changelog workflow
@@ -562,6 +563,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
