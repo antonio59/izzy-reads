@@ -81,6 +81,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Fix CodeQL #18 + CVEs (flatted, picomatch, uuid, brace-expansion)
 - Redesign poem detail page and fix book suggestion cover fallbacks
 
 - PoemDetail: compact layout with sticky top bar, quote glyphs, prev/next nav,
@@ -524,6 +525,8 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- **deps**: Bump resend from 6.10.0 to 6.12.0 (#108)
+- **deps**: Bump react-router-dom in the react group (#103)
 - Update dependencies (#102)
 - Send suggestion emails from verified domain
 - **deps**: Bump convex from 1.34.1 to 1.35.1 (#97)
@@ -565,6 +568,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
