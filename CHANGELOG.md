@@ -525,6 +525,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- Remove package-lock.json from git tracking
 - **deps**: Bump resend from 6.10.0 to 6.12.0 (#108)
 - **deps**: Bump react-router-dom in the react group (#103)
 - Update dependencies (#102)
@@ -568,6 +569,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
