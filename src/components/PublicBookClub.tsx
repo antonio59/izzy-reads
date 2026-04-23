@@ -32,17 +32,31 @@ export default function PublicBookClub() {
       : "skip",
   );
 
-  // Load saved credentials
+  const detailedData = useQuery(
+    api.bookClubs.getById,
+    clubData ? { id: clubData._id } : "skip",
+  );
+
+  const [daysLeft, setDaysLeft] = useState(0);
+
+  // Load saved visitor name (passcode is not persisted to avoid
+  // clear-text storage of sensitive information)
   useEffect(() => {
     const savedName = localStorage.getItem("izzy_bookclub_name");
-    const savedPasscode = localStorage.getItem("izzy_bookclub_passcode");
     if (savedName) setVisitorName(savedName);
-    if (savedPasscode) setPasscode(savedPasscode);
   }, []);
+
+  useEffect(() => {
+    if (clubData?.endDate) {
+      setDaysLeft(
+        Math.max(0, Math.ceil((new Date(clubData.endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+      );
+    }
+  }, [clubData?.endDate]);
 
   const saveCredentials = () => {
     localStorage.setItem("izzy_bookclub_name", visitorName.trim());
-    localStorage.setItem("izzy_bookclub_passcode", passcode);
+    // Passcode is intentionally NOT stored in localStorage
   };
 
   const handleOpenComment = () => {
@@ -137,13 +151,6 @@ export default function PublicBookClub() {
       </div>
     );
   }
-
-  const detailedData = useQuery(
-    api.bookClubs.getById,
-    { id: clubData._id },
-  );
-
-  const daysLeft = Math.max(0, Math.ceil((new Date(clubData.endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-cream-100 to-accent-50 flex flex-col">

@@ -72,7 +72,7 @@ function buildMetaHtml(params: {
 </html>`;
 }
 
-export default async (request: Request, context: Context) => {
+export default async (request: Request, _context: Context) => {
   if (!isCrawler(request)) {
     return;
   }
@@ -104,7 +104,7 @@ export default async (request: Request, context: Context) => {
   // Review pages
   const reviewMatch = url.pathname.match(/^\/reviews\/(.+)$/);
   if (reviewMatch) {
-    const bookId = reviewMatch[1];
+    const _bookId = reviewMatch[1];
     const title = `Izzy's Book Review | Izzy's Bookshelf`;
     const description = `Read Izzy's review of this book on Izzy's Bookshelf.`;
     return new Response(

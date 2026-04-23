@@ -62,3 +62,6 @@ coverage/
 # TypeScript
 *.tsbuildinfo
 .gstack/
+
+# Local Netlify folder
+.netlify

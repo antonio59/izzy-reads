@@ -52,14 +52,7 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
     };
   }, []);
 
-  // Load trending GIFs when opened
-  useEffect(() => {
-    if (isOpen && !hasSearched && gifs.length === 0 && giphyAvailable) {
-      loadTrendingGifs();
-    }
-  }, [isOpen, hasSearched, gifs.length, giphyAvailable]);
-
-  const loadTrendingGifs = async () => {
+  const loadTrendingGifs = useCallback(async () => {
     setLoading(true);
     try {
       const trending = await getTrendingGifs(12);
@@ -69,7 +62,14 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  // Load trending GIFs when opened
+  useEffect(() => {
+    if (isOpen && !hasSearched && gifs.length === 0 && giphyAvailable) {
+      loadTrendingGifs();
+    }
+  }, [isOpen, hasSearched, gifs.length, giphyAvailable, loadTrendingGifs]);
 
   const handleSearch = useCallback(async (query: string) => {
     if (!query.trim()) {
