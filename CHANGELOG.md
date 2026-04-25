@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- **ci**: Patch minimatch@8.0.7 for brace-expansion CJS compatibility
 - **ci**: Remove direct brace-expansion dependency to resolve ESM import conflict
 - Show loading skeleton in PublicWishlist while data loads
 - Escape quotes in social meta edge function HTML
@@ -82,6 +83,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge branch 'main' of https://github.com/antonio59/izzy-reads
 - Merge branch 'main' of https://github.com/antonio59/izzy-reads
 - Merge branch 'main' of https://github.com/antonio59/izzy-reads
 - Fix CodeQL #18 + CVEs (flatted, picomatch, uuid, brace-expansion)
@@ -573,6 +575,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
