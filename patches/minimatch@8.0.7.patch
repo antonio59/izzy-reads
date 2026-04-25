@@ -1,0 +1,13 @@
+diff --git a/node_modules/glob/node_modules/minimatch/.bun-tag-bc0aa013ce71d3a9 b/.bun-tag-bc0aa013ce71d3a9
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/dist/mjs/index.js b/dist/mjs/index.js
+index 80e8fde9412eed60e827c361c082c74c83718544..41b052a577d74193e0159ff9183cb574360c9e46 100644
+--- a/dist/mjs/index.js
++++ b/dist/mjs/index.js
+@@ -1,4 +1,4 @@
+-import expand from 'brace-expansion';
++import { expand } from 'brace-expansion';
+ import { assertValidPattern } from './assert-valid-pattern.js';
+ import { AST } from './ast.js';
+ import { escape } from './escape.js';
