@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- **covers**: Add referrerPolicy=no-referrer for external book covers
 - **ci**: Dynamic import for @sentry/vite-plugin to avoid minimatch/brace-expansion ESM issue
 - **ci**: Correct minimatch patch for CJS brace-expansion compatibility
 - **ci**: Patch minimatch@8.0.7 for brace-expansion CJS compatibility
@@ -85,6 +86,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge branch 'main' of https://github.com/antonio59/izzy-reads
 - Merge branch 'main' of https://github.com/antonio59/izzy-reads
 - Merge branch 'main' of https://github.com/antonio59/izzy-reads
 - Merge branch 'main' of https://github.com/antonio59/izzy-reads
@@ -579,6 +581,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
