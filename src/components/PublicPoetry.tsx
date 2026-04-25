@@ -5,6 +5,7 @@ import { Feather, Search, Quote } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
+import { Input } from "./ui/Input";
 
 const BACKGROUND_PATTERNS = [
   "from-violet-100/80 via-purple-50/80 to-fuchsia-100/80",
@@ -71,7 +72,7 @@ const PublicPoetry = () => {
               <Feather className="w-8 h-8 text-white" />
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-display font-extrabold text-stone-800 mb-4">
+            <h1 className="text-4xl md:text-5xl font-display font-bold text-stone-800 mb-4">
               Poetry Corner
             </h1>
             <p className="text-lg text-stone-600 mb-8">
@@ -100,15 +101,15 @@ const PublicPoetry = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="relative"
             >
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
-              <input
+              <Input
                 type="text"
                 placeholder="Search poems..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-white border-2 border-violet-100 rounded-xl focus:border-violet-400 focus:outline-none transition-colors text-stone-700 placeholder:text-stone-400"
+                icon={<Search className="w-5 h-5" />}
+                iconPosition="left"
+                className="border-2 border-violet-100 focus:border-violet-400"
               />
             </motion.div>
           </div>

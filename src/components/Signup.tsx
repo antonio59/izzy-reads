@@ -4,7 +4,6 @@ import { useAuth } from "../contexts/AuthContext";
 import {
   BookOpen,
   Mail,
-  Lock,
   UserPlus,
   AlertCircle,
   CheckCircle,
@@ -12,6 +11,9 @@ import {
   Info,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { Button } from "./ui/Button";
+import { Card } from "./ui/Card";
+import { Input, PasswordInput } from "./ui/Input";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -88,7 +90,7 @@ const Signup = () => {
         </div>
 
         {/* Signup Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <Card variant="elevated" padding="lg" className="shadow-xl">
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
               <motion.div
@@ -136,102 +138,56 @@ const Signup = () => {
               </motion.div>
             )}
 
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-semibold text-stone-700 mb-2"
-              >
-                Your Name
-              </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-400" />
-                <input
-                  id="name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border-2 border-stone-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
-                  placeholder="What should we call you?"
-                  autoComplete="name"
-                />
-              </div>
-            </div>
+            <Input
+              label="Your Name"
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="What should we call you?"
+              autoComplete="name"
+              icon={<User className="w-5 h-5" />}
+            />
 
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-semibold text-stone-700 mb-2"
-              >
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-400" />
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full pl-10 pr-4 py-3 border-2 border-stone-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
-                  placeholder="you@example.com"
-                  autoComplete="email"
-                />
-              </div>
-            </div>
+            <Input
+              label="Email Address"
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="you@example.com"
+              autoComplete="email"
+              icon={<Mail className="w-5 h-5" />}
+            />
 
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-semibold text-stone-700 mb-2"
-              >
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-400" />
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="w-full pl-10 pr-4 py-3 border-2 border-stone-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
-                  placeholder="••••••••"
-                  autoComplete="new-password"
-                />
-              </div>
-              <p className="text-xs text-stone-500 mt-1">
-                Must be at least 8 characters
-              </p>
-            </div>
+            <PasswordInput
+              label="Password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="••••••••"
+              autoComplete="new-password"
+              hint="Must be at least 8 characters"
+            />
 
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-semibold text-stone-700 mb-2"
-              >
-                Confirm Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-400" />
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  className="w-full pl-10 pr-4 py-3 border-2 border-stone-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
-                  placeholder="••••••••"
-                  autoComplete="new-password"
-                />
-              </div>
-            </div>
+            <PasswordInput
+              label="Confirm Password"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              placeholder="••••••••"
+              autoComplete="new-password"
+            />
 
-            <motion.button
+            <Button
               type="submit"
               disabled={loading || success}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-bold hover:from-purple-600 hover:to-pink-600 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-              whileHover={{ scale: loading || success ? 1 : 1.02 }}
-              whileTap={{ scale: loading || success ? 1 : 0.98 }}
+              fullWidth
+              size="lg"
+              variant="primary"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -246,7 +202,7 @@ const Signup = () => {
                   Create Account
                 </>
               )}
-            </motion.button>
+            </Button>
           </form>
 
           <div className="mt-6 text-center">
@@ -266,7 +222,7 @@ const Signup = () => {
               ← Back to public portfolio
             </Link>
           </div>
-        </div>
+        </Card>
 
         {/* Fun fact */}
         <motion.div

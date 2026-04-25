@@ -17,6 +17,8 @@ import {
 import { useAuth } from "../contexts/AuthContext";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { Input, Textarea } from "./ui/Input";
+import { Button, IconButton } from "./ui/Button";
 
 interface ProfileData {
   isPublished: boolean;
@@ -184,25 +186,14 @@ const ProfileEditor: React.FC = () => {
                 </>
               )}
             </button>
-            <motion.button
+            <Button
+              variant="primary"
               onClick={handleSave}
               disabled={saving}
-              className="bg-white text-purple-600 px-5 py-2 rounded-full font-bold hover:bg-purple-50 transition-all flex items-center gap-2 shadow-lg disabled:opacity-50"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              icon={saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
             >
-              {saving ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : saved ? (
-                <>
-                  <Save className="w-5 h-5" /> Saved!
-                </>
-              ) : (
-                <>
-                  <Save className="w-5 h-5" /> Save
-                </>
-              )}
-            </motion.button>
+              {saved ? "Saved!" : "Save"}
+            </Button>
           </div>
         </div>
       </div>
@@ -219,28 +210,26 @@ const ProfileEditor: React.FC = () => {
             <label className="block text-sm font-medium text-stone-700 mb-1">
               Tagline (shown on homepage)
             </label>
-            <input
+            <Input
               type="text"
               value={profile.heroTagline}
               onChange={(e) =>
                 setProfile({ ...profile, heroTagline: e.target.value })
               }
               placeholder="e.g., Welcome to my bookshelf!"
-              className="w-full px-4 py-2.5 rounded-xl border border-stone-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-stone-700 mb-1">
               Short Description
             </label>
-            <textarea
+            <Textarea
               value={profile.heroDescription}
               onChange={(e) =>
                 setProfile({ ...profile, heroDescription: e.target.value })
               }
               placeholder="A brief intro about you and your love of reading..."
               rows={2}
-              className="w-full px-4 py-2.5 rounded-xl border border-stone-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             />
           </div>
         </div>
@@ -253,12 +242,11 @@ const ProfileEditor: React.FC = () => {
         color="blue"
         description="Tell visitors about yourself"
       >
-        <textarea
+        <Textarea
           value={profile.bio}
           onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
           placeholder="Hi! I'm Izzy, and I absolutely LOVE reading..."
           rows={4}
-          className="w-full px-4 py-2.5 rounded-xl border border-stone-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
         />
       </Section>
 
@@ -269,14 +257,13 @@ const ProfileEditor: React.FC = () => {
         color="green"
         description="What book are you reading right now?"
       >
-        <input
+        <Input
           type="text"
           value={profile.currentlyReading}
           onChange={(e) =>
             setProfile({ ...profile, currentlyReading: e.target.value })
           }
           placeholder="e.g., Percy Jackson & The Lightning Thief by Rick Riordan"
-          className="w-full px-4 py-2.5 rounded-xl border border-stone-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
         />
       </Section>
 
@@ -287,12 +274,11 @@ const ProfileEditor: React.FC = () => {
         color="pink"
         description="Share what makes reading special to you"
       >
-        <textarea
+        <Textarea
           value={profile.whyIRead}
           onChange={(e) => setProfile({ ...profile, whyIRead: e.target.value })}
           placeholder="I read because every book is a new adventure..."
           rows={3}
-          className="w-full px-4 py-2.5 rounded-xl border border-stone-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
         />
       </Section>
 
@@ -392,20 +378,15 @@ const ProfileEditor: React.FC = () => {
 
       {/* Save Button (bottom) */}
       <div className="flex justify-end pb-8">
-        <motion.button
+        <Button
+          variant="primary"
+          size="lg"
           onClick={handleSave}
           disabled={saving}
-          className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-xl font-bold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center gap-2 shadow-lg disabled:opacity-50"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          icon={saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
         >
-          {saving ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <Save className="w-5 h-5" />
-          )}
           {saved ? "Saved!" : "Save All Changes"}
-        </motion.button>
+        </Button>
       </div>
     </div>
   );
@@ -514,21 +495,23 @@ const ListEditor: React.FC<ListEditorProps> = ({
 
       {/* Add new item */}
       <div className="flex gap-2">
-        <input
+        <Input
           type="text"
           value={newValue}
           onChange={(e) => onNewValueChange(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && onAdd()}
           placeholder={placeholder}
-          className="flex-1 px-4 py-2 rounded-xl border border-stone-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+          size="sm"
+          className="flex-1"
         />
-        <button
+        <IconButton
+          icon={<Plus className="w-5 h-5" />}
           onClick={onAdd}
           disabled={!newValue.trim()}
-          className="px-4 py-2 bg-stone-100 hover:bg-stone-200 rounded-xl transition-colors disabled:opacity-50"
-        >
-          <Plus className="w-5 h-5 text-stone-600" />
-        </button>
+          aria-label="Add item"
+          variant="secondary"
+          size="sm"
+        />
       </div>
     </div>
   );

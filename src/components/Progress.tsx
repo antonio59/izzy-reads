@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Trophy,
   Target,
@@ -8,12 +8,14 @@ import {
   Star,
   Award,
   Settings,
-  X,
   Check,
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { useGamification } from "../contexts/GamificationContext";
 import { useUser } from "../contexts/UserContext";
+import { Modal, ModalFooter } from "./ui/Modal";
+import { Card } from "./ui/Card";
+import { Button } from "./ui/Button";
 
 interface Achievement {
   id: string;
@@ -86,7 +88,7 @@ const Progress: React.FC = () => {
             <Target className="w-5 h-5 text-amber-500" />
           </div>
           <div>
-            <h3 className="font-semibold text-stone-800 flex items-center gap-2">
+            <h3 className="font-bold text-stone-800 flex items-center gap-2">
               Your Reading Adventure Stats! <span className="text-lg">🌟</span>
             </h3>
             <p className="text-sm text-stone-600 mt-0.5">
@@ -127,7 +129,7 @@ const Progress: React.FC = () => {
       </div>
 
       {/* Level Progress */}
-      <div className="bg-white rounded-2xl p-6 border border-stone-100">
+      <Card variant="outlined" padding="md">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-2xl">
@@ -153,10 +155,10 @@ const Progress: React.FC = () => {
             transition={{ duration: 1, ease: "easeOut" }}
           />
         </div>
-      </div>
+      </Card>
 
       {/* Achievements */}
-      <div className="bg-white rounded-2xl p-6 border border-stone-100">
+      <Card variant="outlined" padding="md">
         <h2 className="text-xl font-bold text-stone-900 mb-4 flex items-center gap-2">
           <Trophy className="w-5 h-5 text-amber-500" />
           Achievements
@@ -197,22 +199,24 @@ const Progress: React.FC = () => {
             </div>
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Reading Goals */}
-      <div className="bg-white rounded-2xl p-6 border border-stone-100">
+      <Card variant="outlined" padding="md">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-stone-900 flex items-center gap-2">
             <Target className="w-5 h-5 text-green-500" />
             Reading Goals
           </h2>
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => setShowGoalEditor(true)}
-            className="flex items-center gap-1 px-3 py-1.5 text-sm text-stone-500 hover:text-stone-700 hover:bg-stone-100 rounded-lg transition-colors"
+            className="text-stone-500 hover:text-stone-700 hover:bg-stone-100 gap-1"
+            icon={<Settings className="w-4 h-4" />}
           >
-            <Settings className="w-4 h-4" />
             Edit Goals
-          </button>
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -229,38 +233,16 @@ const Progress: React.FC = () => {
             icon="📖"
           />
         </div>
-      </div>
+      </Card>
 
       {/* Goal Editor Modal */}
-      <AnimatePresence>
-        {showGoalEditor && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowGoalEditor(false)}
-          >
-            <motion.div
-              className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl"
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-stone-900">
-                  Set Reading Goals
-                </h3>
-                <button
-                  onClick={() => setShowGoalEditor(false)}
-                  className="p-2 hover:bg-stone-100 rounded-lg transition-colors"
-                >
-                  <X className="w-5 h-5 text-stone-500" />
-                </button>
-              </div>
-
-              <div className="space-y-4">
+      <Modal
+        isOpen={showGoalEditor}
+        onClose={() => setShowGoalEditor(false)}
+        size="sm"
+        title="Set Reading Goals"
+      >
+        <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-stone-700 mb-2">
                     Books per Year
@@ -306,27 +288,24 @@ const Progress: React.FC = () => {
                     </span>
                   </div>
                 </div>
+        </div>
 
-                <div className="pt-4 flex gap-3">
-                  <button
-                    onClick={() => setShowGoalEditor(false)}
-                    className="flex-1 px-4 py-2.5 border border-stone-200 rounded-xl font-medium text-stone-600 hover:bg-stone-50 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleSaveGoals}
-                    className="flex-1 px-4 py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
-                  >
-                    <Check className="w-4 h-4" />
-                    Save
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        <ModalFooter>
+          <button
+            onClick={() => setShowGoalEditor(false)}
+            className="px-4 py-2.5 border border-stone-200 rounded-xl font-medium text-stone-600 hover:bg-stone-50 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSaveGoals}
+            className="px-4 py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
+          >
+            <Check className="w-4 h-4" />
+            Save
+          </button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 };
@@ -353,8 +332,10 @@ const StatCard: React.FC<StatCardProps> = ({
   };
 
   return (
-    <motion.div
-      className="bg-white rounded-xl p-4 border border-stone-100"
+    <Card
+      variant="default"
+      padding="sm"
+      className="border border-stone-100"
       whileHover={{ y: -2 }}
     >
       <div
@@ -364,7 +345,7 @@ const StatCard: React.FC<StatCardProps> = ({
       </div>
       <p className="text-2xl font-bold text-stone-900">{value}</p>
       <p className="text-sm text-stone-500">{label}</p>
-    </motion.div>
+    </Card>
   );
 };
 

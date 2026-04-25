@@ -14,6 +14,7 @@ import {
   Loader2,
 } from "lucide-react";
 import SwipeCard from "./SwipeCard";
+import { Button } from "./ui/Button";
 
 // Genre mapping from Google Books categories
 const CATEGORY_MAP: Record<string, string> = {
@@ -338,16 +339,15 @@ function Discover() {
             <p className="text-sm text-stone-500 mb-6 max-w-xs">
               We've run out of recommendations for now. Refresh to discover more.
             </p>
-            <button
+            <Button
               onClick={() => {
                 queryIndexRef.current++;
                 fetchMore();
               }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+              icon={<RefreshCw className="w-4 h-4" />}
             >
-              <RefreshCw className="w-4 h-4" />
               Find more books
-            </button>
+            </Button>
           </div>
         ) : (
           <AnimatePresence>
@@ -388,7 +388,7 @@ function Discover() {
               onClick={() => setSelectedBook(null)}
             />
             <motion.div
-              className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto"
+              className="relative bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto"
               initial={{ scale: 0.9, y: 50 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 50 }}
@@ -399,7 +399,7 @@ function Discover() {
                   <img
                     src={selectedBook.coverUrl}
                     alt={selectedBook.title}
-                    className="h-56 w-auto object-contain rounded shadow-2xl"
+                    className="h-56 w-auto object-contain rounded shadow-xl"
                     onError={() => setModalImageError(true)}
                   />
                 ) : (
@@ -448,26 +448,28 @@ function Discover() {
                 )}
 
                 <div className="flex gap-2 mt-6">
-                  <button
+                  <Button
+                    variant="secondary"
+                    className="flex-1"
                     onClick={() => {
                       setSelectedBook(null);
                       handleSwipe("left");
                     }}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-red-50 hover:bg-red-100 text-red-500 rounded-xl font-semibold transition-colors"
+                    icon={<X className="w-4 h-4" />}
                   >
-                    <X className="w-4 h-4" />
                     Pass
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="primary"
+                    className="flex-1"
                     onClick={() => {
                       setSelectedBook(null);
                       handleSwipe("right");
                     }}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-50 hover:bg-green-100 text-green-600 rounded-xl font-semibold transition-colors"
+                    icon={<Heart className="w-4 h-4" />}
                   >
-                    <Heart className="w-4 h-4" />
                     Want it
-                  </button>
+                  </Button>
                 </div>
               </div>
             </motion.div>

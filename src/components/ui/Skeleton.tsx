@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useMemo } from "react";
+import { Card } from "./Card";
 
 interface SkeletonProps {
   className?: string;
@@ -62,7 +63,7 @@ export function Skeleton({
 // Pre-built skeleton components for common patterns
 export function BookCardSkeleton() {
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-soft">
+    <Card variant="default" padding="sm">
       <Skeleton
         variant="rounded"
         className="w-full aspect-[2/3] mb-4"
@@ -70,7 +71,7 @@ export function BookCardSkeleton() {
       />
       <Skeleton variant="text" className="h-4 w-3/4 mb-2" animation="wave" />
       <Skeleton variant="text" className="h-3 w-1/2" animation="wave" />
-    </div>
+    </Card>
   );
 }
 
@@ -88,7 +89,7 @@ export function DashboardStatsSkeleton() {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {Array.from({ length: 4 }).map((_, i) => (
-        <div key={i} className="bg-white rounded-2xl p-6 shadow-soft">
+        <Card variant="default" padding="md" key={i}>
           <div className="flex items-center gap-4">
             <Skeleton
               variant="circular"
@@ -105,7 +106,7 @@ export function DashboardStatsSkeleton() {
               <Skeleton variant="text" className="h-6 w-16" animation="wave" />
             </div>
           </div>
-        </div>
+        </Card>
       ))}
     </div>
   );
@@ -118,7 +119,7 @@ export function ChartSkeleton() {
   );
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-soft">
+    <Card variant="default" padding="md">
       <div className="flex items-center justify-between mb-6">
         <div>
           <Skeleton variant="text" className="h-5 w-32 mb-1" animation="wave" />
@@ -137,7 +138,7 @@ export function ChartSkeleton() {
           />
         ))}
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -181,7 +182,7 @@ export function PoemGallerySkeleton({ count = 6 }: { count?: number }) {
 
 export function BlogPostSkeleton() {
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-soft">
+    <Card variant="default" padding="md">
       <div className="flex items-center gap-3 mb-4">
         <Skeleton variant="circular" width={40} height={40} animation="wave" />
         <div>
@@ -199,7 +200,7 @@ export function BlogPostSkeleton() {
         <Skeleton variant="rounded" className="h-6 w-16" animation="wave" />
         <Skeleton variant="rounded" className="h-6 w-20" animation="wave" />
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -233,7 +234,7 @@ export function AchievementsSkeleton({ count = 8 }: { count?: number }) {
 
 export function ProfileSkeleton() {
   return (
-    <div className="bg-white rounded-3xl p-8 shadow-soft">
+    <Card variant="default" padding="lg">
       <div className="flex flex-col items-center mb-6">
         <Skeleton
           variant="circular"
@@ -250,7 +251,7 @@ export function ProfileSkeleton() {
         <Skeleton variant="rounded" className="h-16 w-full" animation="wave" />
         <Skeleton variant="rounded" className="h-16 w-full" animation="wave" />
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -277,7 +278,7 @@ export function TableSkeleton({
   columns?: number;
 }) {
   return (
-    <div className="bg-white rounded-2xl shadow-soft overflow-hidden">
+    <Card variant="default" padding="none" className="overflow-hidden">
       <div className="flex items-center gap-4 p-4 bg-stone-50 border-b border-stone-200">
         {Array.from({ length: columns }).map((_, i) => (
           <Skeleton
@@ -291,7 +292,7 @@ export function TableSkeleton({
       {Array.from({ length: rows }).map((_, i) => (
         <TableRowSkeleton key={i} columns={columns} />
       ))}
-    </div>
+    </Card>
   );
 }
 

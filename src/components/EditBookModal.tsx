@@ -14,6 +14,9 @@ import {
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { useToastActions } from "./ui/Toast";
+import { Button } from "./ui/Button";
+import { Card } from "./ui/Card";
+import { Input, Textarea, Select } from "./ui/Input";
 import type { Book } from "../types";
 
 interface EditBookModalProps {
@@ -246,8 +249,10 @@ export function EditBookModal({
           />
 
           {/* Modal */}
-          <motion.div
-            className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl"
+          <Card
+            variant="default"
+            padding="none"
+            className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-xl"
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -350,30 +355,22 @@ export function EditBookModal({
                   When did you finish this book?
                 </label>
                 <div className="flex gap-3">
-                  <select
-                    value={month}
-                    onChange={(e) => setMonth(e.target.value)}
-                    className="flex-1 px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all bg-white"
-                  >
-                    <option value="">Select month</option>
-                    {MONTHS.map((m) => (
-                      <option key={m.value} value={m.value}>
-                        {m.label}
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    value={year}
-                    onChange={(e) => setYear(e.target.value)}
-                    className="w-32 px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all bg-white"
-                  >
-                    <option value="">Year</option>
-                    {YEARS.map((y) => (
-                      <option key={y} value={y}>
-                        {y}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="flex-1">
+                    <Select
+                      value={month}
+                      onChange={(e) => setMonth(e.target.value)}
+                      options={MONTHS}
+                      placeholder="Select month"
+                    />
+                  </div>
+                  <div className="w-32">
+                    <Select
+                      value={year}
+                      onChange={(e) => setYear(e.target.value)}
+                      options={YEARS.map((y) => ({ value: String(y), label: String(y) }))}
+                      placeholder="Year"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -406,9 +403,8 @@ export function EditBookModal({
                     </div>
                   ) : (
                     <>
-                      <input
+                      <Input
                         ref={giftInputRef}
-                        type="text"
                         value={giftFrom}
                         onChange={(e) => setGiftFrom(e.target.value)}
                         onFocus={() => setShowGiftSuggestions(true)}
@@ -416,7 +412,6 @@ export function EditBookModal({
                           setTimeout(() => setShowGiftSuggestions(false), 200)
                         }
                         placeholder="Type a name or select below..."
-                        className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
                       />
                       <button
                         type="button"
@@ -511,7 +506,7 @@ export function EditBookModal({
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 10 }}
-                          className="absolute z-20 top-full mt-2 left-0 w-72 bg-white rounded-xl shadow-2xl border border-stone-200 overflow-hidden"
+                          className="absolute z-20 top-full mt-2 left-0 w-72 bg-white rounded-xl shadow-xl border border-stone-200 overflow-hidden"
                         >
                           {/* Category Tabs */}
                           <div className="flex overflow-x-auto p-2 border-b border-stone-100 gap-1">
@@ -560,12 +555,12 @@ export function EditBookModal({
                   </span>
                 </div>
 
-                <textarea
+                <Textarea
                   ref={notesRef}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Write your review here... What did you think of the story? Who was your favorite character? Would you recommend it? 📚✨"
-                  className="w-full px-4 py-3 border border-stone-200 rounded-b-xl rounded-t-none focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none"
+                  className="rounded-b-xl rounded-t-none"
                   rows={6}
                 />
                 <p className="text-xs text-stone-400 mt-2 text-right">
@@ -575,32 +570,21 @@ export function EditBookModal({
 
               {/* Action Buttons */}
               <div className="flex gap-3 pt-4 border-t border-stone-100">
-                <button
-                  onClick={onClose}
-                  className="flex-1 px-4 py-3 border border-stone-200 text-stone-600 rounded-xl font-medium hover:bg-stone-50 transition-colors"
-                >
+                <Button variant="secondary" fullWidth onClick={onClose}>
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="primary"
+                  fullWidth
                   onClick={handleSave}
-                  disabled={isSaving}
-                  className="flex-1 px-4 py-3 bg-primary-500 text-white rounded-xl font-medium hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  loading={isSaving}
+                  icon={<Save className="w-4 h-4" />}
                 >
-                  {isSaving ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="w-4 h-4" />
-                      Save Changes
-                    </>
-                  )}
-                </button>
+                  Save Changes
+                </Button>
               </div>
             </div>
-          </motion.div>
+          </Card>
         </motion.div>
       )}
     </AnimatePresence>

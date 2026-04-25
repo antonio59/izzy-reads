@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, BookOpen, Flame } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
+import { Card } from "./ui/Card";
 
 interface DayData {
   date: string;
@@ -173,8 +174,10 @@ const ReadingHeatmap: React.FC<ReadingHeatmapProps> = ({ className = "" }) => {
   }, [selectedYear]);
 
   return (
-    <motion.div
-      className={`bg-white rounded-2xl p-6 shadow-soft ${className}`}
+    <Card
+      variant="default"
+      padding="md"
+      className={className}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
     >
@@ -276,7 +279,7 @@ const ReadingHeatmap: React.FC<ReadingHeatmapProps> = ({ className = "" }) => {
                   {week.map((day, dayIndex) => (
                     <motion.div
                       key={day.date}
-                      className={`w-[12px] h-[12px] rounded-sm cursor-pointer transition-all ${getColor(day.count, maxCount)}`}
+                      className={`w-[12px] h-[12px] rounded-md cursor-pointer transition-all ${getColor(day.count, maxCount)}`}
                       onMouseEnter={(e) => handleMouseEnter(day, e)}
                       onMouseLeave={handleMouseLeave}
                       whileHover={{ scale: 1.3 }}
@@ -296,11 +299,11 @@ const ReadingHeatmap: React.FC<ReadingHeatmapProps> = ({ className = "" }) => {
       <div className="flex items-center justify-end gap-2 mt-4">
         <span className="text-xs text-stone-500">Less</span>
         <div className="flex gap-1">
-          <div className="w-3 h-3 rounded-sm bg-stone-100" />
-          <div className="w-3 h-3 rounded-sm bg-purple-200" />
-          <div className="w-3 h-3 rounded-sm bg-purple-400" />
-          <div className="w-3 h-3 rounded-sm bg-purple-500" />
-          <div className="w-3 h-3 rounded-sm bg-purple-600" />
+          <div className="w-3 h-3 rounded-md bg-stone-100" />
+          <div className="w-3 h-3 rounded-md bg-purple-200" />
+          <div className="w-3 h-3 rounded-md bg-purple-400" />
+          <div className="w-3 h-3 rounded-md bg-purple-500" />
+          <div className="w-3 h-3 rounded-md bg-purple-600" />
         </div>
         <span className="text-xs text-stone-500">More</span>
       </div>
@@ -335,7 +338,7 @@ const ReadingHeatmap: React.FC<ReadingHeatmapProps> = ({ className = "" }) => {
           )}
         </motion.div>
       )}
-    </motion.div>
+    </Card>
   );
 };
 

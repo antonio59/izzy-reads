@@ -3,6 +3,7 @@ import { useQuery, useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { motion, AnimatePresence } from "framer-motion";
 import { Database, ArrowRight, CheckCircle, AlertCircle, Loader2, ImageIcon } from "lucide-react";
+import { Card } from "./ui/Card";
 
 export function CoverMigrationPanel() {
   const status = useQuery(api.migration.getMigrationStatus);
@@ -78,19 +79,19 @@ export function CoverMigrationPanel() {
 
   if (!status) {
     return (
-      <div className="p-6 bg-white rounded-2xl shadow-sm border border-cream-300">
+      <Card variant="outlined" padding="md" className="shadow-sm border-cream-300">
         <div className="flex items-center gap-2 text-stone-500">
           <Loader2 className="w-5 h-5 animate-spin" />
           Loading migration status...
         </div>
-      </div>
+      </Card>
     );
   }
 
   const totalToMigrate = status.books.withExternalUrl + status.wishlist.withExternalUrl;
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-sm border border-cream-300 space-y-6">
+    <Card variant="outlined" padding="md" className="shadow-sm border-cream-300 space-y-6">
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center">
           <ImageIcon className="w-6 h-6 text-white" />
@@ -104,7 +105,7 @@ export function CoverMigrationPanel() {
       {/* Status Cards */}
       <div className="grid sm:grid-cols-2 gap-4">
         <div className="bg-cream-50 rounded-xl p-4 border border-cream-200">
-          <h3 className="font-semibold text-stone-700 mb-3">Books</h3>
+          <h3 className="font-bold text-stone-700 mb-3">Books</h3>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-stone-500">Total</span>
@@ -122,7 +123,7 @@ export function CoverMigrationPanel() {
         </div>
 
         <div className="bg-cream-50 rounded-xl p-4 border border-cream-200">
-          <h3 className="font-semibold text-stone-700 mb-3">Wishlist</h3>
+          <h3 className="font-bold text-stone-700 mb-3">Wishlist</h3>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-stone-500">Total</span>
@@ -181,7 +182,7 @@ export function CoverMigrationPanel() {
             exit={{ opacity: 0, height: 0 }}
             className="border-t border-cream-200 pt-4 space-y-4"
           >
-            <h3 className="font-semibold text-stone-700">Migration Results</h3>
+            <h3 className="font-bold text-stone-700">Migration Results</h3>
 
             {results.books && (
               <div className="bg-cream-50 rounded-xl p-4">
@@ -251,7 +252,7 @@ export function CoverMigrationPanel() {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </Card>
   );
 }
 

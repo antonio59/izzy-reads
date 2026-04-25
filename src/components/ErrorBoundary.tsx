@@ -1,6 +1,7 @@
 import { Component, useId, useMemo, type ErrorInfo, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { RefreshCw, Home, AlertTriangle } from "lucide-react";
+import { Card } from "./ui/Card";
 
 const funMessages = [
   { emoji: "📖", message: "Oops! This page got a paper cut!" },
@@ -91,8 +92,10 @@ function ErrorFallback({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-rose-50 to-purple-50 flex items-center justify-center p-4">
-      <motion.div
-        className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 text-center"
+      <Card
+        variant="elevated"
+        padding="lg"
+        className="max-w-md w-full text-center"
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -166,7 +169,7 @@ function ErrorFallback({
         >
           Tip: Sometimes turning it off and on again really does work!
         </motion.p>
-      </motion.div>
+      </Card>
     </div>
   );
 }

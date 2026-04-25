@@ -22,6 +22,7 @@ import { useToastActions } from "./Toast";
 import type { Book } from "../../types";
 import { useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { Input, Textarea } from "./Input";
 
 export type BookDestination = "read" | "reading" | "wishlist";
 
@@ -295,7 +296,7 @@ export function BookSearchModal({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+          className="relative bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
         >
           {/* Header */}
           <div className="bg-gradient-to-r from-primary-500 to-accent-500 p-6 text-white">
@@ -314,22 +315,20 @@ export function BookSearchModal({
 
             {/* Search Bar */}
             <div className="flex gap-2">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-stone-400 w-5 h-5" />
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Search by title, author, or ISBN..."
-                  className="w-full pl-10 pr-4 py-3 rounded-xl text-stone-800 focus:outline-none focus:ring-2 focus:ring-white/50"
-                  autoFocus
-                />
-              </div>
+              <Input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Search by title, author, or ISBN..."
+                icon={<Search className="w-5 h-5" />}
+                autoFocus
+                className="flex-1"
+              />
               <button
                 onClick={handleSearch}
                 disabled={loading}
-                className="bg-white text-primary-600 px-6 py-3 rounded-xl font-semibold hover:bg-primary-50 transition-colors disabled:opacity-50 flex items-center gap-2"
+                className="bg-white text-primary-600 px-6 py-3 rounded-xl font-medium hover:bg-primary-50 transition-colors disabled:opacity-50 flex items-center gap-2"
               >
                 {loading ? (
                   <>
@@ -371,12 +370,13 @@ export function BookSearchModal({
                   <div className="flex gap-6">
                     {/* Cover Upload */}
                     <div className="flex-shrink-0">
-                      <input
+                      <Input
                         ref={fileInputRef}
                         type="file"
                         accept="image/*"
                         className="hidden"
                         onChange={handleCoverUpload}
+                        fullWidth={false}
                       />
                       <div
                         onClick={() => fileInputRef.current?.click()}
@@ -415,10 +415,10 @@ export function BookSearchModal({
                     {/* Book Details Form */}
                     <div className="flex-1 space-y-4">
                       <div>
-                        <label className="block text-sm font-semibold text-stone-700 mb-1">
+                        <label className="block text-sm font-medium text-stone-700 mb-1">
                           Book Title *
                         </label>
-                        <input
+                        <Input
                           type="text"
                           value={manualBook.title}
                           onChange={(e) =>
@@ -428,15 +428,14 @@ export function BookSearchModal({
                             })
                           }
                           placeholder="Enter book title..."
-                          className="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-stone-700 mb-1">
+                        <label className="block text-sm font-medium text-stone-700 mb-1">
                           Author *
                         </label>
-                        <input
+                        <Input
                           type="text"
                           value={manualBook.author}
                           onChange={(e) =>
@@ -446,13 +445,12 @@ export function BookSearchModal({
                             })
                           }
                           placeholder="Enter author name..."
-                          className="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         />
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-semibold text-stone-700 mb-1">
+                          <label className="block text-sm font-medium text-stone-700 mb-1">
                             Genre
                           </label>
                           <select
@@ -473,10 +471,10 @@ export function BookSearchModal({
                           </select>
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-stone-700 mb-1">
+                          <label className="block text-sm font-medium text-stone-700 mb-1">
                             Pages
                           </label>
-                          <input
+                          <Input
                             type="number"
                             value={manualBook.pageCount}
                             onChange={(e) =>
@@ -486,16 +484,15 @@ export function BookSearchModal({
                               })
                             }
                             placeholder="Optional"
-                            className="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-stone-700 mb-1">
+                        <label className="block text-sm font-medium text-stone-700 mb-1">
                           Description (optional)
                         </label>
-                        <textarea
+                        <Textarea
                           value={manualBook.description}
                           onChange={(e) =>
                             setManualBook({
@@ -505,13 +502,12 @@ export function BookSearchModal({
                           }
                           placeholder="What's this book about?"
                           rows={3}
-                          className="w-full px-4 py-2 border border-stone-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
                         />
                       </div>
 
                       {/* Destination Selector */}
                       <div>
-                        <label className="block text-sm font-semibold text-stone-700 mb-2">
+                        <label className="block text-sm font-medium text-stone-700 mb-2">
                           Add to:
                         </label>
                         <div className="grid grid-cols-3 gap-2">
@@ -631,7 +627,7 @@ export function BookSearchModal({
 
                       {selectedBook.description && (
                         <div className="bg-cream-100 p-4 rounded-xl">
-                          <h4 className="font-semibold text-stone-700 mb-2">
+                          <h4 className="font-bold text-stone-700 mb-2">
                             Description
                           </h4>
                           <p className="text-stone-600 text-sm leading-relaxed">
@@ -644,7 +640,7 @@ export function BookSearchModal({
                       {selectedBook.subjects &&
                         selectedBook.subjects.length > 0 && (
                           <div>
-                            <h4 className="font-semibold text-stone-700 mb-2">
+                            <h4 className="font-bold text-stone-700 mb-2">
                               Subjects
                             </h4>
                             <div className="flex flex-wrap gap-2">
@@ -664,7 +660,7 @@ export function BookSearchModal({
 
                       {/* Destination Selector */}
                       <div>
-                        <label className="block text-sm font-semibold text-stone-700 mb-2">
+                        <label className="block text-sm font-medium text-stone-700 mb-2">
                           Add to:
                         </label>
                         <div className="grid grid-cols-3 gap-2">

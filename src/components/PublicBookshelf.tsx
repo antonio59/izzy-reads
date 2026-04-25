@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Star, BookOpen } from 'lucide-react'
 import type { Book } from '../types'
+import { Card } from './ui'
 
 interface PublicBookshelfProps {
   books: Book[]
@@ -46,7 +47,7 @@ const PublicBookshelf: React.FC<PublicBookshelfProps> = ({ books }) => {
               >
                 {/* Book */}
                 <motion.div 
-                  className="relative w-[90px] md:w-[110px] h-[140px] md:h-[170px] rounded-sm overflow-hidden shadow-lg transition-shadow"
+                  className="relative w-[90px] md:w-[110px] h-[140px] md:h-[170px] rounded-md overflow-hidden shadow-lg transition-shadow"
                   whileHover={{ y: -12, scale: 1.05 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                   style={{
@@ -76,7 +77,7 @@ const PublicBookshelf: React.FC<PublicBookshelfProps> = ({ books }) => {
                     <span className="text-xs font-bold text-center leading-tight line-clamp-3">
                       {book.title}
                     </span>
-                    <span className="text-[10px] opacity-80 mt-1 text-center line-clamp-1">
+                    <span className="text-xs opacity-80 mt-1 text-center line-clamp-1">
                       {book.author}
                     </span>
                   </div>
@@ -94,7 +95,7 @@ const PublicBookshelf: React.FC<PublicBookshelfProps> = ({ books }) => {
           {/* Wooden Shelf */}
           <div className="relative h-5">
             <div 
-              className="absolute inset-x-0 top-0 h-3 rounded-sm"
+              className="absolute inset-x-0 top-0 h-3 rounded-md"
               style={{
                 background: 'linear-gradient(180deg, #D4A574 0%, #C4956A 50%, #B8875A 100%)',
                 boxShadow: '0 2px 4px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3)',
@@ -126,7 +127,7 @@ const PublicBookshelf: React.FC<PublicBookshelfProps> = ({ books }) => {
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden w-[420px] max-w-[90vw] border border-stone-200">
+            <Card variant="elevated" padding="none" className="w-[420px] max-w-[90vw] shadow-xl border border-stone-200">
               {/* Header with cover */}
               <div className="flex">
                 {/* Book Cover */}
@@ -193,7 +194,7 @@ const PublicBookshelf: React.FC<PublicBookshelfProps> = ({ books }) => {
               {(hoveredBook.notes || hoveredBook.review) && (
                 <div className="px-4 pb-4">
                   <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
-                    <p className="text-xs font-bold text-amber-700 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+                    <p className="text-xs font-bold text-amber-700 uppercase mb-2 flex items-center gap-1.5">
                       <span className="text-base">💭</span> Izzy's Review
                     </p>
                     <p className="text-stone-700 text-sm leading-relaxed">
@@ -211,7 +212,7 @@ const PublicBookshelf: React.FC<PublicBookshelfProps> = ({ books }) => {
                   </div>
                 </div>
               )}
-            </div>
+            </Card>
           </motion.div>
         )}
       </AnimatePresence>

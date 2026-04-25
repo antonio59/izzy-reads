@@ -42,6 +42,7 @@ import {
   suggestGenre,
   type UnifiedBook,
 } from "../services/bookApi";
+import { Input, Textarea, Select } from "./ui/Input";
 
 interface SuggestionFormModalProps {
   isOpen: boolean;
@@ -209,7 +210,7 @@ export function SuggestionFormModal({
         />
 
         <motion.div
-          className="relative bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-md max-h-[90vh] overflow-y-auto"
+          className="relative bg-white rounded-2xl shadow-xl overflow-hidden w-full max-w-md max-h-[90vh] overflow-y-auto"
           initial={{ scale: 0.9, y: 50 }}
           animate={{ scale: 1, y: 0 }}
           exit={{ scale: 0.9, y: 50 }}
@@ -272,17 +273,16 @@ export function SuggestionFormModal({
                     Search for a Book *
                   </label>
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-                    <input
-                      type="text"
+                    <Input
                       value={searchQuery}
                       onChange={handleSearchInputChange}
                       onFocus={() =>
                         searchResults.length > 0 && setShowSearchResults(true)
                       }
-                      className="w-full pl-10 pr-10 py-2.5 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all"
                       placeholder="Start typing to search..."
                       disabled={isSubmitting}
+                      icon={<Search className="w-4 h-4" />}
+                      className="pr-10"
                     />
                     {isSearching && (
                       <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary-500 animate-spin" />
@@ -329,8 +329,7 @@ export function SuggestionFormModal({
                   <label className="block text-sm font-semibold text-stone-700 mb-1">
                     Book Title *
                   </label>
-                  <input
-                    type="text"
+                  <Input
                     value={suggestionForm.title}
                     onChange={(e) =>
                       setSuggestionForm({
@@ -338,7 +337,6 @@ export function SuggestionFormModal({
                         title: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-2.5 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all"
                     placeholder="e.g., Percy Jackson"
                     required
                     disabled={isSubmitting}
@@ -349,8 +347,7 @@ export function SuggestionFormModal({
                   <label className="block text-sm font-semibold text-stone-700 mb-1">
                     Author *
                   </label>
-                  <input
-                    type="text"
+                  <Input
                     value={suggestionForm.author}
                     onChange={(e) =>
                       setSuggestionForm({
@@ -358,7 +355,6 @@ export function SuggestionFormModal({
                         author: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-2.5 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all"
                     placeholder="e.g., Rick Riordan"
                     required
                     disabled={isSubmitting}
@@ -369,8 +365,7 @@ export function SuggestionFormModal({
                   <label className="block text-sm font-semibold text-stone-700 mb-1">
                     Your Name *
                   </label>
-                  <input
-                    type="text"
+                  <Input
                     value={suggestionForm.suggestedBy}
                     onChange={(e) =>
                       setSuggestionForm({
@@ -378,7 +373,6 @@ export function SuggestionFormModal({
                         suggestedBy: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-2.5 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all"
                     placeholder="Your first name"
                     required
                     disabled={isSubmitting}
@@ -389,7 +383,7 @@ export function SuggestionFormModal({
                   <label className="block text-sm font-semibold text-stone-700 mb-1">
                     Genre
                   </label>
-                  <select
+                  <Select
                     value={suggestionForm.genre}
                     onChange={(e) =>
                       setSuggestionForm({
@@ -397,22 +391,16 @@ export function SuggestionFormModal({
                         genre: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-2.5 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all bg-white"
                     disabled={isSubmitting}
-                  >
-                    {GENRES.map((genre) => (
-                      <option key={genre} value={genre}>
-                        {genre}
-                      </option>
-                    ))}
-                  </select>
+                    options={GENRES.map((genre) => ({ value: genre, label: genre }))}
+                  />
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-stone-700 mb-1">
                     Why would {recipientName} love this book?
                   </label>
-                  <textarea
+                  <Textarea
                     value={suggestionForm.reason}
                     onChange={(e) =>
                       setSuggestionForm({
@@ -420,7 +408,6 @@ export function SuggestionFormModal({
                         reason: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-2.5 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all resize-none"
                     rows={3}
                     placeholder="Tell them why this book is amazing!"
                     disabled={isSubmitting}

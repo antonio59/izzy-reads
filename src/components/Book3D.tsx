@@ -41,9 +41,9 @@ export function Book3D({
   const [isHovered, setIsHovered] = useState(false)
 
   const sizeConfig = {
-    sm: { width: 80, height: 120, depth: 20, fontSize: 'text-[8px]', spineText: 'text-[6px]' },
-    md: { width: 120, height: 180, depth: 30, fontSize: 'text-xs', spineText: 'text-[8px]' },
-    lg: { width: 160, height: 240, depth: 40, fontSize: 'text-sm', spineText: 'text-[10px]' },
+    sm: { width: 80, height: 120, depth: 20, fontSize: 'text-xs', spineText: 'text-[6px]' },
+    md: { width: 120, height: 180, depth: 30, fontSize: 'text-xs', spineText: 'text-xs' },
+    lg: { width: 160, height: 240, depth: 40, fontSize: 'text-sm', spineText: 'text-xs' },
   }
 
   const config = sizeConfig[size]
@@ -267,7 +267,7 @@ export function BookOpen({ title, coverUrl, isOpen, onClose, children }: BookOpe
 
       {/* Open book */}
       <motion.div
-        className="relative bg-amber-50 rounded-lg shadow-2xl overflow-hidden"
+        className="relative bg-amber-50 rounded-lg shadow-xl overflow-hidden"
         style={{
           width: 'min(90vw, 800px)',
           height: 'min(80vh, 600px)',

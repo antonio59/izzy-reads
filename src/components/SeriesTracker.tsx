@@ -17,7 +17,9 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Card } from "./ui/Card";
 import { Badge } from "./ui/Badge";
+import { Modal } from "./ui/Modal";
 import { Progress } from "./ui/Progress";
+import { Input } from "./ui/Input";
 import { FadeIn, StaggerContainer, StaggerItem } from "./PageTransition";
 import type { Book } from "../types";
 import type { Id, Doc } from "../../convex/_generated/dataModel";
@@ -457,47 +459,26 @@ const SeriesTracker: React.FC = () => {
       </FadeIn>
 
       {/* Add Series Modal */}
-      <AnimatePresence>
-        {showAddSeries && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowAddSeries(false)}
-          >
-            <motion.div
-              className="bg-white rounded-3xl p-6 max-w-lg w-full max-h-[80vh] overflow-auto shadow-2xl"
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-display font-bold text-stone-900">
-                  Add a Series
-                </h2>
-                <button
-                  onClick={() => setShowAddSeries(false)}
-                  className="p-2 hover:bg-stone-100 rounded-lg transition-colors"
-                >
-                  <X className="w-5 h-5 text-stone-500" />
-                </button>
-              </div>
-
-              {/* Custom series input */}
+      <Modal
+        isOpen={showAddSeries}
+        onClose={() => setShowAddSeries(false)}
+        size="md"
+        title="Add a Series"
+      >
+        {/* Custom series input */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-stone-700 mb-2">
                   Series Name
                 </label>
                 <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newSeriesName}
-                    onChange={(e) => setNewSeriesName(e.target.value)}
-                    placeholder="Enter series name..."
-                    className="flex-1 px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
-                  />
+                  <div className="flex-1">
+                    <Input
+                      type="text"
+                      value={newSeriesName}
+                      onChange={(e) => setNewSeriesName(e.target.value)}
+                      placeholder="Enter series name..."
+                    />
+                  </div>
                   <motion.button
                     onClick={() => handleAddSeries(newSeriesName)}
                     disabled={!newSeriesName.trim()}
@@ -522,139 +503,108 @@ const SeriesTracker: React.FC = () => {
               </div>
 
               {/* Search popular series */}
-              <div className="relative mb-4">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
-                <input
+              <div className="mb-4">
+                <Input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search popular series..."
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                  icon={<Search className="w-5 h-5" />}
+                  iconPosition="left"
                 />
               </div>
 
-              {/* Popular series list */}
-              <div className="space-y-2 max-h-64 overflow-auto">
-                {filteredPopularSeries.map((s) => (
-                  <button
-                    key={s.name}
-                    onClick={() => handleAddSeries(s.name)}
-                    className="w-full p-4 rounded-xl border border-stone-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all flex items-center gap-4 text-left"
-                  >
-                    <span className="text-3xl">{s.emoji}</span>
-                    <div className="flex-1">
-                      <p className="font-bold text-stone-900">{s.name}</p>
-                      <p className="text-sm text-stone-500">
-                        by {s.author} ({s.totalBooks} books)
-                      </p>
-                    </div>
-                    <ChevronRight className="w-5 h-5 text-stone-400" />
-                  </button>
-                ))}
+        {/* Popular series list */}
+        <div className="space-y-2 max-h-64 overflow-auto">
+          {filteredPopularSeries.map((s) => (
+            <button
+              key={s.name}
+              onClick={() => handleAddSeries(s.name)}
+              className="w-full p-4 rounded-xl border border-stone-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all flex items-center gap-4 text-left"
+            >
+              <span className="text-3xl">{s.emoji}</span>
+              <div className="flex-1">
+                <p className="font-bold text-stone-900">{s.name}</p>
+                <p className="text-sm text-stone-500">
+                  by {s.author} ({s.totalBooks} books)
+                </p>
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <ChevronRight className="w-5 h-5 text-stone-400" />
+            </button>
+          ))}
+        </div>
+      </Modal>
 
       {/* Add Book to Series Modal */}
-      <AnimatePresence>
-        {showAddBook && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => {
-              setShowAddBook(null);
-              setBookSearchQuery("");
-            }}
-          >
-            <motion.div
-              className="bg-white rounded-3xl p-6 max-w-lg w-full max-h-[80vh] overflow-auto shadow-2xl"
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-display font-bold text-stone-900">
-                  Add Book to Series
-                </h2>
-                <button
-                  onClick={() => {
-                    setShowAddBook(null);
-                    setBookSearchQuery("");
-                  }}
-                  className="p-2 hover:bg-stone-100 rounded-lg transition-colors"
-                >
-                  <X className="w-5 h-5 text-stone-500" />
-                </button>
-              </div>
-
-              {/* Search books */}
-              <div className="relative mb-4">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
-                <input
+      <Modal
+        isOpen={!!showAddBook}
+        onClose={() => {
+          setShowAddBook(null);
+          setBookSearchQuery("");
+        }}
+        size="md"
+        title="Add Book to Series"
+      >
+        {/* Search books */}
+              <div className="mb-4">
+                <Input
                   type="text"
                   value={bookSearchQuery}
                   onChange={(e) => setBookSearchQuery(e.target.value)}
                   placeholder="Search your books..."
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                  icon={<Search className="w-5 h-5" />}
+                  iconPosition="left"
                 />
               </div>
 
-              {/* Book list */}
-              <div className="space-y-2 max-h-96 overflow-auto">
-                {getAvailableBooks(showAddBook).length > 0 ? (
-                  getAvailableBooks(showAddBook).map((book) => (
-                    <button
-                      key={book.id}
-                      onClick={() =>
-                        handleAddBookToSeries(showAddBook, book.id)
-                      }
-                      className="w-full p-3 rounded-xl border border-stone-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all flex items-center gap-3 text-left"
-                    >
-                      {book.coverUrl ? (
-                        <img
-                          src={book.coverUrl}
-                          alt={book.title}
-                          className="w-10 h-14 rounded object-cover"
-                        />
-                      ) : (
-                        <div className="w-10 h-14 rounded bg-gradient-to-br from-indigo-200 to-purple-200 flex items-center justify-center">
-                          <BookOpen className="w-5 h-5 text-indigo-600" />
-                        </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-stone-900 truncate">
-                          {book.title}
-                        </p>
-                        <p className="text-sm text-stone-500 truncate">
-                          {book.author}
-                        </p>
-                      </div>
-                      {book.isRead && (
-                        <Badge variant="success" size="sm">
-                          Read
-                        </Badge>
-                      )}
-                    </button>
-                  ))
+        {/* Book list */}
+        <div className="space-y-2 max-h-96 overflow-auto">
+          {getAvailableBooks(showAddBook!).length > 0 ? (
+            getAvailableBooks(showAddBook!).map((book) => (
+              <button
+                key={book.id}
+                onClick={() =>
+                  handleAddBookToSeries(showAddBook!, book.id)
+                }
+                className="w-full p-3 rounded-xl border border-stone-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all flex items-center gap-3 text-left"
+              >
+                {book.coverUrl ? (
+                  <img
+                    src={book.coverUrl}
+                    alt={book.title}
+                    className="w-10 h-14 rounded object-cover"
+                  />
                 ) : (
-                  <div className="text-center py-8">
-                    <BookOpen className="w-12 h-12 text-stone-300 mx-auto mb-3" />
-                    <p className="text-stone-500">No books available</p>
-                    <p className="text-sm text-stone-400">
-                      Add books to your bookshelf first
-                    </p>
+                  <div className="w-10 h-14 rounded bg-gradient-to-br from-indigo-200 to-purple-200 flex items-center justify-center">
+                    <BookOpen className="w-5 h-5 text-indigo-600" />
                   </div>
                 )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-stone-900 truncate">
+                    {book.title}
+                  </p>
+                  <p className="text-sm text-stone-500 truncate">
+                    {book.author}
+                  </p>
+                </div>
+                {book.isRead && (
+                  <Badge variant="success" size="sm">
+                    Read
+                  </Badge>
+                )}
+              </button>
+            ))
+          ) : (
+            <div className="text-center py-8">
+              <BookOpen className="w-12 h-12 text-stone-300 mx-auto mb-3" />
+              <p className="text-stone-500">No books available</p>
+              <p className="text-sm text-stone-400">
+                Add books to your bookshelf first
+              </p>
+            </div>
+          )}
+        </div>
+      </Modal>
     </div>
   );
 };

@@ -125,7 +125,7 @@ export function AdminPage() {
 
             {/* Quick Stats */}
             <div className="mt-6 bg-white rounded-2xl shadow-sm border border-cream-300 p-4">
-              <h3 className="font-semibold text-stone-700 mb-3 flex items-center gap-2">
+              <h3 className="font-bold text-stone-700 mb-3 flex items-center gap-2">
                 <Database className="w-4 h-4" />
                 Quick Stats
               </h3>
@@ -170,7 +170,7 @@ export function AdminPage() {
                           <div className="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">
                             <ImageIcon className="w-5 h-5 text-white" />
                           </div>
-                          <h3 className="font-semibold text-stone-800">Cover Migration</h3>
+                          <h3 className="font-bold text-stone-800">Cover Migration</h3>
                         </div>
                         <p className="text-sm text-stone-600">
                           Migrate book covers from external URLs to permanent Convex storage
@@ -185,7 +185,7 @@ export function AdminPage() {
                           <div className="w-10 h-10 bg-violet-500 rounded-lg flex items-center justify-center">
                             <UsersRound className="w-5 h-5 text-white" />
                           </div>
-                          <h3 className="font-semibold text-stone-800">Book Club</h3>
+                          <h3 className="font-bold text-stone-800">Book Club</h3>
                         </div>
                         <p className="text-sm text-stone-600">
                           Create and manage book club picks for friends to read along
@@ -330,7 +330,7 @@ function BookClubAdminPanel() {
 
       {isCreating && (
         <div className="mb-8 p-5 bg-cream-50 rounded-xl border border-cream-200">
-          <h3 className="font-semibold text-stone-800 mb-4">Create New Book Club Pick</h3>
+          <h3 className="font-bold text-stone-800 mb-4">Create New Book Club Pick</h3>
           
           <div className="space-y-4">
             <div className="relative">
@@ -456,7 +456,7 @@ function BookClubAdminPanel() {
                 <div className="flex items-center gap-2">
                   <h4 className="font-bold text-stone-800">{club.title}</h4>
                   {club.isActive && (
-                    <span className="px-2 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded-full uppercase tracking-wide">
+                    <span className="px-2 py-0.5 bg-green-500 text-white text-xs font-bold rounded-full uppercase tracking-wide">
                       Active
                     </span>
                   )}

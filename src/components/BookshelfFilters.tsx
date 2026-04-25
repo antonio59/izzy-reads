@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Search,
   Filter,
-  X,
   ChevronDown,
   Star,
   SortAsc,
@@ -12,6 +10,9 @@ import {
   BookOpen,
 } from "lucide-react";
 import { Badge } from "./ui/Badge";
+import { Button } from "./ui/Button";
+import { SearchInput } from "./ui/Input";
+import { Card } from "./ui/Card";
 
 interface BookshelfFiltersProps {
   searchQuery: string;
@@ -86,25 +87,12 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
     <div className="space-y-4">
       {/* Search and filter toggle */}
       <div className="flex gap-3">
-        {/* Search input */}
-        <div className="flex-1 relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search books by title or author..."
-            className="w-full pl-12 pr-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => onSearchChange("")}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          )}
-        </div>
+        <SearchInput
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder="Search books by title or author..."
+          onClear={() => onSearchChange("")}
+        />
 
         {/* Filter toggle button */}
         <motion.button
@@ -139,7 +127,7 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="bg-white rounded-2xl border border-stone-200 p-5 space-y-5">
+            <Card variant="outlined" padding="md" className="space-y-5">
               {/* Sort options */}
               <div>
                 <label className="block text-sm font-medium text-stone-700 mb-2">
@@ -259,15 +247,17 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
                       </Badge>
                     )}
                   </div>
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={clearFilters}
-                    className="text-sm text-stone-500 hover:text-stone-700 font-medium"
+                    className="text-stone-500 hover:text-stone-700 hover:bg-transparent"
                   >
                     Clear all
-                  </button>
+                  </Button>
                 </div>
               )}
-            </div>
+            </Card>
           </motion.div>
         )}
       </AnimatePresence>
@@ -302,12 +292,14 @@ const BookshelfFilters: React.FC<BookshelfFiltersProps> = ({
               {selectedRating}+ stars
             </Badge>
           )}
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={clearFilters}
-            className="text-sm text-purple-600 hover:text-purple-800 font-medium"
+            className="text-purple-600 hover:text-purple-800 hover:bg-transparent"
           >
             Clear
-          </button>
+          </Button>
         </motion.div>
       )}
     </div>

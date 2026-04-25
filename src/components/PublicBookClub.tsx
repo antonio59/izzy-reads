@@ -5,6 +5,9 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
+import { Input, Textarea } from "./ui/Input";
+import { Card } from "./ui/Card";
+import { Button } from "./ui/Button";
 
 const CLUB_REACTIONS = [
   { key: "excited", emoji: "🤩", label: "Excited!" },
@@ -168,7 +171,7 @@ export default function PublicBookClub() {
               <Users className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800">
+              <h1 className="text-2xl md:text-3xl font-display font-bold text-stone-800">
                 Izzy's Book Club
               </h1>
               <p className="text-sm text-stone-500">Read along with friends!</p>
@@ -176,11 +179,13 @@ export default function PublicBookClub() {
           </motion.div>
 
           {/* Book Card */}
-          <motion.div
+          <Card
+            variant="outlined"
+            padding="none"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white rounded-3xl shadow-xl border border-cream-300 overflow-hidden"
+            className="shadow-xl rounded-3xl border-cream-300"
           >
             <div className="flex flex-col md:flex-row">
               {/* Cover */}
@@ -189,7 +194,7 @@ export default function PublicBookClub() {
                   <img
                     src={clubData.coverUrl}
                     alt={clubData.title}
-                    className="w-32 md:w-full rounded-lg shadow-2xl"
+                    className="w-32 md:w-full rounded-lg shadow-xl"
                   />
                 ) : (
                   <div className="w-32 h-48 rounded-lg bg-gradient-to-br from-primary-200 to-accent-200 flex items-center justify-center shadow-xl">
@@ -263,7 +268,7 @@ export default function PublicBookClub() {
                 )}
               </div>
             </div>
-          </motion.div>
+          </Card>
         </div>
       </section>
 
@@ -285,12 +290,14 @@ export default function PublicBookClub() {
           <div className="space-y-4 mb-8">
             {detailedData?.comments.length ? (
               detailedData.comments.map((comment, idx) => (
-                <motion.div
+                <Card
                   key={comment._id}
+                  variant="outlined"
+                  padding="none"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.05 }}
-                  className="bg-white rounded-2xl p-5 shadow-sm border border-cream-300"
+                  className="p-5 shadow-sm border-cream-300"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-bold text-stone-800">{comment.visitorName}</span>
@@ -302,7 +309,7 @@ export default function PublicBookClub() {
                     </span>
                   </div>
                   <p className="text-stone-600 leading-relaxed">{comment.content}</p>
-                </motion.div>
+                </Card>
               ))
             ) : (
               <div className="text-center py-12 bg-white/50 rounded-2xl border border-dashed border-cream-300">
@@ -312,7 +319,7 @@ export default function PublicBookClub() {
           </div>
 
           {/* Comment input */}
-          <div className="bg-white rounded-2xl p-5 shadow-md border border-cream-300">
+          <Card variant="outlined" padding="none" className="p-5 shadow-md border-cream-300">
             {pendingAction === "comment" ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -324,24 +331,23 @@ export default function PublicBookClub() {
                     <X className="w-4 h-4 text-stone-400" />
                   </button>
                 </div>
-                <textarea
+                <Textarea
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
                   placeholder="What do you think about this book?"
-                  className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:border-primary-400 focus:ring-2 focus:ring-primary-100 outline-none resize-none text-stone-700"
                   rows={4}
                 />
                 {error && <p className="text-red-500 text-sm">{error}</p>}
                 {success && <p className="text-green-600 text-sm">{success}</p>}
-                <motion.button
+                <Button
+                  variant="primary"
+                  size="md"
+                  fullWidth
                   onClick={submitComment}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary-500 text-white rounded-xl font-semibold hover:bg-primary-600 transition-colors"
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
+                  icon={<Send className="w-4 h-4" />}
                 >
-                  <Send className="w-4 h-4" />
                   Post Comment
-                </motion.button>
+                </Button>
               </div>
             ) : (
               <motion.button
@@ -356,7 +362,7 @@ export default function PublicBookClub() {
                 <span>Join the discussion...</span>
               </motion.button>
             )}
-          </div>
+          </Card>
         </div>
       </section>
 
@@ -371,7 +377,7 @@ export default function PublicBookClub() {
           >
             <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowNamePrompt(false)} />
             <motion.div
-              className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6"
+              className="relative bg-white rounded-2xl shadow-xl w-full max-w-sm p-6"
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
@@ -381,14 +387,12 @@ export default function PublicBookClub() {
                 Enter a name and create a 6-digit passcode so we know it's you next time.
               </p>
               <div className="space-y-3">
-                <input
-                  type="text"
+                <Input
                   value={visitorName}
                   onChange={(e) => setVisitorName(e.target.value)}
                   placeholder="Your name"
-                  className="w-full px-4 py-2 rounded-xl border border-stone-200 focus:border-primary-400 focus:ring-2 focus:ring-primary-100 outline-none"
                 />
-                <input
+                <Input
                   type="password"
                   inputMode="numeric"
                   pattern="[0-9]*"
@@ -396,7 +400,6 @@ export default function PublicBookClub() {
                   value={passcode}
                   onChange={(e) => setPasscode(e.target.value.replace(/\D/g, "").slice(0, 6))}
                   placeholder="6-digit passcode"
-                  className="w-full px-4 py-2 rounded-xl border border-stone-200 focus:border-primary-400 focus:ring-2 focus:ring-primary-100 outline-none"
                 />
                 {error && <p className="text-red-500 text-sm">{error}</p>}
                 <div className="flex gap-2 pt-2">

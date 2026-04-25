@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Target,
   Plus,
@@ -18,6 +18,8 @@ import { CircularProgress, Progress } from "./ui/Progress";
 import { Badge } from "./ui/Badge";
 import { FadeIn, StaggerContainer, StaggerItem } from "./PageTransition";
 import ReadingHeatmap from "./ReadingHeatmap";
+import { Modal, ModalFooter } from "./ui/Modal";
+import { Input } from "./ui/Input";
 
 interface Goal {
   id: string;
@@ -379,40 +381,25 @@ const ReadingGoals: React.FC = () => {
       </FadeIn>
 
       {/* Add Goal Modal */}
-      <AnimatePresence>
-        {showAddGoal && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowAddGoal(false)}
-          >
-            <motion.div
-              className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl"
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h2 className="text-2xl font-display font-bold text-stone-900 mb-6">
-                Create a New Goal
-              </h2>
-
-              <div className="space-y-4">
+      <Modal
+        isOpen={showAddGoal}
+        onClose={() => setShowAddGoal(false)}
+        size="sm"
+        title="Create a New Goal"
+      >
+        <div className="space-y-4">
                 {/* Goal title */}
                 <div>
                   <label className="block text-sm font-medium text-stone-700 mb-1">
                     Goal Title
                   </label>
-                  <input
+                  <Input
                     type="text"
                     value={newGoal.title}
                     onChange={(e) =>
                       setNewGoal((prev) => ({ ...prev, title: e.target.value }))
                     }
                     placeholder="e.g., Read 10 books this summer"
-                    className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
                   />
                 </div>
 
@@ -454,7 +441,7 @@ const ReadingGoals: React.FC = () => {
                   <label className="block text-sm font-medium text-stone-700 mb-1">
                     Target
                   </label>
-                  <input
+                  <Input
                     type="number"
                     value={newGoal.target}
                     onChange={(e) =>
@@ -464,7 +451,6 @@ const ReadingGoals: React.FC = () => {
                       }))
                     }
                     min={1}
-                    className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
                   />
                 </div>
 
@@ -473,7 +459,7 @@ const ReadingGoals: React.FC = () => {
                   <label className="block text-sm font-medium text-stone-700 mb-1">
                     Deadline (optional)
                   </label>
-                  <input
+                  <Input
                     type="date"
                     value={newGoal.deadline}
                     onChange={(e) =>
@@ -482,31 +468,26 @@ const ReadingGoals: React.FC = () => {
                         deadline: e.target.value,
                       }))
                     }
-                    className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
                   />
                 </div>
               </div>
 
-              {/* Actions */}
-              <div className="flex gap-3 mt-6">
-                <button
-                  onClick={() => setShowAddGoal(false)}
-                  className="flex-1 py-3 px-4 rounded-xl border border-stone-200 font-medium text-stone-700 hover:bg-stone-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleAddGoal}
-                  disabled={!newGoal.title.trim()}
-                  className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Create Goal
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        <ModalFooter>
+          <button
+            onClick={() => setShowAddGoal(false)}
+            className="py-3 px-4 rounded-xl border border-stone-200 font-medium text-stone-700 hover:bg-stone-50 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleAddGoal}
+            disabled={!newGoal.title.trim()}
+            className="py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Create Goal
+          </button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 };

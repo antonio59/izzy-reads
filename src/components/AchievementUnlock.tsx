@@ -37,7 +37,7 @@ function ConfettiParticle({ delay, color }: { delay: number; color: string }) {
 
   return (
     <motion.div
-      className={`absolute w-2 h-2 ${color} rounded-sm`}
+      className={`absolute w-2 h-2 ${color} rounded-md`}
       initial={{
         opacity: 1,
         scale: 0,
@@ -168,7 +168,7 @@ export function AchievementUnlock({
             {/* Card */}
             <div
               className={`
-                relative bg-white rounded-3xl p-8 shadow-2xl ${rarityGlow[achievement.rarity]}
+                relative bg-white rounded-3xl p-8 shadow-xl ${rarityGlow[achievement.rarity]}
                 min-w-[300px] max-w-[400px] text-center overflow-hidden
               `}
             >
@@ -182,7 +182,7 @@ export function AchievementUnlock({
 
               {/* Unlock text */}
               <div className="relative z-10 -mt-2 mb-2">
-                <span className="text-sm font-bold text-white/90 uppercase tracking-wider">
+                <span className="text-sm font-bold text-white/90 uppercaser">
                   Achievement Unlocked!
                 </span>
               </div>
@@ -333,10 +333,10 @@ export function LevelUp({
             )}
 
             {/* Card */}
-            <div className="relative bg-gradient-to-br from-iris-500 to-coral-500 rounded-3xl p-8 shadow-2xl text-white text-center overflow-hidden">
+            <div className="relative bg-gradient-to-br from-iris-500 to-coral-500 rounded-3xl p-8 shadow-xl text-white text-center overflow-hidden">
               {/* Level up text */}
               <div className="mb-4">
-                <span className="text-lg font-bold uppercase tracking-wider text-white/90">
+                <span className="text-lg font-bold uppercaser text-white/90">
                   Level Up!
                 </span>
               </div>

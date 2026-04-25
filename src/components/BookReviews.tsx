@@ -121,7 +121,7 @@ const BookReviews: React.FC = () => {
                 </StaggerContainer>
             ) : (
                 <FadeIn delay={0.2}>
-                    <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-stone-200">
+                    <Card variant="default" padding="none" className="text-center py-16 border-2 border-dashed border-stone-200">
                         <BookOpen className="w-16 h-16 text-stone-300 mx-auto mb-4" />
                         <h2 className="text-xl font-bold text-stone-700 mb-2">No reviews yet</h2>
                         <p className="text-stone-500 mb-6">Read some books and add your thoughts to see them here!</p>
@@ -131,7 +131,7 @@ const BookReviews: React.FC = () => {
                         >
                             Go to Bookshelf <ArrowRight className="w-4 h-4" />
                         </Link>
-                    </div>
+                    </Card>
                 </FadeIn>
             )}
         </div>

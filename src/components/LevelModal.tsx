@@ -1,5 +1,6 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, TreeDeciduous } from "lucide-react";
+import { motion } from "framer-motion";
+import { Sparkles, TreeDeciduous } from "lucide-react";
+import { Modal } from "./ui/Modal";
 import {
   LEVELS,
   getLevelProgress,
@@ -19,87 +20,64 @@ export function LevelModal({ isOpen, onClose, totalXP }: LevelModalProps) {
     progress;
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-          onClick={onClose}
-        >
+    <Modal isOpen={isOpen} onClose={onClose} size="lg" title={level.title}>
+      {/* Header */}
+      <div className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 p-6 text-white relative overflow-hidden -mx-6 -mt-6 mb-6">
+        {/* Background decoration */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-2 left-4 text-4xl">🌟</div>
+          <div className="absolute top-8 right-8 text-3xl">✨</div>
+          <div className="absolute bottom-2 left-1/3 text-2xl">🌱</div>
+        </div>
+
+        <div className="flex items-center gap-4 relative z-10">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
+            className="text-5xl"
+            animate={{ y: [0, -5, 0], rotate: [0, 5, -5, 0] }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
           >
-            {/* Header */}
-            <div className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 p-6 text-white relative overflow-hidden">
-              {/* Background decoration */}
-              <div className="absolute inset-0 opacity-20">
-                <div className="absolute top-2 left-4 text-4xl">🌟</div>
-                <div className="absolute top-8 right-8 text-3xl">✨</div>
-                <div className="absolute bottom-2 left-1/3 text-2xl">🌱</div>
-              </div>
+            {level.icon}
+          </motion.div>
+          <div>
+            <p className="text-white/80 text-sm">Level {level.level}</p>
+            <h2 className="text-2xl font-display font-bold">
+              {level.title}
+            </h2>
+            <p className="text-white/90 text-sm mt-1">
+              {formatXP(totalXP)} Total XP
+            </p>
+          </div>
+        </div>
 
-              <button
-                onClick={onClose}
-                className="absolute top-4 right-4 p-1.5 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="flex items-center gap-4 relative z-10">
-                <motion.div
-                  className="text-5xl"
-                  animate={{ y: [0, -5, 0], rotate: [0, 5, -5, 0] }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  {level.icon}
-                </motion.div>
-                <div>
-                  <p className="text-white/80 text-sm">Level {level.level}</p>
-                  <h2 className="text-2xl font-display font-bold">
-                    {level.title}
-                  </h2>
-                  <p className="text-white/90 text-sm mt-1">
-                    {formatXP(totalXP)} Total XP
-                  </p>
-                </div>
-              </div>
-
-              {/* Progress to next level */}
-              {nextLevel && (
-                <div className="mt-4 relative z-10">
-                  <div className="flex justify-between text-sm text-white/80 mb-1">
-                    <span>{formatXP(xpInLevel)} XP</span>
-                    <span>{formatXP(xpForNextLevel)} XP</span>
-                  </div>
-                  <div className="h-3 bg-white/30 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full bg-white"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${progressPercent}%` }}
-                      transition={{ duration: 0.8, ease: "easeOut" }}
-                    />
-                  </div>
-                  <p className="text-center text-sm text-white/90 mt-2">
-                    {formatXP(xpForNextLevel - xpInLevel)} XP to{" "}
-                    {nextLevel.title} {nextLevel.icon}
-                  </p>
-                </div>
-              )}
+        {/* Progress to next level */}
+        {nextLevel && (
+          <div className="mt-4 relative z-10">
+            <div className="flex justify-between text-sm text-white/80 mb-1">
+              <span>{formatXP(xpInLevel)} XP</span>
+              <span>{formatXP(xpForNextLevel)} XP</span>
             </div>
+            <div className="h-3 bg-white/30 rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-white"
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercent}%` }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              />
+            </div>
+            <p className="text-center text-sm text-white/90 mt-2">
+              {formatXP(xpForNextLevel - xpInLevel)} XP to{" "}
+              {nextLevel.title} {nextLevel.icon}
+            </p>
+          </div>
+        )}
+      </div>
 
-            {/* Content */}
-            <div className="p-6 overflow-y-auto max-h-[50vh]">
+      {/* Content */}
+      <div className="overflow-y-auto max-h-[50vh] -mx-6 -mb-6 px-6 pb-6">
               {/* Level Tree */}
               <div className="flex items-center gap-2 mb-4">
                 <TreeDeciduous className="w-5 h-5 text-green-600" />
@@ -224,11 +202,8 @@ export function LevelModal({ isOpen, onClose, totalXP }: LevelModalProps) {
                   </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+      </div>
+    </Modal>
   );
 }
 

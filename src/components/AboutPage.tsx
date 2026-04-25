@@ -121,7 +121,7 @@ export function AboutPage({ aboutData }: AboutPageProps) {
                     <div className="w-10 h-10 bg-sage-100 rounded-xl flex items-center justify-center">
                       <BookOpen className="w-5 h-5 text-sage-600" />
                     </div>
-                    <h2 className="font-display font-semibold text-stone-800">
+                    <h2 className="font-display font-bold text-stone-800">
                       Currently Reading
                     </h2>
                   </div>
@@ -139,7 +139,7 @@ export function AboutPage({ aboutData }: AboutPageProps) {
                   <div className="w-10 h-10 bg-accent-100 rounded-xl flex items-center justify-center">
                     <Heart className="w-5 h-5 text-accent-600" />
                   </div>
-                  <h2 className="font-display font-semibold text-stone-800">
+                  <h2 className="font-display font-bold text-stone-800">
                     Why I Love Reading
                   </h2>
                 </div>
@@ -156,7 +156,7 @@ export function AboutPage({ aboutData }: AboutPageProps) {
                   <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-primary-600" />
                   </div>
-                  <h2 className="font-display font-semibold text-stone-800">
+                  <h2 className="font-display font-bold text-stone-800">
                     Favorite Genres
                   </h2>
                 </div>
@@ -177,7 +177,7 @@ export function AboutPage({ aboutData }: AboutPageProps) {
                   <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
                     <User className="w-5 h-5 text-amber-600" />
                   </div>
-                  <h2 className="font-display font-semibold text-stone-800">
+                  <h2 className="font-display font-bold text-stone-800">
                     Favorite Authors
                   </h2>
                 </div>
@@ -204,7 +204,7 @@ export function AboutPage({ aboutData }: AboutPageProps) {
                   <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-amber-600" />
                   </div>
-                  <h2 className="font-display font-semibold text-stone-800">
+                  <h2 className="font-display font-bold text-stone-800">
                     Fun Facts About Me
                   </h2>
                 </div>
@@ -230,7 +230,7 @@ export function AboutPage({ aboutData }: AboutPageProps) {
                   <div className="w-10 h-10 bg-sage-100 rounded-xl flex items-center justify-center">
                     <Target className="w-5 h-5 text-sage-600" />
                   </div>
-                  <h2 className="font-display font-semibold text-stone-800">
+                  <h2 className="font-display font-bold text-stone-800">
                     My Reading Goals
                   </h2>
                 </div>
@@ -257,7 +257,7 @@ export function AboutPage({ aboutData }: AboutPageProps) {
                   <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
                     <Award className="w-5 h-5 text-primary-600" />
                   </div>
-                  <h2 className="font-display font-semibold text-stone-800">
+                  <h2 className="font-display font-bold text-stone-800">
                     Reading Achievements
                   </h2>
                 </div>

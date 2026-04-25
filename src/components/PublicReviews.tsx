@@ -127,7 +127,7 @@ export function PublicReviews() {
                 <MessageSquare className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800">
+                <h1 className="text-2xl md:text-3xl font-display font-bold text-stone-800">
                   Izzy's Book Reviews
                 </h1>
                 <p className="text-sm text-stone-500">
@@ -336,7 +336,7 @@ function SingleReviewView({
             <div className="relative bg-gradient-to-br from-primary-500 to-accent-500 p-8 text-white">
               <div className="flex flex-col md:flex-row items-center gap-6">
                 {/* Book Cover */}
-                <div className="w-32 h-48 rounded-xl overflow-hidden shadow-2xl flex-shrink-0 ring-4 ring-white/20">
+                <div className="w-32 h-48 rounded-xl overflow-hidden shadow-xl flex-shrink-0 ring-4 ring-white/20">
                   {book.coverUrl && !imageError ? (
                     <img
                       src={book.coverUrl}
@@ -423,7 +423,7 @@ function SingleReviewView({
 
               {/* Reactions Section */}
               <div className="bg-stone-50 rounded-2xl p-6">
-                <h3 className="font-semibold text-stone-700 mb-4 flex items-center gap-2">
+                <h3 className="font-bold text-stone-700 mb-4 flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-primary-500" />
                   What do you think of this review?
                 </h3>

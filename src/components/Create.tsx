@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import {
   PenTool,
   Feather,
@@ -14,6 +14,8 @@ import {
 import { useBooks } from "../contexts/BookContext";
 import PoetryEditor from "./PoetryEditor";
 import type { Poem, BlogPost } from "../types";
+import { Card } from "./ui/Card";
+import { Button } from "./ui/Button";
 
 type TabType = "poems" | "posts";
 
@@ -90,19 +92,19 @@ const Create: React.FC = () => {
               Express yourself through writing
             </p>
           </div>
-          <motion.button
+          <Button
+            variant="primary"
             onClick={() =>
               activeTab === "poems"
                 ? setShowPoemEditor(true)
                 : navigate("/create/post")
             }
-            className="bg-white text-purple-600 px-5 py-2.5 rounded-full font-bold hover:bg-purple-50 transition-all flex items-center gap-2 shadow-lg"
+            icon={<Plus className="w-5 h-5" />}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Plus className="w-5 h-5" />
             {activeTab === "poems" ? "Write Poem" : "Write Post"}
-          </motion.button>
+          </Button>
         </div>
       </div>
 
@@ -145,7 +147,7 @@ const Create: React.FC = () => {
           <div>
             {activeTab === "poems" ? (
               <>
-                <h3 className="font-semibold text-stone-800 flex items-center gap-2">
+                <h3 className="font-bold text-stone-800 flex items-center gap-2">
                   My Poems <Sparkles className="w-4 h-4 text-purple-500" />
                 </h3>
                 <p className="text-sm text-stone-600 mt-0.5">
@@ -156,7 +158,7 @@ const Create: React.FC = () => {
               </>
             ) : (
               <>
-                <h3 className="font-semibold text-stone-800 flex items-center gap-2">
+                <h3 className="font-bold text-stone-800 flex items-center gap-2">
                   My Blog Posts <Sparkles className="w-4 h-4 text-pink-500" />
                 </h3>
                 <p className="text-sm text-stone-600 mt-0.5">
@@ -251,8 +253,10 @@ const PoemCard: React.FC<PoemCardProps> = ({
   onLike,
 }) => {
   return (
-    <motion.div
-      className="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden group"
+    <Card
+      variant="outlined"
+      padding="none"
+      className="group shadow-sm"
       whileHover={{ y: -4 }}
     >
       <div
@@ -294,7 +298,7 @@ const PoemCard: React.FC<PoemCardProps> = ({
           </button>
         </div>
       </div>
-    </motion.div>
+    </Card>
   );
 };
 
@@ -307,8 +311,10 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
   return (
-    <motion.div
-      className="bg-white rounded-2xl shadow-sm border border-stone-100 p-5 group"
+    <Card
+      variant="outlined"
+      padding="none"
+      className="group shadow-sm p-5"
       whileHover={{ y: -4 }}
     >
       <div className="flex justify-between items-start mb-3">
@@ -358,7 +364,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
           </div>
         )}
       </div>
-    </motion.div>
+    </Card>
   );
 };
 
@@ -383,14 +389,11 @@ const EmptyState: React.FC<EmptyStateProps> = ({
       <div className="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
         <Icon className="w-10 h-10 text-stone-400" />
       </div>
-      <h3 className="text-xl font-semibold text-stone-900 mb-2">{title}</h3>
+      <h3 className="text-xl font-bold text-stone-900 mb-2">{title}</h3>
       <p className="text-stone-500 mb-6">{description}</p>
-      <button
-        onClick={onAction}
-        className="bg-purple-600 text-white px-6 py-2.5 rounded-full font-medium hover:bg-purple-700 transition-colors"
-      >
+      <Button variant="primary" onClick={onAction}>
         {actionLabel}
-      </button>
+      </Button>
     </div>
   );
 };

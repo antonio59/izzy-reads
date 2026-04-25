@@ -72,7 +72,7 @@ const ReadingStats = ({ stats }: ReadingStatsProps) => {
             <div className={`text-lg font-bold ${card.color} ${card.isText ? 'text-xs' : ''}`}>
               {card.value}
             </div>
-            <div className="text-[10px] text-stone-500 font-medium">
+            <div className="text-xs text-stone-500 font-medium">
               {card.label}
             </div>
           </div>

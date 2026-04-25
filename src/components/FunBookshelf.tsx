@@ -139,7 +139,7 @@ const FunBookshelf: React.FC<FunBookshelfProps> = ({ books, onSelectBook }) => {
 
                     {/* Author (Bottom) */}
                     <div className="absolute bottom-2 left-0 right-0 text-center">
-                      <p className="text-white text-[8px] opacity-80 px-1 truncate">
+                      <p className="text-white text-xs opacity-80 px-1 truncate">
                         {book.author}
                       </p>
                     </div>
@@ -167,7 +167,7 @@ const FunBookshelf: React.FC<FunBookshelfProps> = ({ books, onSelectBook }) => {
                         exit={{ opacity: 0, y: 10, scale: 0.9 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <div className="bg-white text-stone-800 px-4 py-3 rounded-xl shadow-2xl min-w-[180px] border border-stone-100">
+                        <div className="bg-white text-stone-800 px-4 py-3 rounded-xl shadow-xl min-w-[180px] border border-stone-100">
                           <p className="font-bold text-sm truncate mb-1">
                             {book.title}
                           </p>
@@ -195,7 +195,7 @@ const FunBookshelf: React.FC<FunBookshelfProps> = ({ books, onSelectBook }) => {
                           )}
 
                           {/* Click hint */}
-                          <p className="text-[10px] text-primary-600 font-medium text-center">
+                          <p className="text-xs text-primary-600 font-medium text-center">
                             Click to read review
                           </p>
                         </div>
@@ -247,7 +247,7 @@ const FunBookshelf: React.FC<FunBookshelfProps> = ({ books, onSelectBook }) => {
             >
               {/* Open Book */}
               <div
-                className="relative bg-amber-50 rounded-lg shadow-2xl overflow-hidden flex"
+                className="relative bg-amber-50 rounded-lg shadow-xl overflow-hidden flex"
                 style={{ minHeight: "500px" }}
               >
                 {/* Book Spine Shadow */}

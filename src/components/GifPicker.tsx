@@ -7,6 +7,7 @@ import {
   isGiphyConfigured,
   type GifData,
 } from "../services/giphyApi";
+import { Input } from "./ui/Input";
 
 interface GifPickerProps {
   onSelect: (gifUrl: string) => void;
@@ -140,7 +141,7 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.15 }}
-            className="absolute z-50 top-full mt-2 left-0 w-64 bg-white rounded-xl shadow-2xl border border-stone-200 overflow-hidden p-4"
+            className="absolute z-50 top-full mt-2 left-0 w-64 bg-white rounded-xl shadow-xl border border-stone-200 overflow-hidden p-4"
           >
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-bold text-stone-800 flex items-center gap-2">
@@ -166,7 +167,7 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.15 }}
-            className="absolute z-50 top-full mt-2 left-0 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-stone-200 overflow-hidden"
+            className="absolute z-50 top-full mt-2 left-0 w-80 sm:w-96 bg-white rounded-xl shadow-xl border border-stone-200 overflow-hidden"
           >
             {/* Header */}
             <div className="p-3 border-b border-stone-100">
@@ -184,17 +185,18 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
               </div>
 
               {/* Search input */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  placeholder="Search for GIFs..."
-                  className="w-full pl-9 pr-4 py-2 bg-stone-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-400"
-                  autoFocus
-                />
-              </div>
+              <Input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Search for GIFs..."
+                icon={<Search className="w-4 h-4" />}
+                iconPosition="left"
+                variant="filled"
+                size="sm"
+                className="rounded-lg"
+                autoFocus
+              />
 
               {/* Quick searches */}
               {!hasSearched && (

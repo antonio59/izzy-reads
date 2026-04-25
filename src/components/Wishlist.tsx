@@ -6,7 +6,9 @@ import { useBooks } from "../contexts/BookContext";
 import { useAuth } from "../contexts/AuthContext";
 import { useToastActions } from "./ui/Toast";
 import { BookSearchModal } from "./ui/BookSearchModal";
+import { Button } from "./ui/Button";
 import { BookSuggestionsList } from "./BookSuggestionsList";
+import { Card } from "./ui/Card";
 import type { Book } from "../types";
 import type { Id } from "../../convex/_generated/dataModel";
 
@@ -122,18 +124,19 @@ const Wishlist: React.FC = () => {
           </h1>
           <p className="text-stone-600 mt-1">Books you can't wait to read!</p>
         </div>
-        <button
+        <Button
+          variant="accent"
+          size="md"
           onClick={() => setShowAddModal(true)}
-          className="flex items-center space-x-2 bg-accent-600 text-white px-4 py-2 rounded-lg hover:bg-accent-700 transition-colors duration-200"
+          icon={<Plus className="h-5 w-5" />}
         >
-          <Plus className="h-5 w-5" />
-          <span>Add Book</span>
-        </button>
+          Add Book
+        </Button>
       </div>
 
       {/* Wishlist Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl shadow-lg p-4 border-l-4 border-accent-500">
+        <Card variant="elevated" padding="sm" className="border-l-4 border-accent-500">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-stone-600">
@@ -145,9 +148,9 @@ const Wishlist: React.FC = () => {
             </div>
             <Heart className="h-8 w-8 text-accent-500 fill-current" />
           </div>
-        </div>
+        </Card>
 
-        <div className="bg-white rounded-xl shadow-lg p-4 border-l-4 border-primary-500">
+        <Card variant="elevated" padding="sm" className="border-l-4 border-primary-500">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-stone-600">Total Pages</p>
@@ -157,9 +160,9 @@ const Wishlist: React.FC = () => {
             </div>
             <BookOpen className="h-8 w-8 text-primary-500" />
           </div>
-        </div>
+        </Card>
 
-        <div className="bg-white rounded-xl shadow-lg p-4 border-l-4 border-sage-500">
+        <Card variant="elevated" padding="sm" className="border-l-4 border-sage-500">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-stone-600">Genres</p>
@@ -169,16 +172,18 @@ const Wishlist: React.FC = () => {
             </div>
             <Star className="h-8 w-8 text-sage-500" />
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Wishlist Books */}
       {wishlist.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {wishlist.map((book) => (
-            <div
+            <Card
               key={book.id}
-              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+              variant="elevated"
+              padding="none"
+              className="hover:shadow-xl transition-shadow duration-300"
             >
               {/* Book Cover */}
               <div className="h-40 bg-gradient-to-br from-accent-400 via-primary-400 to-sage-400 flex items-center justify-center relative">
@@ -225,32 +230,36 @@ const Wishlist: React.FC = () => {
                 </div>
 
                 {/* Action Button */}
-                <button
+                <Button
+                  variant="success"
+                  size="md"
+                  fullWidth
                   onClick={() => handleMoveToBookshelf(book.id)}
-                  className="w-full flex items-center justify-center space-x-2 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors duration-200"
+                  icon={<ArrowRight className="h-4 w-4" />}
+                  iconPosition="right"
                 >
-                  <span>I Read This!</span>
-                  <ArrowRight className="h-4 w-4" />
-                </button>
+                  I Read This!
+                </Button>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       ) : (
         <div className="text-center py-12">
           <Heart className="h-24 w-24 text-accent-300 mx-auto mb-4 fill-current" />
-          <h3 className="text-xl font-semibold text-stone-600 mb-2">
+          <h3 className="text-xl font-bold text-stone-600 mb-2">
             Your wishlist is empty!
           </h3>
           <p className="text-stone-500 mb-4">
             Add some books you'd love to read!
           </p>
-          <button
+          <Button
+            variant="accent"
+            size="lg"
             onClick={() => setShowAddModal(true)}
-            className="bg-accent-600 text-white px-6 py-3 rounded-lg hover:bg-accent-700 transition-colors duration-200"
           >
             Add Your First Book
-          </button>
+          </Button>
         </div>
       )}
 

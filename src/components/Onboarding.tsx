@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "./ui/Button";
+import { Input } from "./ui/Input";
 import {
   ChevronRight,
   ChevronLeft,
@@ -165,7 +167,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
       </motion.div>
 
       <motion.div
-        className="relative max-w-2xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden"
+        className="relative max-w-2xl w-full bg-white rounded-3xl shadow-xl overflow-hidden"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
@@ -247,26 +249,22 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
 
                 <div className="max-w-sm mx-auto space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">
-                      Your Name
-                    </label>
-                    <input
+                    <Input
+                      label="Your Name"
                       type="text"
                       value={data.name}
                       onChange={(e) =>
                         setData((prev) => ({ ...prev, name: e.target.value }))
                       }
                       placeholder="Enter your name..."
-                      className="w-full px-4 py-4 text-xl rounded-2xl border-2 border-stone-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all text-center"
+                      className="text-center"
                       autoFocus
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">
-                      Your Age
-                    </label>
-                    <input
+                    <Input
+                      label="Your Age"
                       type="number"
                       value={data.age}
                       onChange={(e) =>
@@ -277,7 +275,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                       }
                       min={5}
                       max={18}
-                      className="w-full px-4 py-4 text-xl rounded-2xl border-2 border-stone-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all text-center"
+                      className="text-center"
                     />
                   </div>
                 </div>
@@ -497,16 +495,16 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
             ))}
           </div>
 
-          <motion.button
+          <Button
             onClick={handleNext}
             disabled={!canProceed()}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            whileHover={{ scale: canProceed() ? 1.05 : 1 }}
-            whileTap={{ scale: canProceed() ? 0.95 : 1 }}
+            size="lg"
+            variant="primary"
+            icon={<ChevronRight className="w-5 h-5" />}
+            iconPosition="right"
           >
             {step === steps.length - 1 ? "Start Reading!" : "Continue"}
-            <ChevronRight className="w-5 h-5" />
-          </motion.button>
+          </Button>
         </div>
       </motion.div>
     </div>

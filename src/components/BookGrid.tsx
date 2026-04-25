@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Star, BookOpen, Heart } from "lucide-react";
 import type { Book } from "../types";
+import { Card } from "./ui/Card";
 
 // Generate a beautiful gradient from book title
 function getBookGradient(title: string): string {
@@ -142,7 +143,7 @@ export function BookGridItem({
         className="mt-3 text-center max-w-full px-1"
         animate={{ y: isHovered ? -2 : 0 }}
       >
-        <h4 className="font-semibold text-stone-900 text-sm line-clamp-2 leading-tight group-hover:text-purple-700 transition-colors">
+        <h4 className="font-bold text-stone-900 text-sm line-clamp-2 leading-tight group-hover:text-purple-700 transition-colors">
           {book.title}
         </h4>
         <p className="text-stone-500 text-xs mt-1 truncate">{book.author}</p>
@@ -202,8 +203,10 @@ export function FeaturedBook({ book, onClick }: FeaturedBookProps) {
   const gradient = getBookGradient(book.title);
 
   return (
-    <motion.div
-      className="relative bg-white rounded-2xl overflow-hidden shadow-xl cursor-pointer group"
+    <Card
+      variant="elevated"
+      padding="none"
+      className="relative cursor-pointer group"
       onClick={onClick}
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
@@ -226,7 +229,7 @@ export function FeaturedBook({ book, onClick }: FeaturedBookProps) {
 
       <div className="relative flex gap-6 p-6">
         {/* Cover */}
-        <div className="relative w-32 h-48 flex-shrink-0 rounded-xl overflow-hidden shadow-2xl">
+        <div className="relative w-32 h-48 flex-shrink-0 rounded-xl overflow-hidden shadow-xl">
           {book.coverUrl && !imageError ? (
             <img
               src={book.coverUrl}
@@ -291,7 +294,7 @@ export function FeaturedBook({ book, onClick }: FeaturedBookProps) {
           )}
         </div>
       </div>
-    </motion.div>
+    </Card>
   );
 }
 

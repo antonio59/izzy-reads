@@ -8,6 +8,7 @@ import type { Book } from "../types";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
 import { SuggestionFormModal } from "./SuggestionFormModal";
+import { Input } from "./ui/Input";
 
 function getBookGradient(title: string): [string, string] {
   const colors: [string, string][] = [
@@ -182,7 +183,7 @@ const PublicWishlist = () => {
                 <Gift className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800">
+                <h1 className="text-2xl md:text-3xl font-display font-bold text-stone-800">
                   My Reading Wishlist
                 </h1>
                 <p className="text-sm text-stone-500">
@@ -312,7 +313,7 @@ const PublicWishlist = () => {
                             <Check className="w-5 h-5 text-white" />
                           </div>
                           <span className="text-white text-xs font-bold drop-shadow">Bought!</span>
-                          <span className="text-white/80 text-[10px] mt-0.5 drop-shadow">
+                          <span className="text-white/80 text-xs mt-0.5 drop-shadow">
                             by {book.boughtBy}
                           </span>
                         </div>
@@ -328,7 +329,7 @@ const PublicWishlist = () => {
                             <p className="text-white text-xs font-semibold leading-tight line-clamp-2 drop-shadow-lg">
                               {book.title}
                             </p>
-                            <p className="text-white/70 text-[10px] mt-1">
+                            <p className="text-white/70 text-xs mt-1">
                               {book.author}
                             </p>
                           </div>
@@ -387,14 +388,14 @@ const PublicWishlist = () => {
             />
 
             <motion.div
-              className="relative bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-lg max-h-[90vh] overflow-y-auto"
+              className="relative bg-white rounded-2xl shadow-xl overflow-hidden w-full max-w-lg max-h-[90vh] overflow-y-auto"
               initial={{ scale: 0.9, y: 50 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 50 }}
             >
               {/* Cover */}
               <div className="relative h-72 bg-gradient-to-br from-cream-100 to-cream-200 flex items-center justify-center p-6">
-                <div className="h-56 w-40 shadow-2xl rounded-sm overflow-hidden">
+                <div className="h-56 w-40 shadow-xl rounded-md overflow-hidden">
                   <BookCoverImage book={selectedBook} className="w-full h-full" />
                 </div>
 
@@ -498,12 +499,13 @@ const PublicWishlist = () => {
                           <p className="text-sm text-stone-500 text-center">
                             Enter your name so we know who's getting this book!
                           </p>
-                          <input
+                          <Input
                             type="text"
                             value={buyerName}
                             onChange={(e) => { setBuyerName(e.target.value); setBuyError(""); }}
                             placeholder="Your name"
-                            className="w-full px-4 py-2 rounded-lg border border-stone-200 focus:border-primary-400 focus:ring-2 focus:ring-primary-100 outline-none text-sm"
+                            size="sm"
+                            className="rounded-lg"
                             autoFocus
                           />
                           {buyError && (

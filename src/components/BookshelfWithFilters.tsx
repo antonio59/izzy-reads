@@ -12,6 +12,7 @@ import {
   Filter,
 } from "lucide-react";
 import type { Book } from "../types";
+import { Button, Input } from "./ui";
 
 interface BookshelfWithFiltersProps {
   books: Book[];
@@ -92,32 +93,25 @@ const BookshelfWithFilters: React.FC<BookshelfWithFiltersProps> = ({
         <div className="sticky top-24 space-y-6">
           {/* Search */}
           <div>
-            <label className="text-xs font-bold text-stone-500 uppercase tracking-wider mb-2 block">
+            <label className="text-xs font-bold text-stone-500 uppercaser mb-2 block">
               Search
             </label>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-              <input
-                type="text"
-                placeholder="Search books..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-white border border-stone-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-            </div>
+            <Input
+              type="text"
+              placeholder="Search books..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              icon={<Search />}
+              iconPosition="left"
+              clearable
+              onClear={() => setSearchQuery("")}
+              size="sm"
+            />
           </div>
 
           {/* Genre Filter */}
           <div>
-            <label className="text-xs font-bold text-stone-500 uppercase tracking-wider mb-3 block">
+            <label className="text-xs font-bold text-stone-500 uppercaser mb-3 block">
               Genres
             </label>
             <div className="space-y-1">
@@ -166,7 +160,7 @@ const BookshelfWithFilters: React.FC<BookshelfWithFiltersProps> = ({
 
           {/* Stats */}
           <div className="bg-gradient-to-br from-violet-50 to-fuchsia-50 rounded-xl p-4 border border-violet-100">
-            <p className="text-xs font-bold text-violet-600 uppercase tracking-wider mb-3">
+            <p className="text-xs font-bold text-violet-600 uppercaser mb-3">
               Collection Stats
             </p>
             <div className="space-y-2">
@@ -231,16 +225,15 @@ const BookshelfWithFilters: React.FC<BookshelfWithFiltersProps> = ({
               </div>
               {/* Search */}
               <div className="mb-6">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-                  <input
-                    type="text"
-                    placeholder="Search books..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-sm"
-                  />
-                </div>
+                <Input
+                  type="text"
+                  placeholder="Search books..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  icon={<Search />}
+                  iconPosition="left"
+                  size="sm"
+                />
               </div>
               {/* Genres */}
               <div className="space-y-1">
@@ -314,7 +307,7 @@ const BookshelfWithFilters: React.FC<BookshelfWithFiltersProps> = ({
                       onClick={() => setSelectedBook(book)}
                     >
                       <motion.div
-                        className="relative w-[85px] md:w-[100px] h-[130px] md:h-[155px] rounded-sm overflow-hidden shadow-md group-hover:shadow-xl transition-all"
+                        className="relative w-[85px] md:w-[100px] h-[130px] md:h-[155px] rounded-md overflow-hidden shadow-md group-hover:shadow-xl transition-all"
                         whileHover={{ y: -10, scale: 1.03 }}
                         transition={{
                           type: "spring",
@@ -336,7 +329,7 @@ const BookshelfWithFilters: React.FC<BookshelfWithFiltersProps> = ({
                               background: `linear-gradient(135deg, ${getBookColor(book.title, 0)} 0%, ${getBookColor(book.title, 1)} 100%)`,
                             }}
                           >
-                            <span className="text-[10px] font-bold text-center leading-tight line-clamp-3">
+                            <span className="text-xs font-bold text-center leading-tight line-clamp-3">
                               {book.title}
                             </span>
                           </div>
@@ -362,7 +355,7 @@ const BookshelfWithFilters: React.FC<BookshelfWithFiltersProps> = ({
 
                       {/* Rating badge */}
                       {book.rating && (
-                        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-amber-400 text-amber-900 text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-amber-400 text-amber-900 text-xs font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">
                           <Star className="w-2.5 h-2.5 fill-current" />
                           {book.rating}
                         </div>
@@ -374,7 +367,7 @@ const BookshelfWithFilters: React.FC<BookshelfWithFiltersProps> = ({
                 {/* Shelf */}
                 <div className="relative h-4">
                   <div
-                    className="absolute inset-x-0 top-0 h-2.5 rounded-sm"
+                    className="absolute inset-x-0 top-0 h-2.5 rounded-md"
                     style={{
                       background:
                         "linear-gradient(180deg, #D4A574 0%, #C4956A 50%, #B8875A 100%)",
@@ -420,7 +413,7 @@ const BookshelfWithFilters: React.FC<BookshelfWithFiltersProps> = ({
             />
 
             <motion.div
-              className="relative bg-white rounded-3xl shadow-2xl overflow-hidden w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+              className="relative bg-white rounded-3xl shadow-xl overflow-hidden w-full max-w-2xl max-h-[90vh] overflow-y-auto"
               initial={{ scale: 0.9, y: 50 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 50 }}
@@ -433,11 +426,11 @@ const BookshelfWithFilters: React.FC<BookshelfWithFiltersProps> = ({
                     <img
                       src={selectedBook.coverUrl}
                       alt={selectedBook.title}
-                      className="h-52 w-auto rounded-lg shadow-2xl"
+                      className="h-52 w-auto rounded-lg shadow-xl"
                     />
                   ) : (
                     <div
-                      className="h-52 w-36 rounded-lg shadow-2xl flex items-center justify-center text-white p-4"
+                      className="h-52 w-36 rounded-lg shadow-xl flex items-center justify-center text-white p-4"
                       style={{
                         background: `linear-gradient(135deg, ${getBookColor(selectedBook.title, 0)} 0%, ${getBookColor(selectedBook.title, 1)} 100%)`,
                       }}
@@ -565,24 +558,26 @@ const BookshelfWithFilters: React.FC<BookshelfWithFiltersProps> = ({
                   </div>
 
                   <div className="flex items-center gap-4">
-                    <button
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={() => handleLike(selectedBook.id)}
-                      className="flex items-center gap-2 text-stone-500 hover:text-rose-500 transition-colors"
+                      icon={
+                        <Heart
+                          className={`w-5 h-5 ${likedBooks.has(selectedBook.id) ? "fill-rose-500 text-rose-500" : ""}`}
+                        />
+                      }
                     >
-                      <Heart
-                        className={`w-5 h-5 ${likedBooks.has(selectedBook.id) ? "fill-rose-500 text-rose-500" : ""}`}
-                      />
-                      <span className="text-sm font-medium">
-                        {likedBooks.has(selectedBook.id) ? "Liked!" : "Like"}
-                      </span>
-                    </button>
-                    <button
+                      {likedBooks.has(selectedBook.id) ? "Liked!" : "Like"}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={() => handleShare(selectedBook)}
-                      className="flex items-center gap-2 text-stone-500 hover:text-violet-600 transition-colors"
+                      icon={<Share2 className="w-5 h-5" />}
                     >
-                      <Share2 className="w-5 h-5" />
-                      <span className="text-sm font-medium">Share</span>
-                    </button>
+                      Share
+                    </Button>
                   </div>
                 </div>
               </div>

@@ -82,7 +82,7 @@ export function BookCard({
         whileTap={{ scale: 0.98 }}
       >
         {/* Book Cover */}
-        <div className="relative w-full aspect-[2/3] rounded-xl overflow-hidden shadow-lg group-hover:shadow-2xl transition-shadow duration-300">
+        <div className="relative w-full aspect-[2/3] rounded-xl overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow duration-300">
           {book.coverUrl && !imageError ? (
             <>
               {!imageLoaded && (
@@ -153,7 +153,7 @@ export function BookCard({
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
-        <div className="relative bg-white rounded-3xl overflow-hidden shadow-xl group-hover:shadow-2xl transition-all duration-300">
+        <div className="relative bg-white rounded-3xl overflow-hidden shadow-xl group-hover:shadow-xl transition-all duration-300">
           {/* Decorative Background */}
           <div
             className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-10`}
@@ -315,7 +315,7 @@ export function BookCard({
         />
 
         {/* Main Card */}
-        <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg group-hover:shadow-2xl transition-shadow duration-300">
+        <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow duration-300">
           {/* Cover Section */}
           <div className="relative aspect-[3/4] overflow-hidden">
             {book.coverUrl && !imageError ? (

@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "./ui/Button";
 import { Home, BookOpen, Sparkles, ArrowLeft } from "lucide-react";
 
 // Fun messages that rotate
@@ -177,7 +178,7 @@ const NotFound: React.FC = () => {
         >
           <div className="relative inline-block">
             <motion.h1
-              className="text-[12rem] md:text-[16rem] font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 leading-none select-none"
+              className="text-[12rem] md:text-[16rem] font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 leading-tight select-none"
               animate={{
                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
               }}
@@ -220,7 +221,7 @@ const NotFound: React.FC = () => {
 
         {/* Message card */}
         <motion.div
-          className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl p-8 md:p-12 text-center"
+          className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl p-8 md:p-12 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
@@ -269,14 +270,13 @@ const NotFound: React.FC = () => {
             </Link>
 
             <Link to="/dashboard">
-              <motion.button
-                className="group bg-white text-purple-600 border-2 border-purple-200 px-8 py-4 rounded-2xl font-bold text-lg hover:border-purple-400 hover:bg-purple-50 transition-all flex items-center justify-center gap-3 w-full sm:w-auto"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <Button
+                variant="secondary"
+                size="lg"
+                icon={<BookOpen className="w-5 h-5" />}
               >
-                <BookOpen className="w-5 h-5" />
                 My Bookshelf
-              </motion.button>
+              </Button>
             </Link>
           </div>
 
@@ -302,13 +302,14 @@ const NotFound: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
         >
-          <button
+          <Button
+            variant="ghost"
             onClick={() => window.history.back()}
-            className="text-purple-600 hover:text-purple-800 font-medium flex items-center gap-2 mx-auto transition-colors"
+            className="mx-auto"
           >
             <ArrowLeft className="w-4 h-4" />
             Go back to previous page
-          </button>
+          </Button>
         </motion.div>
       </motion.div>
 

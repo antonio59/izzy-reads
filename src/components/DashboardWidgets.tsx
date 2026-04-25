@@ -201,9 +201,11 @@ export function MostLovedBooks({ books, totalReactions }: MostLovedBooksProps) {
       </p>
       <div className="space-y-3">
         {books.map((book, index) => (
-          <div
+          <Card
             key={book.id}
-            className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm"
+            variant="default"
+            padding="sm"
+            className="flex items-center gap-3"
           >
             <div className="flex items-center justify-center w-8 h-8 bg-primary-100 text-primary-600 font-bold rounded-full">
               {index + 1}
@@ -231,7 +233,7 @@ export function MostLovedBooks({ books, totalReactions }: MostLovedBooksProps) {
                 {book.reactionCount}
               </span>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
     </Card>

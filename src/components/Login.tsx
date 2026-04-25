@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { BookOpen, Mail, Lock, LogIn, AlertCircle, Info } from "lucide-react";
+import { BookOpen, Mail, LogIn, AlertCircle, Info } from "lucide-react";
 import { motion } from "framer-motion";
+import { Button } from "./ui/Button";
+import { Card } from "./ui/Card";
+import { Input, PasswordInput } from "./ui/Input";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -62,7 +65,7 @@ const Login = () => {
         </div>
 
         {/* Login Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <Card variant="elevated" padding="lg" className="shadow-xl">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
               <motion.div
@@ -97,56 +100,34 @@ const Login = () => {
               </motion.div>
             )}
 
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-semibold text-stone-700 mb-2"
-              >
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-400" />
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  autoComplete="email"
-                  className="w-full pl-10 pr-4 py-3 border-2 border-stone-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
-                  placeholder="you@example.com"
-                />
-              </div>
-            </div>
+            <Input
+              label="Email Address"
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+              placeholder="you@example.com"
+              icon={<Mail className="w-5 h-5" />}
+            />
 
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-semibold text-stone-700 mb-2"
-              >
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-400" />
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  autoComplete="current-password"
-                  className="w-full pl-10 pr-4 py-3 border-2 border-stone-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
-                  placeholder="••••••••"
-                />
-              </div>
-            </div>
+            <PasswordInput
+              label="Password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+              placeholder="••••••••"
+            />
 
-            <motion.button
+            <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-bold hover:from-purple-600 hover:to-pink-600 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-              whileHover={{ scale: loading ? 1 : 1.02 }}
-              whileTap={{ scale: loading ? 1 : 0.98 }}
+              fullWidth
+              size="lg"
+              variant="primary"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -156,7 +137,7 @@ const Login = () => {
                   Sign In
                 </>
               )}
-            </motion.button>
+            </Button>
           </form>
 
           <div className="mt-6 text-center">
@@ -176,7 +157,7 @@ const Login = () => {
               ← Back to public portfolio
             </Link>
           </div>
-        </div>
+        </Card>
 
         {/* Demo hint */}
         <motion.div

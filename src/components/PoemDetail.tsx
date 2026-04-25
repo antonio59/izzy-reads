@@ -7,6 +7,7 @@ import { useBooks } from "../contexts/BookContext";
 import { useUser } from "../contexts/UserContext";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
+import { Card } from "./ui/Card";
 import { AvatarPreview, type AvatarConfig } from "./AvatarCreator";
 import { PoemReactionButtons } from "./ReactionButtons";
 
@@ -169,11 +170,13 @@ const PoemDetail = () => {
       {/* Elegant Poem Card */}
       <main className="px-4 py-6 md:py-10">
         <div className="max-w-2xl mx-auto">
-          <motion.div
+          <Card
+            variant="elevated"
+            padding="none"
+            className="border border-stone-100"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="bg-white rounded-3xl shadow-xl border border-stone-100 overflow-hidden"
           >
             {/* Decorative gradient header strip */}
             <div className={`h-3 bg-gradient-to-r ${backgroundPattern}`} />
@@ -200,7 +203,7 @@ const PoemDetail = () => {
                   </span>
                 </div>
                 {poem.template && (
-                  <span className="sm:hidden inline-flex items-center gap-1 mt-2 px-2.5 py-0.5 bg-violet-50 rounded-full text-[10px] font-bold text-violet-700">
+                  <span className="sm:hidden inline-flex items-center gap-1 mt-2 px-2.5 py-0.5 bg-violet-50 rounded-full text-xs font-bold text-violet-700">
                     <Sparkles className="w-3 h-3" />
                     {poem.template}
                   </span>
@@ -235,7 +238,7 @@ const PoemDetail = () => {
 
               {/* Reactions - compact horizontal row */}
               <div className="mt-6 pt-6 border-t border-stone-100">
-                <p className="text-xs font-semibold text-stone-500 text-center mb-3 uppercase tracking-wide">
+                <p className="text-xs font-semibold text-stone-500 text-center mb-3 uppercase">
                   React to this poem
                 </p>
                 <div className="flex justify-center">
@@ -254,7 +257,7 @@ const PoemDetail = () => {
                       >
                         <ChevronLeft className="w-4 h-4 text-stone-400 group-hover:text-violet-500 flex-shrink-0" />
                         <div className="min-w-0 text-left">
-                          <p className="text-[10px] uppercase tracking-wide text-stone-400 font-semibold">Previous</p>
+                          <p className="text-xs uppercase text-stone-400 font-semibold">Previous</p>
                           <p className="text-sm font-display font-bold text-stone-700 group-hover:text-violet-700 truncate">
                             {prevPoem.title}
                           </p>
@@ -270,7 +273,7 @@ const PoemDetail = () => {
                         className="group flex items-center gap-2 px-3 py-2 rounded-xl bg-stone-50 hover:bg-violet-50 border border-stone-100 hover:border-violet-100 transition-all flex-1 min-w-0"
                       >
                         <div className="min-w-0 text-right flex-1">
-                          <p className="text-[10px] uppercase tracking-wide text-stone-400 font-semibold">Next</p>
+                          <p className="text-xs uppercase text-stone-400 font-semibold">Next</p>
                           <p className="text-sm font-display font-bold text-stone-700 group-hover:text-violet-700 truncate">
                             {nextPoem.title}
                           </p>
@@ -284,7 +287,7 @@ const PoemDetail = () => {
                 </div>
               )}
             </div>
-          </motion.div>
+          </Card>
         </div>
       </main>
 
@@ -305,8 +308,10 @@ const PoemDetail = () => {
                     to={`/poetry/${otherPoem.slug || otherPoem.id}`}
                     className="group flex-shrink-0 w-56 snap-start"
                   >
-                    <motion.div
-                      className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 p-4 border border-stone-100 hover:-translate-y-1"
+                    <Card
+                      variant="default"
+                      padding="sm"
+                      className="shadow-sm hover:shadow-md transition-all duration-300 border border-stone-100 hover:-translate-y-1"
                       whileHover={{ y: -2 }}
                     >
                       <h3 className="font-display font-bold text-stone-800 text-sm mb-1 group-hover:text-violet-600 transition-colors line-clamp-1">
@@ -315,7 +320,7 @@ const PoemDetail = () => {
                       <p className="text-stone-400 text-xs line-clamp-2 font-serif italic">
                         {otherPoem.content.substring(0, 80)}...
                       </p>
-                    </motion.div>
+                    </Card>
                   </Link>
                 ))}
             </div>

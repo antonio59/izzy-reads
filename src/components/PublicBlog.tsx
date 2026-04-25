@@ -111,7 +111,7 @@ const PublicBlog = () => {
                 <PenTool className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800">
+                <h1 className="text-2xl md:text-3xl font-display font-bold text-stone-800">
                   Izzy's Writing
                 </h1>
                 <p className="text-sm text-stone-500">
@@ -147,7 +147,7 @@ const PublicBlog = () => {
                     onClick={() => setSelectedPost(post)}
                     className="group cursor-pointer"
                   >
-                    <div className="relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-stone-100 hover:-translate-y-2">
+                    <div className="relative bg-white rounded-3xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden border border-stone-100 hover:-translate-y-2">
                       {/* Card Header */}
                       <div
                         className={`h-48 bg-gradient-to-br ${BACKGROUND_PATTERNS[index % BACKGROUND_PATTERNS.length]} relative overflow-hidden`}
@@ -274,7 +274,7 @@ const PublicBlog = () => {
               exit={{ scale: 0.9, y: 50 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
-              <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
+              <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
                 {/* Header with gradient */}
                 <div
                   className={`relative h-32 bg-gradient-to-br ${BACKGROUND_PATTERNS[sortedPosts.indexOf(selectedPost) % BACKGROUND_PATTERNS.length]}`}

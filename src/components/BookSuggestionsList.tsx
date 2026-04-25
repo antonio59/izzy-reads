@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Lightbulb, Check, X, MessageCircle } from "lucide-react";
 import type { Id } from "../../convex/_generated/dataModel";
 import { BookCover } from "./BookCover";
+import { Button } from "./ui/Button";
+import { Card } from "./ui/Card";
 
 interface BookSuggestion {
   _id: Id<"bookSuggestions">;
@@ -114,8 +116,10 @@ function SuggestionCard({
   onDelete,
 }: SuggestionCardProps) {
   return (
-    <motion.div
-      className={`bg-white rounded-xl p-4 text-stone-800 ${
+    <Card
+      variant="default"
+      padding="sm"
+      className={`text-stone-800 ${
         suggestion.status === "approved"
           ? "border-2 border-green-400"
           : suggestion.status === "declined"
@@ -180,20 +184,21 @@ function SuggestionCard({
       {/* Action buttons for pending suggestions */}
       {suggestion.status === "pending" && (
         <div className="flex gap-2 mt-4 pt-3 border-t border-stone-100">
-          <button
+          <Button
+            variant="success"
+            className="flex-1"
             onClick={() => onApprove(suggestion._id)}
-            className="flex-1 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg font-medium transition-colors"
+            icon={<Check className="w-4 h-4" />}
           >
-            <Check className="w-4 h-4" />
             Add to Wishlist
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="secondary"
             onClick={() => onDecline(suggestion._id)}
-            className="flex items-center justify-center gap-2 bg-stone-200 hover:bg-stone-300 text-stone-700 py-2 px-4 rounded-lg font-medium transition-colors"
+            icon={<X className="w-4 h-4" />}
           >
-            <X className="w-4 h-4" />
             Decline
-          </button>
+          </Button>
         </div>
       )}
 
@@ -208,7 +213,7 @@ function SuggestionCard({
           </button>
         </div>
       )}
-    </motion.div>
+    </Card>
   );
 }
 

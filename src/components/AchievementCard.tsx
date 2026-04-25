@@ -128,7 +128,7 @@ export function AchievementCard({
                   transition={{ duration: 0.5 }}
                 />
               </div>
-              <p className="text-[10px] text-stone-400 mt-0.5">
+              <p className="text-xs text-stone-400 mt-0.5">
                 {Math.round(progress)}% complete
               </p>
             </div>
@@ -220,7 +220,7 @@ export function AchievementShowcase({
   return (
     <div className={className}>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-display font-semibold text-stone-900 flex items-center gap-2">
+        <h3 className="font-display font-bold text-stone-900 flex items-center gap-2">
           <Star className="w-4 h-4 text-coral-500" />
           Achievements
           <span className="text-sm font-normal text-stone-500">

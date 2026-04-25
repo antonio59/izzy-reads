@@ -15,6 +15,10 @@ import type { BlogPost } from "../types";
 import { EmojiButton } from "./EmojiPicker";
 import { EmojiPicker } from "./EmojiPicker";
 import GifPicker from "./GifPicker";
+import { Modal, ModalFooter } from "./ui/Modal";
+import { Input, Textarea, Select } from "./ui/Input";
+import { Button } from "./ui/Button";
+import { Card } from "./ui/Card";
 
 const Blog: React.FC = () => {
   const { blogPosts, books, addBlogPost, updateBlogPost, deleteBlogPost } =
@@ -249,18 +253,18 @@ const Blog: React.FC = () => {
             Share your thoughts about the books you love! ✍️
           </p>
         </div>
-        <button
+        <Button
+          variant="primary"
+          icon={<Plus className="h-5 w-5" />}
           onClick={() => setShowNewPost(true)}
-          className="flex items-center space-x-2 bg-sage-600 text-white px-4 py-2 rounded-lg hover:bg-sage-700 transition-colors duration-200"
         >
-          <Plus className="h-5 w-5" />
-          <span>New Post</span>
-        </button>
+          New Post
+        </Button>
       </div>
 
       {/* Blog Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl shadow-lg p-4 border-l-4 border-sage-500">
+        <Card variant="elevated" padding="sm" className="border-l-4 border-sage-500">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-stone-600">Total Posts</p>
@@ -270,9 +274,9 @@ const Blog: React.FC = () => {
             </div>
             <PenTool className="h-8 w-8 text-sage-500" />
           </div>
-        </div>
+        </Card>
 
-        <div className="bg-white rounded-xl shadow-lg p-4 border-l-4 border-primary-500">
+        <Card variant="elevated" padding="sm" className="border-l-4 border-primary-500">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-stone-600">Published</p>
@@ -282,9 +286,9 @@ const Blog: React.FC = () => {
             </div>
             <CheckCircle className="h-8 w-8 text-primary-500" />
           </div>
-        </div>
+        </Card>
 
-        <div className="bg-white rounded-xl shadow-lg p-4 border-l-4 border-stone-500">
+        <Card variant="elevated" padding="sm" className="border-l-4 border-stone-500">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-stone-600">Drafts</p>
@@ -294,7 +298,7 @@ const Blog: React.FC = () => {
             </div>
             <Edit className="h-8 w-8 text-stone-500" />
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Blog Posts */}
@@ -311,9 +315,11 @@ const Blog: React.FC = () => {
                 ? books.find((book) => book.id === post.bookId)
                 : null;
               return (
-                <div
+                <Card
                   key={post.id}
-                  className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300"
+                  variant="elevated"
+                  padding="md"
+                  className="hover:shadow-xl transition-shadow duration-300"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
@@ -377,343 +383,321 @@ const Blog: React.FC = () => {
                       ))}
                     </div>
                   )}
-                </div>
+                </Card>
               );
             })}
         </div>
       ) : (
         <div className="text-center py-12">
           <PenTool className="h-24 w-24 text-sage-300 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-stone-600 mb-2">
+          <h3 className="text-xl font-bold text-stone-600 mb-2">
             No posts yet!
           </h3>
           <p className="text-stone-500 mb-4">
             Start writing about your reading adventures!
           </p>
-          <button
+          <Button
+            variant="primary"
+            size="lg"
             onClick={() => setShowNewPost(true)}
-            className="bg-sage-600 text-white px-6 py-3 rounded-lg hover:bg-sage-700 transition-colors duration-200"
           >
             Write Your First Post
-          </button>
+          </Button>
         </div>
       )}
 
       {/* New Post Modal */}
-      {showNewPost && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold text-stone-800 mb-4">
-              Write a New Post
-            </h2>
-
-            {/* Template Selection */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-stone-700 mb-2">
-                Choose a template:
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                {Object.entries(templates).map(([key, template]) => (
-                  <button
-                    key={key}
-                    onClick={() => setSelectedTemplate(key)}
-                    className={`p-3 text-left rounded-lg border transition-colors ${
-                      selectedTemplate === key
-                        ? "border-sage-500 bg-sage-50 text-sage-800"
-                        : "border-stone-300 hover:border-stone-400"
-                    }`}
-                  >
-                    <div className="font-medium">{template.title}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {/* Emoji Selection */}
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-2">
-                  Pick a post emoji:
-                </label>
-                <EmojiButton
-                  value={newPost.emoji || "📚"}
-                  onChange={(emoji) => setNewPost({ ...newPost, emoji })}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  value={newPost.title}
-                  onChange={(e) =>
-                    setNewPost({ ...newPost, title: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
-                  placeholder="Give your post a fun title!"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">
-                  About a book? (optional)
-                </label>
-                <select
-                  value={newPost.bookId}
-                  onChange={(e) =>
-                    setNewPost({ ...newPost, bookId: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
-                >
-                  <option value="">Not about a specific book</option>
-                  {books
-                    .filter((book) => book.isRead)
-                    .map((book) => (
-                      <option key={book.id} value={book.id}>
-                        {book.title} by {book.author}
-                      </option>
-                    ))}
-                </select>
-              </div>
-
-              {/* Tags Input */}
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">
-                  <Tag className="w-4 h-4 inline mr-1" />
-                  Tags (optional)
-                </label>
-                <p className="text-xs text-stone-500 mb-2">
-                  Press Enter or comma to add a tag
-                </p>
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {(newPost.tags || []).map((tag, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center gap-1 text-sm bg-sage-100 text-sage-800 px-3 py-1 rounded-full"
-                    >
-                      {tag}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveTag(tag)}
-                        className="hover:bg-sage-200 rounded-full p-0.5 transition-colors"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
-                    </span>
-                  ))}
-                </div>
-                <input
-                  type="text"
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={handleAddTag}
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
-                  placeholder="Type a tag and press Enter..."
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">
-                  Your thoughts:
-                </label>
-                {selectedTemplate !== "free" && (
-                  <div className="mb-3 p-3 bg-primary-50 rounded-lg">
-                    <p className="text-sm font-medium text-primary-800 mb-2">
-                      Writing prompts to help you:
-                    </p>
-                    <ul className="text-sm text-primary-700 space-y-1">
-                      {templates[
-                        selectedTemplate as keyof typeof templates
-                      ].prompts.map((prompt, index) => (
-                        <li key={index}>• {prompt}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {/* Emoji & GIF toolbar */}
-                <div className="flex items-center gap-2 mb-2 p-2 bg-stone-50 rounded-lg border border-stone-200">
-                  <span className="text-xs text-stone-500 mr-1">Add:</span>
-                  <EmojiPicker onSelect={handleEmojiInsert} />
-                  <GifPicker onSelect={handleGifSelect} />
-                </div>
-                <textarea
-                  ref={textareaRef}
-                  value={newPost.content}
-                  onChange={(e) =>
-                    setNewPost({ ...newPost, content: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
-                  rows={8}
-                  placeholder="Write your thoughts here! Remember to be kind and thoughtful."
-                />
-                {/* GIF Preview */}
-                {selectedGif && (
-                  <div className="mt-2 relative inline-block">
-                    <img
-                      src={selectedGif}
-                      alt="Selected GIF"
-                      className="max-h-32 rounded-lg border border-stone-200"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setSelectedGif("")}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="flex space-x-3 mt-6">
+      <Modal
+        isOpen={showNewPost}
+        onClose={() => setShowNewPost(false)}
+        title="Write a New Post"
+        size="lg"
+        className="max-h-[90vh] overflow-y-auto"
+      >
+        {/* Template Selection */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-stone-700 mb-2">
+            Choose a template:
+          </label>
+          <div className="grid grid-cols-2 gap-2">
+            {Object.entries(templates).map(([key, template]) => (
               <button
-                onClick={handleCreatePost}
-                className="flex-1 bg-sage-600 text-white py-2 rounded-lg hover:bg-sage-700 transition-colors duration-200"
+                key={key}
+                onClick={() => setSelectedTemplate(key)}
+                className={`p-3 text-left rounded-lg border transition-colors ${
+                  selectedTemplate === key
+                    ? "border-sage-500 bg-sage-50 text-sage-800"
+                    : "border-stone-300 hover:border-stone-400"
+                }`}
               >
-                Save Post
+                <div className="font-medium">{template.title}</div>
               </button>
-              <button
-                onClick={() => setShowNewPost(false)}
-                className="flex-1 bg-stone-300 text-stone-700 py-2 rounded-lg hover:bg-stone-400 transition-colors duration-200"
-              >
-                Cancel
-              </button>
-            </div>
+            ))}
           </div>
         </div>
-      )}
+
+        <div className="space-y-4">
+          {/* Emoji Selection */}
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-2">
+              Pick a post emoji:
+            </label>
+            <EmojiButton
+              value={newPost.emoji || "📚"}
+              onChange={(emoji) => setNewPost({ ...newPost, emoji })}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              Title
+            </label>
+            <Input
+              type="text"
+              value={newPost.title}
+              onChange={(e) =>
+                setNewPost({ ...newPost, title: e.target.value })
+              }
+              placeholder="Give your post a fun title!"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              About a book? (optional)
+            </label>
+            <Select
+              value={newPost.bookId}
+              onChange={(e) =>
+                setNewPost({ ...newPost, bookId: e.target.value })
+              }
+              options={[
+                { value: "", label: "Not about a specific book" },
+                ...books
+                  .filter((book) => book.isRead)
+                  .map((book) => ({
+                    value: book.id,
+                    label: `${book.title} by ${book.author}`,
+                  })),
+              ]}
+            />
+          </div>
+
+          {/* Tags Input */}
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              <Tag className="w-4 h-4 inline mr-1" />
+              Tags (optional)
+            </label>
+            <p className="text-xs text-stone-500 mb-2">
+              Press Enter or comma to add a tag
+            </p>
+            <div className="flex flex-wrap gap-2 mb-2">
+              {(newPost.tags || []).map((tag, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center gap-1 text-sm bg-sage-100 text-sage-800 px-3 py-1 rounded-full"
+                >
+                  {tag}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveTag(tag)}
+                    className="hover:bg-sage-200 rounded-full p-0.5 transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+            <Input
+              type="text"
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              onKeyDown={handleAddTag}
+              placeholder="Type a tag and press Enter..."
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              Your thoughts:
+            </label>
+            {selectedTemplate !== "free" && (
+              <div className="mb-3 p-3 bg-primary-50 rounded-lg">
+                <p className="text-sm font-medium text-primary-800 mb-2">
+                  Writing prompts to help you:
+                </p>
+                <ul className="text-sm text-primary-700 space-y-1">
+                  {templates[
+                    selectedTemplate as keyof typeof templates
+                  ].prompts.map((prompt, index) => (
+                    <li key={index}>• {prompt}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {/* Emoji & GIF toolbar */}
+            <div className="flex items-center gap-2 mb-2 p-2 bg-stone-50 rounded-lg border border-stone-200">
+              <span className="text-xs text-stone-500 mr-1">Add:</span>
+              <EmojiPicker onSelect={handleEmojiInsert} />
+              <GifPicker onSelect={handleGifSelect} />
+            </div>
+            <Textarea
+              ref={textareaRef}
+              value={newPost.content}
+              onChange={(e) =>
+                setNewPost({ ...newPost, content: e.target.value })
+              }
+              rows={8}
+              placeholder="Write your thoughts here! Remember to be kind and thoughtful."
+            />
+            {/* GIF Preview */}
+            {selectedGif && (
+              <div className="mt-2 relative inline-block">
+                <img
+                  src={selectedGif}
+                  alt="Selected GIF"
+                  className="max-h-32 rounded-lg border border-stone-200"
+                />
+                <button
+                  type="button"
+                  onClick={() => setSelectedGif("")}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <ModalFooter>
+          <Button variant="primary" onClick={handleCreatePost}>
+            Save Post
+          </Button>
+          <Button variant="secondary" onClick={() => setShowNewPost(false)}>
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
 
       {/* Edit Post Modal */}
-      {editingPost && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold text-stone-800 mb-4">
-              Edit Post
-            </h2>
+      <Modal
+        isOpen={!!editingPost}
+        onClose={() => setEditingPost(null)}
+        title="Edit Post"
+        size="lg"
+        className="max-h-[90vh] overflow-y-auto"
+      >
+        <div className="space-y-4">
+          {/* Post Emoji */}
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-2">
+              Post emoji:
+            </label>
+            <EmojiButton
+              value={editingPost?.emoji || "📚"}
+              onChange={(emoji) =>
+                setEditingPost({ ...editingPost!, emoji })
+              }
+            />
+          </div>
 
-            <div className="space-y-4">
-              {/* Post Emoji */}
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-2">
-                  Post emoji:
-                </label>
-                <EmojiButton
-                  value={editingPost.emoji || "📚"}
-                  onChange={(emoji) =>
-                    setEditingPost({ ...editingPost, emoji })
-                  }
-                />
-              </div>
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              Title
+            </label>
+            <Input
+              type="text"
+              value={editingPost?.title || ""}
+              onChange={(e) =>
+                setEditingPost({ ...editingPost!, title: e.target.value })
+              }
+            />
+          </div>
 
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  value={editingPost.title}
-                  onChange={(e) =>
-                    setEditingPost({ ...editingPost, title: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
-                />
-              </div>
-
-              {/* Tags Input for Edit */}
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">
-                  <Tag className="w-4 h-4 inline mr-1" />
-                  Tags
-                </label>
-                <p className="text-xs text-stone-500 mb-2">
-                  Press Enter or comma to add a tag
-                </p>
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {(editingPost.tags || []).map((tag, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center gap-1 text-sm bg-sage-100 text-sage-800 px-3 py-1 rounded-full"
-                    >
-                      {tag}
-                      <button
-                        type="button"
-                        onClick={() => handleEditRemoveTag(tag)}
-                        className="hover:bg-sage-200 rounded-full p-0.5 transition-colors"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
-                    </span>
-                  ))}
-                </div>
-                <input
-                  type="text"
-                  value={editTagInput}
-                  onChange={(e) => setEditTagInput(e.target.value)}
-                  onKeyDown={handleEditAddTag}
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
-                  placeholder="Type a tag and press Enter..."
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">
-                  Content
-                </label>
-                {/* Emoji & GIF toolbar */}
-                <div className="flex items-center gap-2 mb-2 p-2 bg-stone-50 rounded-lg border border-stone-200">
-                  <span className="text-xs text-stone-500 mr-1">Add:</span>
-                  <EmojiPicker onSelect={handleEditEmojiInsert} />
-                  <GifPicker onSelect={handleEditGifSelect} />
-                </div>
-                <textarea
-                  ref={editTextareaRef}
-                  value={editingPost.content}
-                  onChange={(e) =>
-                    setEditingPost({ ...editingPost, content: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-transparent"
-                  rows={8}
-                />
-                {/* GIF Preview */}
-                {editSelectedGif && (
-                  <div className="mt-2 relative inline-block">
-                    <img
-                      src={editSelectedGif}
-                      alt="Selected GIF"
-                      className="max-h-32 rounded-lg border border-stone-200"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setEditSelectedGif("")}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </div>
-                )}
-              </div>
+          {/* Tags Input for Edit */}
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              <Tag className="w-4 h-4 inline mr-1" />
+              Tags
+            </label>
+            <p className="text-xs text-stone-500 mb-2">
+              Press Enter or comma to add a tag
+            </p>
+            <div className="flex flex-wrap gap-2 mb-2">
+              {(editingPost?.tags || []).map((tag, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center gap-1 text-sm bg-sage-100 text-sage-800 px-3 py-1 rounded-full"
+                >
+                  {tag}
+                  <button
+                    type="button"
+                    onClick={() => handleEditRemoveTag(tag)}
+                    className="hover:bg-sage-200 rounded-full p-0.5 transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
             </div>
+            <Input
+              type="text"
+              value={editTagInput}
+              onChange={(e) => setEditTagInput(e.target.value)}
+              onKeyDown={handleEditAddTag}
+              placeholder="Type a tag and press Enter..."
+            />
+          </div>
 
-            <div className="flex space-x-3 mt-6">
-              <button
-                onClick={handleUpdatePost}
-                className="flex-1 bg-sage-600 text-white py-2 rounded-lg hover:bg-sage-700 transition-colors duration-200"
-              >
-                Update Post
-              </button>
-              <button
-                onClick={() => setEditingPost(null)}
-                className="flex-1 bg-stone-300 text-stone-700 py-2 rounded-lg hover:bg-stone-400 transition-colors duration-200"
-              >
-                Cancel
-              </button>
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              Content
+            </label>
+            {/* Emoji & GIF toolbar */}
+            <div className="flex items-center gap-2 mb-2 p-2 bg-stone-50 rounded-lg border border-stone-200">
+              <span className="text-xs text-stone-500 mr-1">Add:</span>
+              <EmojiPicker onSelect={handleEditEmojiInsert} />
+              <GifPicker onSelect={handleEditGifSelect} />
             </div>
+            <Textarea
+              ref={editTextareaRef}
+              value={editingPost?.content || ""}
+              onChange={(e) =>
+                setEditingPost({ ...editingPost!, content: e.target.value })
+              }
+              rows={8}
+            />
+            {/* GIF Preview */}
+            {editSelectedGif && (
+              <div className="mt-2 relative inline-block">
+                <img
+                  src={editSelectedGif}
+                  alt="Selected GIF"
+                  className="max-h-32 rounded-lg border border-stone-200"
+                />
+                <button
+                  type="button"
+                  onClick={() => setEditSelectedGif("")}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
-      )}
+
+        <ModalFooter>
+          <Button variant="primary" onClick={handleUpdatePost}>
+            Update Post
+          </Button>
+          <Button variant="secondary" onClick={() => setEditingPost(null)}>
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
 
       {/* Writing Tips */}
       <div className="bg-gradient-to-r from-green-500 to-blue-500 rounded-xl shadow-lg p-6 text-white">
@@ -722,25 +706,25 @@ const Blog: React.FC = () => {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white bg-opacity-20 rounded-lg p-4">
-            <h4 className="font-semibold mb-2">📝 Be Descriptive</h4>
+            <h4 className="font-bold mb-2">📝 Be Descriptive</h4>
             <p className="text-sm opacity-90">
               Use words that help others picture what you're thinking!
             </p>
           </div>
           <div className="bg-white bg-opacity-20 rounded-lg p-4">
-            <h4 className="font-semibold mb-2">💭 Share Your Feelings</h4>
+            <h4 className="font-bold mb-2">💭 Share Your Feelings</h4>
             <p className="text-sm opacity-90">
               Tell us how the book made you feel - happy, excited, curious?
             </p>
           </div>
           <div className="bg-white bg-opacity-20 rounded-lg p-4">
-            <h4 className="font-semibold mb-2">❓ Ask Questions</h4>
+            <h4 className="font-bold mb-2">❓ Ask Questions</h4>
             <p className="text-sm opacity-90">
               What would you ask the characters or the author?
             </p>
           </div>
           <div className="bg-white bg-opacity-20 rounded-lg p-4">
-            <h4 className="font-semibold mb-2">🌟 Be Kind</h4>
+            <h4 className="font-bold mb-2">🌟 Be Kind</h4>
             <p className="text-sm opacity-90">
               Always write with kindness and respect for others!
             </p>

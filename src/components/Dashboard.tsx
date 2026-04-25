@@ -19,6 +19,7 @@ import { useBooks } from "../contexts/BookContext";
 import { useUser } from "../contexts/UserContext";
 import { getWeeklyQuote } from "../utils/readingQuotes";
 import { Card, StatCard } from "./ui/Card";
+import { Button } from "./ui/Button";
 import { StreakBadge } from "./ui/Badge";
 import { ChallengeProgress } from "./ui/Progress";
 import { StaggerContainer, StaggerItem } from "./PageTransition";
@@ -220,14 +221,15 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <button
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => setShowTour(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium text-purple-600 bg-purple-50 hover:bg-purple-100 transition-colors"
                 title="Take the tour again"
+                icon={<Sparkles className="w-4 h-4" />}
               >
-                <Sparkles className="w-4 h-4" />
                 Tour
-              </button>
+              </Button>
               <StreakBadge days={readingStats.readingStreak} />
             </div>
           </div>
@@ -289,7 +291,7 @@ const Dashboard: React.FC = () => {
         {/* Left Column - 2/3 width */}
         <div className="lg:col-span-2 space-y-6">
           {/* Tabs */}
-          <div className="bg-white rounded-2xl p-1.5 shadow-sm border border-stone-100 flex gap-1">
+          <Card variant="default" padding="none" className="p-1.5 shadow-sm border border-stone-100 flex gap-1">
             <button
               onClick={() => setActiveTab("activity")}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
@@ -312,7 +314,7 @@ const Dashboard: React.FC = () => {
               <BarChart3 className="w-4 h-4" />
               Insights
             </button>
-          </div>
+          </Card>
 
           {activeTab === "activity" ? (
             <div className="space-y-6">

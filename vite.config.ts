@@ -1,10 +1,21 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    process.env.SENTRY_AUTH_TOKEN
+      ? sentryVitePlugin({
+          authToken: process.env.SENTRY_AUTH_TOKEN,
+          org: process.env.SENTRY_ORG,
+          project: process.env.SENTRY_PROJECT,
+        })
+      : null,
+  ].filter(Boolean),
   server: {
     host: "0.0.0.0",
     port: 5000,
@@ -17,6 +28,7 @@ export default defineConfig({
     port: 5000,
   },
   build: {
+    sourcemap: true,
     chunkSizeWarningLimit: 800,
     rollupOptions: {
       output: {

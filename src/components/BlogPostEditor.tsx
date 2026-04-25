@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { GifPicker } from "./GifPicker";
+import { Card } from "./ui/Card";
 
 // Common emoji categories for a teen reader
 const EMOJI_CATEGORIES = {
@@ -280,12 +281,14 @@ const BlogPostEditor: React.FC = () => {
       <main className="max-w-4xl mx-auto px-4 py-8">
         <AnimatePresence mode="wait">
           {showPreview ? (
-            <motion.div
+            <Card
               key="preview"
+              variant="elevated"
+              padding="lg"
+              className="shadow-lg"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="bg-white rounded-2xl shadow-lg p-8"
             >
               <h1 className="text-3xl font-bold text-stone-900 mb-6">
                 {title || "Untitled Post"}
@@ -293,7 +296,7 @@ const BlogPostEditor: React.FC = () => {
               <div className="prose prose-lg max-w-none text-stone-700">
                 {renderPreview()}
               </div>
-            </motion.div>
+            </Card>
           ) : (
             <motion.div
               key="editor"
@@ -303,7 +306,7 @@ const BlogPostEditor: React.FC = () => {
               className="space-y-6"
             >
               {/* Title */}
-              <div className="bg-white rounded-2xl shadow-lg p-6">
+              <Card variant="elevated" padding="md" className="shadow-lg">
                 <input
                   type="text"
                   value={title}
@@ -311,10 +314,10 @@ const BlogPostEditor: React.FC = () => {
                   placeholder="Give your post an awesome title..."
                   className="w-full text-3xl font-bold text-stone-900 placeholder-stone-300 border-none focus:outline-none focus:ring-0"
                 />
-              </div>
+              </Card>
 
               {/* Toolbar */}
-              <div className="bg-white rounded-2xl shadow-lg p-4">
+              <Card variant="elevated" padding="sm" className="shadow-lg">
                 <div className="flex items-center gap-2 flex-wrap">
                   {/* Emoji Picker */}
                   <div className="relative" ref={emojiPickerRef}>
@@ -337,7 +340,7 @@ const BlogPostEditor: React.FC = () => {
                           initial={{ opacity: 0, scale: 0.95, y: 10 }}
                           animate={{ opacity: 1, scale: 1, y: 0 }}
                           exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                          className="absolute z-50 top-full mt-2 left-0 w-80 bg-white rounded-xl shadow-2xl border border-stone-200 overflow-hidden"
+                          className="absolute z-50 top-full mt-2 left-0 w-80 bg-white rounded-xl shadow-xl border border-stone-200 overflow-hidden"
                         >
                           {/* Category Tabs */}
                           <div className="flex overflow-x-auto p-2 border-b border-stone-100 gap-1">
@@ -397,10 +400,10 @@ const BlogPostEditor: React.FC = () => {
                     <span>Express yourself!</span>
                   </div>
                 </div>
-              </div>
+              </Card>
 
               {/* Content Editor */}
-              <div className="bg-white rounded-2xl shadow-lg p-6">
+              <Card variant="elevated" padding="md">
                 <textarea
                   ref={textareaRef}
                   value={content}
@@ -434,7 +437,7 @@ const BlogPostEditor: React.FC = () => {
                     </div>
                   </div>
                 )}
-              </div>
+              </Card>
 
               {/* Tips */}
               <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-6">

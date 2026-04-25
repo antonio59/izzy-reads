@@ -2,6 +2,10 @@ import React, { useState } from 'react'
 import { BookOpen, Star, Plus, Edit, Trash2, Calendar, User } from 'lucide-react'
 import { useBooks } from '../contexts/BookContext'
 import type { Book } from '../types'
+import { Modal, ModalFooter } from './ui/Modal'
+import { Input, Textarea, Select } from './ui/Input'
+import { Button } from './ui/Button'
+import { Card } from './ui/Card'
 
 interface StarRatingProps {
   rating: number
@@ -90,13 +94,13 @@ const Bookshelf: React.FC = () => {
           </h1>
           <p className="text-stone-600 mt-1">Your amazing reading collection! 📚</p>
         </div>
-        <button
+        <Button
+          variant="primary"
+          icon={<Plus className="h-5 w-5" />}
           onClick={() => setShowAddForm(true)}
-          className="flex items-center space-x-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors duration-200"
         >
-          <Plus className="h-5 w-5" />
-          <span>Add Book</span>
-        </button>
+          Add Book
+        </Button>
       </div>
 
       {/* Genre Filter */}
@@ -118,7 +122,7 @@ const Bookshelf: React.FC = () => {
       {/* Books Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredBooks.map((book) => (
-          <div key={book.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+          <Card key={book.id} variant="elevated" padding="none" className="hover:shadow-xl transition-shadow duration-300">
             {/* Book Cover */}
             <div className="h-48 bg-gradient-to-br from-primary-400 via-accent-400 to-primary-300 flex items-center justify-center relative">
               <BookOpen className="h-16 w-16 text-white" />
@@ -172,183 +176,129 @@ const Bookshelf: React.FC = () => {
                 </p>
               )}
             </div>
-          </div>
+          </Card>
         ))}
       </div>
 
       {filteredBooks.length === 0 && (
         <div className="text-center py-12">
           <BookOpen className="h-24 w-24 text-stone-300 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-stone-600 mb-2">No books yet!</h3>
+          <h3 className="text-xl font-bold text-stone-600 mb-2">No books yet!</h3>
           <p className="text-stone-500 mb-4">Start building your amazing bookshelf!</p>
-          <button
+          <Button
+            variant="primary"
+            size="lg"
             onClick={() => setShowAddForm(true)}
-            className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors duration-200"
           >
             Add Your First Book
-          </button>
+          </Button>
         </div>
       )}
 
       {/* Add Book Modal */}
-      {showAddForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-2xl font-bold text-stone-800 mb-4">Add New Book</h2>
+      <Modal isOpen={showAddForm} onClose={() => setShowAddForm(false)} title="Add New Book" size="sm">
+        <div className="space-y-4">
+          <Input
+            label="Title"
+            type="text"
+            value={newBook.title}
+            onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
+            placeholder="Enter book title"
+          />
 
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">Title</label>
-                <input
-                  type="text"
-                  value={newBook.title}
-                  onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Enter book title"
-                />
-              </div>
+          <Input
+            label="Author"
+            type="text"
+            value={newBook.author}
+            onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
+            placeholder="Enter author name"
+          />
 
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">Author</label>
-                <input
-                  type="text"
-                  value={newBook.author}
-                  onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Enter author name"
-                />
-              </div>
+          <Select
+            label="Genre"
+            value={newBook.genre}
+            onChange={(e) => setNewBook({ ...newBook, genre: e.target.value })}
+            options={[
+              { value: 'Fiction', label: 'Fiction' },
+              { value: 'Fantasy', label: 'Fantasy' },
+              { value: 'Adventure', label: 'Adventure' },
+              { value: 'Mystery', label: 'Mystery' },
+              { value: 'Science Fiction', label: 'Science Fiction' },
+              { value: 'Non-Fiction', label: 'Non-Fiction' },
+            ]}
+          />
 
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">Genre</label>
-                <select
-                  value={newBook.genre}
-                  onChange={(e) => setNewBook({ ...newBook, genre: e.target.value })}
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                >
-                  <option value="Fiction">Fiction</option>
-                  <option value="Fantasy">Fantasy</option>
-                  <option value="Adventure">Adventure</option>
-                  <option value="Mystery">Mystery</option>
-                  <option value="Science Fiction">Science Fiction</option>
-                  <option value="Non-Fiction">Non-Fiction</option>
-                </select>
-              </div>
+          <Input
+            label="Pages"
+            type="number"
+            value={newBook.pageCount}
+            onChange={(e) => setNewBook({ ...newBook, pageCount: parseInt(e.target.value) || 0 })}
+            placeholder="Number of pages"
+          />
 
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">Pages</label>
-                <input
-                  type="number"
-                  value={newBook.pageCount}
-                  onChange={(e) => setNewBook({ ...newBook, pageCount: parseInt(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Number of pages"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">Rating</label>
-                <StarRating
-                  rating={newBook.rating || 0}
-                  onRatingChange={(rating) => setNewBook({ ...newBook, rating })}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">Notes</label>
-                <textarea
-                  value={newBook.notes}
-                  onChange={(e) => setNewBook({ ...newBook, notes: e.target.value })}
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  rows={3}
-                  placeholder="What did you think about this book?"
-                />
-              </div>
-            </div>
-
-            <div className="flex space-x-3 mt-6">
-              <button
-                onClick={handleAddBook}
-                className="flex-1 bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700 transition-colors duration-200"
-              >
-                Add Book
-              </button>
-              <button
-                onClick={() => setShowAddForm(false)}
-                className="flex-1 bg-stone-300 text-stone-700 py-2 rounded-lg hover:bg-stone-400 transition-colors duration-200"
-              >
-                Cancel
-              </button>
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-1">Rating</label>
+            <StarRating
+              rating={newBook.rating || 0}
+              onRatingChange={(rating) => setNewBook({ ...newBook, rating })}
+            />
           </div>
+
+          <Textarea
+            label="Notes"
+            value={newBook.notes}
+            onChange={(e) => setNewBook({ ...newBook, notes: e.target.value })}
+            rows={3}
+            placeholder="What did you think about this book?"
+          />
         </div>
-      )}
+
+        <ModalFooter>
+          <Button variant="primary" onClick={handleAddBook}>Add Book</Button>
+          <Button variant="secondary" onClick={() => setShowAddForm(false)}>Cancel</Button>
+        </ModalFooter>
+      </Modal>
 
       {/* Edit Book Modal */}
-      {editingBook && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-2xl font-bold text-stone-800 mb-4">Edit Book</h2>
+      <Modal isOpen={!!editingBook} onClose={() => setEditingBook(null)} title="Edit Book" size="sm">
+        <div className="space-y-4">
+          <Input
+            label="Title"
+            type="text"
+            value={editingBook?.title || ''}
+            onChange={(e) => setEditingBook(editingBook ? { ...editingBook, title: e.target.value } : null)}
+          />
 
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">Title</label>
-                <input
-                  type="text"
-                  value={editingBook.title}
-                  onChange={(e) => setEditingBook({ ...editingBook, title: e.target.value })}
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                />
-              </div>
+          <Input
+            label="Author"
+            type="text"
+            value={editingBook?.author || ''}
+            onChange={(e) => setEditingBook(editingBook ? { ...editingBook, author: e.target.value } : null)}
+          />
 
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">Author</label>
-                <input
-                  type="text"
-                  value={editingBook.author}
-                  onChange={(e) => setEditingBook({ ...editingBook, author: e.target.value })}
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">Rating</label>
-                <StarRating
-                  rating={editingBook.rating || 0}
-                  onRatingChange={(rating) => setEditingBook({ ...editingBook, rating })}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">Notes</label>
-                <textarea
-                  value={editingBook.notes}
-                  onChange={(e) => setEditingBook({ ...editingBook, notes: e.target.value })}
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  rows={3}
-                />
-              </div>
-            </div>
-
-            <div className="flex space-x-3 mt-6">
-              <button
-                onClick={handleUpdateBook}
-                className="flex-1 bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700 transition-colors duration-200"
-              >
-                Update Book
-              </button>
-              <button
-                onClick={() => setEditingBook(null)}
-                className="flex-1 bg-stone-300 text-stone-700 py-2 rounded-lg hover:bg-stone-400 transition-colors duration-200"
-              >
-                Cancel
-              </button>
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-1">Rating</label>
+            <StarRating
+              rating={editingBook?.rating || 0}
+              onRatingChange={(rating) => setEditingBook(editingBook ? { ...editingBook, rating } : null)}
+            />
           </div>
+
+          <Textarea
+            label="Notes"
+            value={editingBook?.notes || ''}
+            onChange={(e) => setEditingBook(editingBook ? { ...editingBook, notes: e.target.value } : null)}
+            rows={3}
+          />
         </div>
-      )}
+
+        <ModalFooter>
+          <Button variant="primary" onClick={handleUpdateBook}>Update Book</Button>
+          <Button variant="secondary" onClick={() => setEditingBook(null)}>Cancel</Button>
+        </ModalFooter>
+      </Modal>
     </div>
   )
 }
 
-export default Bookshelf 
+export default Bookshelf

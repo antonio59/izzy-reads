@@ -77,7 +77,7 @@ function SwipeCard({ book, onSwipe, isTop, onClick }: SwipeCardProps) {
             <img
               src={book.coverUrl}
               alt={book.title}
-              className="h-full w-auto max-w-[80%] object-contain drop-shadow-2xl rounded-sm"
+              className="h-full w-auto max-w-[80%] object-contain drop-shadow-xl rounded-md"
               draggable={false}
               onError={() => setImageError(true)}
             />

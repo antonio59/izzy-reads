@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { Card } from "./ui/Card";
 import { Star, BookOpen, Calendar, MessageCircle } from "lucide-react";
 import type { Book } from "../types";
 import { ReviewReactionButtons } from "./ReactionButtons";
@@ -18,8 +18,10 @@ export function ReviewCard({ book, featured = false }: ReviewCardProps) {
   if (!reviewText) return null;
 
   return (
-    <motion.article
-      className={`bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden ${
+    <Card
+      variant="default"
+      padding="none"
+      className={`shadow-md hover:shadow-xl transition-all duration-300 ${
         featured ? "ring-2 ring-primary-300" : ""
       }`}
       initial={{ opacity: 0, y: 20 }}
@@ -141,7 +143,7 @@ export function ReviewCard({ book, featured = false }: ReviewCardProps) {
           </div>
         </div>
       </div>
-    </motion.article>
+    </Card>
   );
 }
 

@@ -210,7 +210,7 @@ const PoemGallery: React.FC<PoemGalleryProps> = ({
           onClick={() => setSelectedPoem(null)}
         >
           <div
-            className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col md:flex-row"
+            className="bg-white rounded-3xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col md:flex-row"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Visual Side */}

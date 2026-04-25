@@ -4,6 +4,7 @@ import { Book, BookOpen, Trophy, Flame, Plus, Star } from 'lucide-react'
 import { CircularLevel } from './LevelProgress'
 import { AchievementChip } from './AchievementCard'
 import { ACHIEVEMENTS } from '../lib/achievements'
+import { Card, IconButton } from './ui'
 
 interface LibraryBook {
   id: string
@@ -100,7 +101,7 @@ export function VirtualLibrary({
   return (
     <div className={`relative ${className}`}>
       {/* Library Container */}
-      <div className="relative bg-white rounded-2xl overflow-hidden shadow-soft-lg border border-stone-200">
+      <Card variant="elevated" padding="none" className="relative shadow-soft-lg border border-stone-200">
         {/* Header */}
         <div className="px-4 py-3 flex items-center justify-between border-b border-stone-200 bg-stone-50">
           <div className="flex items-center gap-2">
@@ -128,13 +129,14 @@ export function VirtualLibrary({
             <CircularLevel totalXP={totalXP} size="sm" />
 
             {/* Add Book */}
-            <button
+            <IconButton
               onClick={onAddBook}
-              className="p-1.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-              title="Add New Book"
-            >
-              <Plus className="w-3.5 h-3.5" />
-            </button>
+              size="sm"
+              variant="primary"
+              className="bg-primary-600 hover:bg-primary-700"
+              aria-label="Add New Book"
+              icon={<Plus className="w-3.5 h-3.5" />}
+            />
           </div>
         </div>
 
@@ -203,7 +205,7 @@ export function VirtualLibrary({
             </div>
           </div>
         )}
-      </div>
+      </Card>
     </div>
   )
 }
@@ -253,12 +255,12 @@ function BookShelf({ books, onBookClick }: BookShelfProps) {
                       </div>
                     )}
                     {book.notes && (
-                      <p className="text-stone-500 text-[10px] leading-relaxed line-clamp-3 italic">
+                      <p className="text-stone-500 text-xs leading-relaxed line-clamp-3 italic">
                         "{book.notes}"
                       </p>
                     )}
                     {!book.notes && book.rating && (
-                      <p className="text-primary-500 text-[10px]">
+                      <p className="text-primary-500 text-xs">
                         Click to see full review
                       </p>
                     )}
@@ -273,7 +275,7 @@ function BookShelf({ books, onBookClick }: BookShelfProps) {
 
             {/* Book */}
             <div
-              className="relative rounded-sm overflow-hidden shadow-md group-hover:shadow-lg transition-all"
+              className="relative rounded-md overflow-hidden shadow-md group-hover:shadow-lg transition-all"
               style={{
                 width: book.coverUrl ? '80px' : '75px',
                 height: book.coverUrl ? '120px' : '115px',
@@ -287,10 +289,10 @@ function BookShelf({ books, onBookClick }: BookShelfProps) {
                 />
               ) : (
                 <div className={`w-full h-full bg-gradient-to-br ${getBookColor(book.title)} flex flex-col items-center justify-center p-1.5`}>
-                  <span className="text-white text-[10px] font-bold text-center leading-tight line-clamp-3">
+                  <span className="text-white text-xs font-bold text-center leading-tight line-clamp-3">
                     {book.title}
                   </span>
-                  <span className="text-white/70 text-[8px] mt-0.5 text-center line-clamp-1">
+                  <span className="text-white/70 text-xs mt-0.5 text-center line-clamp-1">
                     {book.author}
                   </span>
                 </div>
@@ -300,7 +302,7 @@ function BookShelf({ books, onBookClick }: BookShelfProps) {
               {book.rating && (
                 <div className="absolute top-1 right-1 bg-white/90 backdrop-blur-sm rounded-full px-1.5 py-0.5 flex items-center gap-0.5">
                   <Star className="w-2 h-2 text-amber-400 fill-amber-400" />
-                  <span className="text-[8px] font-bold text-stone-700">{book.rating}</span>
+                  <span className="text-xs font-bold text-stone-700">{book.rating}</span>
                 </div>
               )}
 

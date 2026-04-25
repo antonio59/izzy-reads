@@ -255,7 +255,7 @@ export function GenreBingo({
                   className={`
                   text-xs font-medium text-center mt-1 leading-tight
                   ${isCompleted ? "text-stone-700" : "text-stone-500"}
-                  ${board.size === 5 ? "text-[10px]" : ""}
+                  ${board.size === 5 ? "text-xs" : ""}
                 `}
                 >
                   {cell.genre.name}
@@ -392,7 +392,7 @@ export function MiniBingo({ board, onClick, className = "" }: MiniBingoProps) {
               }
             `}
           >
-            <span className="text-[10px]">{cell.genre.icon}</span>
+            <span className="text-xs">{cell.genre.icon}</span>
           </div>
         ))}
       </div>

@@ -109,7 +109,7 @@ function CelebrationParticles() {
           <div
             className={`
               relative overflow-hidden rounded-2xl bg-white 
-              shadow-2xl ${RARITY_GLOW[currentAchievement.rarity]}
+              shadow-xl ${RARITY_GLOW[currentAchievement.rarity]}
             `}
           >
             {/* Animated background shimmer for legendary */}
@@ -128,7 +128,7 @@ function CelebrationParticles() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Trophy className="w-5 h-5" />
-                  <span className="font-bold text-sm uppercase tracking-wide">
+                  <span className="font-bold text-sm uppercase">
                     Achievement Unlocked!
                   </span>
                 </div>

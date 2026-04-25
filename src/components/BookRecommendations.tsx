@@ -14,9 +14,9 @@ const BookRecommendations = ({ books }: BookRecommendationsProps) => {
 
   return (
     <div className="mb-10 relative">
-      <div className="absolute -inset-1 bg-gradient-to-r from-amber-300 via-orange-300 to-rose-300 rounded-[2rem] blur-lg opacity-40"></div>
+      <div className="absolute -inset-1 bg-gradient-to-r from-amber-300 via-orange-300 to-rose-300 rounded-4xl blur-lg opacity-40"></div>
       
-      <div className="relative bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 rounded-[2rem] p-8 shadow-xl border-4 border-amber-200/50 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 rounded-4xl p-8 shadow-xl border-4 border-amber-200/50 overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-yellow-200/40 to-orange-200/40 rounded-full -translate-y-1/2 translate-x-1/2"></div>
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-br from-pink-200/40 to-rose-200/40 rounded-full translate-y-1/2 -translate-x-1/2"></div>
         
@@ -31,7 +31,7 @@ const BookRecommendations = ({ books }: BookRecommendationsProps) => {
             </div>
           </div>
           <div>
-            <h2 className="text-3xl font-bold font-fun bg-gradient-to-r from-amber-600 via-orange-500 to-rose-500 bg-clip-text text-transparent flex items-center gap-2">
+            <h2 className="text-3xl font-bold font-display bg-gradient-to-r from-amber-600 via-orange-500 to-rose-500 bg-clip-text text-transparent flex items-center gap-2">
               Izzy's Picks
               <span className="text-2xl animate-wiggle">🌟</span>
             </h2>

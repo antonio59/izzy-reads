@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { Button } from "./Button";
 
 interface ModalProps {
   isOpen: boolean;
@@ -190,10 +191,10 @@ export function ConfirmModal({
   variant = "default",
   loading = false,
 }: ConfirmModalProps) {
-  const variantStyles = {
-    danger: "bg-red-500 hover:bg-red-600",
-    warning: "bg-amber-500 hover:bg-amber-600",
-    default: "bg-primary-500 hover:bg-primary-600",
+  const confirmVariant: Record<string, "primary" | "danger" | "accent"> = {
+    danger: "danger",
+    warning: "accent",
+    default: "primary",
   };
 
   const icons = {
@@ -211,20 +212,22 @@ export function ConfirmModal({
         </h3>
         <p className="text-stone-600 mb-6">{message}</p>
         <div className="flex gap-3 justify-center">
-          <button
+          <Button
+            variant="secondary"
+            size="md"
             onClick={onClose}
-            className="px-4 py-2 rounded-lg font-medium text-stone-600 bg-stone-100 hover:bg-stone-200 transition-colors"
             disabled={loading}
           >
             {cancelText}
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={confirmVariant[variant]}
+            size="md"
             onClick={onConfirm}
-            className={`px-4 py-2 rounded-lg font-medium text-white ${variantStyles[variant]} transition-colors disabled:opacity-50`}
-            disabled={loading}
+            loading={loading}
           >
-            {loading ? "Loading..." : confirmText}
-          </button>
+            {confirmText}
+          </Button>
         </div>
       </div>
     </Modal>

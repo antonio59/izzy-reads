@@ -14,6 +14,7 @@ import {
   Trash2,
 } from "lucide-react";
 import type { Book } from "../types";
+import { Button } from "./ui/Button";
 
 // Generate gradient from title
 function getBookGradient(title: string): string {
@@ -94,7 +95,7 @@ export function BookDetailModal({
 
           {/* Modal */}
           <motion.div
-            className="relative w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-3xl bg-white shadow-2xl"
+            className="relative w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-3xl bg-white shadow-xl"
             initial={{ scale: 0.9, y: 20, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.9, y: 20, opacity: 0 }}
@@ -152,7 +153,7 @@ export function BookDetailModal({
               <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end gap-6">
                 {/* Cover */}
                 <motion.div
-                  className="relative w-28 h-40 flex-shrink-0 rounded-xl overflow-hidden shadow-2xl ring-4 ring-white/20"
+                  className="relative w-28 h-40 flex-shrink-0 rounded-xl overflow-hidden shadow-xl ring-4 ring-white/20"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.1 }}
@@ -267,7 +268,7 @@ export function BookDetailModal({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <h3 className="text-sm font-semibold text-stone-500 uppercase tracking-wide mb-2">
+                  <h3 className="text-sm font-bold text-stone-500 uppercase mb-2">
                     About This Book
                   </h3>
                   <p className="text-stone-700 leading-relaxed">
@@ -284,7 +285,7 @@ export function BookDetailModal({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
                 >
-                  <h3 className="text-sm font-semibold text-stone-500 uppercase tracking-wide mb-3 flex items-center gap-2">
+                  <h3 className="text-sm font-bold text-stone-500 uppercase mb-3 flex items-center gap-2">
                     <Quote className="w-4 h-4" />
                     My Thoughts
                   </h3>
@@ -314,37 +315,37 @@ export function BookDetailModal({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 }}
               >
-                <button
+                <Button
+                  variant="secondary"
                   onClick={() => {
                     navigator.share?.({
                       title: book.title,
                       text: `Check out "${book.title}" by ${book.author}!`,
                     });
                   }}
-                  className="flex items-center gap-2 px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-medium transition-colors"
+                  icon={<Share2 className="w-4 h-4" />}
                 >
-                  <Share2 className="w-4 h-4" />
                   Share
-                </button>
+                </Button>
 
                 {showActions && onEdit && (
-                  <button
+                  <Button
+                    variant="accent"
                     onClick={() => onEdit(book)}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-xl font-medium transition-colors"
+                    icon={<Edit3 className="w-4 h-4" />}
                   >
-                    <Edit3 className="w-4 h-4" />
                     Edit
-                  </button>
+                  </Button>
                 )}
 
                 {showActions && onDelete && (
-                  <button
+                  <Button
+                    variant="danger"
                     onClick={() => onDelete(book)}
-                    className="flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl font-medium transition-colors"
+                    icon={<Trash2 className="w-4 h-4" />}
                   >
-                    <Trash2 className="w-4 h-4" />
                     Remove
-                  </button>
+                  </Button>
                 )}
               </motion.div>
             </div>

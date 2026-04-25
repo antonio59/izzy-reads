@@ -18,7 +18,9 @@ import FunBookshelfPublic from "./FunBookshelfPublic";
 import { AvatarPreview, type AvatarConfig } from "./AvatarCreator";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
+import { Card } from "./ui/Card";
 import { WritingReactionButtons } from "./ReactionButtons";
+import { Badge } from "./ui/Badge";
 
 type TabId = "reviews" | "poems" | "blog" | "wishlist";
 
@@ -67,7 +69,7 @@ const PublicPortfolio = () => {
         <PublicNav />
         <div className="max-w-5xl mx-auto px-4 pt-6 pb-12 space-y-8">
           {/* Hero skeleton */}
-          <div className="bg-white rounded-2xl shadow-md p-5 md:p-6 border border-cream-300">
+          <Card variant="elevated" padding="none" className="p-5 md:p-6 border border-cream-300">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-full bg-stone-100 animate-pulse" />
               <div className="flex-1 space-y-2">
@@ -75,9 +77,9 @@ const PublicPortfolio = () => {
                 <div className="h-4 w-48 bg-stone-100 rounded animate-pulse" />
               </div>
             </div>
-          </div>
+          </Card>
           {/* Stats skeleton */}
-          <div className="bg-white rounded-2xl shadow-md border border-cream-300 p-5 max-w-2xl mx-auto">
+          <Card variant="elevated" padding="none" className="border border-cream-300 p-5 max-w-2xl mx-auto">
             <div className="grid grid-cols-3 gap-4">
               {[0, 1, 2].map((i) => (
                 <div key={i} className="text-center space-y-2">
@@ -87,7 +89,7 @@ const PublicPortfolio = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
           {/* Sections skeleton */}
           <div className="space-y-6">
             <div className="h-8 w-40 bg-stone-100 rounded animate-pulse" />
@@ -114,8 +116,10 @@ const PublicPortfolio = () => {
       {/* Hero Section with Avatar */}
       <section className="relative overflow-hidden bg-cream-100 pt-6 pb-6 md:pt-8 md:pb-8">
         <div className="max-w-5xl mx-auto px-4">
-          <motion.div
-            className="bg-white rounded-2xl shadow-md p-5 md:p-6 border border-cream-300"
+          <Card
+            variant="elevated"
+            padding="none"
+            className="p-5 md:p-6 border border-cream-300"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
@@ -128,7 +132,7 @@ const PublicPortfolio = () => {
 
               {/* Hero Content */}
               <div className="flex-1 min-w-0">
-                <h1 className="text-lg sm:text-xl md:text-2xl font-display font-extrabold text-stone-800">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-display font-bold text-stone-800">
                   Hi, I'm Izzy! 👋
                 </h1>
                 <p className="text-xs sm:text-sm text-stone-500 mt-0.5 line-clamp-2">
@@ -165,18 +169,20 @@ const PublicPortfolio = () => {
                 </motion.a>
               </div>
             </div>
-          </motion.div>
+          </Card>
         </div>
       </section>
 
       {/* Reading Stats Card */}
       <section className="py-6 bg-cream-100">
         <div className="max-w-5xl mx-auto px-4">
-          <motion.div
+          <Card
+            variant="elevated"
+            padding="none"
+            className="border border-cream-300 p-5 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="bg-white rounded-2xl shadow-md border border-cream-300 p-5 max-w-2xl mx-auto"
           >
             {/* Card Header */}
             <div className="flex items-center gap-2 mb-4 pb-3 border-b border-cream-200">
@@ -195,7 +201,7 @@ const PublicPortfolio = () => {
                 <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                   <Book className="w-5 h-5 text-primary-500" />
                 </div>
-                <p className="text-2xl font-extrabold text-stone-800">
+                <p className="text-2xl font-bold text-stone-800">
                   {readBooks.length}
                 </p>
                 <p className="text-xs text-stone-500 font-medium">Books Read</p>
@@ -209,7 +215,7 @@ const PublicPortfolio = () => {
                   <div className="w-10 h-10 bg-star-light rounded-xl flex items-center justify-center mx-auto mb-2">
                     <BookOpen className="w-5 h-5 text-star" />
                   </div>
-                  <p className="text-2xl font-extrabold text-stone-800">
+                  <p className="text-2xl font-bold text-stone-800">
                     {readBooks
                       .reduce((sum, b) => sum + (b.pageCount || 0), 0)
                       .toLocaleString()}
@@ -227,7 +233,7 @@ const PublicPortfolio = () => {
                   <div className="w-10 h-10 bg-accent-100 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:bg-accent-200 transition-colors">
                     <Star className="w-5 h-5 text-accent-500" />
                   </div>
-                  <p className="text-2xl font-extrabold text-stone-800 group-hover:text-accent-600 transition-colors">
+                  <p className="text-2xl font-bold text-stone-800 group-hover:text-accent-600 transition-colors">
                     {books.filter((b) => b.isRead && (b.notes || b.review)).length}
                   </p>
                   <p className="text-xs text-stone-500 font-medium">
@@ -236,7 +242,7 @@ const PublicPortfolio = () => {
                 </Link>
               </div>
             </div>
-          </motion.div>
+          </Card>
         </div>
       </section>
 
@@ -250,7 +256,7 @@ const PublicPortfolio = () => {
                   <span className="text-3xl">⭐</span>
                 </div>
                 <div>
-                  <h2 className="text-3xl md:text-4xl font-display font-extrabold text-stone-800">
+                  <h2 className="text-3xl md:text-4xl font-display font-bold text-stone-800">
                     Izzy's Picks
                   </h2>
                   <p className="text-sm text-stone-500 mt-1">
@@ -277,7 +283,7 @@ const PublicPortfolio = () => {
                   <PenTool className="w-7 h-7 text-accent-500" />
                 </div>
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800">
+                  <h2 className="text-2xl md:text-3xl font-display font-bold text-stone-800">
                     Latest Poem
                   </h2>
                   <p className="text-sm text-stone-500 mt-1">
@@ -293,7 +299,7 @@ const PublicPortfolio = () => {
               </Link>
             </div>
 
-            <div className="bg-white rounded-3xl p-8 border border-cream-300 shadow-sm">
+            <Card variant="default" padding="lg" className="border border-cream-300 shadow-sm">
               <div className="max-w-lg mx-auto text-center">
                 <h3 className="text-xl font-bold text-stone-700 mb-4">
                   {latestPoems[0].title}
@@ -315,7 +321,7 @@ const PublicPortfolio = () => {
                   Read full poem →
                 </Link>
               </div>
-            </div>
+            </Card>
           </section>
         )}
 
@@ -328,7 +334,7 @@ const PublicPortfolio = () => {
                 <BookOpen className="w-7 h-7 text-primary-500" />
               </div>
               <div>
-                <h2 className="text-3xl md:text-4xl font-display font-extrabold text-stone-800">
+                <h2 className="text-3xl md:text-4xl font-display font-bold text-stone-800">
                   Books I've Read
                 </h2>
                 <p className="text-sm text-stone-500 mt-1">
@@ -357,7 +363,7 @@ const PublicPortfolio = () => {
                   <PenTool className="w-7 h-7 text-accent-500" />
                 </div>
                 <div>
-                  <h2 className="text-3xl md:text-4xl font-display font-extrabold text-stone-800">
+                  <h2 className="text-3xl md:text-4xl font-display font-bold text-stone-800">
                     My Poetry
                   </h2>
                   <p className="text-sm text-stone-500 mt-1">
@@ -370,12 +376,14 @@ const PublicPortfolio = () => {
 
             <div className="grid md:grid-cols-2 gap-8">
               {latestPoems.map((poem, index) => (
-                <motion.article
+                <Card
                   key={poem.id}
+                  variant="elevated"
+                  padding="none"
+                  className="hover:shadow-lg transition-all border border-cream-300"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all border border-cream-300"
                 >
                   <div className="bg-gradient-to-r from-primary-500 to-accent-500 p-5">
                     <div className="flex items-start justify-between">
@@ -394,13 +402,13 @@ const PublicPortfolio = () => {
                     </p>
                     <div className="flex items-center gap-4 mt-5 pt-5 border-t border-cream-200">
                       {poem.template && (
-                        <span className="text-sm text-accent-600 bg-accent-100 px-3 py-1 rounded-full">
+                        <Badge variant="accent" size="md">
                           {poem.template}
-                        </span>
+                        </Badge>
                       )}
                     </div>
                   </div>
-                </motion.article>
+                </Card>
               ))}
             </div>
           </section>
@@ -413,7 +421,7 @@ const PublicPortfolio = () => {
                 <MessageSquare className="w-7 h-7 text-accent-500" />
               </div>
               <div>
-                <h2 className="text-3xl md:text-4xl font-display font-extrabold text-stone-800">
+                <h2 className="text-3xl md:text-4xl font-display font-bold text-stone-800">
                   My Writing
                 </h2>
                 <p className="text-sm text-stone-500 mt-1">
@@ -424,12 +432,14 @@ const PublicPortfolio = () => {
 
             <div className="space-y-6">
               {publishedPosts.map((post, index) => (
-                <motion.article
+                <Card
                   key={post.id}
+                  variant="elevated"
+                  padding="lg"
+                  className="hover:shadow-lg transition-all border border-cream-300"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-all border border-cream-300"
                 >
                   <div className="flex items-start gap-5 mb-5">
                     {post.emoji && (
@@ -459,7 +469,7 @@ const PublicPortfolio = () => {
                   <div className="mt-6 pt-6 border-t border-cream-200">
                     <WritingReactionButtons postId={post.id} />
                   </div>
-                </motion.article>
+                </Card>
               ))}
             </div>
           </section>
@@ -472,7 +482,7 @@ const PublicPortfolio = () => {
                 <Gift className="w-7 h-7 text-primary-500" />
               </div>
               <div>
-                <h2 className="text-3xl md:text-4xl font-display font-extrabold text-stone-800">
+                <h2 className="text-3xl md:text-4xl font-display font-bold text-stone-800">
                   My Wishlist
                 </h2>
                 <p className="text-sm text-stone-500 mt-1">
@@ -483,12 +493,14 @@ const PublicPortfolio = () => {
 
             <div className="space-y-3">
               {wishlist.map((book, index) => (
-                <motion.div
+                <Card
                   key={book.id}
+                  variant="default"
+                  padding="sm"
+                  className="shadow-sm hover:shadow-md transition-all border border-cream-300 flex items-center gap-4"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all border border-cream-300 flex items-center gap-4"
                 >
                   <span className="text-2xl">🎁</span>
                   <div className="flex-1 min-w-0">
@@ -504,7 +516,7 @@ const PublicPortfolio = () => {
                       </p>
                     )}
                   </div>
-                </motion.div>
+                </Card>
               ))}
             </div>
           </section>
@@ -521,7 +533,7 @@ const PublicPortfolio = () => {
                   <PenTool className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800">
+                  <h2 className="text-2xl md:text-3xl font-display font-bold text-stone-800">
                     My Poetry
                   </h2>
                   <p className="text-sm text-stone-500 mt-1">
@@ -557,8 +569,13 @@ const PublicPortfolio = () => {
                     >
                       <Link
                         to={`/poetry/${poem.slug || poem.id}`}
-                        className="block bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-stone-100 hover:-translate-y-1 group"
+                        className="block group"
                       >
+                        <Card
+                          variant="elevated"
+                          padding="none"
+                          className="hover:shadow-xl transition-all duration-300 border border-stone-100 hover:-translate-y-1"
+                        >
                         {/* Poem Header */}
                         <div
                           className={`h-28 bg-gradient-to-br ${
@@ -603,6 +620,7 @@ const PublicPortfolio = () => {
                             </span>
                           </div>
                         </div>
+                        </Card>
                       </Link>
                     </motion.div>
                   ))}
@@ -624,7 +642,7 @@ const PublicPortfolio = () => {
                   <Gift className="w-7 h-7 text-primary-500" />
                 </div>
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-display font-extrabold text-stone-800">
+                  <h2 className="text-2xl md:text-3xl font-display font-bold text-stone-800">
                     My Wishlist
                   </h2>
                   <p className="text-sm text-stone-500 mt-1">
@@ -714,7 +732,7 @@ const PublicPortfolio = () => {
                           <p className="text-white text-xs font-semibold leading-tight line-clamp-2 drop-shadow-lg">
                             {book.title}
                           </p>
-                          <p className="text-white/70 text-[10px] mt-1">
+                          <p className="text-white/70 text-xs mt-1">
                             {book.author}
                           </p>
                         </div>
@@ -770,7 +788,7 @@ function EmptyState({
   message: string;
 }) {
   return (
-    <div className="text-center py-20 bg-white rounded-3xl border border-cream-300">
+    <Card variant="default" padding="none" className="text-center py-20 border border-cream-300">
       <div className="w-24 h-24 bg-cream-200 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-md">
         <span className="text-5xl">{icon}</span>
       </div>
@@ -778,7 +796,7 @@ function EmptyState({
         {title}
       </h3>
       <p className="text-stone-500 text-lg">{message}</p>
-    </div>
+    </Card>
   );
 }
 

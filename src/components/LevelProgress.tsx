@@ -274,7 +274,7 @@ interface LevelMilestonesProps {
 export function LevelMilestones({ levels, currentLevel, className = '' }: LevelMilestonesProps) {
   return (
     <div className={className}>
-      <h3 className="font-display font-semibold text-stone-900 mb-4">Level Journey</h3>
+      <h3 className="font-display font-bold text-stone-900 mb-4">Level Journey</h3>
       <div className="space-y-3">
         {levels.map((level) => {
           const isComplete = currentLevel >= level.level

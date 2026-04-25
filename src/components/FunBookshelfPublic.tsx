@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { Book } from "../types";
 import { BookReactionButtons } from "./ReactionButtons";
 import { ShareBookButton } from "./ShareButton";
+import { Button, Card, SearchInput } from "./ui";
 
 function ConfettiParticles() {
   const particles = useMemo(
@@ -270,88 +271,57 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
     <div>
       {/* Filters */}
       {showFilters && (
-        <div className="mb-10 bg-white rounded-2xl shadow-sm border border-cream-300 p-5">
+        <Card variant="outlined" padding="none" className="mb-10 shadow-sm border-cream-300 p-5">
           {/* Search Bar */}
           <div className="max-w-md mx-auto mb-5">
-            <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wide mb-2">
+            <label className="block text-xs font-semibold text-stone-500 uppercase mb-2">
               🔍 Search Books
             </label>
-            <div className="relative">
-              <svg
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-              <input
-                type="text"
-                placeholder="Type a book title or author..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-12 py-3 bg-cream-50 border border-cream-300 rounded-xl text-base text-stone-700 placeholder:text-stone-400 focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:bg-white transition-all"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              )}
-            </div>
+            <SearchInput
+              placeholder="Type a book title or author..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onClear={() => setSearchQuery("")}
+              className="bg-cream-50 border-cream-300 focus:bg-white"
+            />
           </div>
 
           {/* Sort Options */}
           <div className="mb-5">
-            <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wide mb-2 text-center">
+            <label className="block text-xs font-semibold text-stone-500 uppercase mb-2 text-center">
               📊 Sort By
             </label>
             <div className="flex justify-center gap-2">
-              <button
+              <Button
                 onClick={() => setSortBy("title")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                size="sm"
+                className={`${
                   sortBy === "title"
-                    ? "bg-stone-800 text-white"
+                    ? "bg-stone-800 text-white hover:bg-stone-800"
                     : "bg-cream-100 text-stone-500 hover:bg-stone-100"
                 }`}
               >
                 A-Z
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => setSortBy("rating")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
+                size="sm"
+                icon={<span>⭐</span>}
+                iconPosition="left"
+                className={`${
                   sortBy === "rating"
-                    ? "bg-primary-500 text-white"
+                    ? ""
                     : "bg-cream-100 text-stone-500 hover:bg-primary-50 hover:text-primary-600"
                 }`}
               >
-                <span>⭐</span> Highest Rated
-              </button>
+                Highest Rated
+              </Button>
             </div>
           </div>
 
           {/* Filter Pills */}
           <div>
-            <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wide mb-2 text-center">
+            <label className="block text-xs font-semibold text-stone-500 uppercase mb-2 text-center">
               📚 Filter by Genre
             </label>
             <div
@@ -388,7 +358,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
               ))}
             </div>
           </div>
-        </div>
+        </Card>
       )}
 
       {/* Books Grid - Clean covers with fun animations */}
@@ -453,7 +423,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-3 pt-10 hidden sm:block opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     {/* Genre tag - only visible on hover */}
                     {book.genre && (
-                      <span className="inline-block px-2 py-0.5 mb-1.5 rounded-full text-[9px] font-medium bg-white/20 text-white/90 backdrop-blur-sm">
+                      <span className="inline-block px-2 py-0.5 mb-1.5 rounded-full text-xs font-medium bg-white/20 text-white/90 backdrop-blur-sm">
                         {book.genre}
                       </span>
                     )}
@@ -463,7 +433,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                         {[...Array(5)].map((_, i) => (
                           <span
                             key={i}
-                            className={`text-[10px] ${i < book.rating! ? "text-amber-300" : "text-white/30"}`}
+                            className={`text-xs ${i < book.rating! ? "text-amber-300" : "text-white/30"}`}
                           >
                             ★
                           </span>
@@ -473,7 +443,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                     <p className="text-white text-xs font-semibold leading-tight line-clamp-2 drop-shadow-lg">
                       {book.title}
                     </p>
-                    <p className="text-white/70 text-[10px] mt-1">
+                    <p className="text-white/70 text-xs mt-1">
                       {book.author}
                     </p>
                   </div>
@@ -491,15 +461,16 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
           <p className="text-stone-500 text-sm mb-4">
             Try a different search or filter
           </p>
-          <button
+          <Button
             onClick={() => {
               setSearchQuery("");
               setSelectedGenre(null);
             }}
-            className="px-5 py-2.5 bg-primary-500 text-white rounded-full font-medium text-sm hover:bg-primary-600 transition-colors"
+            size="sm"
+            className="rounded-full px-5 py-2.5"
           >
             Show All
-          </button>
+          </Button>
         </div>
       )}
 
@@ -519,8 +490,10 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
               onClick={() => setSelectedBook(null)}
             />
 
-            <motion.div
-              className="relative bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-lg max-h-[90vh] overflow-y-auto"
+            <Card
+              variant="elevated"
+              padding="none"
+              className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-xl"
               initial={{ scale: 0.9, y: 50 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 50 }}
@@ -531,7 +504,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                   <img
                     src={selectedBook.coverUrl}
                     alt={selectedBook.title}
-                    className="h-56 w-auto shadow-2xl rounded-sm"
+                    className="h-56 w-auto shadow-xl rounded-md"
                     onError={(e) => {
                       // If image fails, replace with gradient fallback
                       const target = e.currentTarget;
@@ -539,7 +512,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                       const parent = target.parentElement;
                       if (parent) {
                         const fallback = document.createElement('div');
-                        fallback.className = 'h-56 w-40 shadow-2xl flex items-center justify-center text-white p-4 rounded';
+                        fallback.className = 'h-56 w-40 shadow-xl flex items-center justify-center text-white p-4 rounded';
                         const [c1, c2] = getBookGradient(selectedBook.title);
                         fallback.style.background = `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`;
                         fallback.innerHTML = `<span class="text-xl font-bold text-center">${selectedBook.title}</span>`;
@@ -549,7 +522,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                   />
                 ) : (
                   <div
-                    className="h-56 w-40 shadow-2xl flex items-center justify-center text-white p-4 rounded"
+                    className="h-56 w-40 shadow-xl flex items-center justify-center text-white p-4 rounded"
                     style={{
                       background: `linear-gradient(135deg, ${getBookGradient(selectedBook.title)[0]} 0%, ${getBookGradient(selectedBook.title)[1]} 100%)`,
                     }}
@@ -651,7 +624,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                   />
                 </div>
               </div>
-            </motion.div>
+            </Card>
           </motion.div>
         )}
       </AnimatePresence>

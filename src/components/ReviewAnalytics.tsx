@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
+import { Card } from "./ui/Card";
 import {
   TrendingUp,
   Award,
@@ -24,7 +25,6 @@ import {
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useBooks } from "../contexts/BookContext";
-import { Card } from "./ui/Card";
 import { Badge } from "./ui/Badge";
 import type { ReviewReactions, BookReactions } from "../types";
 
@@ -244,26 +244,26 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
         </div>
 
         <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="bg-white rounded-xl p-3 text-center shadow-sm">
+          <Card variant="default" padding="sm" className="text-center">
             <p className="text-2xl font-bold text-indigo-600">
               {totalBookReactions}
             </p>
             <p className="text-xs text-stone-500">Book Reactions</p>
-          </div>
-          <div className="bg-white rounded-xl p-3 text-center shadow-sm">
+          </Card>
+          <Card variant="default" padding="sm" className="text-center">
             <p className="text-2xl font-bold text-purple-600">
               {totalReviewReactions}
             </p>
             <p className="text-xs text-stone-500">Review Reactions</p>
-          </div>
+          </Card>
         </div>
 
         {mostPopularReviews.length > 0 && mostPopularReviews[0] && (
           <div className="space-y-2">
-            <p className="text-xs font-medium text-stone-600 uppercase tracking-wide">
+            <p className="text-xs font-medium text-stone-600 uppercase">
               Top Review
             </p>
-            <div className="bg-white rounded-xl p-3 shadow-sm flex items-center gap-3">
+            <Card variant="default" padding="sm" className="flex items-center gap-3">
               <div className="flex items-center justify-center w-8 h-8 bg-amber-100 rounded-full">
                 <Award className="w-4 h-4 text-amber-600" />
               </div>
@@ -275,7 +275,7 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                   {mostPopularReviews[0].totalReviewReactions} reactions
                 </p>
               </div>
-            </div>
+            </Card>
           </div>
         )}
       </Card>

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Card } from "./Card";
 
 interface ProgressProps {
   value: number; // 0-100
@@ -165,12 +166,12 @@ export function ChallengeProgress({
   const isComplete = current >= target;
 
   return (
-    <div className={`bg-white rounded-2xl p-5 shadow-soft ${className}`}>
+    <Card variant="default" padding="md" className={className}>
       <div className="flex items-start gap-4">
         <div className="text-3xl">{icon}</div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between">
-            <h4 className="font-display font-semibold text-stone-900 truncate">
+            <h4 className="font-display font-bold text-stone-900 truncate">
               {title}
             </h4>
             {isComplete && (
@@ -203,7 +204,7 @@ export function ChallengeProgress({
           )}
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
 

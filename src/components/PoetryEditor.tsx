@@ -15,6 +15,9 @@ import {
   Palette,
   Layout,
 } from "lucide-react";
+import { Button } from "./ui/Button";
+import { Input, Textarea } from "./ui/Input";
+import { Card } from "./ui/Card";
 import type { Poem } from "../types";
 import { EmojiButton } from "./EmojiPicker";
 import GifPicker from "./GifPicker";
@@ -110,7 +113,7 @@ const BACKGROUND_THEMES = [
 
 const FONT_OPTIONS = [
   { name: "Elegant", className: "font-serif", preview: "Aa" },
-  { name: "Modern", className: "font-sans", preview: "Aa" },
+  { name: "Modern", className: "font-body", preview: "Aa" },
   { name: "Playful", className: "font-display", preview: "Aa" },
 ];
 
@@ -212,7 +215,7 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
 
       {/* Editor Container */}
       <motion.div
-        className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden bg-white rounded-3xl shadow-2xl"
+        className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden bg-white rounded-3xl shadow-xl"
         initial={{ scale: 0.9, y: 50 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 50 }}
@@ -362,20 +365,17 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
                 )}
 
                 <div className="flex items-center gap-2">
-                  <button
-                    onClick={onClose}
-                    className="px-4 py-2 text-stone-600 hover:bg-stone-200 rounded-lg transition-colors font-medium"
-                  >
+                  <Button variant="ghost" onClick={onClose}>
                     Cancel
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="primary"
                     onClick={handleSave}
                     disabled={!title.trim() || (!content.trim() && !imageUrl)}
-                    className="px-6 py-2 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-lg font-bold hover:from-violet-700 hover:to-fuchsia-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    icon={<Check className="w-4 h-4" />}
                   >
-                    <Check className="w-4 h-4" />
                     Publish
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -414,17 +414,18 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
                   )}
 
                   {/* Title Input */}
-                  <input
+                  <Input
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="Title of your poem..."
-                    className={`w-full text-3xl md:text-4xl font-display font-bold text-center bg-transparent border-none outline-none placeholder-stone-400 mb-8 ${theme.text}`}
+                    variant="outlined"
+                    className={`text-3xl md:text-4xl font-display font-bold text-center bg-transparent border-none outline-none placeholder-stone-400 mb-8 focus:ring-0 ${theme.text}`}
                   />
 
                   {/* Content Area - Image or Text */}
                   {imageUrl ? (
-                    <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg">
+                    <Card variant="elevated" padding="none" className="relative shadow-lg">
                       <img
                         src={imageUrl}
                         alt="Uploaded poem"
@@ -436,29 +437,30 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
                       >
                         <X className="w-4 h-4 text-stone-600" />
                       </button>
-                    </div>
+                    </Card>
                   ) : (
                     <div className="relative">
-                      <textarea
+                      <Textarea
                         ref={textareaRef}
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         placeholder="Start writing your poem..."
-                        className={`w-full min-h-[300px] text-xl leading-relaxed bg-transparent border-none outline-none placeholder-stone-400 resize-none ${font.className} ${theme.text} ${isBold ? "font-bold" : ""} ${isItalic ? "italic" : ""}`}
+                        variant="outlined"
+                        className={`min-h-[300px] text-xl leading-relaxed bg-transparent border-none outline-none placeholder-stone-400 focus:ring-0 ${font.className} ${theme.text} ${isBold ? "font-bold" : ""} ${isItalic ? "italic" : ""}`}
                         style={{ textAlign }}
                       />
 
                       {/* Upload option for text mode */}
                       <div className="mt-6 pt-6 border-t border-stone-200/50">
-                        <button
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           onClick={() => fileInputRef.current?.click()}
-                          className="flex items-center gap-2 text-stone-500 hover:text-violet-600 transition-colors mx-auto"
+                          icon={<Upload className="w-4 h-4" />}
+                          className="mx-auto text-stone-500 hover:text-violet-600"
                         >
-                          <Upload className="w-4 h-4" />
-                          <span className="text-sm font-medium">
-                            Or upload a handwritten poem
-                          </span>
-                        </button>
+                          Or upload a handwritten poem
+                        </Button>
                       </div>
                     </div>
                   )}
@@ -489,17 +491,17 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
                     Customize Style
                   </h2>
                 </div>
-                <button
+                <Button
+                  variant="primary"
                   onClick={() => setStep("write")}
-                  className="px-4 py-2 bg-violet-600 text-white rounded-lg font-bold hover:bg-violet-700 transition-colors"
                 >
                   Done
-                </button>
+                </Button>
               </div>
 
               {/* Theme Selection */}
               <div className="mb-8">
-                <h3 className="text-sm font-bold text-stone-700 uppercase tracking-wide mb-4 flex items-center gap-2">
+                <h3 className="text-sm font-bold text-stone-700 uppercase mb-4 flex items-center gap-2">
                   <Palette className="w-4 h-4" />
                   Background Theme
                 </h3>
@@ -525,7 +527,7 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
 
               {/* Font Selection */}
               <div className="mb-8">
-                <h3 className="text-sm font-bold text-stone-700 uppercase tracking-wide mb-4 flex items-center gap-2">
+                <h3 className="text-sm font-bold text-stone-700 uppercase mb-4 flex items-center gap-2">
                   <Type className="w-4 h-4" />
                   Font Style
                 </h3>
@@ -551,7 +553,7 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
 
               {/* Preview */}
               <div className="mt-8">
-                <h3 className="text-sm font-bold text-stone-700 uppercase tracking-wide mb-4 flex items-center gap-2">
+                <h3 className="text-sm font-bold text-stone-700 uppercase mb-4 flex items-center gap-2">
                   <Sparkles className="w-4 h-4" />
                   Preview
                 </h3>

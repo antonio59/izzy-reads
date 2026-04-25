@@ -75,6 +75,8 @@
   --color-error-200: #fecaca;
   --color-error-500: #ef4444;
   --color-error-600: #dc2626;
+  --color-error-700: #b91c1c;
+  --color-error-800: #991b1b;
 
   /* Legacy color aliases */
   --color-iris-50: #fdf2f8;
@@ -166,7 +168,7 @@
   /* Buttons */
   .btn {
     @apply inline-flex items-center justify-center gap-2 font-medium rounded-lg;
-    font-family: var(--font-display);
+    font-family: var(--font-body);
     transition: all var(--transition-base) var(--ease-default);
   }
 
@@ -229,7 +231,7 @@
 
   /* Badge */
   .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium;
   }
 
   .badge-primary {

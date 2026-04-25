@@ -15,6 +15,7 @@ import { EmptyBooks, EmptySearch } from "./ui/EmptyState";
 import { BookGrid } from "./BookGrid";
 import { BookDetailModal } from "./BookDetailModal";
 import type { Book } from "../types";
+import { Button } from "./ui/Button";
 
 const EnhancedBookshelf: React.FC = () => {
   const { books, addBook } = useBooks();
@@ -134,15 +135,17 @@ const EnhancedBookshelf: React.FC = () => {
                 : `You've read ${readBooks.length} amazing ${readBooks.length === 1 ? "book" : "books"}! 📚✨`}
             </p>
           </div>
-          <motion.button
+          <Button
+            variant="secondary"
+            size="lg"
             onClick={() => setShowSearch(true)}
-            className="bg-white text-purple-600 px-6 py-3 rounded-full font-bold hover:bg-purple-50 transition-all flex items-center gap-2 shadow-lg"
+            className="rounded-full shadow-lg font-bold text-purple-600 hover:bg-purple-50 hover:border-transparent"
+            icon={<SearchIcon className="w-5 h-5" />}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <SearchIcon className="w-5 h-5" />
             Find Books
-          </motion.button>
+          </Button>
         </div>
 
         {/* Decorative elements */}
