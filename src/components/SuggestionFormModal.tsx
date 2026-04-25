@@ -32,6 +32,8 @@ function SearchResultCover({ src, title }: { src?: string; title: string }) {
         }
       }}
       onError={() => setHasError(true)}
+      referrerPolicy="no-referrer"
+      crossOrigin="anonymous"
     />
   );
 }

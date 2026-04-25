@@ -139,6 +139,8 @@ export function BookCover({
             onLoad={handleLoad}
             onError={handleError}
             loading="lazy"
+            referrerPolicy="no-referrer"
+            crossOrigin="anonymous"
           />
         </>
       )}
