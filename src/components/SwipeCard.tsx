@@ -74,7 +74,7 @@ function SwipeCard({ book, onSwipe, isTop, onClick, exitDirection }: SwipeCardPr
         {/* Cover Image */}
         <div
           className="relative flex-shrink-0 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center cursor-pointer"
-          style={{ height: expanded ? "35%" : "55%" }}
+          style={{ height: expanded ? "30%" : "42%" }}
           onClick={() => onClick?.()}
         >
           {book.coverUrl && !imageError ? (
@@ -144,13 +144,11 @@ function SwipeCard({ book, onSwipe, isTop, onClick, exitDirection }: SwipeCardPr
           </div>
 
           {/* Description - always visible preview */}
-          {cleanDescription && (
-            <div className={`mt-3 overflow-y-auto ${expanded ? "flex-1" : "max-h-20"}`}>
-              <p className={`text-sm text-stone-600 leading-relaxed ${expanded ? "" : "line-clamp-3"}`}>
-                {cleanDescription}
-              </p>
-            </div>
-          )}
+          <div className={`mt-3 overflow-y-auto ${expanded ? "flex-1" : "max-h-28"}`}>
+            <p className={`text-sm text-stone-600 leading-relaxed ${expanded ? "" : "line-clamp-4"}`}>
+              {cleanDescription || "No description available. Tap the cover to see more details, or check it out online!"}
+            </p>
+          </div>
 
           {/* Expand/collapse toggle */}
           {cleanDescription && cleanDescription.length > 120 && (

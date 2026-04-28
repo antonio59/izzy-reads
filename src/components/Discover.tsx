@@ -14,6 +14,8 @@ import {
   Loader2,
   ArrowRight,
   ArrowLeft,
+  Info,
+  Gift,
 } from "lucide-react";
 import SwipeCard from "./SwipeCard";
 import { Button } from "./ui/Button";
@@ -118,6 +120,7 @@ function Discover() {
   const [lastSwipeDirection, setLastSwipeDirection] = useState<"left" | "right" | null>(null);
   const [selectedBook, setSelectedBook] = useState<BookCandidate | null>(null);
   const [modalImageError, setModalImageError] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const queryIndexRef = useRef(0);
   const searchQueriesRef = useRef<string[]>([]);
 
@@ -257,6 +260,102 @@ function Discover() {
 
   return (
     <div className="max-w-lg mx-auto">
+      {/* Onboarding Modal */}
+      <AnimatePresence>
+        {showOnboarding && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={() => setShowOnboarding(false)}
+            />
+            <motion.div
+              className="relative bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden"
+              initial={{ scale: 0.9, y: 30 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 30 }}
+            >
+              {/* Header */}
+              <div className="bg-gradient-to-br from-primary-400 to-accent-400 p-6 text-center">
+                <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Compass className="w-7 h-7 text-white" />
+                </div>
+                <h2 className="text-xl font-bold text-white">Discover New Books</h2>
+                <p className="text-white/80 text-sm mt-1">Find your next adventure, Izzy!</p>
+              </div>
+
+              {/* Steps */}
+              <div className="p-6 space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                    <Heart className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-stone-800 text-sm">Swipe Right = Want It!</p>
+                    <p className="text-xs text-stone-500 mt-0.5">
+                      Books you like are saved to your wishlist automatically
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                    <X className="w-4 h-4 text-red-500" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-stone-800 text-sm">Swipe Left = Pass</p>
+                    <p className="text-xs text-stone-500 mt-0.5">
+                      Not interested? Swipe left and we won't show it again
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+                    <Info className="w-4 h-4 text-primary-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-stone-800 text-sm">Tap for Details</p>
+                    <p className="text-xs text-stone-500 mt-0.5">
+                      Tap a book cover to read the full description before deciding
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-accent-100 flex items-center justify-center flex-shrink-0">
+                    <Gift className="w-4 h-4 text-accent-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-stone-800 text-sm">Safe for You</p>
+                    <p className="text-xs text-stone-500 mt-0.5">
+                      We only show books that are appropriate for readers your age
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div className="px-6 pb-6">
+                <Button
+                  fullWidth
+                  size="lg"
+                  variant="primary"
+                  onClick={() => setShowOnboarding(false)}
+                >
+                  <Sparkles className="w-4 h-4" />
+                  Got it!
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
@@ -269,6 +368,13 @@ function Discover() {
               Find your next favourite book, Izzy
             </p>
           </div>
+          <button
+            onClick={() => setShowOnboarding(true)}
+            className="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center transition-colors"
+            title="How Discover works"
+          >
+            <Info className="w-4 h-4 text-stone-500" />
+          </button>
         </div>
 
         {/* Stats bar */}
