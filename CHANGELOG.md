@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Professional placeholder design for missing covers
 - Detect blank placeholder covers via canvas pixel analysis
 - Remove crossOrigin attribute and relax cover validation
 - Detect Google Books placeholder images by aspect ratio
@@ -587,6 +588,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
