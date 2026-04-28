@@ -536,6 +536,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- Remove dead code and update dependencies
 - **deps-dev**: Bump the tailwind group across 1 directory with 2 updates (#113)
 - Remove package-lock.json from git tracking
 - **deps**: Bump resend from 6.10.0 to 6.12.0 (#108)
@@ -581,6 +582,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
