@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { BookOpen, Mail, LogIn, AlertCircle, Info } from "lucide-react";
+import { BookOpen, Mail, LogIn, AlertCircle, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";
@@ -27,88 +27,63 @@ const Login = () => {
       const message =
         err instanceof Error
           ? err.message
-          : "Failed to sign in. Please try again.";
+          : "Unable to sign in. Please check your credentials.";
       setError(message);
     } finally {
       setLoading(false);
     }
   };
 
-  const isNoAccountError =
-    error.toLowerCase().includes("no account") ||
-    error.toLowerCase().includes("sign up");
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-cream-100 via-primary-50 to-accent-50 flex items-center justify-center p-4">
       <motion.div
         className="max-w-md w-full"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Logo/Header */}
+        {/* Logo / Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-block">
             <motion.div
-              className="w-20 h-20 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-4 shadow-lg"
-              whileHover={{ scale: 1.05, rotate: 5 }}
+              className="w-20 h-20 mx-auto bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg"
+              whileHover={{ scale: 1.05, rotate: -3 }}
             >
               <BookOpen className="w-10 h-10 text-white" />
             </motion.div>
-            <h1 className="text-4xl font-display font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Izzy's Bookshelf
+            <h1 className="text-3xl font-display font-bold text-stone-800">
+              Welcome back, Izzy!
             </h1>
           </Link>
-          <p className="text-stone-600 mt-2">
-            Welcome back! Sign in to continue
+          <p className="text-stone-500 mt-2 flex items-center justify-center gap-1.5">
+            <Sparkles className="w-4 h-4 text-accent-500" />
+            Ready to dive into your next adventure?
           </p>
         </div>
 
         {/* Login Form */}
-        <Card variant="elevated" padding="lg" className="shadow-xl">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <Card variant="elevated" padding="lg" className="shadow-xl border border-cream-300">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
               <motion.div
-                className={`rounded-lg p-4 flex items-start gap-3 ${
-                  isNoAccountError
-                    ? "bg-blue-50 border border-blue-200"
-                    : "bg-red-50 border border-red-200"
-                }`}
+                className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                {isNoAccountError ? (
-                  <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                ) : (
-                  <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                )}
-                <div>
-                  <p
-                    className={`text-sm ${isNoAccountError ? "text-blue-800" : "text-red-800"}`}
-                  >
-                    {error}
-                  </p>
-                  {isNoAccountError && (
-                    <Link
-                      to="/signup"
-                      className="text-sm text-blue-600 hover:text-blue-700 font-semibold mt-1 inline-block"
-                    >
-                      Create an account now →
-                    </Link>
-                  )}
-                </div>
+                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-red-800">{error}</p>
               </motion.div>
             )}
 
             <Input
-              label="Email Address"
+              label="Email"
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              placeholder="you@example.com"
+              placeholder="izzy@example.com"
               icon={<Mail className="w-5 h-5" />}
             />
 
@@ -119,7 +94,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              placeholder="••••••••"
+              placeholder="Your secret code"
             />
 
             <Button
@@ -141,37 +116,27 @@ const Login = () => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-stone-600">
-              Don't have an account?{" "}
-              <Link
-                to="/signup"
-                className="text-purple-600 hover:text-purple-700 font-semibold"
-              >
-                Sign up
-              </Link>
-            </p>
-          </div>
-
-          <div className="mt-4 text-center">
-            <Link to="/" className="text-sm text-stone-500 hover:text-stone-700">
-              ← Back to public portfolio
+            <Link
+              to="/"
+              className="text-sm text-stone-500 hover:text-primary-600 font-medium transition-colors"
+            >
+              Back to Izzy's Bookshelf
             </Link>
           </div>
         </Card>
 
-        {/* Demo hint */}
+        {/* Warm footer */}
         <motion.div
-          className="mt-4 text-center"
+          className="mt-6 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: 0.4 }}
         >
           <p className="text-sm text-stone-500">
-            First time here?{" "}
-            <Link to="/signup" className="text-purple-600 font-medium">
-              Create your account
-            </Link>{" "}
-            to start your reading adventure!
+            This is Izzy's personal space. Only she can sign in here.
+          </p>
+          <p className="text-xs text-stone-400 mt-1.5">
+            Keep reading, keep dreaming
           </p>
         </motion.div>
       </motion.div>

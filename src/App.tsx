@@ -26,7 +26,6 @@ import { MotionPreferenceProvider } from "./contexts/MotionPreferenceContext";
 
 // Lazy load auth pages
 const Login = lazy(() => import("./components/Login"));
-const Signup = lazy(() => import("./components/Signup"));
 
 // Lazy load poem detail page
 const PoemDetail = lazy(() => import("./components/PoemDetail"));
@@ -159,13 +158,7 @@ function App() {
                     />
                     <Route
                       path="/signup"
-                      element={
-                        <AuthLayout>
-                          <Suspense fallback={<PageLoader />}>
-                            <Signup />
-                          </Suspense>
-                        </AuthLayout>
-                      }
+                      element={<Navigate to="/login" replace />}
                     />
 
                     {/* NEW SIMPLIFIED PROTECTED ROUTES */}
