@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   BookOpen,
@@ -12,14 +12,12 @@ import {
   BarChart3,
   Activity,
 } from "lucide-react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import OnboardingTour from "./OnboardingTour";
 import { useBooks } from "../contexts/BookContext";
 import { useUser } from "../contexts/UserContext";
 import { getWeeklyQuote } from "../utils/readingQuotes";
 import { Card, StatCard } from "./ui/Card";
-import { Button } from "./ui/Button";
 import { StreakBadge } from "./ui/Badge";
 import { ChallengeProgress } from "./ui/Progress";
 import { StaggerContainer, StaggerItem } from "./PageTransition";
@@ -47,32 +45,8 @@ const Dashboard: React.FC = () => {
   const { books, wishlist, readingChallenges, readingStats } = useBooks();
   const reactionStats = useQuery(api.reactions.getAllBookReactionStats);
   const { user, updateUserProfile } = useUser();
-  const userProfile = useQuery(api.users.getCurrentProfile);
-  const setOnboardingSeen = useMutation(api.users.setOnboardingSeen);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [showAvatarCreator, setShowAvatarCreator] = useState(false);
-  const [showTour, setShowTour] = useState(false);
-
-  // Show onboarding on first visit (sync during render to avoid effect setState)
-  const shouldShowOnboarding =
-    userProfile !== undefined &&
-    userProfile !== null &&
-    userProfile.hasSeenOnboarding !== true &&
-    !showTour;
-
-  if (shouldShowOnboarding && !showTour) {
-    setShowTour(true);
-  }
-
-  const handleTourComplete = useCallback(async () => {
-    setShowTour(false);
-    await setOnboardingSeen();
-  }, [setOnboardingSeen]);
-
-  const handleTourSkip = useCallback(async () => {
-    setShowTour(false);
-    await setOnboardingSeen();
-  }, [setOnboardingSeen]);
 
   // Get avatar from user profile or use default
   const userAvatar: AvatarConfig = user?.avatar || {
@@ -221,15 +195,6 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => setShowTour(true)}
-                title="Take the tour again"
-                icon={<Sparkles className="w-4 h-4" />}
-              >
-                Tour
-              </Button>
               <StreakBadge days={readingStats.readingStreak} />
             </div>
           </div>
@@ -429,14 +394,6 @@ const Dashboard: React.FC = () => {
           </motion.div>
         </div>
       </div>
-
-      {/* Onboarding Tour */}
-      {showTour && (
-        <OnboardingTour
-          onComplete={handleTourComplete}
-          onSkip={handleTourSkip}
-        />
-      )}
 
       {/* Book Detail Modal */}
       {selectedBook && (
