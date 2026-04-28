@@ -692,7 +692,6 @@ const PublicPortfolio = () => {
                         <BookCoverImage
                           book={book}
                           className="w-full h-full"
-                          fallbackEmoji="🎁"
                         />
 
                         {/* Wishlist badge */}

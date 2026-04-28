@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
+import { BookOpen } from "lucide-react";
 import type { Book } from "../../types";
 
 function getBookGradient(title: string): [string, string] {
@@ -22,7 +23,6 @@ function getBookGradient(title: string): [string, string] {
 interface BookCoverImageProps {
   book: Book;
   className?: string;
-  fallbackEmoji?: string;
 }
 
 function isLikelyInvalidCover(url: string | undefined): boolean {
@@ -47,91 +47,18 @@ function isLikelyInvalidCover(url: string | undefined): boolean {
   return false;
 }
 
-/**
- * Check if a loaded image is a "blank" placeholder by sampling pixel brightness.
- * This runs asynchronously on a separate image with crossOrigin to avoid
- * tainting issues. If CORS blocks the check, we conservatively return false
- * (assume valid) so we never falsely reject covers.
- */
-function checkIsBlankPlaceholder(url: string): Promise<boolean> {
-  return new Promise((resolve) => {
-    const testImg = new Image();
-    testImg.crossOrigin = "anonymous";
-
-    testImg.onload = () => {
-      try {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d", { willReadFrequently: true });
-        if (!ctx) {
-          resolve(false);
-          return;
-        }
-
-        // Sample a 20x20 grid from the center of the image
-        const sampleW = 20;
-        const sampleH = 20;
-        const sx = Math.max(0, Math.floor((testImg.naturalWidth - sampleW) / 2));
-        const sy = Math.max(0, Math.floor((testImg.naturalHeight - sampleH) / 2));
-        const sw = Math.min(sampleW, testImg.naturalWidth);
-        const sh = Math.min(sampleH, testImg.naturalHeight);
-
-        canvas.width = sw;
-        canvas.height = sh;
-        ctx.drawImage(testImg, sx, sy, sw, sh, 0, 0, sw, sh);
-
-        const imageData = ctx.getImageData(0, 0, sw, sh);
-        const pixels = imageData.data;
-
-        let lightPixelCount = 0;
-        let totalSampled = 0;
-
-        // Sample every 4th pixel for performance
-        for (let i = 0; i < pixels.length; i += 16) {
-          const r = pixels[i];
-          const g = pixels[i + 1];
-          const b = pixels[i + 2];
-          const brightness = (r + g + b) / 3;
-
-          // Count pixels that are very light (>235/255 = ~92% white)
-          if (brightness > 235) {
-            lightPixelCount++;
-          }
-          totalSampled++;
-        }
-
-        // If >85% of sampled pixels are very light, it's likely a blank placeholder
-        const isBlank = totalSampled > 0 && lightPixelCount / totalSampled > 0.85;
-        resolve(isBlank);
-      } catch {
-        // Canvas tainted or other error - conservatively assume valid
-        resolve(false);
-      }
-    };
-
-    testImg.onerror = () => {
-      // CORS or load error on test image - conservatively assume valid
-      resolve(false);
-    };
-
-    // Add cache-buster to avoid cached CORS issues
-    testImg.src = url + (url.includes("?") ? "&" : "?") + "_cb=1";
-  });
-}
-
 export function BookCoverImage({
   book,
   className = "",
-  fallbackEmoji = "📖",
 }: BookCoverImageProps) {
   const [hasError, setHasError] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
-  const [isBlankPlaceholder, setIsBlankPlaceholder] = useState(false);
   const [color1, color2] = getBookGradient(book.title);
 
-  const showFallback = !book.coverUrl || hasError || isLikelyInvalidCover(book.coverUrl) || isBlankPlaceholder;
+  const showFallback = !book.coverUrl || hasError || isLikelyInvalidCover(book.coverUrl);
 
   const handleLoad = useCallback(
-    async (e: React.SyntheticEvent<HTMLImageElement>) => {
+    (e: React.SyntheticEvent<HTMLImageElement>) => {
       const img = e.currentTarget;
       const { naturalWidth, naturalHeight } = img;
 
@@ -155,22 +82,8 @@ export function BookCoverImage({
       }
 
       setHasLoaded(true);
-
-      // Secondary async check: detect blank placeholder images
-      // (e.g., Google Books "image not available" white placeholder)
-      // This runs in parallel and won't block rendering
-      if (book.coverUrl) {
-        try {
-          const isBlank = await checkIsBlankPlaceholder(book.coverUrl);
-          if (isBlank) {
-            setIsBlankPlaceholder(true);
-          }
-        } catch {
-          // Ignore errors - conservatively keep the image
-        }
-      }
     },
-    [book.coverUrl],
+    [],
   );
 
   return (
@@ -201,25 +114,28 @@ export function BookCoverImage({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="w-full h-full flex flex-col items-center justify-center p-4 text-white"
+          className="w-full h-full flex flex-col items-center justify-center p-5 text-center"
           style={{
-            background: `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`,
+            background: `linear-gradient(180deg, #f5f5f4 0%, #e7e5e4 100%)`,
+            border: "1px solid #d6d3d1",
           }}
         >
-          <motion.span
-            className="text-4xl mb-3"
-            animate={{ rotate: [0, -10, 10, 0] }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              repeatDelay: 3,
-            }}
-          >
-            {fallbackEmoji}
-          </motion.span>
-          <span className="text-sm font-bold text-center leading-tight line-clamp-3">
-            {book.title}
-          </span>
+          <div className="flex-1 flex flex-col items-center justify-center w-full">
+            <BookOpen className="w-10 h-10 text-stone-400 mb-3" strokeWidth={1.5} />
+            <p className="text-sm font-semibold text-stone-700 leading-snug line-clamp-3 max-w-full">
+              {book.title}
+            </p>
+            {book.author && (
+              <p className="text-xs text-stone-500 mt-1.5 line-clamp-1 max-w-full">
+                {book.author}
+              </p>
+            )}
+          </div>
+          <div className="w-full pt-3 mt-2 border-t border-stone-300/60">
+            <p className="text-[10px] uppercase tracking-wider text-stone-400 font-medium">
+              No cover available
+            </p>
+          </div>
         </motion.div>
       )}
     </div>

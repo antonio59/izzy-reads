@@ -213,7 +213,7 @@ const PublicWishlist = () => {
                       }}
                       style={{ transformStyle: "preserve-3d" }}
                     >
-                      <BookCoverImage book={book} className="w-full h-full" fallbackEmoji="🎁" />
+                      <BookCoverImage book={book} className="w-full h-full" />
 
                       {/* Bought overlay */}
                       {book.boughtBy ? (
@@ -305,7 +305,7 @@ const PublicWishlist = () => {
               {/* Cover */}
               <div className="relative h-72 bg-gradient-to-br from-cream-100 to-cream-200 flex items-center justify-center p-6">
                 <div className="h-56 w-40 shadow-xl rounded-md overflow-hidden">
-                  <BookCoverImage book={selectedBook} className="w-full h-full" fallbackEmoji="🎁" />
+                  <BookCoverImage book={selectedBook} className="w-full h-full" />
                 </div>
 
                 {/* Wishlist badge */}

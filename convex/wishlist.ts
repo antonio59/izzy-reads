@@ -129,3 +129,39 @@ export const remove = mutation({
     await ctx.db.delete(args.id);
   },
 });
+
+// Bulk update cover URLs - admin only
+export const bulkUpdateCovers = mutation({
+  args: {
+    updates: v.array(
+      v.object({
+        wishlistId: v.id("wishlist"),
+        coverUrl: v.string(),
+      }),
+    ),
+  },
+  handler: async (ctx, { updates }) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    const results = [];
+    for (const update of updates) {
+      const item = await ctx.db.get(update.wishlistId);
+      if (!item) {
+        results.push({ id: update.wishlistId, error: "Not found" });
+        continue;
+      }
+
+      await ctx.db.patch(update.wishlistId, { coverUrl: update.coverUrl });
+      results.push({
+        id: update.wishlistId,
+        title: item.title,
+        oldUrl: item.coverUrl,
+        newUrl: update.coverUrl,
+      });
+    }
+    return results;
+  },
+});
