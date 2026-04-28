@@ -94,6 +94,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Fix incomplete URL substring sanitization (CodeQL #30-31)
 - Merge branch 'main' of https://github.com/antonio59/izzy-reads
 - Merge branch 'main' of https://github.com/antonio59/izzy-reads
 - Merge branch 'main' of https://github.com/antonio59/izzy-reads
@@ -590,6 +591,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
