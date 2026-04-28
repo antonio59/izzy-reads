@@ -91,6 +91,18 @@ export const getExistingBookKeys = query({
   },
 });
 
+// Keywords that indicate content is NOT appropriate for readers under 13
+const ADULT_CONTENT_KEYWORDS = [
+  "erotica", "adult fiction", "mature", "sexual", "explicit",
+  "graphic novels - adult", "adult content", "nsfw", "pornographic",
+  "erotic romance", "adult only", "18+", "xxx", "adult themes",
+];
+
+function isAgeAppropriateBackend(categories: string[], title: string): boolean {
+  const allText = [...categories, title].join(" ").toLowerCase();
+  return !ADULT_CONTENT_KEYWORDS.some((kw) => allText.includes(kw.toLowerCase()));
+}
+
 async function fetchFromGoogleBooks(query: string, startIndex: number, apiKey?: string): Promise<any[]> {
   try {
     const keyParam = apiKey ? `&key=${apiKey}` : "";
@@ -110,38 +122,40 @@ async function fetchFromGoogleBooks(query: string, startIndex: number, apiKey?: 
       return [];
     }
 
-    return (data.items ?? []).map((item: Record<string, any>) => {
-      const imageLinks = item.volumeInfo?.imageLinks ?? {};
-      const rawCoverUrl = (
-        imageLinks.extraLarge ??
-        imageLinks.large ??
-        imageLinks.medium ??
-        imageLinks.thumbnail ??
-        imageLinks.smallThumbnail ??
-        ""
-      ).replace("http://", "https://");
+    return (data.items ?? [])
+      .map((item: Record<string, any>) => {
+        const imageLinks = item.volumeInfo?.imageLinks ?? {};
+        const rawCoverUrl = (
+          imageLinks.extraLarge ??
+          imageLinks.large ??
+          imageLinks.medium ??
+          imageLinks.thumbnail ??
+          imageLinks.smallThumbnail ??
+          ""
+        ).replace("http://", "https://");
 
-      let coverUrl = rawCoverUrl;
-      try {
-        if (rawCoverUrl) {
-          const u = new URL(rawCoverUrl);
-          if (u.hostname === "books.google.com" || u.hostname.endsWith(".books.google.com")) {
-            u.searchParams.set("zoom", "3");
-            coverUrl = u.toString();
+        let coverUrl = rawCoverUrl;
+        try {
+          if (rawCoverUrl) {
+            const u = new URL(rawCoverUrl);
+            if (u.hostname === "books.google.com" || u.hostname.endsWith(".books.google.com")) {
+              u.searchParams.set("zoom", "3");
+              coverUrl = u.toString();
+            }
           }
-        }
-      } catch { /* leave as-is */ }
+        } catch { /* leave as-is */ }
 
-      return {
-        googleBookId: item.id as string,
-        title: (item.volumeInfo?.title as string) || "Unknown Title",
-        author: ((item.volumeInfo?.authors as string[]) ?? []).join(", ") || "Unknown Author",
-        coverUrl,
-        pageCount: (item.volumeInfo?.pageCount as number) ?? 0,
-        description: (item.volumeInfo?.description as string) ?? "",
-        categories: (item.volumeInfo?.categories as string[]) ?? [],
-      };
-    });
+        return {
+          googleBookId: item.id as string,
+          title: (item.volumeInfo?.title as string) || "Unknown Title",
+          author: ((item.volumeInfo?.authors as string[]) ?? []).join(", ") || "Unknown Author",
+          coverUrl,
+          pageCount: (item.volumeInfo?.pageCount as number) ?? 0,
+          description: (item.volumeInfo?.description as string) ?? "",
+          categories: (item.volumeInfo?.categories as string[]) ?? [],
+        };
+      })
+      .filter((book: any) => isAgeAppropriateBackend(book.categories ?? [], book.title));
   } catch (err) {
     console.error("Google Books fetch failed:", err);
     return [];
@@ -173,7 +187,8 @@ async function fetchFromOpenLibrary(query: string, limit: number): Promise<any[]
         pageCount: doc.number_of_pages_median ?? 0,
         description: doc.first_sentence?.[0] ?? "",
         categories: doc.subject?.slice(0, 3) ?? [],
-      }));
+      }))
+      .filter((book: any) => isAgeAppropriateBackend(book.categories ?? [], book.title));
   } catch (err) {
     console.error("OpenLibrary fetch failed:", err);
     return [];

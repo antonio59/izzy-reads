@@ -12,6 +12,10 @@ import {
   BookOpen,
   TrendingUp,
   Loader2,
+  ArrowRight,
+  ArrowLeft,
+  Gift,
+  Info,
 } from "lucide-react";
 import SwipeCard from "./SwipeCard";
 import { Button } from "./ui/Button";
@@ -47,6 +51,18 @@ function mapCategoryToGenre(categories: string[]): string {
     }
   }
   return "Other";
+}
+
+// Keywords that indicate content is NOT appropriate for a 12-year-old
+const INAPPROPRIATE_KEYWORDS = [
+  "erotica", "adult fiction", "mature", "sexual", "explicit",
+  "graphic novels - adult", "adult content", "nsfw", "pornographic",
+  "erotic romance", "adult only", "18+", "xxx",
+];
+
+function isAgeAppropriate(categories: string[], title: string): boolean {
+  const allText = [...categories, title].join(" ").toLowerCase();
+  return !INAPPROPRIATE_KEYWORDS.some((kw) => allText.includes(kw));
 }
 
 interface BookCandidate {
@@ -101,8 +117,12 @@ function Discover() {
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
   const [lastSwipeAction, setLastSwipeAction] = useState<"liked" | "passed" | null>(null);
+  const [lastSwipeDirection, setLastSwipeDirection] = useState<"left" | "right" | null>(null);
   const [selectedBook, setSelectedBook] = useState<BookCandidate | null>(null);
   const [modalImageError, setModalImageError] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    return localStorage.getItem("izzy_discover_onboarding_seen") !== "true";
+  });
   const queryIndexRef = useRef(0);
   const searchQueriesRef = useRef<string[]>([]);
 
@@ -150,7 +170,8 @@ function Discover() {
             !existingSet.has(bookKey) &&
             !candidates.some((c) => c.googleBookId === result.googleBookId) &&
             !newCandidates.some((c) => c.googleBookId === result.googleBookId) &&
-            result.title !== "Unknown Title"
+            result.title !== "Unknown Title" &&
+            isAgeAppropriate(result.categories ?? [], result.title)
           ) {
             newCandidates.push({
               googleBookId: result.googleBookId,
@@ -192,6 +213,7 @@ function Discover() {
       if (!book) return;
 
       const action = direction === "right" ? "liked" : "passed";
+      setLastSwipeDirection(direction);
       setLastSwipeAction(action);
 
       // Remove from stack immediately
@@ -209,7 +231,10 @@ function Discover() {
         action,
       });
 
-      setTimeout(() => setLastSwipeAction(null), 1500);
+      setTimeout(() => {
+        setLastSwipeAction(null);
+        setLastSwipeDirection(null);
+      }, 1500);
     },
     [candidates, recordSwipe]
   );
@@ -237,18 +262,130 @@ function Discover() {
 
   return (
     <div className="max-w-lg mx-auto">
+      {/* Onboarding Modal */}
+      <AnimatePresence>
+        {showOnboarding && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={() => {
+                setShowOnboarding(false);
+                localStorage.setItem("izzy_discover_onboarding_seen", "true");
+              }}
+            />
+            <motion.div
+              className="relative bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden"
+              initial={{ scale: 0.9, y: 30 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 30 }}
+            >
+              {/* Header */}
+              <div className="bg-gradient-to-br from-primary-400 to-accent-400 p-6 text-center">
+                <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Compass className="w-7 h-7 text-white" />
+                </div>
+                <h2 className="text-xl font-bold text-white">Discover New Books</h2>
+                <p className="text-white/80 text-sm mt-1">Find your next adventure!</p>
+              </div>
+
+              {/* Steps */}
+              <div className="p-6 space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                    <Heart className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-stone-800 text-sm">Swipe Right = Want It!</p>
+                    <p className="text-xs text-stone-500 mt-0.5">
+                      Books you like are saved to your wishlist automatically
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                    <X className="w-4 h-4 text-red-500" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-stone-800 text-sm">Swipe Left = Pass</p>
+                    <p className="text-xs text-stone-500 mt-0.5">
+                      Not interested? Swipe left and we won't show it again
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+                    <Info className="w-4 h-4 text-primary-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-stone-800 text-sm">Tap for Details</p>
+                    <p className="text-xs text-stone-500 mt-0.5">
+                      Tap a book cover to read the full description before deciding
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-accent-100 flex items-center justify-center flex-shrink-0">
+                    <Gift className="w-4 h-4 text-accent-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-stone-800 text-sm">Safe for You</p>
+                    <p className="text-xs text-stone-500 mt-0.5">
+                      We only show books that are appropriate for readers your age
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div className="px-6 pb-6">
+                <Button
+                  fullWidth
+                  size="lg"
+                  variant="primary"
+                  onClick={() => {
+                    setShowOnboarding(false);
+                    localStorage.setItem("izzy_discover_onboarding_seen", "true");
+                  }}
+                >
+                  <Sparkles className="w-4 h-4" />
+                  Start Discovering!
+                </Button>
+                <p className="text-center text-[10px] text-stone-400 mt-2">
+                  You can see these tips again by tapping the "?" icon at the top
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-400 to-accent-400 flex items-center justify-center">
             <Compass className="w-5 h-5 text-white" />
           </div>
-          <div>
+          <div className="flex-1">
             <h1 className="text-2xl font-bold text-stone-800">Discover</h1>
             <p className="text-sm text-stone-500">
               Swipe to find your next read
             </p>
           </div>
+          <button
+            onClick={() => setShowOnboarding(true)}
+            className="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center transition-colors"
+            title="How Discover works"
+          >
+            <Info className="w-4 h-4 text-stone-500" />
+          </button>
         </div>
 
         {/* Stats bar */}
@@ -357,6 +494,7 @@ function Discover() {
                 book={book}
                 onSwipe={handleSwipe}
                 isTop={index === 0}
+                exitDirection={index === 0 ? lastSwipeDirection : null}
                 onClick={() => {
                   setModalImageError(false);
                   setSelectedBook(book);
@@ -369,9 +507,20 @@ function Discover() {
 
       {/* Hint */}
       {candidates.length > 0 && (
-        <p className="text-center text-xs text-stone-400 mt-4">
-          Swipe or use the buttons. Right = want it, Left = pass.
-        </p>
+        <div className="text-center mt-4 space-y-1">
+          <p className="text-xs text-stone-400 flex items-center justify-center gap-3">
+            <span className="flex items-center gap-1">
+              <ArrowLeft className="w-3 h-3" /> Pass
+            </span>
+            <span className="text-stone-300">|</span>
+            <span className="flex items-center gap-1">
+              Want it <ArrowRight className="w-3 h-3" />
+            </span>
+          </p>
+          <p className="text-[10px] text-stone-400">
+            Books you like go straight to your wishlist
+          </p>
+        </div>
       )}
 
       {/* Book Detail Modal */}

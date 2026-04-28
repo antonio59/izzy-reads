@@ -22,11 +22,12 @@ interface SwipeCardProps {
   onSwipe: (direction: "left" | "right") => void;
   isTop: boolean;
   onClick?: () => void;
+  exitDirection?: "left" | "right" | null;
 }
 
 const SWIPE_THRESHOLD = 120;
 
-function SwipeCard({ book, onSwipe, isTop, onClick }: SwipeCardProps) {
+function SwipeCard({ book, onSwipe, isTop, onClick, exitDirection }: SwipeCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const x = useMotionValue(0);
@@ -50,6 +51,9 @@ function SwipeCard({ book, onSwipe, isTop, onClick }: SwipeCardProps) {
       })()
     : "";
 
+  // Exit animation direction: pass goes left, like goes right
+  const exitX = exitDirection === "left" ? -300 : 300;
+
   return (
     <motion.div
       className={`absolute inset-0 ${isTop ? "z-10 cursor-grab active:cursor-grabbing" : "z-0"}`}
@@ -61,7 +65,7 @@ function SwipeCard({ book, onSwipe, isTop, onClick }: SwipeCardProps) {
       initial={{ scale: isTop ? 1 : 0.95, opacity: isTop ? 1 : 0.7 }}
       animate={{ scale: isTop ? 1 : 0.95, opacity: isTop ? 1 : 0.7 }}
       exit={{
-        x: 300,
+        x: exitX,
         opacity: 0,
         transition: { duration: 0.3 },
       }}
@@ -118,26 +122,11 @@ function SwipeCard({ book, onSwipe, isTop, onClick }: SwipeCardProps) {
 
         {/* Book Info */}
         <div className="flex-1 p-5 flex flex-col min-h-0">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <h3 className="text-xl font-bold text-stone-800 leading-tight truncate">
-                {book.title}
-              </h3>
-              <p className="text-sm text-stone-500 mt-1 truncate">{book.author}</p>
-            </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setExpanded(!expanded);
-              }}
-              className="flex-shrink-0 p-1.5 rounded-lg hover:bg-stone-100 transition-colors"
-            >
-              {expanded ? (
-                <ChevronUp className="w-5 h-5 text-stone-400" />
-              ) : (
-                <ChevronDown className="w-5 h-5 text-stone-400" />
-              )}
-            </button>
+          <div className="min-w-0">
+            <h3 className="text-xl font-bold text-stone-800 leading-tight line-clamp-2">
+              {book.title}
+            </h3>
+            <p className="text-sm text-stone-500 mt-1">by {book.author}</p>
           </div>
 
           {/* Tags */}
@@ -154,13 +143,34 @@ function SwipeCard({ book, onSwipe, isTop, onClick }: SwipeCardProps) {
             )}
           </div>
 
-          {/* Description (expandable) */}
+          {/* Description - always visible preview */}
           {cleanDescription && (
-            <div className={`mt-3 overflow-y-auto ${expanded ? "flex-1" : "max-h-16"}`}>
+            <div className={`mt-3 overflow-y-auto ${expanded ? "flex-1" : "max-h-20"}`}>
               <p className={`text-sm text-stone-600 leading-relaxed ${expanded ? "" : "line-clamp-3"}`}>
                 {cleanDescription}
               </p>
             </div>
+          )}
+
+          {/* Expand/collapse toggle */}
+          {cleanDescription && cleanDescription.length > 120 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setExpanded(!expanded);
+              }}
+              className="mt-2 self-start flex items-center gap-1 text-xs text-primary-600 hover:text-primary-700 font-medium transition-colors"
+            >
+              {expanded ? (
+                <>
+                  <ChevronUp className="w-4 h-4" /> Show less
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="w-4 h-4" /> Read more
+                </>
+              )}
+            </button>
           )}
         </div>
 
