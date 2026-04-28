@@ -76,7 +76,21 @@ async function checkCoverDimensions(url) {
 
 function isGoogleBooksPlaceholder(url) {
   if (!url) return false;
-  return url.includes("books.google.com") || url.includes("books.googleapis.com");
+  try {
+    const parsed = new URL(url);
+    const hostname = parsed.hostname.toLowerCase();
+    // Use proper hostname checking instead of substring matching
+    // to avoid bypasses like evil-books.google.com or books.google.com.evil.com
+    return (
+      hostname === "books.google.com" ||
+      hostname === "books.googleapis.com" ||
+      hostname.endsWith(".books.google.com") ||
+      hostname.endsWith(".books.googleapis.com")
+    );
+  } catch {
+    // Invalid URL, treat as not Google Books
+    return false;
+  }
 }
 
 async function main() {
