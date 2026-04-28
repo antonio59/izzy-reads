@@ -640,6 +640,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 - Update README and CHANGELOG for v1.1.0
 - Add guide for closing Dependabot PRs
 - Add final project summary
@@ -656,6 +657,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Features
 
+- Discover page UX overhaul - age filtering, onboarding, swipe fixes
 - Redesign login page for Izzy only, remove signup
 - Add adminPatchCover mutation for CLI cover updates
 - Complete design system migration to shared UI primitives
