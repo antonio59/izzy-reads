@@ -55,73 +55,13 @@ export async function searchBooks(
 }
 
 /**
- * Search books specifically by ISBN
- */
-export async function searchByISBN(isbn: string): Promise<OpenLibraryBook[]> {
-  try {
-    const response = await fetch(
-      `${BASE_URL}/search.json?isbn=${encodeURIComponent(isbn)}`,
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to search by ISBN");
-    }
-
-    const data = await response.json();
-    return data.docs || [];
-  } catch (error) {
-    console.error("Error searching by ISBN:", error);
-    return [];
-  }
-}
-
-/**
  * Get book cover URL by cover ID
  */
-export function getCoverUrl(
+function getCoverUrl(
   coverId: number,
   size: "S" | "M" | "L" = "M",
 ): string {
   return `${COVER_URL}/id/${coverId}-${size}.jpg`;
-}
-
-/**
- * Get book cover URL by ISBN
- */
-export function getCoverByISBN(
-  isbn: string,
-  size: "S" | "M" | "L" = "M",
-): string {
-  return `${COVER_URL}/isbn/${isbn}-${size}.jpg`;
-}
-
-interface OpenLibraryBookDetails {
-  key: string;
-  title: string;
-  description?: string | { value: string };
-  covers?: number[];
-  subjects?: string[];
-  authors?: { key: string }[];
-}
-
-/**
- * Get detailed book information by Open Library ID
- */
-export async function getBookDetails(
-  bookKey: string,
-): Promise<OpenLibraryBookDetails | null> {
-  try {
-    const response = await fetch(`${BASE_URL}${bookKey}.json`);
-
-    if (!response.ok) {
-      throw new Error("Failed to get book details");
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Error getting book details:", error);
-    return null;
-  }
 }
 
 /**
@@ -142,57 +82,6 @@ export function convertToBookFormat(book: OpenLibraryBook): BookDetails {
     publisher: book.publisher?.[0],
     subjects: book.subject?.slice(0, 5), // Limit to 5 subjects
   };
-}
-
-/**
- * Get book description from work details
- */
-export async function getBookDescription(workKey: string): Promise<string> {
-  try {
-    const response = await fetch(`${BASE_URL}${workKey}.json`);
-
-    if (!response.ok) {
-      return "";
-    }
-
-    const data = await response.json();
-
-    // Description can be a string or an object with value property
-    if (typeof data.description === "string") {
-      return data.description;
-    } else if (data.description?.value) {
-      return data.description.value;
-    }
-
-    return "";
-  } catch (error) {
-    console.error("Error getting book description:", error);
-    return "";
-  }
-}
-
-/**
- * Get recommended books for children by genre
- */
-export async function getChildrenBooks(
-  genre: string = "children",
-  limit: number = 20,
-): Promise<OpenLibraryBook[]> {
-  try {
-    const response = await fetch(
-      `${BASE_URL}/search.json?q=subject:${encodeURIComponent(genre)}&limit=${limit}&sort=rating`,
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to get children books");
-    }
-
-    const data = await response.json();
-    return data.docs || [];
-  } catch (error) {
-    console.error("Error getting children books:", error);
-    return [];
-  }
 }
 
 /**

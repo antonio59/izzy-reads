@@ -60,88 +60,6 @@ export function Progress({
   );
 }
 
-// Circular Progress component
-interface CircularProgressProps {
-  value: number;
-  max?: number;
-  size?: number;
-  strokeWidth?: number;
-  color?: "primary" | "accent" | "success";
-  showValue?: boolean;
-  label?: string;
-  className?: string;
-}
-
-export function CircularProgress({
-  value,
-  max = 100,
-  size = 120,
-  strokeWidth = 8,
-  color = "primary",
-  showValue = true,
-  label,
-  className = "",
-}: CircularProgressProps) {
-  const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
-  const radius = (size - strokeWidth) / 2;
-  const circumference = radius * 2 * Math.PI;
-  const strokeDashoffset = circumference - (percentage / 100) * circumference;
-
-  const colorClasses = {
-    primary: "text-primary-500",
-    accent: "text-accent-500",
-    success: "text-success-500",
-  };
-
-  return (
-    <div
-      className={`relative inline-flex items-center justify-center ${className}`}
-    >
-      <svg width={size} height={size} className="transform -rotate-90">
-        {/* Background circle */}
-        <circle
-          className="text-stone-100"
-          strokeWidth={strokeWidth}
-          stroke="currentColor"
-          fill="transparent"
-          r={radius}
-          cx={size / 2}
-          cy={size / 2}
-        />
-        {/* Progress circle */}
-        <motion.circle
-          className={colorClasses[color]}
-          strokeWidth={strokeWidth}
-          strokeLinecap="round"
-          stroke="currentColor"
-          fill="transparent"
-          r={radius}
-          cx={size / 2}
-          cy={size / 2}
-          initial={{ strokeDashoffset: circumference }}
-          animate={{ strokeDashoffset }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          style={{
-            strokeDasharray: circumference,
-          }}
-        />
-      </svg>
-      {showValue && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span
-            className={`text-2xl font-bold font-display ${colorClasses[color]}`}
-          >
-            {Math.round(percentage)}%
-          </span>
-          {label && (
-            <span className="text-xs text-stone-500 mt-0.5">{label}</span>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
 // Reading Challenge Progress
 interface ChallengeProgressProps {
   title: string;
@@ -205,48 +123,6 @@ export function ChallengeProgress({
         </div>
       </div>
     </Card>
-  );
-}
-
-// XP Progress Bar
-interface XPProgressProps {
-  currentXP: number;
-  levelXP: number;
-  nextLevelXP: number;
-  level: number;
-  className?: string;
-}
-
-export function XPProgress({
-  currentXP,
-  levelXP,
-  nextLevelXP,
-  level,
-  className = "",
-}: XPProgressProps) {
-  const xpInLevel = currentXP - levelXP;
-  const xpNeeded = nextLevelXP - levelXP;
-
-  return (
-    <div
-      className={`bg-gradient-to-r from-primary-50 to-accent-50 rounded-2xl p-5 ${className}`}
-    >
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <span className="text-2xl">⭐</span>
-          <span className="font-display font-bold text-stone-900">
-            Level {level}
-          </span>
-        </div>
-        <span className="text-sm text-stone-500">
-          {xpInLevel.toLocaleString()} / {xpNeeded.toLocaleString()} XP
-        </span>
-      </div>
-      <Progress value={xpInLevel} max={xpNeeded} color="gradient" size="lg" />
-      <p className="text-xs text-stone-500 mt-2 text-center">
-        {(xpNeeded - xpInLevel).toLocaleString()} XP to Level {level + 1}
-      </p>
-    </div>
   );
 }
 

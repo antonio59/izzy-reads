@@ -25,7 +25,7 @@ import type { Book } from "../types";
 type SortOption = "recent" | "rating";
 type FilterGenre = string | "all";
 
-export function PublicReviews() {
+function PublicReviews() {
   const { bookId } = useParams<{ bookId?: string }>();
   const { books } = useBooks();
   const { user } = useUser();

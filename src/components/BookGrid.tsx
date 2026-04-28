@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Star, BookOpen, Heart } from "lucide-react";
 import type { Book } from "../types";
-import { Card } from "./ui/Card";
+
 
 // Generate a beautiful gradient from book title
 function getBookGradient(title: string): string {
@@ -29,7 +29,7 @@ interface BookGridItemProps {
   size?: "sm" | "md" | "lg";
 }
 
-export function BookGridItem({
+function BookGridItem({
   book,
   onClick,
   index = 0,
@@ -193,109 +193,4 @@ export function BookGrid({
 }
 
 // Featured book display - larger, horizontal layout
-interface FeaturedBookProps {
-  book: Book;
-  onClick?: () => void;
-}
-
-export function FeaturedBook({ book, onClick }: FeaturedBookProps) {
-  const [imageError, setImageError] = useState(false);
-  const gradient = getBookGradient(book.title);
-
-  return (
-    <Card
-      variant="elevated"
-      padding="none"
-      className="relative cursor-pointer group"
-      onClick={onClick}
-      whileHover={{ scale: 1.01 }}
-      whileTap={{ scale: 0.99 }}
-    >
-      {/* Background Blur */}
-      <div className="absolute inset-0 overflow-hidden">
-        {book.coverUrl && !imageError ? (
-          <img
-            src={book.coverUrl}
-            alt=""
-            className="w-full h-full object-cover scale-150 blur-3xl opacity-30"
-            onError={() => setImageError(true)}
-          />
-        ) : (
-          <div
-            className={`w-full h-full bg-gradient-to-br ${gradient} opacity-20`}
-          />
-        )}
-      </div>
-
-      <div className="relative flex gap-6 p-6">
-        {/* Cover */}
-        <div className="relative w-32 h-48 flex-shrink-0 rounded-xl overflow-hidden shadow-xl">
-          {book.coverUrl && !imageError ? (
-            <img
-              src={book.coverUrl}
-              alt={book.title}
-              className="w-full h-full object-cover"
-              onError={() => setImageError(true)}
-            />
-          ) : (
-            <div
-              className={`w-full h-full bg-gradient-to-br ${gradient} flex items-center justify-center`}
-            >
-              <BookOpen className="w-10 h-10 text-white/80" />
-            </div>
-          )}
-        </div>
-
-        {/* Info */}
-        <div className="flex-1 flex flex-col justify-center">
-          <h3 className="font-display font-bold text-2xl text-stone-900 line-clamp-2 group-hover:text-purple-700 transition-colors">
-            {book.title}
-          </h3>
-          <p className="text-stone-600 mt-1">{book.author}</p>
-
-          {/* Rating */}
-          {book.rating && book.rating > 0 && (
-            <div className="flex items-center gap-1 mt-3">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={`w-5 h-5 ${
-                    i < book.rating!
-                      ? "text-amber-400 fill-amber-400"
-                      : "text-stone-200"
-                  }`}
-                />
-              ))}
-              <span className="ml-2 text-stone-600 font-medium">
-                {book.rating}/5
-              </span>
-            </div>
-          )}
-
-          {/* Genre & Pages */}
-          <div className="flex flex-wrap gap-2 mt-3">
-            {book.genre && (
-              <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
-                {book.genre}
-              </span>
-            )}
-            {book.pageCount && (
-              <span className="px-3 py-1 bg-stone-100 text-stone-600 rounded-full text-sm">
-                {book.pageCount} pages
-              </span>
-            )}
-          </div>
-
-          {/* Notes Preview */}
-          {book.notes && (
-            <p className="text-stone-500 text-sm italic mt-3 line-clamp-2">
-              "{book.notes}"
-            </p>
-          )}
-        </div>
-      </div>
-    </Card>
-  );
-}
-
 export default BookGrid;

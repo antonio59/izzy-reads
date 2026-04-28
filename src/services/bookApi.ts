@@ -11,7 +11,6 @@ import {
 import {
   searchBooks as searchOpenLibrary,
   convertToBookFormat as convertOpenLibraryBook,
-  getCoverUrl,
   suggestGenre as openLibrarySuggestGenre,
   determineAgeRating as openLibraryDetermineAgeRating,
   type OpenLibraryBook
@@ -91,55 +90,6 @@ export async function searchBooks(query: string, limit: number = 12): Promise<Un
   } catch (error) {
     console.error('Both book APIs failed:', error)
     return []
-  }
-}
-
-/**
- * Get book details with best available cover
- * Tries to get cover from Google Books, falls back to Open Library
- */
-export async function getBookWithCover(book: UnifiedBook): Promise<BookDetails> {
-  // If we already have a good cover URL, use it
-  if (book.coverUrl && !book.coverUrl.includes('placeholder')) {
-    return {
-      title: book.title,
-      author: book.author,
-      coverUrl: book.coverUrl,
-      isbn: book.isbn,
-      pageCount: book.pageCount,
-      publishYear: book.publishYear,
-      publisher: book.publisher,
-      description: book.description,
-      subjects: book.subjects
-    }
-  }
-
-  // If no cover from primary source, try the other API
-  if (book.source === 'google' && book._openLibraryBook?.cover_i) {
-    return {
-      title: book.title,
-      author: book.author,
-      coverUrl: getCoverUrl(book._openLibraryBook.cover_i, 'L'),
-      isbn: book.isbn,
-      pageCount: book.pageCount,
-      publishYear: book.publishYear,
-      publisher: book.publisher,
-      description: book.description,
-      subjects: book.subjects
-    }
-  }
-
-  // Return what we have
-  return {
-    title: book.title,
-    author: book.author,
-    coverUrl: book.coverUrl || '',
-    isbn: book.isbn,
-    pageCount: book.pageCount,
-    publishYear: book.publishYear,
-    publisher: book.publisher,
-    description: book.description,
-    subjects: book.subjects
   }
 }
 

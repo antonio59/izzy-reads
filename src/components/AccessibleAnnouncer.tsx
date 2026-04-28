@@ -1,9 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import {
-  useEffect,
   useState,
   createContext,
-  useContext,
   useCallback,
 } from "react";
 import type { ReactNode } from "react";
@@ -15,16 +13,6 @@ interface AnnouncerContextType {
 const AnnouncerContext = createContext<AnnouncerContextType | undefined>(
   undefined,
 );
-
-export const useAnnouncer = () => {
-  const context = useContext(AnnouncerContext);
-  if (context === undefined) {
-    throw new Error(
-      "useAnnouncer must be used within an AccessibleAnnouncerProvider",
-    );
-  }
-  return context;
-};
 
 interface AnnouncerProviderProps {
   children: ReactNode;
@@ -82,40 +70,6 @@ export const AccessibleAnnouncerProvider: React.FC<AnnouncerProviderProps> = ({
   );
 };
 
-// Hook for announcing page changes
-export const usePageAnnouncement = (pageTitle: string) => {
-  const { announce } = useAnnouncer();
 
-  useEffect(() => {
-    announce(`Navigated to ${pageTitle}`);
-  }, [pageTitle, announce]);
-};
 
-// Hook for announcing loading states
-export const useLoadingAnnouncement = (
-  isLoading: boolean,
-  itemName: string,
-) => {
-  const { announce } = useAnnouncer();
 
-  useEffect(() => {
-    if (isLoading) {
-      announce(`Loading ${itemName}...`);
-    } else {
-      announce(`${itemName} loaded`);
-    }
-  }, [isLoading, itemName, announce]);
-};
-
-// Hook for announcing actions
-export const useActionAnnouncement = () => {
-  const { announce } = useAnnouncer();
-
-  return {
-    announceSuccess: (action: string) =>
-      announce(`${action} completed successfully`),
-    announceError: (action: string) =>
-      announce(`${action} failed`, "assertive"),
-    announceInfo: (message: string) => announce(message),
-  };
-};

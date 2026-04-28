@@ -111,7 +111,7 @@ function AboutPageContent() {
   return <AboutPage aboutData={aboutData} />;
 }
 
-export function AboutPageWrapper() {
+function AboutPageWrapper() {
   return (
     <AboutErrorBoundary>
       <AboutPageContent />

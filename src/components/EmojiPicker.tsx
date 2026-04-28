@@ -24,7 +24,7 @@ interface EmojiData {
   name: string;
 }
 
-export function EmojiPicker({
+function EmojiPicker({
   onSelect,
   buttonClassName = "",
   pickerPosition = "bottom",

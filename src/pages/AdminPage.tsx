@@ -28,7 +28,7 @@ import type { UnifiedBook } from "../services/bookApi";
 
 type AdminTab = "overview" | "covers" | "users" | "books" | "bookclub";
 
-export function AdminPage() {
+function AdminPage() {
   const [activeTab, setActiveTab] = useState<AdminTab>("overview");
   const { user } = useAuth();
 

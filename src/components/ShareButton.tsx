@@ -35,7 +35,7 @@ interface ShareOption {
   action: (title: string, text: string, url: string) => void;
 }
 
-export function ShareButton({
+function ShareButton({
   title,
   text,
   url,

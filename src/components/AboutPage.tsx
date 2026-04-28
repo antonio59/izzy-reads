@@ -37,7 +37,7 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
-export function AboutPage({ aboutData }: AboutPageProps) {
+function AboutPage({ aboutData }: AboutPageProps) {
   const { user } = useUser();
 
   // Default avatar config

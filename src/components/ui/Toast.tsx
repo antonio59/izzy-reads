@@ -21,7 +21,7 @@ interface ToastContextType {
 
 const ToastContext = createContext<ToastContextType | null>(null);
 
-export function useToast() {
+function useToast() {
   const context = useContext(ToastContext);
   if (!context) {
     throw new Error("useToast must be used within a ToastProvider");

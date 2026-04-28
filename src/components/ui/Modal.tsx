@@ -1,7 +1,6 @@
 import { useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
-import { Button } from "./Button";
 
 interface ModalProps {
   isOpen: boolean;
@@ -164,73 +163,6 @@ export function ModalFooter({ children, className = "" }: ModalFooterProps) {
     >
       {children}
     </div>
-  );
-}
-
-// Confirmation Modal
-interface ConfirmModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  title: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
-  variant?: "danger" | "warning" | "default";
-  loading?: boolean;
-}
-
-export function ConfirmModal({
-  isOpen,
-  onClose,
-  onConfirm,
-  title,
-  message,
-  confirmText = "Confirm",
-  cancelText = "Cancel",
-  variant = "default",
-  loading = false,
-}: ConfirmModalProps) {
-  const confirmVariant: Record<string, "primary" | "danger" | "accent"> = {
-    danger: "danger",
-    warning: "accent",
-    default: "primary",
-  };
-
-  const icons = {
-    danger: "⚠️",
-    warning: "❓",
-    default: "💭",
-  };
-
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} size="sm">
-      <div className="text-center">
-        <span className="text-4xl mb-4 block">{icons[variant]}</span>
-        <h3 className="text-lg font-display font-bold text-stone-900 mb-2">
-          {title}
-        </h3>
-        <p className="text-stone-600 mb-6">{message}</p>
-        <div className="flex gap-3 justify-center">
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={onClose}
-            disabled={loading}
-          >
-            {cancelText}
-          </Button>
-          <Button
-            variant={confirmVariant[variant]}
-            size="md"
-            onClick={onConfirm}
-            loading={loading}
-          >
-            {confirmText}
-          </Button>
-        </div>
-      </div>
-    </Modal>
   );
 }
 

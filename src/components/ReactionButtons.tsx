@@ -478,22 +478,4 @@ export function WritingReactionButtons({
   );
 }
 
-// Compact version for displaying reaction counts only (no buttons)
-interface ReactionCountBadgeProps {
-  bookId: string;
-}
 
-export function BookReactionCountBadge({ bookId }: ReactionCountBadgeProps) {
-  const { totalReactions, isLoading } = useBookReactions(bookId);
-
-  if (isLoading || totalReactions === 0) return null;
-
-  return (
-    <div className="flex items-center gap-1 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full shadow-md">
-      <span className="text-xs">❤️</span>
-      <span className="text-xs font-bold text-primary-600">
-        {totalReactions}
-      </span>
-    </div>
-  );
-}

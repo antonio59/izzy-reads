@@ -161,11 +161,6 @@ export function checkLevelUp(previousXP: number, newXP: number): Level | null {
   return null;
 }
 
-// Get all levels up to and including current
-export function getCompletedLevels(totalXP: number): Level[] {
-  return LEVELS.filter((level) => totalXP >= level.minXP);
-}
-
 // Format XP number with commas
 export function formatXP(xp: number): string {
   return xp.toLocaleString();

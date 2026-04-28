@@ -7,7 +7,7 @@ export interface ReadingQuote {
   emoji: string
 }
 
-export const childAppropriateQuotes: ReadingQuote[] = [
+const childAppropriateQuotes: ReadingQuote[] = [
   {
     text: "The more that you read, the more things you will know. The more that you learn, the more places you'll go.",
     author: "Dr. Seuss",
@@ -294,19 +294,4 @@ export function getWeeklyQuote(): ReadingQuote {
   const quoteIndex = weekNumber % childAppropriateQuotes.length
   
   return childAppropriateQuotes[quoteIndex]
-}
-
-/**
- * Get a random quote (for variety)
- */
-export function getRandomQuote(): ReadingQuote {
-  const randomIndex = Math.floor(Math.random() * childAppropriateQuotes.length)
-  return childAppropriateQuotes[randomIndex]
-}
-
-/**
- * Get all quotes (for admin/parent to review)
- */
-export function getAllQuotes(): ReadingQuote[] {
-  return childAppropriateQuotes
 }

@@ -94,45 +94,6 @@ export async function searchGoogleBooks(query: string, limit: number = 12): Prom
 }
 
 /**
- * Search books by ISBN using Google Books API
- */
-export async function searchGoogleBooksByISBN(isbn: string): Promise<GoogleBook | null> {
-  try {
-    const response = await fetch(
-      `${BASE_URL}?q=isbn:${encodeURIComponent(isbn)}&maxResults=1`
-    )
-    
-    if (!response.ok) {
-      throw new Error('Failed to search by ISBN')
-    }
-    
-    const data: GoogleBooksResponse = await response.json()
-    return data.items?.[0] || null
-  } catch (error) {
-    console.error('Error searching by ISBN:', error)
-    return null
-  }
-}
-
-/**
- * Get book details by Google Books volume ID
- */
-export async function getGoogleBookById(volumeId: string): Promise<GoogleBook | null> {
-  try {
-    const response = await fetch(`${BASE_URL}/${volumeId}`)
-    
-    if (!response.ok) {
-      throw new Error('Failed to get book details')
-    }
-    
-    return await response.json()
-  } catch (error) {
-    console.error('Error getting book details:', error)
-    return null
-  }
-}
-
-/**
  * Convert Google Book to our BookDetails format
  */
 export function convertGoogleBookToDetails(book: GoogleBook): BookDetails {

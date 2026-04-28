@@ -6,7 +6,7 @@ import { GiphyFetch } from "@giphy/js-fetch-api";
 // Initialize Giphy client with API key from environment
 const giphyApiKey = import.meta.env.VITE_GIPHY_API_KEY || "";
 
-export const giphyFetch = giphyApiKey ? new GiphyFetch(giphyApiKey) : null;
+const giphyFetch = giphyApiKey ? new GiphyFetch(giphyApiKey) : null;
 
 export interface GifData {
   id: string;
