@@ -74,7 +74,16 @@
     <meta name="mobile-web-app-capable" content="yes" />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Initial loading state for Lighthouse CI / SSR fallback -->
+      <div id="initial-loader" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #faf5ff 0%, #f0fdfa 100%);">
+        <div style="text-align: center; font-family: 'Nunito', system-ui, sans-serif;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
+          <h1 style="color: #8b5cf6; font-size: 1.5rem; font-weight: 700; margin: 0;">Izzy's Bookshelf</h1>
+          <p style="color: #78716c; margin-top: 0.5rem;">Loading your reading adventure...</p>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
 
     <!-- Register Service Worker -->
