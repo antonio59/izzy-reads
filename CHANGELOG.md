@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Discover page 503 error - add OpenLibrary fallback
 - Professional placeholder design for missing covers
 - Detect blank placeholder covers via canvas pixel analysis
 - Remove crossOrigin attribute and relax cover validation
@@ -588,6 +589,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
