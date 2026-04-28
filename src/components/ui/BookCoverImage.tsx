@@ -25,6 +25,32 @@ interface BookCoverImageProps {
   fallbackEmoji?: string;
 }
 
+function isLikelyInvalidCover(url: string | undefined): boolean {
+  if (!url) return true;
+  const lowerUrl = url.toLowerCase();
+  
+  // Common patterns for placeholder/invalid cover URLs
+  const invalidPatterns = [
+    'placeholder',
+    'no-cover',
+    'nocover',
+    'default',
+    'missing',
+    'blank',
+    '1x1',
+    'spacer',
+  ];
+  if (invalidPatterns.some(pattern => lowerUrl.includes(pattern))) {
+    return true;
+  }
+  
+  // Open Library returns placeholder images for missing covers
+  // These URLs still contain cover IDs but return a generic image
+  // We can't detect these by URL alone, they need image analysis
+  
+  return false;
+}
+
 export function BookCoverImage({
   book,
   className = "",
@@ -34,7 +60,8 @@ export function BookCoverImage({
   const [hasLoaded, setHasLoaded] = useState(false);
   const [color1, color2] = getBookGradient(book.title);
 
-  const showFallback = !book.coverUrl || hasError;
+  // Check if URL looks like a placeholder or invalid cover
+  const showFallback = !book.coverUrl || hasError || isLikelyInvalidCover(book.coverUrl);
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
@@ -51,16 +78,36 @@ export function BookCoverImage({
           <img
             src={book.coverUrl}
             alt={book.title}
+            crossOrigin="anonymous"
             className={`w-full h-full object-cover transition-opacity duration-300 ${
               hasLoaded ? "opacity-100" : "opacity-0"
             }`}
             onLoad={(e) => {
               const img = e.currentTarget;
-              if (img.naturalWidth < 30 || img.naturalHeight < 30) {
+              const { naturalWidth, naturalHeight } = img;
+              
+              // Check for tiny images
+              if (naturalWidth < 50 || naturalHeight < 50) {
                 setHasError(true);
-              } else {
-                setHasLoaded(true);
+                return;
               }
+              
+              // Check for 1-pixel dimension (common placeholder)
+              if (naturalWidth === 1 || naturalHeight === 1) {
+                setHasError(true);
+                return;
+              }
+              
+              // Check for Google Books placeholder: very wide and short (e.g., 575x92)
+              // Real book covers have aspect ratio between 0.5 and 1.0 (height > width)
+              const aspectRatio = naturalWidth / naturalHeight;
+              if (aspectRatio > 2) {
+                // Image is more than 2x wider than tall - likely a placeholder banner
+                setHasError(true);
+                return;
+              }
+              
+              setHasLoaded(true);
             }}
             onError={() => setHasError(true)}
           />
