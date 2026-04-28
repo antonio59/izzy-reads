@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- About page fallback and wishlist cover images
 - **ci**: Add initial loading state for Lighthouse CI
 - **covers**: Add referrerPolicy=no-referrer for external book covers
 - **ci**: Dynamic import for @sentry/vite-plugin to avoid minimatch/brace-expansion ESM issue
@@ -583,6 +584,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
