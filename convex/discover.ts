@@ -91,23 +91,22 @@ export const getExistingBookKeys = query({
   },
 });
 
-// Fetch recommendation candidates from Google Books
-export const fetchRecommendations = action({
-  args: {
-    searchQuery: v.string(),
-    startIndex: v.optional(v.number()),
-  },
-  handler: async (_ctx, args) => {
-    const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+async function fetchFromGoogleBooks(query: string, startIndex: number, apiKey?: string): Promise<any[]> {
+  try {
     const keyParam = apiKey ? `&key=${apiKey}` : "";
-    const startIndex = args.startIndex ?? 0;
-
     const res = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(args.searchQuery)}&maxResults=20&startIndex=${startIndex}&orderBy=relevance&langRestrict=en${keyParam}`
+      `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=20&startIndex=${startIndex}&orderBy=relevance&langRestrict=en${keyParam}`,
+      { headers: { Accept: "application/json" } }
     );
-    const data = await res.json();
 
+    if (!res.ok) {
+      console.error(`Google Books API returned ${res.status}: ${res.statusText}`);
+      return [];
+    }
+
+    const data = await res.json();
     if (data.error) {
+      console.error("Google Books API error:", data.error);
       return [];
     }
 
@@ -143,6 +142,63 @@ export const fetchRecommendations = action({
         categories: (item.volumeInfo?.categories as string[]) ?? [],
       };
     });
+  } catch (err) {
+    console.error("Google Books fetch failed:", err);
+    return [];
+  }
+}
+
+async function fetchFromOpenLibrary(query: string, limit: number): Promise<any[]> {
+  try {
+    const res = await fetch(
+      `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=${limit}`,
+      { headers: { Accept: "application/json" } }
+    );
+
+    if (!res.ok) {
+      console.error(`OpenLibrary API returned ${res.status}: ${res.statusText}`);
+      return [];
+    }
+
+    const data = await res.json();
+    const docs = (data.docs ?? []) as any[];
+
+    return docs
+      .filter((doc) => doc.cover_i)
+      .map((doc) => ({
+        googleBookId: `ol_${doc.cover_i}`,
+        title: doc.title || "Unknown Title",
+        author: (doc.author_name ?? []).join(", ") || "Unknown Author",
+        coverUrl: `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`,
+        pageCount: doc.number_of_pages_median ?? 0,
+        description: doc.first_sentence?.[0] ?? "",
+        categories: doc.subject?.slice(0, 3) ?? [],
+      }));
+  } catch (err) {
+    console.error("OpenLibrary fetch failed:", err);
+    return [];
+  }
+}
+
+// Fetch recommendation candidates from Google Books (with OpenLibrary fallback)
+export const fetchRecommendations = action({
+  args: {
+    searchQuery: v.string(),
+    startIndex: v.optional(v.number()),
+  },
+  handler: async (_ctx, args) => {
+    const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+    const startIndex = args.startIndex ?? 0;
+
+    // Try Google Books first
+    let results = await fetchFromGoogleBooks(args.searchQuery, startIndex, apiKey);
+
+    // Fallback to OpenLibrary if Google Books returns nothing (rate limited / no key)
+    if (results.length === 0) {
+      results = await fetchFromOpenLibrary(args.searchQuery, 20);
+    }
+
+    return results;
   },
 });
 
