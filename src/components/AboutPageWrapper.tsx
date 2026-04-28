@@ -90,12 +90,12 @@ function AboutPageContent() {
     );
   }
 
-  // If loaded but null (no profile saved), use default data
-  // If loaded with data, use that data
+  // If loaded but null (no profile saved) or not published, use default data
+  // If loaded with data and published, use that data
   const aboutData =
-    profileData !== null
+    profileData !== null && profileData.isPublished
       ? {
-          isPublished: profileData.isPublished,
+          isPublished: true,
           bio: profileData.bio,
           favoriteGenres: profileData.favoriteGenres,
           favoriteAuthors: profileData.favoriteAuthors,

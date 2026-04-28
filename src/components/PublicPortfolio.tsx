@@ -21,6 +21,7 @@ import { PublicFooter } from "./PublicFooter";
 import { Card } from "./ui/Card";
 import { WritingReactionButtons } from "./ReactionButtons";
 import { Badge } from "./ui/Badge";
+import { BookCoverImage } from "./ui/BookCoverImage";
 
 type TabId = "reviews" | "poems" | "blog" | "wishlist";
 
@@ -666,21 +667,7 @@ const PublicPortfolio = () => {
                 gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
               }}
             >
-              {wishlist.slice(0, 6).map((book, index) => {
-                const colors: [string, string][] = [
-                  ["#FF6B6B", "#EE5A5A"],
-                  ["#4ECDC4", "#3DBDB5"],
-                  ["#45B7D1", "#34A6C0"],
-                  ["#96CEB4", "#85BDA3"],
-                  ["#DDA0DD", "#CC8FCC"],
-                  ["#98D8C8", "#87C7B7"],
-                ];
-                const hash = book.title
-                  .split("")
-                  .reduce((acc, char) => acc + char.charCodeAt(0), 0);
-                const [color1, color2] = colors[hash % colors.length];
-
-                return (
+              {wishlist.slice(0, 6).map((book, index) => (
                   <motion.div
                     key={book.id}
                     initial={{ opacity: 0, y: 20 }}
@@ -702,25 +689,11 @@ const PublicPortfolio = () => {
                           damping: 25,
                         }}
                       >
-                        {book.coverUrl ? (
-                          <img
-                            src={book.coverUrl}
-                            alt={book.title}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div
-                            className="w-full h-full flex flex-col items-center justify-center p-4 text-white"
-                            style={{
-                              background: `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`,
-                            }}
-                          >
-                            <span className="text-4xl mb-3">🎁</span>
-                            <span className="text-sm font-bold text-center leading-tight line-clamp-3">
-                              {book.title}
-                            </span>
-                          </div>
-                        )}
+                        <BookCoverImage
+                          book={book}
+                          className="w-full h-full"
+                          fallbackEmoji="🎁"
+                        />
 
                         {/* Wishlist badge */}
                         <div className="absolute top-2 left-2 w-7 h-7 bg-primary-500 rounded-full flex items-center justify-center shadow-md">
@@ -744,8 +717,7 @@ const PublicPortfolio = () => {
                       </motion.div>
                     </Link>
                   </motion.div>
-                );
-              })}
+              ))}
             </div>
 
             {wishlist.length > 6 && (
