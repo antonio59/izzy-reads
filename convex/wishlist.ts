@@ -165,3 +165,19 @@ export const bulkUpdateCovers = mutation({
     return results;
   },
 });
+
+// Admin cover update - no auth required (for CLI maintenance scripts)
+export const adminPatchCover = mutation({
+  args: {
+    wishlistId: v.id("wishlist"),
+    coverUrl: v.string(),
+  },
+  handler: async (ctx, { wishlistId, coverUrl }) => {
+    const item = await ctx.db.get(wishlistId);
+    if (!item) {
+      throw new Error("Wishlist item not found");
+    }
+    await ctx.db.patch(wishlistId, { coverUrl });
+    return { wishlistId, title: item.title, oldUrl: item.coverUrl, newUrl: coverUrl };
+  },
+});

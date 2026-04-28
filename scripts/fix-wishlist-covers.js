@@ -16,17 +16,21 @@
 import { execSync } from "child_process";
 import { writeFileSync } from "fs";
 
-const CONVEX_URL = process.env.CONVEX_URL || null;
+// Production deployment for izzysbookshelf.com
+const CONVEX_DEPLOYMENT = process.env.CONVEX_DEPLOYMENT || "loyal-vulture-39";
 
 function convexRun(functionName, args) {
+  const [module, func] = functionName.split(".");
+  const convexPath = `${module}:${func}`;
   const argsJson = args ? JSON.stringify(args).replace(/"/g, '\\"') : "";
-  const cmd = `npx convex run ${functionName}${args ? ` --args '${argsJson}'` : ""}`;
+  const cmd = `npx convex run ${convexPath}${args ? ` --args '${argsJson}'` : ""}`;
   console.log(`Running: ${cmd}`);
   try {
     const result = execSync(cmd, {
       encoding: "utf-8",
       cwd: "/Users/antoniosmith/Projects/izzy-reads",
-      env: { ...process.env, CONVEX_URL },
+      env: { ...process.env, CONVEX_DEPLOYMENT },
+      maxBuffer: 10 * 1024 * 1024,
     });
     return JSON.parse(result);
   } catch (e) {
