@@ -94,6 +94,12 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #130 from antonio59/dependabot/npm_and_yarn/jsdom-tw-29.1.1
+
+chore(deps-dev): update jsdom requirement from ^29.0.2 to ^29.1.1
+- Merge pull request #131 from antonio59/dependabot/npm_and_yarn/giphy/js-fetch-api-tw-5.8.0
+
+chore(deps): update @giphy/js-fetch-api requirement from ^5.7.0 to ^5.8.0
 - Merge pull request #135 from antonio59/dependabot/npm_and_yarn/globals-tw-17.6.0
 
 chore(deps-dev): update globals requirement from ^17.5.0 to ^17.6.0
@@ -567,6 +573,8 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- **deps-dev**: Update jsdom requirement from ^29.0.2 to ^29.1.1
+- **deps**: Update @giphy/js-fetch-api requirement
 - **deps-dev**: Update typescript-eslint requirement
 - **deps-dev**: Update @sentry/vite-plugin requirement
 - **deps-dev**: Update eslint requirement from ^10.2.1 to ^10.3.0
@@ -620,6 +628,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
