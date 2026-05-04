@@ -94,6 +94,25 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #135 from antonio59/dependabot/npm_and_yarn/globals-tw-17.6.0
+
+chore(deps-dev): update globals requirement from ^17.5.0 to ^17.6.0
+- Merge branch 'main' into dependabot/npm_and_yarn/globals-tw-17.6.0
+- Merge pull request #133 from antonio59/dependabot/npm_and_yarn/typescript-eslint-tw-8.59.1
+
+chore(deps-dev): update typescript-eslint requirement from ^8.59.0 to ^8.59.1
+- Merge pull request #132 from antonio59/dependabot/npm_and_yarn/sentry/vite-plugin-tw-5.2.1
+
+chore(deps-dev): update @sentry/vite-plugin requirement from ^5.2.0 to ^5.2.1
+- Merge pull request #129 from antonio59/dependabot/npm_and_yarn/eslint-tw-10.3.0
+
+chore(deps-dev): update eslint requirement from ^10.2.1 to ^10.3.0
+- Merge pull request #128 from antonio59/dependabot/npm_and_yarn/lucide-react-tw-1.14.0
+
+chore(deps): update lucide-react requirement from ^1.11.0 to ^1.14.0
+- Merge pull request #127 from antonio59/dependabot/npm_and_yarn/sentry/react-tw-10.51.0
+
+chore(deps): update @sentry/react requirement from ^10.50.0 to ^10.51.0
 - Merge pull request #126 from antonio59/dependabot/npm_and_yarn/tailwind-0a4fd6b046
 
 chore(deps-dev): update postcss requirement from ^8.5.12 to ^8.5.13 in the tailwind group
@@ -548,7 +567,13 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- **deps-dev**: Update typescript-eslint requirement
+- **deps-dev**: Update @sentry/vite-plugin requirement
+- **deps-dev**: Update eslint requirement from ^10.2.1 to ^10.3.0
+- **deps**: Update lucide-react requirement from ^1.11.0 to ^1.14.0
+- **deps**: Update @sentry/react requirement from ^10.50.0 to ^10.51.0
 - **deps-dev**: Update postcss requirement in the tailwind group
+- **deps-dev**: Update globals requirement from ^17.5.0 to ^17.6.0
 - Remove dead code and update dependencies
 - **deps-dev**: Bump the tailwind group across 1 directory with 2 updates (#113)
 - Remove package-lock.json from git tracking
@@ -595,6 +620,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
