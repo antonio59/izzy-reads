@@ -94,6 +94,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #126 from antonio59/dependabot/npm_and_yarn/tailwind-0a4fd6b046
+
+chore(deps-dev): update postcss requirement from ^8.5.12 to ^8.5.13 in the tailwind group
 - Fix incomplete URL substring sanitization (CodeQL #30-31)
 - Merge branch 'main' of https://github.com/antonio59/izzy-reads
 - Merge branch 'main' of https://github.com/antonio59/izzy-reads
@@ -545,6 +548,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- **deps-dev**: Update postcss requirement in the tailwind group
 - Remove dead code and update dependencies
 - **deps-dev**: Bump the tailwind group across 1 directory with 2 updates (#113)
 - Remove package-lock.json from git tracking
@@ -591,6 +595,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
