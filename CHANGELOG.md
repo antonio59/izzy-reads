@@ -94,6 +94,13 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #125 from antonio59/dependency-updates
+
+chore: Weekly dependency updates
+- Merge main + resolve conflicts for weekly dependency updates
+- Merge pull request #134 from antonio59/dependabot/npm_and_yarn/stylelint-17.10.0
+
+chore(deps-dev): bump stylelint from 16.26.1 to 17.10.0
 - Merge pull request #130 from antonio59/dependabot/npm_and_yarn/jsdom-tw-29.1.1
 
 chore(deps-dev): update jsdom requirement from ^29.0.2 to ^29.1.1
@@ -573,6 +580,8 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- Update dependencies
+- **deps-dev**: Bump stylelint from 16.26.1 to 17.10.0
 - **deps-dev**: Update jsdom requirement from ^29.0.2 to ^29.1.1
 - **deps**: Update @giphy/js-fetch-api requirement
 - **deps-dev**: Update typescript-eslint requirement
@@ -628,6 +637,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
