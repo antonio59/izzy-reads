@@ -28,7 +28,6 @@
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
     "@giphy/js-fetch-api": "^5.8.0",
-    "@sentry/react": "^10.51.0",
     "convex": "^1.37.0",
     "emoji-mart": "^5.6.0",
     "framer-motion": "^12.38.0",
@@ -49,7 +48,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@sentry/vite-plugin": "^5.2.1",
     "@tailwindcss/vite": "^4.2.4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -75,5 +73,5 @@
   "patchedDependencies": {
     "minimatch@8.0.7": "patches/minimatch@8.0.7.patch"
   },
-  "packageManager": "pnpm@10.33.0"
+  "packageManager": "pnpm@11.1.1"
 }

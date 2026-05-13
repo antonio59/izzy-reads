@@ -6,14 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [
     react(),
-    tailwindcss(),
-    process.env.SENTRY_AUTH_TOKEN
-      ? (await import("@sentry/vite-plugin")).sentryVitePlugin({
-          authToken: process.env.SENTRY_AUTH_TOKEN,
-          org: process.env.SENTRY_ORG,
-          project: process.env.SENTRY_PROJECT,
-        })
-      : null,
+    tailwindcss()
   ].filter(Boolean),
   server: {
     host: "0.0.0.0",
