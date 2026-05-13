@@ -19,7 +19,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v6
+      - name: Enable pnpm via corepack
+        run: corepack enable pnpm
       - uses: actions/setup-node@v4
         with:
           node-version: 22
