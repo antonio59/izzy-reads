@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Remove --frozen-lockfile for pnpm v11 compatibility
 - Bump pnpm/action-setup to v6 for pnpm v11 compatibility
 - Correct pnpm-workspace.yaml format for v11
 - Bring back Discover onboarding for Izzy, fix card descriptions
@@ -641,6 +642,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
