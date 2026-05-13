@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Bump pnpm/action-setup to v6 for pnpm v11 compatibility
 - Correct pnpm-workspace.yaml format for v11
 - Bring back Discover onboarding for Izzy, fix card descriptions
 - Discover page 503 error - add OpenLibrary fallback
@@ -640,6 +641,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
