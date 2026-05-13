@@ -18,8 +18,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "preview": "vite preview",
-    "security-audit": "bun audit",
-    "update-deps": "bun update",
+    "security-audit": "pnpm audit",
+    "update-deps": "pnpm update",
     "lint:css": "stylelint \"src/**/*.css\""
   },
   "dependencies": {

@@ -64,7 +64,7 @@ A beautiful, magical reading tracker and public portfolio for young book lovers.
 
 ### Prerequisites
 
-- Node.js 18+ or Bun
+- Node.js 18+ or pnpm
 - Convex account (free at [convex.dev](https://convex.dev))
 
 ### Installation
@@ -75,13 +75,13 @@ git clone https://github.com/antonio59/izzy-reads.git
 cd izzy-reads
 
 # Install dependencies
-bun install
+pnpm install
 
 # Set up Convex (creates .env.local automatically)
-bunx convex dev
+npx convex dev
 
 # Run development server (in a new terminal)
-bun run dev
+pnpm run dev
 ```
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
@@ -171,7 +171,7 @@ Access via `/login` (bookmark this - no public link):
 
 ### Environment Variables
 
-Create a `.env.local` file (auto-created by `bunx convex dev`):
+Create a `.env.local` file (auto-created by `npx convex dev`):
 
 ```env
 VITE_CONVEX_URL=your-convex-deployment-url
@@ -201,21 +201,21 @@ VITE_CONVEX_URL=your-convex-deployment-url
 ### Local Development
 
 ```bash
-bun run dev          # Start dev server + Convex
-bun run dev:frontend # Frontend only
-bun run dev:backend  # Convex only
+pnpm run dev          # Start dev server + Convex
+pnpm run dev:frontend # Frontend only
+pnpm run dev:backend  # Convex only
 ```
 
 ### Production Build
 
 ```bash
-bun run build
+pnpm run build
 ```
 
 ### Staging Build
 
 ```bash
-bun run build:staging
+pnpm run build:staging
 ```
 
 ### Deployment with Netlify
@@ -247,7 +247,7 @@ This project uses Netlify with automatic branch deploys:
 ### Automated Security Features
 
 - **Dependabot** - Automated dependency updates
-- **Security Scanning** - bun audit on CI
+- **Security Scanning** - pnpm audit on CI
 - **GitHub Actions** - Build verification on every push
 - **Secure Randomness** - Uses `crypto.randomUUID()` for ID generation
 
@@ -263,7 +263,7 @@ This project uses Netlify with automatic branch deploys:
 ### Run Security Audit
 
 ```bash
-bun run security-audit
+pnpm run security-audit
 ```
 
 ---
@@ -274,14 +274,14 @@ bun run security-audit
 
 | Command                  | Description               |
 | ------------------------ | ------------------------- |
-| `bun run dev`            | Start dev server + Convex |
-| `bun run dev:frontend`   | Frontend only             |
-| `bun run dev:backend`    | Convex only               |
-| `bun run build`          | Production build          |
-| `bun run build:staging`  | Staging build             |
-| `bun run lint`           | Run ESLint                |
-| `bun run test`           | Run tests                 |
-| `bun run security-audit` | Check vulnerabilities     |
+| `pnpm run dev`            | Start dev server + Convex |
+| `pnpm run dev:frontend`   | Frontend only             |
+| `pnpm run dev:backend`    | Convex only               |
+| `pnpm run build`          | Production build          |
+| `pnpm run build:staging`  | Staging build             |
+| `pnpm run lint`           | Run ESLint                |
+| `pnpm run test`           | Run tests                 |
+| `pnpm run security-audit` | Check vulnerabilities     |
 
 ### Code Quality
 
@@ -350,7 +350,7 @@ Built with amazing open-source tools:
 
 **App won't start?**
 
-1. Ensure Convex is running: `bunx convex dev`
+1. Ensure Convex is running: `npx convex dev`
 2. Check `.env.local` has correct `VITE_CONVEX_URL`
 3. Clear browser cache and refresh
 
@@ -364,8 +364,8 @@ Built with amazing open-source tools:
 
 ```bash
 # Clear and reinstall dependencies
-rm -rf node_modules bun.lock
-bun install
+rm -rf node_modules pnpm-lock.yaml
+pnpm install
 ```
 
 ---

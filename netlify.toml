@@ -5,7 +5,7 @@
 #   https://loyal-vulture-39.convex.cloud
 
 [build]
-  command = "bun run build"
+  command = "pnpm install --frozen-lockfile && pnpm run build"
   publish = "dist"
 
 [context.production]
