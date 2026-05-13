@@ -580,6 +580,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- Migrate fully from bun to pnpm (CI, docs, scripts)
 - Update dependencies
 - **deps-dev**: Bump stylelint from 16.26.1 to 17.10.0
 - **deps-dev**: Update jsdom requirement from ^29.0.2 to ^29.1.1
@@ -637,6 +638,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update npm references to pnpm
 - Update changelog [skip ci]
 - Update changelog [skip ci]
