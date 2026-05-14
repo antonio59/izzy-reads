@@ -65,12 +65,7 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
     }
   }, []);
 
-  // Load trending GIFs when opened
-  useEffect(() => {
-    if (isOpen && !hasSearched && gifs.length === 0 && giphyAvailable) {
-      loadTrendingGifs();
-    }
-  }, [isOpen, hasSearched, gifs.length, giphyAvailable, loadTrendingGifs]);
+
 
   const handleSearch = useCallback(async (query: string) => {
     if (!query.trim()) {
@@ -89,7 +84,7 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [loadTrendingGifs]);
 
   // Debounced search
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,7 +122,13 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
     <div ref={containerRef} className="relative inline-block">
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          const opening = !isOpen;
+          setIsOpen(opening);
+          if (opening && !hasSearched && gifs.length === 0 && giphyAvailable) {
+            loadTrendingGifs();
+          }
+        }}
         className={`p-2 rounded-lg hover:bg-stone-100 transition-colors ${buttonClassName}`}
         title="Add GIF"
       >

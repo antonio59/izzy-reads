@@ -517,6 +517,7 @@ const MyBooks: React.FC = () => {
 
       {/* Edit Book Modal */}
       <EditBookModal
+        key={editingBook?.id || "new"}
         book={editingBook}
         isOpen={!!editingBook}
         onClose={() => setEditingBook(null)}

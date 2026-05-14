@@ -191,19 +191,24 @@ function Discover() {
     }
   }, [isReady, loading, swipedIds, existingKeys, candidates, convex]);
 
+  const fetchMoreRef = useRef(fetchMore);
+  useEffect(() => {
+    fetchMoreRef.current = fetchMore;
+  }, [fetchMore]);
+
   // Initial fetch
   useEffect(() => {
     if (isReady && candidates.length === 0 && initialLoad) {
-      fetchMore();
+      fetchMoreRef.current();
     }
-  }, [isReady, candidates.length, initialLoad, fetchMore]);
+  }, [isReady, candidates.length, initialLoad]);
 
   // Auto-fetch more when running low
   useEffect(() => {
     if (isReady && candidates.length < 3 && !loading && !initialLoad) {
-      fetchMore();
+      fetchMoreRef.current();
     }
-  }, [isReady, candidates.length, loading, initialLoad, fetchMore]);
+  }, [isReady, candidates.length, loading, initialLoad]);
 
   const handleSwipe = useCallback(
     async (direction: "left" | "right") => {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -115,17 +115,27 @@ export function EditBookModal({
 }: EditBookModalProps) {
   const { books } = useBooks();
   const toast = useToastActions();
-  const [rating, setRating] = useState(0);
-  const [notes, setNotes] = useState("");
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
-  const [giftFrom, setGiftFrom] = useState("");
+  const [rating, setRating] = useState(() => book?.rating || 0);
+  const [notes, setNotes] = useState(() => book?.notes || "");
+  const [month, setMonth] = useState(() => {
+    if (book?.dateRead) {
+      return book.dateRead.split("-")[1] || "";
+    }
+    return String(new Date().getMonth() + 1).padStart(2, "0");
+  });
+  const [year, setYear] = useState(() => {
+    if (book?.dateRead) {
+      return book.dateRead.split("-")[0] || String(currentYear);
+    }
+    return String(currentYear);
+  });
+  const [giftFrom, setGiftFrom] = useState(() => book?.giftFrom || "");
   const [isSaving, setIsSaving] = useState(false);
   const [hoverRating, setHoverRating] = useState(0);
   const [showGiftSuggestions, setShowGiftSuggestions] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [activeEmojiCategory, setActiveEmojiCategory] = useState("Reactions");
-  const [coverUrl, setCoverUrl] = useState("");
+  const [coverUrl, setCoverUrl] = useState(() => book?.coverUrl || "");
   const notesRef = useRef<HTMLTextAreaElement>(null);
   const giftInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -160,27 +170,7 @@ export function EditBookModal({
     }
   };
 
-  // Reset form when book changes
-  useEffect(() => {
-    if (book) {
-      setRating(book.rating || 0);
-      setNotes(book.notes || "");
-      setGiftFrom(book.giftFrom || "");
-      setCoverUrl(book.coverUrl || "");
 
-      // Parse existing date (could be YYYY-MM-DD or YYYY-MM format)
-      if (book.dateRead) {
-        const parts = book.dateRead.split("-");
-        setYear(parts[0] || String(currentYear));
-        setMonth(parts[1] || "");
-      } else {
-        // Default to current month/year
-        const now = new Date();
-        setYear(String(now.getFullYear()));
-        setMonth(String(now.getMonth() + 1).padStart(2, "0"));
-      }
-    }
-  }, [book]);
 
   // Handle cover image upload
   const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

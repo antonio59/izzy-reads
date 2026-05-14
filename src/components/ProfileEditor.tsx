@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   User,
@@ -80,7 +80,49 @@ const ProfileEditor: React.FC = () => {
   );
   const upsertProfile = useMutation(api.aboutProfile.upsert);
 
-  const [profile, setProfile] = useState<ProfileData>(defaultProfile);
+  type ProfileAction =
+    | { type: "LOAD"; data: typeof existingProfile }
+    | { type: "UPDATE"; field: keyof ProfileData; value: string | boolean | string[] }
+    | { type: "ADD_ITEM"; field: keyof ProfileData; value: string }
+    | { type: "REMOVE_ITEM"; field: keyof ProfileData; index: number }
+    | { type: "RESET" };
+
+  function profileReducer(state: ProfileData, action: ProfileAction): ProfileData {
+    switch (action.type) {
+      case "LOAD":
+        if (!action.data) return defaultProfile;
+        return {
+          isPublished: action.data.isPublished,
+          bio: action.data.bio,
+          favoriteGenres: action.data.favoriteGenres,
+          favoriteAuthors: action.data.favoriteAuthors,
+          whyIRead: action.data.whyIRead,
+          funFacts: action.data.funFacts,
+          currentlyReading: action.data.currentlyReading || "",
+          readingGoals: action.data.readingGoals,
+          achievements: action.data.achievements,
+          heroTagline: action.data.heroTagline || "",
+          heroDescription: action.data.heroDescription || "",
+        };
+      case "UPDATE":
+        return { ...state, [action.field]: action.value };
+      case "ADD_ITEM": {
+        const list = state[action.field] as string[];
+        if (list.includes(action.value)) return state;
+        return { ...state, [action.field]: [...list, action.value] };
+      }
+      case "REMOVE_ITEM": {
+        const list = state[action.field] as string[];
+        return { ...state, [action.field]: list.filter((_, i) => i !== action.index) };
+      }
+      case "RESET":
+        return defaultProfile;
+      default:
+        return state;
+    }
+  }
+
+  const [profile, dispatch] = useReducer(profileReducer, defaultProfile);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [newItem, setNewItem] = useState<{ [key: string]: string }>({});
@@ -88,19 +130,7 @@ const ProfileEditor: React.FC = () => {
   // Load existing profile
   useEffect(() => {
     if (existingProfile) {
-      setProfile({
-        isPublished: existingProfile.isPublished,
-        bio: existingProfile.bio,
-        favoriteGenres: existingProfile.favoriteGenres,
-        favoriteAuthors: existingProfile.favoriteAuthors,
-        whyIRead: existingProfile.whyIRead,
-        funFacts: existingProfile.funFacts,
-        currentlyReading: existingProfile.currentlyReading || "",
-        readingGoals: existingProfile.readingGoals,
-        achievements: existingProfile.achievements,
-        heroTagline: existingProfile.heroTagline || "",
-        heroDescription: existingProfile.heroDescription || "",
-      });
+      dispatch({ type: "LOAD", data: existingProfile });
     }
   }, [existingProfile]);
 
@@ -128,17 +158,13 @@ const ProfileEditor: React.FC = () => {
 
     const currentList = profile[field] as string[];
     if (!currentList.includes(value)) {
-      setProfile({ ...profile, [field]: [...currentList, value] });
+      dispatch({ type: "ADD_ITEM", field, value });
     }
     setNewItem({ ...newItem, [field]: "" });
   };
 
   const removeFromList = (field: keyof ProfileData, index: number) => {
-    const currentList = profile[field] as string[];
-    setProfile({
-      ...profile,
-      [field]: currentList.filter((_, i) => i !== index),
-    });
+    dispatch({ type: "REMOVE_ITEM", field, index });
   };
 
   const isLoading = convexUserId && existingProfile === undefined;
@@ -168,7 +194,7 @@ const ProfileEditor: React.FC = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={() =>
-                setProfile({ ...profile, isPublished: !profile.isPublished })
+                dispatch({ type: "UPDATE", field: "isPublished", value: !profile.isPublished })
               }
               className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-all ${
                 profile.isPublished
@@ -214,7 +240,7 @@ const ProfileEditor: React.FC = () => {
               type="text"
               value={profile.heroTagline}
               onChange={(e) =>
-                setProfile({ ...profile, heroTagline: e.target.value })
+                dispatch({ type: "UPDATE", field: "heroTagline", value: e.target.value })
               }
               placeholder="e.g., Welcome to my bookshelf!"
             />
@@ -226,7 +252,7 @@ const ProfileEditor: React.FC = () => {
             <Textarea
               value={profile.heroDescription}
               onChange={(e) =>
-                setProfile({ ...profile, heroDescription: e.target.value })
+                dispatch({ type: "UPDATE", field: "heroDescription", value: e.target.value })
               }
               placeholder="A brief intro about you and your love of reading..."
               rows={2}
@@ -244,7 +270,7 @@ const ProfileEditor: React.FC = () => {
       >
         <Textarea
           value={profile.bio}
-          onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+          onChange={(e) => dispatch({ type: "UPDATE", field: "bio", value: e.target.value })}
           placeholder="Hi! I'm Izzy, and I absolutely LOVE reading..."
           rows={4}
         />
@@ -261,7 +287,7 @@ const ProfileEditor: React.FC = () => {
           type="text"
           value={profile.currentlyReading}
           onChange={(e) =>
-            setProfile({ ...profile, currentlyReading: e.target.value })
+            dispatch({ type: "UPDATE", field: "currentlyReading", value: e.target.value })
           }
           placeholder="e.g., Percy Jackson & The Lightning Thief by Rick Riordan"
         />
@@ -276,7 +302,7 @@ const ProfileEditor: React.FC = () => {
       >
         <Textarea
           value={profile.whyIRead}
-          onChange={(e) => setProfile({ ...profile, whyIRead: e.target.value })}
+          onChange={(e) => dispatch({ type: "UPDATE", field: "whyIRead", value: e.target.value })}
           placeholder="I read because every book is a new adventure..."
           rows={3}
         />

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Users, BookOpen, Calendar, MessageCircle, Send, X, Clock } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
@@ -18,7 +18,7 @@ const CLUB_REACTIONS = [
 
 export default function PublicBookClub() {
   const clubData = useQuery(api.bookClubs.getActive);
-  const [visitorName, setVisitorName] = useState("");
+  const [visitorName, setVisitorName] = useState(() => localStorage.getItem("izzy_bookclub_name") || "");
   const [passcode, setPasscode] = useState("");
   const [commentText, setCommentText] = useState("");
   const [showNamePrompt, setShowNamePrompt] = useState(false);
@@ -40,22 +40,10 @@ export default function PublicBookClub() {
     clubData ? { id: clubData._id } : "skip",
   );
 
-  const [daysLeft, setDaysLeft] = useState(0);
-
-  // Load saved visitor name (passcode is not persisted to avoid
-  // clear-text storage of sensitive information)
-  useEffect(() => {
-    const savedName = localStorage.getItem("izzy_bookclub_name");
-    if (savedName) setVisitorName(savedName);
-  }, []);
-
-  useEffect(() => {
-    if (clubData?.endDate) {
-      setDaysLeft(
-        Math.max(0, Math.ceil((new Date(clubData.endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
-      );
-    }
-  }, [clubData?.endDate]);
+  const endDate = clubData?.endDate;
+  const daysLeft = endDate
+    ? Math.max(0, Math.ceil((new Date(endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))
+    : 0;
 
   const saveCredentials = () => {
     localStorage.setItem("izzy_bookclub_name", visitorName.trim());

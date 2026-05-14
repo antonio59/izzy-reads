@@ -38,6 +38,7 @@ export default tseslint.config(
             "useAnnounce",
             "usePoliteAnnounce",
             "useAssertiveAnnounce",
+            "getBookGradient",
           ],
         },
       ],
