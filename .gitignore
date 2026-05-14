@@ -66,3 +66,6 @@ coverage/
 # Local Netlify folder
 .netlify
 package-lock.json
+
+# Fallow cache
+.fallow/

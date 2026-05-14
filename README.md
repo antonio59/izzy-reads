@@ -11,12 +11,13 @@ A beautiful, magical reading tracker and public portfolio for young book lovers.
 
 ---
 
-## 🌐 Live Sites
+## 🌐 Deployment
 
-| Environment    | URL                                                                        | Branch       |
-| -------------- | -------------------------------------------------------------------------- | ------------ |
-| **Production** | [izzysbookshelf.com](https://izzysbookshelf.com)                           | `production` |
-| **Staging**    | [izzysbookshelf.antoniosmith.xyz](https://izzysbookshelf.antoniosmith.xyz) | `main`       |
+This is a private application deployed via Netlify.
+
+| Environment    | Branch       |
+| -------------- | ------------ |
+| **Production** | `production` |
 
 ---
 
@@ -212,33 +213,22 @@ pnpm run dev:backend  # Convex only
 pnpm run build
 ```
 
-### Staging Build
-
-```bash
-pnpm run build:staging
-```
-
 ### Deployment with Netlify
 
 This project uses Netlify with automatic branch deploys:
 
-| Branch       | Environment | Convex           | Auto-deploy |
-| ------------ | ----------- | ---------------- | ----------- |
-| `production` | Production  | loyal-vulture-39 | ✅          |
-| `main`       | Staging     | aware-gecko-889  | ✅          |
-| PR branches  | Preview     | aware-gecko-889  | ✅          |
+| Branch       | Environment | Auto-deploy |
+| ------------ | ----------- | ----------- |
+| `production` | Production  | ✅          |
+| `main`       | Preview     | ✅          |
+| PR branches  | Preview     | ✅          |
 
 **Configuration is in `netlify.toml`** - no manual setup required.
 
 **To deploy:**
 
-1. Push to `main` → Staging deploys automatically
+1. Push to `main` → Preview deploys automatically
 2. Merge to `production` → Production deploys automatically
-
-**Custom Domains:**
-
-- Production: `izzysbookshelf.com`
-- Staging: `izzysbookshelf.antoniosmith.xyz` (branch subdomain)
 
 ---
 
