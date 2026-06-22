@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@auth/core": "0.41.2",
-    "@convex-dev/auth": "^0.0.92",
+    "@convex-dev/auth": "^0.0.94",
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
     "@giphy/js-fetch-api": "^5.8.0",

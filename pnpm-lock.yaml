@@ -12,8 +12,8 @@ importers:
         specifier: 0.41.2
         version: 0.41.2
       '@convex-dev/auth':
-        specifier: ^0.0.92
-        version: 0.0.92(@auth/core@0.41.2)(convex@1.38.0(react@19.2.6))(react@19.2.6)
+        specifier: ^0.0.94
+        version: 0.0.94(@auth/core@0.41.2)(convex@1.38.0(react@19.2.6))(react@19.2.6)
       '@emoji-mart/data':
         specifier: ^1.2.1
         version: 1.2.1
@@ -226,11 +226,11 @@ packages:
   '@cacheable/utils@2.4.1':
     resolution: {integrity: sha512-eiFgzCbIneyMlLOmNG4g9xzF7Hv3Mga4LjxjcSC/ues6VYq2+gUbQI8JqNuw/ZM8tJIeIaBGpswAsqV2V7ApgA==}
 
-  '@convex-dev/auth@0.0.92':
-    resolution: {integrity: sha512-tNRIMTDxi2vrbT+3vz1FgNR1321IfIBDDBy59zul7E1DyzWQKoU0OzgFqWbiVm3o8gn0eQsYTU3UHNRX9kp3wQ==}
+  '@convex-dev/auth@0.0.94':
+    resolution: {integrity: sha512-A/ily6mXQFhSOUAYoiVZdzAZj3RBhiU4d2MOqpEByL7Uzzub6Y+MYQCzSTi0hQzE1dv7dVHprFku0lQuiq6A5w==}
     hasBin: true
     peerDependencies:
-      '@auth/core': ^0.37.0
+      '@auth/core': ^0.41.1
       convex: ^1.17.0
       react: ^18.2.0 || ^19.0.0-0
     peerDependenciesMeta:
@@ -2499,7 +2499,7 @@ snapshots:
       hashery: 1.5.1
       keyv: 5.6.0
 
-  '@convex-dev/auth@0.0.92(@auth/core@0.41.2)(convex@1.38.0(react@19.2.6))(react@19.2.6)':
+  '@convex-dev/auth@0.0.94(@auth/core@0.41.2)(convex@1.38.0(react@19.2.6))(react@19.2.6)':
     dependencies:
       '@auth/core': 0.41.2
       '@oslojs/crypto': 1.0.1
