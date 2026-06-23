@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Update dependencies and add security overrides
 - Add minimumReleaseAge security setting, resolve all lint warnings
 - Restore CI by adding pnpm-lock.yaml, update deps, clean up unused files
 - Correct pnpm typo in corepack workflow
@@ -658,6 +659,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
