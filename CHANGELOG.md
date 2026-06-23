@@ -88,6 +88,7 @@ All notable changes to this project will be documented in this file.
 
 ### CI/CD
 
+- Bump actions/checkout from 6 to 7
 - Make SARIF upload non-blocking when Code Scanning is disabled
 - Add OSV Scanner workflow for dependency vulnerability scanning
 - Add automatic changelog workflow
@@ -101,6 +102,12 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #156 from antonio59/dependabot/github_actions/actions/checkout-7
+
+ci: bump actions/checkout from 6 to 7
+- Merge pull request #154 from antonio59/dependabot/npm_and_yarn/resend-6.12.4
+
+chore(deps): bump resend from 6.12.3 to 6.12.4
 - Merge pull request #149 from antonio59/dependency-updates
 
 chore: Weekly dependency updates
@@ -590,6 +597,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- **deps**: Bump resend from 6.12.3 to 6.12.4
 - Update dependencies
 - Migrate to pnpm v11 and remove @sentry
 - Migrate fully from bun to pnpm (CI, docs, scripts)
@@ -650,6 +658,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
