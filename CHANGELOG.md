@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Resolve remaining security vulnerabilities with pnpmfile hook
 - Update dependencies and add security overrides
 - Add minimumReleaseAge security setting, resolve all lint warnings
 - Restore CI by adding pnpm-lock.yaml, update deps, clean up unused files
@@ -659,6 +660,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
