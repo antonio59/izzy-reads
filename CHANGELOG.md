@@ -101,6 +101,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #149 from antonio59/dependency-updates
+
+chore: Weekly dependency updates
 - Merge pull request #125 from antonio59/dependency-updates
 
 chore: Weekly dependency updates
@@ -587,6 +590,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- Update dependencies
 - Migrate to pnpm v11 and remove @sentry
 - Migrate fully from bun to pnpm (CI, docs, scripts)
 - Update dependencies
@@ -646,6 +650,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
