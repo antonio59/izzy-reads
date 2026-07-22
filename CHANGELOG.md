@@ -91,6 +91,7 @@ All notable changes to this project will be documented in this file.
 
 ### CI/CD
 
+- Bump actions/setup-node from 6 to 7 (#163)
 - Bump actions/checkout from 6 to 7
 - Make SARIF upload non-blocking when Code Scanning is disabled
 - Add OSV Scanner workflow for dependency vulnerability scanning
@@ -661,6 +662,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
