@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- **security**: Patch brace-expansion, js-yaml, fast-uri vulnerabilities
 - Resolve remaining security vulnerabilities with pnpmfile hook
 - Update dependencies and add security overrides
 - Add minimumReleaseAge security setting, resolve all lint warnings
@@ -660,6 +661,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
