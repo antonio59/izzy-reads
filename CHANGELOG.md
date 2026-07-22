@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- **ci**: Exclude typescript-eslint/postcss from minimumReleaseAge gate
 - **security**: Patch brace-expansion, js-yaml, fast-uri vulnerabilities
 - Resolve remaining security vulnerabilities with pnpmfile hook
 - Update dependencies and add security overrides
@@ -663,6 +664,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
