@@ -13,3 +13,6 @@ minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
   - fast-uri
+  - typescript-eslint
+  - "@typescript-eslint/*"
+  - postcss
