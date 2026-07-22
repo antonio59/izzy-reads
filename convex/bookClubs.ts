@@ -22,18 +22,12 @@ export const getAll = query({
   },
 });
 
-// Get a specific book club with comments
+// Get a specific book club with reaction counts
 export const getById = query({
   args: { id: v.id("bookClubs") },
   handler: async (ctx, args) => {
     const club = await ctx.db.get(args.id);
     if (!club) return null;
-
-    const comments = await ctx.db
-      .query("bookClubComments")
-      .withIndex("by_club", (q) => q.eq("clubId", args.id))
-      .order("desc")
-      .collect();
 
     const reactions = await ctx.db
       .query("bookClubReactions")
@@ -55,7 +49,6 @@ export const getById = query({
 
     return {
       club,
-      comments,
       reactionCounts,
       totalReactions: reactions.length,
     };
@@ -163,34 +156,10 @@ export const remove = mutation({
   },
 });
 
-// Add a comment to a book club (public)
-export const addComment = mutation({
-  args: {
-    clubId: v.id("bookClubs"),
-    visitorName: v.string(),
-    passcode: v.string(),
-    content: v.string(),
-  },
-  handler: async (ctx, args) => {
-    if (args.visitorName.trim().length < 1) {
-      throw new Error("Name is required");
-    }
-    if (!/^\d{6}$/.test(args.passcode)) {
-      throw new Error("Passcode must be exactly 6 digits");
-    }
-    if (args.content.trim().length < 1) {
-      throw new Error("Comment cannot be empty");
-    }
-
-    return await ctx.db.insert("bookClubComments", {
-      clubId: args.clubId,
-      visitorName: args.visitorName.trim(),
-      passcode: args.passcode,
-      content: args.content.trim(),
-      createdAt: new Date().toISOString(),
-    });
-  },
-});
+// NOTE: Public comments were intentionally removed — visitors can only
+// react with emoji. The bookClubComments table is retained so existing
+// data can still be cascade-deleted with its club, but nothing can
+// insert or read it from the app anymore.
 
 // Add a reaction to a book club (public)
 export const addReaction = mutation({

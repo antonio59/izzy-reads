@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, BookOpen, Calendar, MessageCircle, Send, X, Clock } from "lucide-react";
+import { Users, BookOpen, Calendar, Clock } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
-import { Input, Textarea } from "./ui/Input";
+import { Input } from "./ui/Input";
 import { Card } from "./ui/Card";
-import { Button } from "./ui/Button";
 
 const CLUB_REACTIONS = [
   { key: "excited", emoji: "🤩", label: "Excited!" },
@@ -20,13 +19,11 @@ export default function PublicBookClub() {
   const clubData = useQuery(api.bookClubs.getActive);
   const [visitorName, setVisitorName] = useState(() => localStorage.getItem("izzy_bookclub_name") || "");
   const [passcode, setPasscode] = useState("");
-  const [commentText, setCommentText] = useState("");
   const [showNamePrompt, setShowNamePrompt] = useState(false);
-  const [pendingAction, setPendingAction] = useState<"comment" | { reaction: typeof CLUB_REACTIONS[number]["key"] } | null>(null);
+  const [pendingReaction, setPendingReaction] = useState<typeof CLUB_REACTIONS[number]["key"] | null>(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const addComment = useMutation(api.bookClubs.addComment);
   const addReaction = useMutation(api.bookClubs.addReaction);
   const visitorReaction = useQuery(
     api.bookClubs.getVisitorReaction,
@@ -50,45 +47,13 @@ export default function PublicBookClub() {
     // Passcode is intentionally NOT stored in localStorage
   };
 
-  const handleOpenComment = () => {
-    if (!visitorName.trim() || passcode.length !== 6) {
-      setShowNamePrompt(true);
-      setPendingAction("comment");
-      return;
-    }
-    setPendingAction("comment");
-  };
-
   const handleReaction = (reactionKey: typeof CLUB_REACTIONS[number]["key"]) => {
     if (!visitorName.trim() || passcode.length !== 6) {
+      setPendingReaction(reactionKey);
       setShowNamePrompt(true);
-      setPendingAction({ reaction: reactionKey });
       return;
     }
     submitReaction(reactionKey);
-  };
-
-  const submitComment = async () => {
-    if (!clubData) return;
-    if (!commentText.trim()) {
-      setError("Please write a comment");
-      return;
-    }
-    try {
-      await addComment({
-        clubId: clubData._id,
-        visitorName: visitorName.trim(),
-        passcode,
-        content: commentText.trim(),
-      });
-      saveCredentials();
-      setCommentText("");
-      setPendingAction(null);
-      setSuccess("Comment posted!");
-      setTimeout(() => setSuccess(""), 2000);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to post comment");
-    }
   };
 
   const submitReaction = async (reactionKey: typeof CLUB_REACTIONS[number]["key"]) => {
@@ -116,14 +81,11 @@ export default function PublicBookClub() {
     setError("");
     saveCredentials();
     setShowNamePrompt(false);
-    if (pendingAction === "comment") {
-      // Keep comment form open
-    } else if (pendingAction && "reaction" in pendingAction) {
-      submitReaction(pendingAction.reaction);
+    if (pendingReaction) {
+      submitReaction(pendingReaction);
+      setPendingReaction(null);
     }
   };
-
-  const isPromptOpen = showNamePrompt || (pendingAction === "comment" && (!visitorName.trim() || passcode.length !== 6));
 
   if (!clubData) {
     return (
@@ -216,7 +178,7 @@ export default function PublicBookClub() {
 
                 <div className="flex items-center gap-2 text-sm text-stone-500 mb-6">
                   <Calendar className="w-4 h-4" />
-                  Discussion open until{" "}
+                  Reading along until{" "}
                   {new Date(clubData.endDate).toLocaleDateString("en-US", {
                     month: "long",
                     day: "numeric",
@@ -260,103 +222,25 @@ export default function PublicBookClub() {
         </div>
       </section>
 
-      {/* Discussion */}
+      {/* Reactions-only note */}
       <section className="flex-1 px-4 pb-12">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-stone-800 flex items-center gap-2">
-              <MessageCircle className="w-5 h-5 text-primary-500" />
-              Discussion
-            </h3>
-            <span className="text-sm text-stone-500">
-              {detailedData?.comments.length || 0} comment
-              {(detailedData?.comments.length || 0) !== 1 ? "s" : ""}
-            </span>
+          <div className="text-center py-10 bg-white/50 rounded-2xl border border-dashed border-cream-300">
+            <p className="text-stone-600 font-medium mb-1">
+              {detailedData && detailedData.totalReactions > 0
+                ? `${detailedData.totalReactions} reaction${detailedData.totalReactions !== 1 ? "s" : ""} so far — thanks for reading along!`
+                : "Be the first to react to this month's pick!"}
+            </p>
+            <p className="text-sm text-stone-400">
+              Tap an emoji above to let Izzy know what you think 💛
+            </p>
           </div>
-
-          {/* Comments list */}
-          <div className="space-y-4 mb-8">
-            {detailedData?.comments.length ? (
-              detailedData.comments.map((comment, idx) => (
-                <Card
-                  key={comment._id}
-                  variant="outlined"
-                  padding="none"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.05 }}
-                  className="p-5 shadow-sm border-cream-300"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-stone-800">{comment.visitorName}</span>
-                    <span className="text-xs text-stone-400">
-                      {new Date(comment.createdAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </span>
-                  </div>
-                  <p className="text-stone-600 leading-relaxed">{comment.content}</p>
-                </Card>
-              ))
-            ) : (
-              <div className="text-center py-12 bg-white/50 rounded-2xl border border-dashed border-cream-300">
-                <p className="text-stone-500">No comments yet. Be the first to share your thoughts!</p>
-              </div>
-            )}
-          </div>
-
-          {/* Comment input */}
-          <Card variant="outlined" padding="none" className="p-5 shadow-md border-cream-300">
-            {pendingAction === "comment" ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <p className="font-semibold text-stone-700">Add a comment</p>
-                  <button
-                    onClick={() => setPendingAction(null)}
-                    className="p-1 hover:bg-stone-100 rounded-full transition-colors"
-                  >
-                    <X className="w-4 h-4 text-stone-400" />
-                  </button>
-                </div>
-                <Textarea
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  placeholder="What do you think about this book?"
-                  rows={4}
-                />
-                {error && <p className="text-red-500 text-sm">{error}</p>}
-                {success && <p className="text-green-600 text-sm">{success}</p>}
-                <Button
-                  variant="primary"
-                  size="md"
-                  fullWidth
-                  onClick={submitComment}
-                  icon={<Send className="w-4 h-4" />}
-                >
-                  Post Comment
-                </Button>
-              </div>
-            ) : (
-              <motion.button
-                onClick={handleOpenComment}
-                className="w-full flex items-center gap-3 px-4 py-3 bg-cream-50 hover:bg-cream-100 rounded-xl text-stone-600 font-medium transition-colors text-left"
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-              >
-                <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
-                  <MessageCircle className="w-5 h-5 text-primary-500" />
-                </div>
-                <span>Join the discussion...</span>
-              </motion.button>
-            )}
-          </Card>
         </div>
       </section>
 
       {/* Name/Passcode Prompt Modal */}
       <AnimatePresence>
-        {isPromptOpen && (
+        {showNamePrompt && (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
@@ -370,7 +254,7 @@ export default function PublicBookClub() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
             >
-              <h3 className="text-lg font-bold text-stone-800 mb-2">Join the Discussion</h3>
+              <h3 className="text-lg font-bold text-stone-800 mb-2">Leave a Reaction</h3>
               <p className="text-sm text-stone-500 mb-4">
                 Enter a name and create a 6-digit passcode so we know it's you next time.
               </p>
