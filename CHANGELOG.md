@@ -601,6 +601,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- Update dependencies (#162)
 - **deps**: Bump resend from 6.12.3 to 6.12.4
 - Update dependencies
 - Migrate to pnpm v11 and remove @sentry
@@ -662,6 +663,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
