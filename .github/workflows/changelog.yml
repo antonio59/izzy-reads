@@ -32,10 +32,31 @@ jobs:
 
       - name: Commit & Push Changelog
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- CHANGELOG.md; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
           git add CHANGELOG.md
-          git diff --staged --quiet && echo "No changes to commit" && exit 0
           git commit -m "docs: update changelog [skip ci]"
-          git pull --rebase origin ${{ github.ref_name }}
+
+          # Concurrent pushes often land another changelog commit first.
+          # During rebase, "theirs" is our commit — keep the regenerated file.
+          for attempt in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push rejected (attempt ${attempt}); rebasing onto latest main..."
+            if ! git pull --rebase -X theirs origin "${{ github.ref_name }}"; then
+              echo "Rebase conflict; keeping regenerated CHANGELOG.md"
+              git checkout --theirs -- CHANGELOG.md || true
+              git add CHANGELOG.md
+              GIT_EDITOR=true git rebase --continue
+            fi
+          done
+
           git push
