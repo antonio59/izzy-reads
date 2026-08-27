@@ -117,6 +117,11 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Polish public Bookshelf pages and WhatsApp share previews.
+
+Add review filters with shareable URLs, currently-reading strips, SEO meta, and a proper landscape OG image plus icons so social crawlers show more than plain text.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Harden cover host checks and polish the public Bookshelf home.
 
 Replace incomplete hostname substring matches with exact/suffix checks for CodeQL, skip blank covers in the hero, and rename leftover Portfolio labels.
@@ -736,6 +741,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
