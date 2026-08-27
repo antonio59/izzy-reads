@@ -27,14 +27,13 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --config.minimumReleaseAge=0 --config.minimumReleaseAgeStrict=false
 
       - name: Update dependencies
-        run: pnpm update
+        run: pnpm update --config.minimumReleaseAge=0 --config.minimumReleaseAgeStrict=false
 
       - name: Run build
         run: pnpm run build:frontend
-
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
         with:

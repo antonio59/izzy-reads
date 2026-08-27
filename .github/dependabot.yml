@@ -11,6 +11,13 @@ updates:
       timezone: "UTC"
     open-pull-requests-limit: 10
     versioning-strategy: increase
+    # Match pnpm minimumReleaseAge (7 days). Without this, Dependabot proposes
+    # packages the lockfile updater then rejects via ERR_PNPM_MINIMUM_RELEASE_AGE_*.
+    cooldown:
+      default-days: 7
+      semver-major-days: 7
+      semver-minor-days: 7
+      semver-patch-days: 7
     labels:
       - "dependencies"
       - "automated"
@@ -21,7 +28,7 @@ updates:
       - "antonio59"
     assignees:
       - "antonio59"
-    
+
     # Group dependency updates
     groups:
       # Group all React-related updates together
@@ -29,31 +36,26 @@ updates:
         patterns:
           - "react*"
           - "@types/react*"
-      
+
       # Group all Vite-related updates together
       vite:
         patterns:
           - "vite*"
           - "@vitejs/*"
-      
+
       # Group all TypeScript updates together
       typescript:
         patterns:
           - "typescript"
           - "@typescript-eslint/*"
-      
+
       # Group all testing utilities together
       testing:
         patterns:
           - "@testing-library/*"
           - "vitest"
           - "jest"
-      
-      # Group all Supabase updates together
-      supabase:
-        patterns:
-          - "@supabase/*"
-      
+
       # Group all Tailwind updates together
       tailwind:
         patterns:
@@ -70,6 +72,8 @@ updates:
       day: "monday"
       time: "09:00"
       timezone: "UTC"
+    cooldown:
+      default-days: 7
     labels:
       - "github-actions"
       - "automated"

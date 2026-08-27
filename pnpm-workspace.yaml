@@ -10,7 +10,13 @@ overrides:
   fast-uri: ^3.1.5
   "@auth/core": 0.41.3
 
+# 7-day supply-chain cool-off. Dependabot version updates do not bypass this
+# gate (only security_updates_only does), so keep excludes + Dependabot cooldown
+# in sync or the updater fails with ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION.
 minimumReleaseAge: 10080
+# Don't hard-fail when registry metadata is missing a "time" field
+# (ERR_PNPM_MISSING_TIME) — common in Dependabot's resolver environment.
+minimumReleaseAgeStrict: false
 
 minimumReleaseAgeExclude:
   - fast-uri
@@ -20,3 +26,20 @@ minimumReleaseAgeExclude:
   - "@auth/core"
   - react-router
   - react-router-dom
+  # High-churn transitive deps that break Dependabot lockfile regeneration
+  - caniuse-lite
+  - electron-to-chromium
+  - browserslist
+  - "@babel/helpers"
+  - "@babel/runtime"
+  - "@babel/types"
+  - "@types/node"
+  - undici
+  - brace-expansion
+  - js-yaml
+  - esbuild
+  - zod
+  - picomatch
+  - flatted
+  - ws
+  - uuid

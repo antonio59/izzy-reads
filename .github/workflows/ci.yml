@@ -26,7 +26,14 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        # Dependabot lockfiles can include transitive packages still inside the
+        # local minimumReleaseAge window; don't fail CI verification on that.
+        run: |
+          if [ "${{ github.actor }}" = "dependabot[bot]" ]; then
+            pnpm install --config.minimumReleaseAge=0 --config.minimumReleaseAgeStrict=false
+          else
+            pnpm install
+          fi
 
       - name: Run lint
         run: pnpm run lint
@@ -65,7 +72,14 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        # Dependabot lockfiles can include transitive packages still inside the
+        # local minimumReleaseAge window; don't fail CI verification on that.
+        run: |
+          if [ "${{ github.actor }}" = "dependabot[bot]" ]; then
+            pnpm install --config.minimumReleaseAge=0 --config.minimumReleaseAgeStrict=false
+          else
+            pnpm install
+          fi
 
       - name: Build project
         run: pnpm run build:frontend
