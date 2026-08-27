@@ -117,6 +117,11 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Apply safe Dependabot bumps; hold risky major upgrades.
+
+Bump auth, lucide, resend, react-refresh, jest-dom, and vitest. Ignore framer-motion/jsdom/@types/node majors until Node and motion migrations are planned.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Allow MIT-0 in dependency review license checks.
 
 postal-mime (via resend) uses MIT-0, a permissive MIT No Attribution license that was incorrectly failing the allow-list.
@@ -703,6 +708,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
