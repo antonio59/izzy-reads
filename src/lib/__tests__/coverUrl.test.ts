@@ -38,6 +38,14 @@ describe("upgradeCoverUrl", () => {
     expect(out).not.toContain("edge=curl");
   });
 
+  it("does not treat lookalike hosts as Google Books", () => {
+    const evil =
+      "https://books.google.evil.com/books/content?id=abc&zoom=1&edge=curl";
+    const out = upgradeCoverUrl(evil);
+    expect(out).not.toContain("zoom=3");
+    expect(out).toContain("books.google.evil.com");
+  });
+
   it("leaves Convex storage URLs alone", () => {
     const url = "https://helpful-xyz.convex.cloud/api/storage/abc";
     expect(upgradeCoverUrl(url)).toBe(url);

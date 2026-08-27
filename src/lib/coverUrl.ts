@@ -37,10 +37,37 @@ export function googleVolumeCoverUrl(volumeId: string): string {
   return `https://books.google.com/books/content?id=${encodeURIComponent(volumeId)}&printsec=frontcover&img=1&zoom=3&source=gbs_api`;
 }
 
+/** True when hostname is googleusercontent.com or a subdomain of it. */
+export function isGoogleUserContentHost(hostname: string): boolean {
+  return (
+    hostname === "googleusercontent.com" ||
+    hostname.endsWith(".googleusercontent.com")
+  );
+}
+
+/** True when hostname is books.google.com (or a subdomain). */
+export function isGoogleBooksHost(hostname: string): boolean {
+  return (
+    hostname === "books.google.com" || hostname.endsWith(".books.google.com")
+  );
+}
+
+export function isConvexStorageHost(hostname: string): boolean {
+  return (
+    hostname === "convex.cloud" ||
+    hostname.endsWith(".convex.cloud") ||
+    hostname === "convex.site" ||
+    hostname.endsWith(".convex.site")
+  );
+}
+
 export function isLikelyInvalidCover(url: string | undefined | null): boolean {
   if (!url) return true;
   const lower = url.toLowerCase();
-  if (lower === PLACEHOLDER_COVER || lower.endsWith("placeholder-book-cover.png")) {
+  if (
+    lower === PLACEHOLDER_COVER ||
+    lower.endsWith("placeholder-book-cover.png")
+  ) {
     return true;
   }
   // Avoid false positives on legitimate hosts that might contain "default"
@@ -55,30 +82,31 @@ export function upgradeCoverUrl(url: string | undefined | null): string {
   if (!url) return "";
   const trimmed = url.trim();
   if (!trimmed) return "";
-  if (
-    trimmed.startsWith("data:") ||
-    trimmed.startsWith("/") ||
-    trimmed.includes(".convex.cloud") ||
-    trimmed.includes(".convex.site")
-  ) {
+  if (trimmed.startsWith("data:") || trimmed.startsWith("/")) {
     return trimmed;
   }
 
-  // Open Library: always prefer -L
-  const olMatch = trimmed.match(
-    /^(https?:\/\/covers\.openlibrary\.org\/b\/(?:id|isbn|olid)\/)([^/?#]+)-(?:S|M|L)(\.jpe?g)(\?.*)?$/i,
-  );
-  if (olMatch) {
-    return `${olMatch[1].replace(/^http:/i, "https:")}${olMatch[2]}-L${olMatch[3]}${olMatch[4] ?? ""}`;
-  }
-
-  // Google Books / googleusercontent
   try {
     const parsed = new URL(trimmed.replace(/^http:/i, "https:"));
-    const host = parsed.hostname;
+    if (isConvexStorageHost(parsed.hostname)) {
+      return trimmed;
+    }
+
+    // Open Library: always prefer -L
     if (
-      host.includes("books.google") ||
-      host.includes("googleusercontent.com")
+      parsed.hostname === "covers.openlibrary.org" &&
+      /^\/b\/(?:id|isbn|olid)\/[^/]+-(?:S|M|L)\.jpe?g$/i.test(parsed.pathname)
+    ) {
+      parsed.pathname = parsed.pathname.replace(
+        /-(?:S|M|L)(\.jpe?g)$/i,
+        "-L$1",
+      );
+      return parsed.toString();
+    }
+
+    if (
+      isGoogleBooksHost(parsed.hostname) ||
+      isGoogleUserContentHost(parsed.hostname)
     ) {
       parsed.searchParams.delete("edge");
       const zoom = parsed.searchParams.get("zoom");
@@ -87,16 +115,11 @@ export function upgradeCoverUrl(url: string | undefined | null): string {
       }
       return parsed.toString();
     }
-  } catch {
-    // fall through
-  }
 
-  return trimmed
-    .replace(/^http:/i, "https:")
-    .replace(/([?&])edge=curl&?/g, "$1")
-    .replace(/([?&])zoom=[12]\b/g, "$1zoom=3")
-    .replace(/\?&/, "?")
-    .replace(/[?&]$/, "");
+    return parsed.toString();
+  } catch {
+    return trimmed;
+  }
 }
 
 /**

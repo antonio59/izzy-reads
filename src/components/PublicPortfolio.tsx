@@ -11,6 +11,7 @@ import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
 import { BookCoverImage } from "./ui/BookCoverImage";
 import type { Book } from "../types";
+import { isLikelyInvalidCover } from "../lib/coverUrl";
 
 const DEFAULT_AVATAR: AvatarConfig = {
   skinTone: "fair",
@@ -133,19 +134,25 @@ const PublicPortfolio = () => {
     [books],
   );
 
-  const featuredBooks = useMemo(
-    () =>
-      [...readBooks]
-        .filter((b) => b.rating && b.rating >= 4)
-        .sort((a, b) => (b.rating || 0) - (a.rating || 0))
-        .slice(0, 6),
+  const booksWithCovers = useMemo(
+    () => readBooks.filter((b) => !isLikelyInvalidCover(b.coverUrl)),
     [readBooks],
   );
 
+  const featuredBooks = useMemo(
+    () =>
+      [...booksWithCovers]
+        .filter((b) => b.rating && b.rating >= 4)
+        .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+        .slice(0, 6),
+    [booksWithCovers],
+  );
+
   const heroCovers = useMemo(() => {
-    const picks = featuredBooks.length > 0 ? featuredBooks : readBooks;
+    // Prefer rated covers; never put blank placeholders in the hero fan
+    const picks = featuredBooks.length > 0 ? featuredBooks : booksWithCovers;
     return picks.slice(0, 7);
-  }, [featuredBooks, readBooks]);
+  }, [featuredBooks, booksWithCovers]);
 
   const latestPoem = useMemo(() => {
     if (poems.length === 0) return null;
@@ -273,17 +280,17 @@ const PublicPortfolio = () => {
           <header className="mb-8 sm:mb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
             <div>
               <h2 className="text-2xl sm:text-3xl font-display font-bold text-stone-800">
-                Books I&apos;ve Read
+                On my shelf
               </h2>
               <p className="text-sm text-stone-500 mt-1">
-                {readBooks.length} books · Tap a cover to peek inside
+                {readBooks.length} books logged · Tap a cover to peek inside
               </p>
             </div>
             <Link
               to="/reviews"
               className="inline-flex items-center gap-1.5 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors"
             >
-              All reviews <ArrowRight className="w-4 h-4" />
+              Reviews <ArrowRight className="w-4 h-4" />
             </Link>
           </header>
 

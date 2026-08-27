@@ -138,10 +138,13 @@ async function fetchFromGoogleBooks(query: string, startIndex: number, apiKey?: 
         try {
           if (rawCoverUrl) {
             const u = new URL(rawCoverUrl);
-            if (
-              u.hostname.includes("books.google") ||
-              u.hostname.includes("googleusercontent.com")
-            ) {
+            const host = u.hostname;
+            const isGoogleBooks =
+              host === "books.google.com" || host.endsWith(".books.google.com");
+            const isGoogleUserContent =
+              host === "googleusercontent.com" ||
+              host.endsWith(".googleusercontent.com");
+            if (isGoogleBooks || isGoogleUserContent) {
               u.searchParams.delete("edge");
               u.searchParams.set("zoom", "3");
               coverUrl = u.toString();

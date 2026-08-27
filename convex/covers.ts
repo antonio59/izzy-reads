@@ -5,32 +5,56 @@ import { api } from "./_generated/api";
 import { auth } from "./auth";
 import type { Doc, Id } from "./_generated/dataModel";
 
-/** Mirror of src/lib/coverUrl.upgradeCoverUrl — keep in sync for Convex runtime. */
+/** Mirror of src/lib/coverUrl helpers — keep in sync for Convex runtime. */
+function isGoogleUserContentHost(hostname: string): boolean {
+  return (
+    hostname === "googleusercontent.com" ||
+    hostname.endsWith(".googleusercontent.com")
+  );
+}
+
+function isGoogleBooksHost(hostname: string): boolean {
+  return (
+    hostname === "books.google.com" || hostname.endsWith(".books.google.com")
+  );
+}
+
+function isConvexStorageHost(hostname: string): boolean {
+  return (
+    hostname === "convex.cloud" ||
+    hostname.endsWith(".convex.cloud") ||
+    hostname === "convex.site" ||
+    hostname.endsWith(".convex.site")
+  );
+}
+
 function upgradeCoverUrl(url: string): string {
   const trimmed = url.trim();
   if (!trimmed) return "";
-  if (
-    trimmed.startsWith("data:") ||
-    trimmed.startsWith("/") ||
-    trimmed.includes(".convex.cloud") ||
-    trimmed.includes(".convex.site")
-  ) {
+  if (trimmed.startsWith("data:") || trimmed.startsWith("/")) {
     return trimmed;
-  }
-
-  const olMatch = trimmed.match(
-    /^(https?:\/\/covers\.openlibrary\.org\/b\/(?:id|isbn|olid)\/)([^/?#]+)-(?:S|M|L)(\.jpe?g)(\?.*)?$/i,
-  );
-  if (olMatch) {
-    return `${olMatch[1].replace(/^http:/i, "https:")}${olMatch[2]}-L${olMatch[3]}${olMatch[4] ?? ""}`;
   }
 
   try {
     const parsed = new URL(trimmed.replace(/^http:/i, "https:"));
-    const host = parsed.hostname;
+    if (isConvexStorageHost(parsed.hostname)) {
+      return trimmed;
+    }
+
     if (
-      host.includes("books.google") ||
-      host.includes("googleusercontent.com")
+      parsed.hostname === "covers.openlibrary.org" &&
+      /^\/b\/(?:id|isbn|olid)\/[^/]+-(?:S|M|L)\.jpe?g$/i.test(parsed.pathname)
+    ) {
+      parsed.pathname = parsed.pathname.replace(
+        /-(?:S|M|L)(\.jpe?g)$/i,
+        "-L$1",
+      );
+      return parsed.toString();
+    }
+
+    if (
+      isGoogleBooksHost(parsed.hostname) ||
+      isGoogleUserContentHost(parsed.hostname)
     ) {
       parsed.searchParams.delete("edge");
       const zoom = parsed.searchParams.get("zoom");
@@ -39,28 +63,17 @@ function upgradeCoverUrl(url: string): string {
       }
       return parsed.toString();
     }
-  } catch {
-    // fall through
-  }
 
-  return trimmed
-    .replace(/^http:/i, "https:")
-    .replace(/([?&])edge=curl&?/g, "$1")
-    .replace(/([?&])zoom=[12]\b/g, "$1zoom=3")
-    .replace(/\?&/, "?")
-    .replace(/[?&]$/, "");
+    return parsed.toString();
+  } catch {
+    return trimmed;
+  }
 }
 
 function isConvexStorageUrl(url?: string): boolean {
   if (!url) return false;
   try {
-    const hostname = new URL(url).hostname;
-    return (
-      hostname === "convex.site" ||
-      hostname.endsWith(".convex.site") ||
-      hostname === "convex.cloud" ||
-      hostname.endsWith(".convex.cloud")
-    );
+    return isConvexStorageHost(new URL(url).hostname);
   } catch {
     return false;
   }

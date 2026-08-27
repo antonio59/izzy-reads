@@ -124,10 +124,10 @@ const Navigation: React.FC = () => {
               <Link
                 to="/"
                 className="flex items-center gap-2 px-3 py-2 rounded-lg text-stone-500 hover:text-primary-600 hover:bg-primary-50 transition-colors text-sm font-medium"
-                title="View your public portfolio"
+                title="View your public bookshelf"
               >
                 <Globe className="h-4 w-4" />
-                <span className="hidden lg:inline">My Portfolio</span>
+                <span className="hidden lg:inline">My Bookshelf</span>
               </Link>
 
               {/* Logout */}
@@ -224,7 +224,7 @@ const Navigation: React.FC = () => {
                   >
                     <Globe className="h-5 w-5 text-primary-500" />
                     <span className="font-medium text-stone-700">
-                      My Public Portfolio
+                      My Public Bookshelf
                     </span>
                   </Link>
 

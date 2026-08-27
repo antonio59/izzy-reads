@@ -306,8 +306,12 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                 >
                   <BookCoverImage book={book} className="w-full h-full" />
                   {hasReview && (
-                    <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-primary-600 text-white shadow-sm">
-                      Review
+                    <span
+                      className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/95 text-primary-600 shadow-sm ring-1 ring-cream-300 flex items-center justify-center"
+                      title="Has a review"
+                      aria-hidden
+                    >
+                      <Star className="w-3.5 h-3.5 fill-primary-500 text-primary-500" />
                     </span>
                   )}
                 </motion.div>
