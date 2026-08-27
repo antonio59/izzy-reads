@@ -117,6 +117,11 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Polish Discover swipe cards and admin dashboard cards.
+
+Align card layout, stats, and cover refresh progress with the cream/berry Bookshelf design on Discover and admin pages.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Make the login page personal for Izzy with helpful reminders.
 
 Add a welcome with avatar, shelf tips, and after-sign-in notes so the private entry feels like her bookshelf, not a generic form.
@@ -754,6 +759,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
