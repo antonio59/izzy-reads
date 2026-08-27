@@ -81,7 +81,7 @@ const Create: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 rounded-2xl p-6 text-white">
+      <div className="bg-gradient-to-r from-primary-500 via-primary-600 to-accent-500 rounded-2xl p-6 text-white">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-display font-bold flex items-center gap-3">
@@ -114,7 +114,7 @@ const Create: React.FC = () => {
           onClick={() => setActiveTab("poems")}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
             activeTab === "poems"
-              ? "bg-white text-purple-600 shadow-sm"
+              ? "bg-white text-primary-600 shadow-sm"
               : "text-stone-600 hover:text-stone-900"
           }`}
         >
@@ -125,7 +125,7 @@ const Create: React.FC = () => {
           onClick={() => setActiveTab("posts")}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
             activeTab === "posts"
-              ? "bg-white text-pink-600 shadow-sm"
+              ? "bg-white text-accent-700 shadow-sm"
               : "text-stone-600 hover:text-stone-900"
           }`}
         >
@@ -139,16 +139,16 @@ const Create: React.FC = () => {
         <div className="flex items-start gap-3">
           <div className="p-2 bg-white rounded-lg shadow-sm">
             {activeTab === "poems" ? (
-              <Feather className="w-5 h-5 text-purple-500" />
+              <Feather className="w-5 h-5 text-primary-500" />
             ) : (
-              <FileText className="w-5 h-5 text-pink-500" />
+              <FileText className="w-5 h-5 text-accent-600" />
             )}
           </div>
           <div>
             {activeTab === "poems" ? (
               <>
                 <h3 className="font-bold text-stone-800 flex items-center gap-2">
-                  My Poems <Sparkles className="w-4 h-4 text-purple-500" />
+                  My Poems <Sparkles className="w-4 h-4 text-primary-500" />
                 </h3>
                 <p className="text-sm text-stone-600 mt-0.5">
                   Write poems about anything you like! They can be about books
@@ -159,7 +159,7 @@ const Create: React.FC = () => {
             ) : (
               <>
                 <h3 className="font-bold text-stone-800 flex items-center gap-2">
-                  My Blog Posts <Sparkles className="w-4 h-4 text-pink-500" />
+                  My Blog Posts <Sparkles className="w-4 h-4 text-accent-600" />
                 </h3>
                 <p className="text-sm text-stone-600 mt-0.5">
                   Share longer stories and thoughts! Write book reviews, talk
@@ -356,7 +356,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
             {post.tags.slice(0, 2).map((tag) => (
               <span
                 key={tag}
-                className="text-xs bg-purple-50 text-purple-600 px-2 py-0.5 rounded"
+                className="text-xs bg-primary-50 text-primary-700 px-2 py-0.5 rounded"
               >
                 {tag}
               </span>

@@ -29,6 +29,7 @@ const Login = lazy(() => import("./components/Login"));
 
 // Lazy load poem detail page
 const PoemDetail = lazy(() => import("./components/PoemDetail"));
+const PublicBlogDetail = lazy(() => import("./components/PublicBlogDetail"));
 
 // Lazy load book club page
 const PublicBookClub = lazy(() => import("./components/PublicBookClub"));
@@ -109,6 +110,16 @@ function App() {
                       element={
                         <PublicLayout>
                           <PublicBlog />
+                        </PublicLayout>
+                      }
+                    />
+                    <Route
+                      path="/blog/:postId"
+                      element={
+                        <PublicLayout>
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicBlogDetail />
+                          </Suspense>
                         </PublicLayout>
                       }
                     />

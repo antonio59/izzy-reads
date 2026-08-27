@@ -106,15 +106,28 @@ const MyBooks: React.FC = () => {
   const handleAddBook = async (book: Book, destination: BookDestination) => {
     if (destination === "wishlist") {
       await addToWishlist(book);
-    } else {
-      // For "read" or "reading", add to books with appropriate isRead status
-      const bookWithStatus = {
-        ...book,
-        isRead: destination === "read",
-      };
-      await addBook(bookWithStatus);
+      setShowSearch(false);
+      return;
     }
+
+    const today = new Date().toISOString().slice(0, 10);
+    const isRead = destination === "read";
+    const bookWithStatus = {
+      ...book,
+      isRead,
+      dateRead: isRead ? book.dateRead || today : book.dateRead,
+    };
+    const newId = await addBook(bookWithStatus);
     setShowSearch(false);
+
+    if (isRead) {
+      setFinishedBook({
+        ...bookWithStatus,
+        id: newId,
+        isRead: true,
+      });
+      setActiveTab("read");
+    }
   };
 
   const handleRemoveFromWishlist = async (bookId: string) => {
@@ -154,7 +167,7 @@ const MyBooks: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl p-6 text-white">
+      <div className="bg-gradient-to-r from-primary-500 via-primary-600 to-accent-500 rounded-2xl p-6 text-white">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-display font-bold flex items-center gap-3">
@@ -221,7 +234,7 @@ const MyBooks: React.FC = () => {
           onClick={() => setActiveTab("wishlist")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all ${
             activeTab === "wishlist"
-              ? "bg-white text-pink-600 shadow-sm"
+              ? "bg-white text-primary-600 shadow-sm"
               : "text-stone-600 hover:text-stone-900"
           }`}
         >
@@ -241,7 +254,7 @@ const MyBooks: React.FC = () => {
               <BookMarked className="w-5 h-5 text-blue-500" />
             )}
             {activeTab === "wishlist" && (
-              <Heart className="w-5 h-5 text-pink-500" />
+              <Heart className="w-5 h-5 text-primary-500" />
             )}
           </div>
           <div>
@@ -274,7 +287,7 @@ const MyBooks: React.FC = () => {
             {activeTab === "wishlist" && (
               <>
                 <h3 className="font-bold text-stone-800 flex items-center gap-2">
-                  My Wishlist <Gift className="w-4 h-4 text-pink-500" />
+                  My Wishlist <Gift className="w-4 h-4 text-primary-500" />
                 </h3>
                 <p className="text-sm text-stone-600 mt-0.5">
                   Books you want to read someday! Add books here that look
@@ -306,7 +319,7 @@ const MyBooks: React.FC = () => {
               onClick={() => setShowGiftFilter(!showGiftFilter)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all ${
                 giftFromFilter
-                  ? "bg-pink-100 text-pink-700 border border-pink-200"
+                  ? "bg-primary-100 text-primary-700 border border-primary-200"
                   : "bg-stone-100 text-stone-600 hover:bg-stone-200 border border-transparent"
               }`}
             >
@@ -318,7 +331,7 @@ const MyBooks: React.FC = () => {
                     e.stopPropagation();
                     setGiftFromFilter("");
                   }}
-                  className="ml-1 p-0.5 hover:bg-pink-200 rounded-full"
+                  className="ml-1 p-0.5 hover:bg-primary-200 rounded-full"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -347,7 +360,7 @@ const MyBooks: React.FC = () => {
                       }}
                       className={`w-full px-4 py-2 text-left text-sm transition-colors ${
                         !giftFromFilter
-                          ? "bg-pink-50 text-pink-700"
+                          ? "bg-primary-50 text-primary-700"
                           : "hover:bg-stone-50 text-stone-700"
                       }`}
                     >
@@ -362,11 +375,11 @@ const MyBooks: React.FC = () => {
                         }}
                         className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 transition-colors ${
                           giftFromFilter === giver
-                            ? "bg-pink-50 text-pink-700"
+                            ? "bg-primary-50 text-primary-700"
                             : "hover:bg-stone-50 text-stone-700"
                         }`}
                       >
-                        <Gift className="w-4 h-4 text-pink-400" />
+                        <Gift className="w-4 h-4 text-primary-400" />
                         {giver}
                         <span className="ml-auto text-xs text-stone-400">
                           {readBooks.filter((b) => b.giftFrom === giver).length}
@@ -383,13 +396,13 @@ const MyBooks: React.FC = () => {
 
       {/* Active filter indicator */}
       {giftFromFilter && (
-        <div className="flex items-center gap-2 text-sm text-pink-600 bg-pink-50 px-4 py-2 rounded-lg w-fit">
+        <div className="flex items-center gap-2 text-sm text-primary-600 bg-primary-50 px-4 py-2 rounded-lg w-fit">
           <Gift className="w-4 h-4" />
           Showing books from{" "}
           <span className="font-semibold">{giftFromFilter}</span>
           <button
             onClick={() => setGiftFromFilter("")}
-            className="ml-2 text-pink-500 hover:text-pink-700"
+            className="ml-2 text-primary-500 hover:text-primary-700"
           >
             Clear filter
           </button>
@@ -620,7 +633,7 @@ const ReadBookCard: React.FC<ReadBookCardProps> = ({
       onClick={onClick}
     >
       {/* Cover */}
-      <div className="aspect-[2/3] bg-gradient-to-br from-purple-100 to-indigo-100 relative">
+      <div className="aspect-[2/3] bg-gradient-to-br from-primary-100 to-accent-100 relative">
         {book.coverUrl ? (
           <img
             src={book.coverUrl}
@@ -629,7 +642,7 @@ const ReadBookCard: React.FC<ReadBookCardProps> = ({
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <BookOpen className="w-12 h-12 text-purple-300" />
+            <BookOpen className="w-12 h-12 text-primary-300" />
           </div>
         )}
         {/* Rating badge */}
@@ -676,7 +689,7 @@ const ReadBookCard: React.FC<ReadBookCardProps> = ({
               e.stopPropagation();
               onMoveToWishlist();
             }}
-            className="px-2 py-1.5 text-stone-400 hover:text-pink-500 hover:bg-pink-50 rounded-lg transition-colors"
+            className="px-2 py-1.5 text-stone-400 hover:text-primary-500 hover:bg-primary-50 rounded-lg transition-colors"
             title="Move to Want to Read"
           >
             <ArrowRight className="w-3 h-3" />
@@ -721,7 +734,7 @@ const ReadingBookCard: React.FC<ReadingBookCardProps> = ({
       onClick={onClick}
     >
       {/* Cover */}
-      <div className="aspect-[2/3] bg-gradient-to-br from-blue-100 to-indigo-100 relative">
+      <div className="aspect-[2/3] bg-gradient-to-br from-accent-100 to-accent-200 relative">
         {book.coverUrl ? (
           <img
             src={book.coverUrl}
@@ -808,13 +821,13 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
 }) => {
   return (
     <motion.div
-      className="bg-white rounded-xl shadow-sm border border-pink-100 overflow-hidden group cursor-pointer hover:shadow-lg"
+      className="bg-white rounded-xl shadow-sm border border-primary-100 overflow-hidden group cursor-pointer hover:shadow-lg"
       variants={staggerItem}
       whileHover={{ y: -4 }}
       onClick={onClick}
     >
       {/* Cover */}
-      <div className="aspect-[2/3] bg-gradient-to-br from-pink-100 to-purple-100 relative">
+      <div className="aspect-[2/3] bg-gradient-to-br from-primary-100 to-accent-100 relative">
         {book.coverUrl ? (
           <img
             src={book.coverUrl}
@@ -823,7 +836,7 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <Heart className="w-12 h-12 text-pink-300" />
+            <Heart className="w-12 h-12 text-primary-300" />
           </div>
         )}
         {/* Wishlist badge */}

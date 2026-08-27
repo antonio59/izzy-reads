@@ -172,7 +172,7 @@ const ProfileEditor: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary-500" />
       </div>
     );
   }
@@ -180,7 +180,7 @@ const ProfileEditor: React.FC = () => {
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       {/* Header */}
-      <div className="bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 rounded-2xl p-6 text-white">
+      <div className="bg-gradient-to-r from-primary-500 via-primary-600 to-accent-500 rounded-2xl p-6 text-white">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-display font-bold flex items-center gap-3">
@@ -198,7 +198,7 @@ const ProfileEditor: React.FC = () => {
               }
               className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-all ${
                 profile.isPublished
-                  ? "bg-white text-purple-600"
+                  ? "bg-white text-primary-600"
                   : "bg-white/20 text-white"
               }`}
             >
@@ -435,13 +435,13 @@ const Section: React.FC<SectionProps> = ({
   children,
 }) => {
   const colorClasses: Record<string, string> = {
-    purple: "from-purple-500 to-violet-500",
+    purple: "from-primary-500 to-accent-500",
     blue: "from-blue-500 to-cyan-500",
-    pink: "from-pink-500 to-rose-500",
+    pink: "from-primary-400 to-primary-600",
     green: "from-green-500 to-emerald-500",
     amber: "from-amber-500 to-orange-500",
     yellow: "from-yellow-500 to-amber-500",
-    indigo: "from-indigo-500 to-purple-500",
+    indigo: "from-accent-500 to-accent-700",
   };
 
   return (
@@ -485,11 +485,11 @@ const ListEditor: React.FC<ListEditorProps> = ({
   color,
 }) => {
   const bgClasses: Record<string, string> = {
-    purple: "bg-purple-100 text-purple-700",
+    purple: "bg-primary-100 text-primary-700",
     amber: "bg-amber-100 text-amber-700",
     yellow: "bg-yellow-100 text-yellow-700",
     green: "bg-green-100 text-green-700",
-    indigo: "bg-indigo-100 text-indigo-700",
+    indigo: "bg-accent-100 text-accent-700",
   };
 
   return (

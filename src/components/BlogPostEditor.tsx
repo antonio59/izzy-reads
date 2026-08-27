@@ -236,7 +236,7 @@ const BlogPostEditor: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
+    <div className="min-h-screen bg-gradient-to-br from-cream-100 via-primary-50 to-accent-50">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-stone-200">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -253,7 +253,7 @@ const BlogPostEditor: React.FC = () => {
               onClick={() => setShowPreview(!showPreview)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
                 showPreview
-                  ? "bg-purple-100 text-purple-700"
+                  ? "bg-primary-100 text-primary-700"
                   : "bg-stone-100 text-stone-600 hover:bg-stone-200"
               }`}
             >
@@ -268,7 +268,7 @@ const BlogPostEditor: React.FC = () => {
             <button
               onClick={handleSave}
               disabled={!title.trim() || !content.trim() || isSaving}
-              className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-medium hover:from-primary-700 hover:to-accent-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               <Save className="w-4 h-4" />
               {isSaving ? "Saving..." : existingPost ? "Update" : "Publish"}
@@ -326,8 +326,8 @@ const BlogPostEditor: React.FC = () => {
                       onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                       className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
                         showEmojiPicker
-                          ? "bg-purple-100 text-purple-700"
-                          : "bg-stone-100 text-stone-600 hover:bg-purple-50 hover:text-purple-600"
+                          ? "bg-primary-100 text-primary-700"
+                          : "bg-stone-100 text-stone-600 hover:bg-primary-50 hover:text-primary-600"
                       }`}
                     >
                       <Smile className="w-5 h-5" />
@@ -350,7 +350,7 @@ const BlogPostEditor: React.FC = () => {
                                 onClick={() => setActiveEmojiCategory(category)}
                                 className={`px-3 py-1.5 text-xs font-medium rounded-lg whitespace-nowrap transition-colors ${
                                   activeEmojiCategory === category
-                                    ? "bg-purple-100 text-purple-700"
+                                    ? "bg-primary-100 text-primary-700"
                                     : "text-stone-500 hover:bg-stone-100"
                                 }`}
                               >
@@ -384,7 +384,7 @@ const BlogPostEditor: React.FC = () => {
                   </div>
 
                   {/* GIF Picker - wrapped in styled button */}
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-stone-100 text-stone-600 hover:bg-pink-50 hover:text-pink-600 transition-all">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-stone-100 text-stone-600 hover:bg-primary-50 hover:text-primary-600 transition-all">
                     <Image className="w-5 h-5" />
                     <span className="font-medium">GIF</span>
                     <GifPicker
@@ -440,9 +440,9 @@ const BlogPostEditor: React.FC = () => {
               </Card>
 
               {/* Tips */}
-              <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-6">
-                <h3 className="font-bold text-purple-800 mb-2">Writing Tips</h3>
-                <ul className="text-sm text-purple-700 space-y-1">
+              <div className="bg-gradient-to-r from-primary-100 to-accent-100 rounded-2xl p-6">
+                <h3 className="font-bold text-primary-800 mb-2">Writing Tips</h3>
+                <ul className="text-sm text-primary-700 space-y-1">
                   <li>Use emojis to make your post more expressive and fun!</li>
                   <li>Add GIFs to show reactions or illustrate your points</li>
                   <li>

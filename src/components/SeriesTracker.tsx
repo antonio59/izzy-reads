@@ -5,11 +5,13 @@ import {
   Plus,
   ChevronRight,
   ChevronDown,
+  ChevronUp,
   BookOpen,
   Check,
   Search,
   X,
   Trash2,
+  Trophy,
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { useAuth } from "../contexts/AuthContext";
@@ -85,6 +87,8 @@ const SeriesTracker: React.FC = () => {
   const deleteSeries = useMutation(api.series.remove);
   const addBookToSeries = useMutation(api.series.addBook);
   const removeBookFromSeries = useMutation(api.series.removeBook);
+  const reorderSeriesBooks = useMutation(api.series.reorderBooks);
+  const updateSeries = useMutation(api.series.update);
 
   const [showAddSeries, setShowAddSeries] = useState(false);
   const [showAddBook, setShowAddBook] = useState<Id<"bookSeries"> | null>(null);
@@ -162,6 +166,32 @@ const SeriesTracker: React.FC = () => {
     });
   };
 
+  const handleReorderBook = async (
+    seriesId: Id<"bookSeries">,
+    bookId: string,
+    direction: "up" | "down",
+  ) => {
+    const series = seriesWithBooks.find((s) => s.id === seriesId);
+    if (!series) return;
+
+    const ids = [...series.bookIds];
+    const index = ids.findIndex((id) => id === bookId);
+    if (index < 0) return;
+
+    const swapWith = direction === "up" ? index - 1 : index + 1;
+    if (swapWith < 0 || swapWith >= ids.length) return;
+
+    [ids[index], ids[swapWith]] = [ids[swapWith], ids[index]];
+    await reorderSeriesBooks({ seriesId, bookIds: ids });
+  };
+
+  const handleToggleComplete = async (
+    seriesId: Id<"bookSeries">,
+    completed: boolean,
+  ) => {
+    await updateSeries({ id: seriesId, completed: !completed });
+  };
+
   const toggleExpanded = (id: string) => {
     setExpandedSeries((prev) =>
       prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id],
@@ -202,7 +232,7 @@ const SeriesTracker: React.FC = () => {
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
-                  <Library className="w-7 h-7 text-indigo-600" />
+                  <Library className="w-7 h-7 text-primary-600" />
                 </div>
                 <div>
                   <h1 className="text-3xl font-display font-bold text-stone-900">
@@ -217,7 +247,7 @@ const SeriesTracker: React.FC = () => {
 
             <motion.button
               onClick={() => setShowAddSeries(true)}
-              className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg"
+              className="flex items-center gap-2 bg-gradient-to-r from-primary-600 to-accent-600 text-white px-6 py-3 rounded-xl font-bold hover:from-primary-700 hover:to-accent-700 transition-all shadow-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -241,19 +271,19 @@ const SeriesTracker: React.FC = () => {
       <FadeIn delay={0.1}>
         <div className="grid grid-cols-3 gap-4">
           <Card padding="md" className="text-center">
-            <p className="text-3xl font-display font-bold text-indigo-600">
+            <p className="text-3xl font-display font-bold text-primary-600">
               {seriesWithBooks.length}
             </p>
             <p className="text-sm text-stone-500">Series Tracked</p>
           </Card>
           <Card padding="md" className="text-center">
-            <p className="text-3xl font-display font-bold text-purple-600">
+            <p className="text-3xl font-display font-bold text-primary-600">
               {seriesWithBooks.filter((s) => s.completed).length}
             </p>
             <p className="text-sm text-stone-500">Completed</p>
           </Card>
           <Card padding="md" className="text-center">
-            <p className="text-3xl font-display font-bold text-pink-600">
+            <p className="text-3xl font-display font-bold text-accent-600">
               {seriesWithBooks.reduce((sum, s) => sum + s.booksRead, 0)}
             </p>
             <p className="text-sm text-stone-500">Books Read</p>
@@ -286,7 +316,7 @@ const SeriesTracker: React.FC = () => {
                       className="w-full p-5 flex items-center justify-between hover:bg-stone-50 transition-colors"
                     >
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center text-2xl">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center text-2xl">
                           {POPULAR_SERIES.find((ps) => ps.name === s.name)
                             ?.emoji || "📚"}
                         </div>
@@ -354,6 +384,38 @@ const SeriesTracker: React.FC = () => {
                                         : "bg-stone-100 opacity-60"
                                     }`}
                                   >
+                                    <div className="absolute top-1 left-1 flex flex-col gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <button
+                                        type="button"
+                                        disabled={index === 0}
+                                        onClick={() =>
+                                          handleReorderBook(
+                                            s.id,
+                                            book.id,
+                                            "up",
+                                          )
+                                        }
+                                        className="p-1 bg-white text-stone-500 rounded-full shadow-sm hover:bg-primary-50 hover:text-primary-600 disabled:opacity-30 disabled:pointer-events-none"
+                                        title="Move up"
+                                      >
+                                        <ChevronUp className="w-3 h-3" />
+                                      </button>
+                                      <button
+                                        type="button"
+                                        disabled={index === s.books.length - 1}
+                                        onClick={() =>
+                                          handleReorderBook(
+                                            s.id,
+                                            book.id,
+                                            "down",
+                                          )
+                                        }
+                                        className="p-1 bg-white text-stone-500 rounded-full shadow-sm hover:bg-primary-50 hover:text-primary-600 disabled:opacity-30 disabled:pointer-events-none"
+                                        title="Move down"
+                                      >
+                                        <ChevronDown className="w-3 h-3" />
+                                      </button>
+                                    </div>
                                     <button
                                       onClick={() =>
                                         handleRemoveBookFromSeries(
@@ -376,9 +438,9 @@ const SeriesTracker: React.FC = () => {
                                         className="w-16 h-24 mx-auto my-2 rounded-lg object-cover shadow-sm"
                                       />
                                     ) : (
-                                      <div className="w-16 h-24 mx-auto my-2 rounded-lg bg-gradient-to-br from-indigo-200 to-purple-200 flex items-center justify-center">
+                                      <div className="w-16 h-24 mx-auto my-2 rounded-lg bg-gradient-to-br from-primary-200 to-accent-200 flex items-center justify-center">
                                         <BookOpen
-                                          className={`w-6 h-6 ${book.isRead ? "text-indigo-600" : "text-stone-400"}`}
+                                          className={`w-6 h-6 ${book.isRead ? "text-primary-600" : "text-stone-400"}`}
                                         />
                                       </div>
                                     )}
@@ -407,14 +469,31 @@ const SeriesTracker: React.FC = () => {
                             )}
 
                             {/* Actions */}
-                            <div className="flex justify-between gap-2 mt-4 pt-4 border-t border-stone-200">
-                              <button
-                                onClick={() => setShowAddBook(s.id)}
-                                className="flex items-center gap-1 px-3 py-2 text-sm text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
-                              >
-                                <Plus className="w-4 h-4" />
-                                Add Book
-                              </button>
+                            <div className="flex flex-wrap justify-between gap-2 mt-4 pt-4 border-t border-stone-200">
+                              <div className="flex flex-wrap gap-2">
+                                <button
+                                  onClick={() => setShowAddBook(s.id)}
+                                  className="flex items-center gap-1 px-3 py-2 text-sm text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                                >
+                                  <Plus className="w-4 h-4" />
+                                  Add Book
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    handleToggleComplete(s.id, s.completed)
+                                  }
+                                  className={`flex items-center gap-1 px-3 py-2 text-sm rounded-lg transition-colors ${
+                                    s.completed
+                                      ? "text-stone-600 hover:bg-stone-100"
+                                      : "text-accent-700 hover:bg-accent-50"
+                                  }`}
+                                >
+                                  <Trophy className="w-4 h-4" />
+                                  {s.completed
+                                    ? "Mark incomplete"
+                                    : "Mark series complete"}
+                                </button>
+                              </div>
                               <button
                                 onClick={() => handleDeleteSeries(s.id)}
                                 className="flex items-center gap-1 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -446,7 +525,7 @@ const SeriesTracker: React.FC = () => {
                 </p>
                 <motion.button
                   onClick={() => setShowAddSeries(true)}
-                  className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-bold"
+                  className="bg-gradient-to-r from-primary-600 to-accent-600 text-white px-6 py-3 rounded-xl font-bold"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -482,7 +561,7 @@ const SeriesTracker: React.FC = () => {
                   <motion.button
                     onClick={() => handleAddSeries(newSeriesName)}
                     disabled={!newSeriesName.trim()}
-                    className="px-4 py-3 bg-indigo-600 text-white rounded-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-3 bg-primary-600 text-white rounded-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -520,7 +599,7 @@ const SeriesTracker: React.FC = () => {
             <button
               key={s.name}
               onClick={() => handleAddSeries(s.name)}
-              className="w-full p-4 rounded-xl border border-stone-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all flex items-center gap-4 text-left"
+              className="w-full p-4 rounded-xl border border-stone-200 hover:border-primary-300 hover:bg-primary-50 transition-all flex items-center gap-4 text-left"
             >
               <span className="text-3xl">{s.emoji}</span>
               <div className="flex-1">
@@ -566,7 +645,7 @@ const SeriesTracker: React.FC = () => {
                 onClick={() =>
                   handleAddBookToSeries(showAddBook!, book.id)
                 }
-                className="w-full p-3 rounded-xl border border-stone-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all flex items-center gap-3 text-left"
+                className="w-full p-3 rounded-xl border border-stone-200 hover:border-primary-300 hover:bg-primary-50 transition-all flex items-center gap-3 text-left"
               >
                 {book.coverUrl ? (
                   <img
@@ -575,8 +654,8 @@ const SeriesTracker: React.FC = () => {
                     className="w-10 h-14 rounded object-cover"
                   />
                 ) : (
-                  <div className="w-10 h-14 rounded bg-gradient-to-br from-indigo-200 to-purple-200 flex items-center justify-center">
-                    <BookOpen className="w-5 h-5 text-indigo-600" />
+                  <div className="w-10 h-14 rounded bg-gradient-to-br from-primary-200 to-accent-200 flex items-center justify-center">
+                    <BookOpen className="w-5 h-5 text-primary-600" />
                   </div>
                 )}
                 <div className="flex-1 min-w-0">

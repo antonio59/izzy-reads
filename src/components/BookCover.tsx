@@ -5,16 +5,16 @@ import { BookOpen } from "lucide-react";
 // Generate a beautiful gradient from book title
 function getBookGradient(title: string): string {
   const gradients = [
-    "from-violet-500 via-purple-500 to-fuchsia-500",
-    "from-cyan-500 via-blue-500 to-indigo-500",
+    "from-primary-500 via-primary-600 to-accent-500",
+    "from-accent-400 via-accent-500 to-accent-700",
     "from-emerald-500 via-teal-500 to-cyan-500",
     "from-amber-500 via-orange-500 to-red-500",
-    "from-rose-500 via-pink-500 to-purple-500",
-    "from-blue-500 via-indigo-500 to-violet-500",
+    "from-primary-400 via-primary-500 to-accent-400",
+    "from-accent-500 via-accent-600 to-primary-500",
     "from-teal-500 via-emerald-500 to-green-500",
     "from-orange-500 via-amber-500 to-yellow-500",
-    "from-pink-500 via-rose-500 to-red-500",
-    "from-indigo-500 via-purple-500 to-pink-500",
+    "from-primary-500 via-primary-600 to-primary-700",
+    "from-accent-500 via-primary-500 to-primary-600",
   ];
   const hash = title
     .split("")

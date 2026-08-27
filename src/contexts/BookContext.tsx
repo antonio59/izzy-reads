@@ -20,7 +20,7 @@ interface BookContextType {
   readingChallenges: ReadingChallenge[];
   readingStats: ReadingStats;
   isLoading: boolean;
-  addBook: (book: Omit<Book, "id">) => Promise<void>;
+  addBook: (book: Omit<Book, "id">) => Promise<string>;
   bulkAddBooks: (books: Omit<Book, "id">[]) => Promise<void>;
   updateBook: (id: string, updates: Partial<Book>) => Promise<void>;
   deleteBook: (id: string) => Promise<void>;
@@ -166,6 +166,7 @@ function convexBlogPostToBlogPost(doc: Doc<"blogPosts">): BlogPost {
   return {
     id: doc._id,
     title: doc.title,
+    slug: doc.slug,
     content: doc.content,
     bookId: doc.bookId as string | undefined,
     dateCreated: doc.dateCreated,
@@ -305,9 +306,9 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
   }, [books]);
 
   // Book operations
-  const addBook = async (book: Omit<Book, "id">) => {
+  const addBook = async (book: Omit<Book, "id">): Promise<string> => {
     if (!convexUserId) throw new Error("Not authenticated");
-    await addBookMutation({
+    const id = await addBookMutation({
       title: book.title,
       author: book.author,
       coverUrl: book.coverUrl,
@@ -324,6 +325,7 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
       giftFrom: book.giftFrom,
       tags: book.tags,
     });
+    return id as string;
   };
 
   const bulkAddBooks = async (newBooks: Omit<Book, "id">[]) => {
@@ -430,6 +432,7 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
       status: post.status,
       tags: post.tags,
       emoji: post.emoji,
+      slug: post.slug,
     });
   };
 
@@ -444,6 +447,7 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
       status: rest.status,
       tags: rest.tags,
       emoji: rest.emoji,
+      slug: rest.slug,
     });
   };
 

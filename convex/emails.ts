@@ -36,11 +36,11 @@ export const sendSuggestionNotification = internalAction({
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-<body style="margin: 0; padding: 0; background-color: #faf5ff; font-family: 'Helvetica Neue', Arial, sans-serif;">
+<body style="margin: 0; padding: 0; background-color: #fdf2f8; font-family: 'Helvetica Neue', Arial, sans-serif;">
   <div style="max-width: 480px; margin: 40px auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
 
     <!-- Header -->
-    <div style="background: linear-gradient(135deg, #8b5cf6, #ec4899); padding: 32px 24px; text-align: center;">
+    <div style="background: linear-gradient(135deg, #d946a8, #0d9488); padding: 32px 24px; text-align: center;">
       <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 700;">📚 New Book Suggestion!</h1>
       <p style="color: rgba(255,255,255,0.85); margin: 8px 0 0 0; font-size: 14px;">Someone has a book idea for you, Izzy!</p>
     </div>
@@ -49,10 +49,10 @@ export const sendSuggestionNotification = internalAction({
     <div style="padding: 24px;">
 
       <!-- Book Info -->
-      <div style="margin-bottom: 20px; padding: 16px; background: #faf5ff; border-radius: 12px;">
+      <div style="margin-bottom: 20px; padding: 16px; background: #fdf2f8; border-radius: 12px;">
         <h2 style="margin: 0 0 4px 0; font-size: 18px; color: #1e293b;">${args.title}</h2>
         <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px;">by ${args.author}</p>
-        ${args.genre ? `<span style="display: inline-block; padding: 2px 10px; background: #ede9fe; color: #7c3aed; border-radius: 100px; font-size: 12px; font-weight: 600;">${args.genre}</span>` : ""}
+        ${args.genre ? `<span style="display: inline-block; padding: 2px 10px; background: #fce7f3; color: #be3590; border-radius: 100px; font-size: 12px; font-weight: 600;">${args.genre}</span>` : ""}
       </div>
 
       <!-- Who Suggested -->
@@ -70,7 +70,7 @@ export const sendSuggestionNotification = internalAction({
       ` : ""}
 
       <!-- CTA -->
-      <a href="https://izzysbookshelf.com/admin" style="display: block; text-align: center; padding: 14px; background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 15px;">
+      <a href="https://izzysbookshelf.com/admin" style="display: block; text-align: center; padding: 14px; background: linear-gradient(135deg, #d946a8, #0d9488); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 15px;">
         View in Dashboard →
       </a>
     </div>
@@ -146,11 +146,11 @@ export const sendWeeklySummary = internalAction({
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-<body style="margin: 0; padding: 0; background-color: #faf5ff; font-family: 'Helvetica Neue', Arial, sans-serif;">
+<body style="margin: 0; padding: 0; background-color: #fdf2f8; font-family: 'Helvetica Neue', Arial, sans-serif;">
   <div style="max-width: 480px; margin: 40px auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
 
     <!-- Header -->
-    <div style="background: linear-gradient(135deg, #8b5cf6, #ec4899); padding: 32px 24px; text-align: center;">
+    <div style="background: linear-gradient(135deg, #d946a8, #0d9488); padding: 32px 24px; text-align: center;">
       <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 700;">✨ Weekly Summary</h1>
       <p style="color: rgba(255,255,255,0.85); margin: 8px 0 0 0; font-size: 14px;">Here's what happened on Izzy's Bookshelf this week</p>
     </div>
@@ -159,13 +159,13 @@ export const sendWeeklySummary = internalAction({
     <div style="padding: 24px;">
 
       <!-- Reactions -->
-      <div style="margin-bottom: 24px; padding: 16px; background: #faf5ff; border-radius: 12px;">
+      <div style="margin-bottom: 24px; padding: 16px; background: #fdf2f8; border-radius: 12px;">
         <h2 style="margin: 0 0 12px 0; font-size: 16px; color: #1e293b;">💖 New Reactions</h2>
         <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-          <span style="display: inline-block; padding: 6px 12px; background: #ede9fe; color: #7c3aed; border-radius: 100px; font-size: 13px; font-weight: 600;">📚 Books: ${bookStats.totalReactions}</span>
-          <span style="display: inline-block; padding: 6px 12px; background: #ede9fe; color: #7c3aed; border-radius: 100px; font-size: 13px; font-weight: 600;">📝 Reviews: ${reviewStats?.totalReactions || 0}</span>
-          <span style="display: inline-block; padding: 6px 12px; background: #ede9fe; color: #7c3aed; border-radius: 100px; font-size: 13px; font-weight: 600;">✍️ Poems: ${poemStats.totalReactions}</span>
-          <span style="display: inline-block; padding: 6px 12px; background: #ede9fe; color: #7c3aed; border-radius: 100px; font-size: 13px; font-weight: 600;">📖 Writing: ${writingStats.totalReactions}</span>
+          <span style="display: inline-block; padding: 6px 12px; background: #fce7f3; color: #be3590; border-radius: 100px; font-size: 13px; font-weight: 600;">📚 Books: ${bookStats.totalReactions}</span>
+          <span style="display: inline-block; padding: 6px 12px; background: #fce7f3; color: #be3590; border-radius: 100px; font-size: 13px; font-weight: 600;">📝 Reviews: ${reviewStats?.totalReactions || 0}</span>
+          <span style="display: inline-block; padding: 6px 12px; background: #fce7f3; color: #be3590; border-radius: 100px; font-size: 13px; font-weight: 600;">✍️ Poems: ${poemStats.totalReactions}</span>
+          <span style="display: inline-block; padding: 6px 12px; background: #fce7f3; color: #be3590; border-radius: 100px; font-size: 13px; font-weight: 600;">📖 Writing: ${writingStats.totalReactions}</span>
         </div>
         ${totalReactions > 0 ? `<p style="margin: 12px 0 0 0; font-size: 14px; color: #475569;"><strong>${totalReactions}</strong> total reactions this week! 🎉</p>` : ""}
       </div>
@@ -195,7 +195,7 @@ export const sendWeeklySummary = internalAction({
       </div>
 
       <!-- CTA -->
-      <a href="https://izzysbookshelf.com/admin" style="display: block; text-align: center; margin-top: 24px; padding: 14px; background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 15px;">
+      <a href="https://izzysbookshelf.com/admin" style="display: block; text-align: center; margin-top: 24px; padding: 14px; background: linear-gradient(135deg, #d946a8, #0d9488); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 15px;">
         Open Dashboard →
       </a>
     </div>

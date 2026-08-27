@@ -104,6 +104,7 @@ export function BookSearchModal({
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedDestination, setSelectedDestination] =
     useState<BookDestination>("read");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [manualBook, setManualBook] = useState({
     title: "",
     author: "",
@@ -114,6 +115,23 @@ export function BookSearchModal({
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const toast = useToastActions();
+
+  const MOOD_TAGS = [
+    "cozy",
+    "funny",
+    "scary",
+    "magical",
+    "sad",
+    "adventure",
+    "must-read",
+    "reread",
+  ] as const;
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
+    );
+  };
 
   // Convex mutation for storing cover images permanently
   const storeCoverImage = useAction(api.covers.storeCoverImage);
@@ -179,7 +197,8 @@ export function BookSearchModal({
         ageRating: "8+",
         dateAdded: today,
         dateRead: isRead ? today : undefined,
-        isRead: isRead || isReading ? isRead : false, // For wishlist, doesn't matter as it goes to separate table
+        isRead: isRead || isReading ? isRead : false,
+        tags: selectedTags.length > 0 ? selectedTags : undefined,
       };
 
       await onAddBook(newBook, selectedDestination);
@@ -237,6 +256,7 @@ export function BookSearchModal({
         dateAdded: today,
         dateRead: isRead ? today : undefined,
         isRead: isRead || isReading ? isRead : false,
+        tags: selectedTags.length > 0 ? selectedTags : undefined,
       };
 
       await onAddBook(newBook, selectedDestination);
@@ -261,6 +281,7 @@ export function BookSearchModal({
     setShowManualEntry(false);
     setHasSearched(false);
     setSelectedDestination("read");
+    setSelectedTags([]);
     setManualBook({
       title: "",
       author: "",
@@ -540,6 +561,32 @@ export function BookSearchModal({
                         </div>
                       </div>
 
+                      {/* Mood tags */}
+                      <div>
+                        <label className="block text-sm font-medium text-stone-700 mb-2">
+                          Mood tags (optional)
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          {MOOD_TAGS.map((tag) => {
+                            const active = selectedTags.includes(tag);
+                            return (
+                              <button
+                                key={tag}
+                                type="button"
+                                onClick={() => toggleTag(tag)}
+                                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                  active
+                                    ? "bg-primary-600 text-white"
+                                    : "bg-cream-200 text-stone-600 hover:bg-primary-50"
+                                }`}
+                              >
+                                {tag}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
@@ -687,6 +734,32 @@ export function BookSearchModal({
                                 <span className="text-sm font-medium">
                                   {destConfig.label}
                                 </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Mood tags */}
+                      <div>
+                        <label className="block text-sm font-medium text-stone-700 mb-2">
+                          Mood tags (optional)
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          {MOOD_TAGS.map((tag) => {
+                            const active = selectedTags.includes(tag);
+                            return (
+                              <button
+                                key={tag}
+                                type="button"
+                                onClick={() => toggleTag(tag)}
+                                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                  active
+                                    ? "bg-primary-600 text-white"
+                                    : "bg-cream-200 text-stone-600 hover:bg-primary-50"
+                                }`}
+                              >
+                                {tag}
                               </button>
                             );
                           })}

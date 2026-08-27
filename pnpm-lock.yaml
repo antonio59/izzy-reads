@@ -16,11 +16,11 @@ importers:
   .:
     dependencies:
       '@auth/core':
-        specifier: 0.41.2
-        version: 0.41.2
+        specifier: 0.41.3
+        version: 0.41.3
       '@convex-dev/auth':
         specifier: ^0.0.92
-        version: 0.0.92(@auth/core@0.41.2)(convex@1.42.2(react@19.2.7))(react@19.2.7)
+        version: 0.0.92(@auth/core@0.41.3)(convex@1.42.2(react@19.2.7))(react@19.2.7)
       '@emoji-mart/data':
         specifier: ^1.2.1
         version: 1.2.1
@@ -55,8 +55,8 @@ importers:
         specifier: ^19.2.7
         version: 19.2.7
       react-router-dom:
-        specifier: ^7.18.1
-        version: 7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^7.18.2
+        version: 7.18.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       recharts:
         specifier: ^3.9.2
         version: 3.9.2(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(redux@5.0.1)
@@ -142,12 +142,12 @@ packages:
   '@asamuzakjp/nwsapi@2.3.9':
     resolution: {integrity: sha512-n8GuYSrI9bF7FFZ/SjhwevlHc8xaVlb/7HmHelnc/PZXBD2ZR49NnN9sMMuDdEGPeeRQ5d0hqlSlEpgCX3Wl0Q==}
 
-  '@auth/core@0.41.2':
-    resolution: {integrity: sha512-Hx5MNBxN2fJTbJKGUKAA0wca43D0Akl3TvufY54Gn8lop7F+34vU1zA1pn0vQfIoVuLIrpfc2nkyjwIaPJMW7w==}
+  '@auth/core@0.41.3':
+    resolution: {integrity: sha512-sJ3JMHHkXMD3aOjopv7mOBTO1Ocw4b0fAEXJBz6k7YHLpYQI6C40jCUPc5fNvUKxXRXNE1/sRISA15UrwWJBTw==}
     peerDependencies:
       '@simplewebauthn/browser': ^9.0.1
       '@simplewebauthn/server': ^9.0.2
-      nodemailer: ^7.0.7
+      nodemailer: ^7.0.7 || ^8.0.5
     peerDependenciesMeta:
       '@simplewebauthn/browser':
         optional: true
@@ -1896,15 +1896,15 @@ packages:
       redux:
         optional: true
 
-  react-router-dom@7.18.1:
-    resolution: {integrity: sha512-KaZh+X/6UtEp28x51AUYZDMg9NGoz2ja3dNHa+ta/tk40vCzKhQ/RypCWBMLbmDr6//E24Vv5uPsrqXFozdkAg==}
+  react-router-dom@7.18.2:
+    resolution: {integrity: sha512-AIKJ/jgGlFb3EbfCXk5Gzshiwt+l3mqbCrNjmEWMMjqQxNJ3svBa6bgzFyCC2Sw3RA0VWF1kg3uQf2OFhxb8hw==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
       react-dom: '>=18'
 
-  react-router@7.18.1:
-    resolution: {integrity: sha512-GDLgg3i3uM0aeJO3Fm+TCS+sDQ7gu12T6x0qdTEzcwqEfleci7JwugVNIF3U//0FWKnJT7ptG+20B2jfDqnZAg==}
+  react-router@7.18.2:
+    resolution: {integrity: sha512-aUVMjFm3GAPTTZL7oYr5E7ETiqfQCHRLH+B+5afnICvf0r7kkK4eR6SMuwbSTJw/7t+12khT/Kahij49fqOCIg==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
@@ -2370,7 +2370,7 @@ snapshots:
 
   '@asamuzakjp/nwsapi@2.3.9': {}
 
-  '@auth/core@0.41.2':
+  '@auth/core@0.41.3':
     dependencies:
       '@panva/hkdf': 1.2.1
       jose: 6.2.3
@@ -2494,9 +2494,9 @@ snapshots:
       hashery: 1.5.1
       keyv: 5.6.0
 
-  '@convex-dev/auth@0.0.92(@auth/core@0.41.2)(convex@1.42.2(react@19.2.7))(react@19.2.7)':
+  '@convex-dev/auth@0.0.92(@auth/core@0.41.3)(convex@1.42.2(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@auth/core': 0.41.2
+      '@auth/core': 0.41.3
       '@oslojs/crypto': 1.0.1
       '@oslojs/encoding': 1.1.0
       convex: 1.42.2(react@19.2.7)
@@ -3920,13 +3920,13 @@ snapshots:
       '@types/react': 19.2.17
       redux: 5.0.1
 
-  react-router-dom@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  react-router-dom@7.18.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
-      react-router: 7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      react-router: 7.18.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
-  react-router@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  react-router@7.18.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
       cookie: 1.1.1
       react: 19.2.7

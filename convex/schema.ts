@@ -93,6 +93,7 @@ export default defineSchema({
   blogPosts: defineTable({
     userId: v.id("users"),
     title: v.string(),
+    slug: v.optional(v.string()),
     content: v.string(),
     bookId: v.optional(v.id("books")),
     dateCreated: v.string(),
@@ -104,7 +105,8 @@ export default defineSchema({
     emoji: v.optional(v.string()),
   })
     .index("by_user", ["userId"])
-    .index("by_status", ["status"]),
+    .index("by_status", ["status"])
+    .index("by_slug", ["slug"]),
 
   readingChallenges: defineTable({
     userId: v.id("users"),

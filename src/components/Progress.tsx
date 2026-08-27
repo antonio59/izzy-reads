@@ -132,7 +132,7 @@ const Progress: React.FC = () => {
       <Card variant="outlined" padding="md">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-2xl">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center text-2xl">
               {level.icon}
             </div>
             <div>
@@ -141,7 +141,7 @@ const Progress: React.FC = () => {
             </div>
           </div>
           <div className="text-right">
-            <p className="font-bold text-purple-600">{totalXP} XP</p>
+            <p className="font-bold text-primary-600">{totalXP} XP</p>
             <p className="text-sm text-stone-500">
               {Math.round((1 - xpProgress) * 100)}% to next level
             </p>
@@ -149,7 +149,7 @@ const Progress: React.FC = () => {
         </div>
         <div className="h-3 bg-stone-100 rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+            className="h-full bg-gradient-to-r from-primary-500 to-accent-500"
             initial={{ width: 0 }}
             animate={{ width: `${xpProgress * 100}%` }}
             transition={{ duration: 1, ease: "easeOut" }}
@@ -258,9 +258,9 @@ const Progress: React.FC = () => {
                         setYearlyGoal(val);
                         setMonthlyGoal(Math.ceil(val / 12));
                       }}
-                      className="flex-1 h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                      className="flex-1 h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-primary-500"
                     />
-                    <span className="w-12 text-center font-bold text-purple-600">
+                    <span className="w-12 text-center font-bold text-primary-600">
                       {yearlyGoal}
                     </span>
                   </div>
@@ -281,9 +281,9 @@ const Progress: React.FC = () => {
                         setMonthlyGoal(val);
                         setYearlyGoal(val * 12);
                       }}
-                      className="flex-1 h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                      className="flex-1 h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-primary-500"
                     />
-                    <span className="w-12 text-center font-bold text-purple-600">
+                    <span className="w-12 text-center font-bold text-primary-600">
                       {monthlyGoal}
                     </span>
                   </div>
@@ -299,7 +299,7 @@ const Progress: React.FC = () => {
           </button>
           <button
             onClick={handleSaveGoals}
-            className="px-4 py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
+            className="px-4 py-2.5 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition-colors flex items-center justify-center gap-2"
           >
             <Check className="w-4 h-4" />
             Save
@@ -325,7 +325,7 @@ const StatCard: React.FC<StatCardProps> = ({
   color,
 }) => {
   const colors = {
-    purple: "from-purple-500 to-pink-500",
+    purple: "from-primary-500 to-accent-500",
     blue: "from-blue-500 to-cyan-500",
     orange: "from-orange-500 to-red-500",
     green: "from-green-500 to-emerald-500",
@@ -419,7 +419,7 @@ const GoalCard: React.FC<GoalCardProps> = ({
       </div>
       <div className="h-2 bg-stone-200 rounded-full overflow-hidden">
         <motion.div
-          className={`h-full ${isComplete ? "bg-green-500" : "bg-purple-500"}`}
+          className={`h-full ${isComplete ? "bg-green-500" : "bg-primary-500"}`}
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.5 }}

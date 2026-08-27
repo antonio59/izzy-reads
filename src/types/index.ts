@@ -43,6 +43,7 @@ export interface ReviewReactions {
 export interface BlogPost {
   id: string;
   title: string;
+  slug?: string;
   content: string;
   bookId?: string;
   dateCreated: string;
