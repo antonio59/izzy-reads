@@ -117,6 +117,11 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Clean unused UI/deps and publish v1.3.0 release notes.
+
+Remove dead Signup/OnboardingTour/Skeleton, unused parent-mode API and types, bare emoji-mart, and broken deploy scripts; document the redesign and security work in RELEASE_NOTES.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Bump framer-motion to 12.43.0.
 
 Co-authored-by: Cursor <cursoragent@cursor.com>
@@ -711,6 +716,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
