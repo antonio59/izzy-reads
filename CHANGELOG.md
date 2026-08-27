@@ -117,6 +117,11 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Prune unused Convex APIs and retire cover migration UI.
+
+Drop dead users/poems/reactions/wishlist helpers, consolidate covers onto BookCoverImage, and remove the Admin migration panel while keeping CLI migration helpers.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Clean unused UI/deps and publish v1.3.0 release notes.
 
 Remove dead Signup/OnboardingTour/Skeleton, unused parent-mode API and types, bare emoji-mart, and broken deploy scripts; document the redesign and security work in RELEASE_NOTES.
@@ -716,6 +721,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
