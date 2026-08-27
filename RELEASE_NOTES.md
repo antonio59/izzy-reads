@@ -53,6 +53,8 @@ pnpm run dev
 
 Removed unused Signup / OnboardingTour / Skeleton UI, bare `emoji-mart` dependency, broken deploy script entries, and dead parent-mode context API.
 
+Also pruned unused Convex write/helpers, retired the Admin cover-migration panel (CLI `convex/migration.ts` kept), consolidated on `BookCoverImage`, and removed unauthenticated `wishlist.adminPatchCover`.
+
 ---
 
 ## Previous Release (v1.2.0)

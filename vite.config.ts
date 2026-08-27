@@ -47,7 +47,7 @@ export default defineConfig({
           if (id.includes("components/Login")) {
             return "feature-auth";
           }
-          if (id.includes("components/Dashboard") || id.includes("components/EnhancedBookshelf")) {
+          if (id.includes("components/Dashboard")) {
             return "feature-admin";
           }
         },

@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Shield, 
-  Database, 
-  Users, 
-  BookOpen, 
+import {
+  Shield,
+  Database,
+  Users,
+  BookOpen,
   ChevronRight,
   LayoutDashboard,
-  ImageIcon,
   ArrowLeft,
   UsersRound,
   Plus,
@@ -18,7 +17,6 @@ import {
   Search,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { CoverMigrationPanel } from "../components/CoverMigrationPanel";
 import { useAuth } from "../contexts/AuthContext";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -26,7 +24,7 @@ import type { Id } from "../../convex/_generated/dataModel";
 import { searchBooks } from "../services/bookApi";
 import type { UnifiedBook } from "../services/bookApi";
 
-type AdminTab = "overview" | "covers" | "users" | "books" | "bookclub";
+type AdminTab = "overview" | "users" | "books" | "bookclub";
 
 function AdminPage() {
   const [activeTab, setActiveTab] = useState<AdminTab>("overview");
@@ -64,7 +62,6 @@ function AdminPage() {
 
   const tabs: { id: AdminTab; label: string; icon: typeof Shield }[] = [
     { id: "overview", label: "Overview", icon: LayoutDashboard },
-    { id: "covers", label: "Cover Migration", icon: ImageIcon },
     { id: "bookclub", label: "Book Club", icon: UsersRound },
     { id: "users", label: "Users", icon: Users },
     { id: "books", label: "Books", icon: BookOpen },
@@ -162,27 +159,12 @@ function AdminPage() {
                     </p>
 
                     <div className="grid sm:grid-cols-2 gap-4">
-                      <div 
-                        onClick={() => setActiveTab("covers")}
+                      <div
+                        onClick={() => setActiveTab("bookclub")}
                         className="p-4 bg-gradient-to-br from-primary-50 to-accent-50 rounded-xl border border-primary-100 cursor-pointer hover:shadow-md transition-all"
                       >
                         <div className="flex items-center gap-3 mb-2">
                           <div className="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">
-                            <ImageIcon className="w-5 h-5 text-white" />
-                          </div>
-                          <h3 className="font-bold text-stone-800">Cover Migration</h3>
-                        </div>
-                        <p className="text-sm text-stone-600">
-                          Migrate book covers from external URLs to permanent Convex storage
-                        </p>
-                      </div>
-
-                      <div 
-                        onClick={() => setActiveTab("bookclub")}
-                        className="p-4 bg-gradient-to-br from-violet-50 to-fuchsia-50 rounded-xl border border-violet-100 cursor-pointer hover:shadow-md transition-all"
-                      >
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="w-10 h-10 bg-violet-500 rounded-lg flex items-center justify-center">
                             <UsersRound className="w-5 h-5 text-white" />
                           </div>
                           <h3 className="font-bold text-stone-800">Book Club</h3>
@@ -193,17 +175,6 @@ function AdminPage() {
                       </div>
                     </div>
                   </div>
-                </motion.div>
-              )}
-
-              {activeTab === "covers" && (
-                <motion.div
-                  key="covers"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                >
-                  <CoverMigrationPanel />
                 </motion.div>
               )}
 

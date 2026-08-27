@@ -34,26 +34,6 @@ async function uniqueSlug(
   }
 }
 
-export const getByUser = query({
-  args: { userId: v.id("users") },
-  handler: async (ctx, args) => {
-    return await ctx.db
-      .query("blogPosts")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
-      .collect();
-  },
-});
-
-export const getPublished = query({
-  args: {},
-  handler: async (ctx) => {
-    return await ctx.db
-      .query("blogPosts")
-      .withIndex("by_status", (q) => q.eq("status", "published"))
-      .collect();
-  },
-});
-
 export const getBySlugOrId = query({
   args: { slugOrId: v.string() },
   handler: async (ctx, args) => {

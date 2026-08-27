@@ -12,25 +12,6 @@ export const getByUser = query({
   },
 });
 
-// Get a single series with book details
-export const getWithBooks = query({
-  args: { seriesId: v.id("bookSeries") },
-  handler: async (ctx, args) => {
-    const series = await ctx.db.get(args.seriesId);
-    if (!series) return null;
-
-    // Fetch all books in the series
-    const books = await Promise.all(
-      series.bookIds.map((bookId) => ctx.db.get(bookId)),
-    );
-
-    return {
-      ...series,
-      books: books.filter(Boolean), // Filter out any null values
-    };
-  },
-});
-
 // Create a new series
 export const create = mutation({
   args: {
@@ -124,28 +105,6 @@ export const remove = mutation({
   args: { id: v.id("bookSeries") },
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id);
-  },
-});
-
-// Check series completion status
-export const checkCompletion = mutation({
-  args: { seriesId: v.id("bookSeries") },
-  handler: async (ctx, args) => {
-    const series = await ctx.db.get(args.seriesId);
-    if (!series || series.bookIds.length === 0) return false;
-
-    // Fetch all books and check if all are read
-    const books = await Promise.all(
-      series.bookIds.map((bookId) => ctx.db.get(bookId)),
-    );
-
-    const allRead = books.every((book) => book?.isRead);
-
-    if (allRead !== series.completed) {
-      await ctx.db.patch(args.seriesId, { completed: allRead });
-    }
-
-    return allRead;
   },
 });
 

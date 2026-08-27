@@ -38,24 +38,6 @@ export const getPendingCount = query({
   },
 });
 
-// Get suggestions by status
-export const getByStatus = query({
-  args: {
-    status: v.union(
-      v.literal("pending"),
-      v.literal("approved"),
-      v.literal("declined"),
-    ),
-  },
-  handler: async (ctx, args) => {
-    return await ctx.db
-      .query("bookSuggestions")
-      .withIndex("by_status", (q) => q.eq("status", args.status))
-      .order("desc")
-      .collect();
-  },
-});
-
 // Submit a new book suggestion (public - no auth required)
 export const submit = mutation({
   args: {

@@ -36,18 +36,6 @@ export const updateBookCover = mutation({
   },
 });
 
-// Get books for the authenticated user
-export const getByUser = query({
-  args: { userId: v.id("users") },
-  handler: async (ctx, args) => {
-    const books = await ctx.db
-      .query("books")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
-      .collect();
-    return books;
-  },
-});
-
 // Get all books (for public pages - read only)
 export const getAll = query({
   args: {},
@@ -137,49 +125,6 @@ export const remove = mutation({
     }
 
     await ctx.db.delete(args.id);
-  },
-});
-
-// Get books grouped by userId (for debugging/cleanup)
-export const getBooksByUserGroups = query({
-  args: {},
-  handler: async (ctx) => {
-    const books = await ctx.db.query("books").collect();
-    const groups: Record<string, { count: number; titles: string[] }> = {};
-
-    for (const book of books) {
-      const key = book.userId;
-      if (!groups[key]) {
-        groups[key] = { count: 0, titles: [] };
-      }
-      groups[key].count++;
-      groups[key].titles.push(book.title);
-    }
-
-    return groups;
-  },
-});
-
-// Transfer all books to a specific user (for cleanup)
-export const transferAllBooksToUser = mutation({
-  args: { targetUserId: v.id("users") },
-  handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
-
-    const books = await ctx.db.query("books").collect();
-    let transferred = 0;
-
-    for (const book of books) {
-      if (book.userId !== args.targetUserId) {
-        await ctx.db.patch(book._id, { userId: args.targetUserId });
-        transferred++;
-      }
-    }
-
-    return { transferred, total: books.length };
   },
 });
 

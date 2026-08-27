@@ -2,14 +2,6 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
 
-// Get wishlist item by ID
-export const getById = query({
-  args: { wishlistId: v.id("wishlist") },
-  handler: async (ctx, { wishlistId }) => {
-    return await ctx.db.get(wishlistId);
-  },
-});
-
 // Update just the cover URL
 export const updateCover = mutation({
   args: {
@@ -29,17 +21,6 @@ export const updateCover = mutation({
 
     await ctx.db.patch(wishlistId, { coverUrl });
     return wishlistId;
-  },
-});
-
-// Get wishlist for a specific user
-export const getByUser = query({
-  args: { userId: v.id("users") },
-  handler: async (ctx, args) => {
-    return await ctx.db
-      .query("wishlist")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
-      .collect();
   },
 });
 
@@ -98,20 +79,6 @@ export const markAsBought = mutation({
   },
 });
 
-// Clear bought status (requires auth - admin only)
-export const clearBought = mutation({
-  args: { id: v.id("wishlist") },
-  handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
-    await ctx.db.patch(args.id, {
-      boughtBy: undefined,
-      boughtAt: undefined,
-    });
-  },
-});
-
 // Remove from wishlist - requires authentication (any authenticated user can delete - they're family/parents)
 export const remove = mutation({
   args: { id: v.id("wishlist") },
@@ -163,21 +130,5 @@ export const bulkUpdateCovers = mutation({
       });
     }
     return results;
-  },
-});
-
-// Admin cover update - no auth required (for CLI maintenance scripts)
-export const adminPatchCover = mutation({
-  args: {
-    wishlistId: v.id("wishlist"),
-    coverUrl: v.string(),
-  },
-  handler: async (ctx, { wishlistId, coverUrl }) => {
-    const item = await ctx.db.get(wishlistId);
-    if (!item) {
-      throw new Error("Wishlist item not found");
-    }
-    await ctx.db.patch(wishlistId, { coverUrl });
-    return { wishlistId, title: item.title, oldUrl: item.coverUrl, newUrl: coverUrl };
   },
 });

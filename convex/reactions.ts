@@ -137,28 +137,6 @@ export const addReaction = mutation({
   },
 });
 
-// Remove a reaction
-export const removeReaction = mutation({
-  args: {
-    bookId: v.id("books"),
-    visitorId: v.string(),
-    isReviewReaction: v.boolean(),
-  },
-  handler: async (ctx, args) => {
-    const existing = await ctx.db
-      .query("bookReactions")
-      .withIndex("by_book_visitor", (q) =>
-        q.eq("bookId", args.bookId).eq("visitorId", args.visitorId),
-      )
-      .filter((q) => q.eq(q.field("isReviewReaction"), args.isReviewReaction))
-      .first();
-
-    if (existing) {
-      await ctx.db.delete(existing._id);
-    }
-  },
-});
-
 // Get reaction stats for all books (for Dashboard)
 export const getAllBookReactionStats = query({
   args: {},
@@ -219,17 +197,5 @@ export const getAllReviewReactionStats = query({
       topReviews,
       reactionsByReview: reviewReactions,
     };
-  },
-});
-
-// Reset all reactions - admin function (requires auth)
-export const resetAllReactions = mutation({
-  args: {},
-  handler: async (ctx) => {
-    const reactions = await ctx.db.query("bookReactions").collect();
-    for (const reaction of reactions) {
-      await ctx.db.delete(reaction._id);
-    }
-    return { deleted: reactions.length };
   },
 });

@@ -3,17 +3,6 @@ import { v } from "convex/values";
 import { auth } from "./auth";
 import type { Id } from "./_generated/dataModel";
 
-// Get poems for a specific user
-export const getByUser = query({
-  args: { userId: v.id("users") },
-  handler: async (ctx, args) => {
-    return await ctx.db
-      .query("poems")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
-      .collect();
-  },
-});
-
 // Get all poems (for public pages - read only)
 export const getAll = query({
   args: {},
@@ -40,7 +29,6 @@ export const getBySlug = query({
   },
 });
 
-// Helper to create a URL-friendly slug
 function createSlug(title: string, existingSlugs: string[]): string {
   const base = title
     .toLowerCase()
@@ -57,7 +45,6 @@ function createSlug(title: string, existingSlugs: string[]): string {
   return slug;
 }
 
-// Add a poem - requires authentication
 export const add = mutation({
   args: {
     title: v.string(),
@@ -79,7 +66,6 @@ export const add = mutation({
   },
 });
 
-// Update a poem - requires authentication (any authenticated user can edit - they're family/parents)
 export const update = mutation({
   args: {
     id: v.id("poems"),
@@ -108,7 +94,6 @@ export const update = mutation({
   },
 });
 
-// Remove a poem - requires authentication (any authenticated user can delete - they're family/parents)
 export const remove = mutation({
   args: { id: v.id("poems") },
   handler: async (ctx, args) => {
@@ -123,59 +108,5 @@ export const remove = mutation({
     }
 
     await ctx.db.delete(args.id);
-  },
-});
-
-// Like a poem - public action (no auth required)
-export const like = mutation({
-  args: { id: v.id("poems") },
-  handler: async (ctx, args) => {
-    const poem = await ctx.db.get(args.id);
-    if (poem) {
-      await ctx.db.patch(args.id, { likes: poem.likes + 1 });
-    }
-  },
-});
-
-// Reset all poem likes to 0 - admin function
-export const resetAllLikes = mutation({
-  args: {},
-  handler: async (ctx) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
-
-    const poems = await ctx.db.query("poems").collect();
-    for (const poem of poems) {
-      await ctx.db.patch(poem._id, { likes: 0 });
-    }
-    return { reset: poems.length };
-  },
-});
-
-// Backfill slugs for existing poems - admin function
-export const backfillSlugs = mutation({
-  args: {},
-  handler: async (ctx) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
-
-    const allPoems = await ctx.db.query("poems").collect();
-    const existingSlugs = allPoems.map((p) => p.slug).filter(Boolean) as string[];
-    let updated = 0;
-
-    for (const poem of allPoems) {
-      if (!poem.slug) {
-        const slug = createSlug(poem.title, existingSlugs);
-        existingSlugs.push(slug);
-        await ctx.db.patch(poem._id, { slug });
-        updated++;
-      }
-    }
-
-    return { updated, total: allPoems.length };
   },
 });
