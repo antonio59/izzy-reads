@@ -449,7 +449,6 @@ function SingleReviewView({
   const { prefersReducedMotion } = useMotionPreference();
   const { books } = useBooks();
   const reviewText = book.notes || book.review;
-  const reviewUrl = `${window.location.origin}/reviews/${book.id}`;
 
   const moreReviews = useMemo(() => {
     return books
