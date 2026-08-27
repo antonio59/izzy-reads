@@ -15,15 +15,16 @@ import {
 } from "lucide-react";
 import type { Book } from "../types";
 import { Button } from "./ui/Button";
+import { upgradeCoverUrl } from "../lib/coverUrl";
 
 // Generate gradient from title
 function getBookGradient(title: string): string {
   const gradients = [
-    "from-violet-500 via-purple-500 to-fuchsia-500",
-    "from-cyan-500 via-blue-500 to-indigo-500",
+    "from-primary-500 via-primary-600 to-accent-500",
+    "from-accent-400 via-accent-500 to-accent-700",
     "from-emerald-500 via-teal-500 to-cyan-500",
     "from-amber-500 via-orange-500 to-red-500",
-    "from-rose-500 via-pink-500 to-purple-500",
+    "from-primary-400 via-primary-500 to-accent-500",
   ];
   const hash = title
     .split("")
@@ -107,7 +108,7 @@ export function BookDetailModal({
               {book.coverUrl && !imageError ? (
                 <>
                   <img
-                    src={book.coverUrl}
+                    src={upgradeCoverUrl(book.coverUrl)}
                     alt=""
                     className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-50"
                     onError={() => setImageError(true)}
@@ -160,8 +161,10 @@ export function BookDetailModal({
                 >
                   {book.coverUrl && !imageError ? (
                     <img
-                      src={book.coverUrl}
+                      src={upgradeCoverUrl(book.coverUrl)}
                       alt={book.title}
+                      decoding="async"
+                      referrerPolicy="no-referrer"
                       className="w-full h-full object-cover"
                       onError={() => setImageError(true)}
                     />
@@ -231,7 +234,7 @@ export function BookDetailModal({
                 transition={{ delay: 0.4 }}
               >
                 {book.genre && (
-                  <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-purple-100 text-purple-700 rounded-full font-medium">
+                  <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary-100 text-primary-700 rounded-full font-medium">
                     <span>{genreEmoji}</span>
                     {book.genre}
                   </span>
@@ -289,8 +292,8 @@ export function BookDetailModal({
                     <Quote className="w-4 h-4" />
                     My Thoughts
                   </h3>
-                  <div className="relative bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-5 border border-purple-100">
-                    <Sparkles className="absolute top-3 right-3 w-5 h-5 text-purple-300" />
+                  <div className="relative bg-gradient-to-br from-primary-50 to-accent-50 rounded-2xl p-5 border border-primary-100">
+                    <Sparkles className="absolute top-3 right-3 w-5 h-5 text-primary-300" />
                     <p
                       className={`text-stone-700 italic leading-relaxed ${!showFullNotes && book.notes.length > 300 ? "line-clamp-4" : ""}`}
                     >
@@ -299,7 +302,7 @@ export function BookDetailModal({
                     {book.notes.length > 300 && (
                       <button
                         onClick={() => setShowFullNotes(!showFullNotes)}
-                        className="mt-2 text-purple-600 hover:text-purple-800 font-medium text-sm"
+                        className="mt-2 text-primary-600 hover:text-primary-800 font-medium text-sm"
                       >
                         {showFullNotes ? "Show less" : "Read more"}
                       </button>

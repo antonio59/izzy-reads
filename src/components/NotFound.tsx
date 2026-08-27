@@ -288,7 +288,7 @@ const NotFound: React.FC = () => {
             transition={{ delay: 0.6 }}
           >
             <p className="text-stone-500 text-sm flex items-center justify-center gap-2">
-              <Sparkles className="w-4 h-4 text-purple-500" />
+              <Sparkles className="w-4 h-4 text-primary-500" />
               While you're here, why not read a book?
               <Sparkles className="w-4 h-4 text-pink-500" />
             </p>

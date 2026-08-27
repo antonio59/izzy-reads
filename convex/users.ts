@@ -14,6 +14,24 @@ export const getCurrentUser = query({
   },
 });
 
+/** True when the signed-in user can use Admin (matches AdminPage email gate) */
+export const isCurrentUserAdmin = query({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return false;
+    const user = await ctx.db.get(userId);
+    const email = (user?.email ?? "").toLowerCase();
+    if (email.includes("admin") || email.includes("parent")) return true;
+
+    const profile = await ctx.db
+      .query("userProfiles")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .first();
+    return Boolean(profile?.isParent);
+  },
+});
+
 // Create user profile (called after signup)
 export const createProfile = mutation({
   args: {

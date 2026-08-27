@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import type { ReactNode } from "react";
 import { useBooks } from "./BookContext";
+import { useUser } from "./UserContext";
 import {
   getLevelProgress,
   calculateTotalXP,
@@ -70,8 +71,9 @@ const STORAGE_KEY = "izzys-bookshelf-gamification";
 export const GamificationProvider: React.FC<GamificationProviderProps> = ({
   children,
 }) => {
-  const { books, poems, blogPosts, readingStats, readingChallenges } =
+  const { books, poems, blogPosts, readingStats } =
     useBooks();
+  const { user } = useUser();
 
   const [totalXP, setTotalXP] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -128,14 +130,19 @@ export const GamificationProvider: React.FC<GamificationProviderProps> = ({
       poemsWritten: poems.length,
       postsWritten: blogPosts.length,
       ratingsGiven: books.filter((b) => b.rating && b.rating > 0).length,
-      challengesCompleted: readingChallenges.filter((c) => c.completed).length,
+      challengesCompleted:
+        (user?.settings.readingGoal ?? 0) > 0 &&
+        readingStats.booksThisYear >= (user?.settings.readingGoal ?? 0)
+          ? 1
+          : 0,
     }),
     [
       books,
       readingStats.readingStreak,
+      readingStats.booksThisYear,
       poems.length,
       blogPosts.length,
-      readingChallenges,
+      user?.settings.readingGoal,
     ],
   );
 

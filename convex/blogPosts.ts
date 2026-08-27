@@ -137,3 +137,33 @@ export const remove = mutation({
     await ctx.db.delete(args.id);
   },
 });
+
+/** One-shot: assign slugs to any posts missing them (parent/admin only) */
+export const backfillSlugs = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    const profile = await ctx.db
+      .query("userProfiles")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .first();
+    if (!profile?.isParent) {
+      throw new Error("Admin access required");
+    }
+
+    const all = await ctx.db.query("blogPosts").collect();
+    let updated = 0;
+    for (const post of all) {
+      if (!post.slug) {
+        const slug = await uniqueSlug(ctx, slugify(post.title), post._id);
+        await ctx.db.patch(post._id, { slug });
+        updated += 1;
+      }
+    }
+    return { updated, total: all.length };
+  },
+});

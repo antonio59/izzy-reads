@@ -23,6 +23,10 @@ import type { Book } from "../../types";
 import { useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Input, Textarea } from "./Input";
+import {
+  PLACEHOLDER_COVER,
+  upgradeCoverUrl,
+} from "../../lib/coverUrl";
 
 export type BookDestination = "read" | "reading" | "wishlist";
 
@@ -231,11 +235,14 @@ export function BookSearchModal({
 
     setAdding(true);
     try {
-      // Store cover in Convex storage for permanence
+      // Prefer Convex-hosted cover; fall back to upgraded hotlink so we never drop a good match
       let permanentCoverUrl: string | null = null;
-      if (selectedBook.coverUrl) {
+      const sourceCover = selectedBook.coverUrl
+        ? upgradeCoverUrl(selectedBook.coverUrl)
+        : undefined;
+      if (sourceCover) {
         permanentCoverUrl = await storeCoverImage({
-          externalUrl: selectedBook.coverUrl,
+          externalUrl: sourceCover,
           bookTitle: selectedBook.title,
         });
       }
@@ -247,7 +254,7 @@ export function BookSearchModal({
       const newBook: Omit<Book, "id"> = {
         title: selectedBook.title,
         author: selectedBook.author,
-        coverUrl: permanentCoverUrl || undefined,
+        coverUrl: permanentCoverUrl || sourceCover || undefined,
         isbn: selectedBook.isbn,
         genre: suggestGenre(selectedBook),
         pageCount: selectedBook.pageCount,
@@ -630,11 +637,11 @@ export function BookSearchModal({
                     <motion.img
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      src={selectedBook.coverUrl}
+                      src={upgradeCoverUrl(selectedBook.coverUrl)}
                       alt={selectedBook.title}
                       className="w-48 h-72 object-cover rounded-xl shadow-lg"
                       onError={(e) => {
-                        e.currentTarget.src = "/placeholder-book-cover.png";
+                        e.currentTarget.src = PLACEHOLDER_COVER;
                       }}
                     />
 
@@ -806,12 +813,16 @@ export function BookSearchModal({
                       >
                         <div className="relative overflow-hidden rounded-xl shadow-md group-hover:shadow-xl transition-all transform group-hover:scale-105">
                           <img
-                            src={book.coverUrl || "/placeholder-book-cover.png"}
+                            src={
+                              upgradeCoverUrl(book.coverUrl) || PLACEHOLDER_COVER
+                            }
                             alt={book.title}
+                            loading="lazy"
+                            decoding="async"
+                            referrerPolicy="no-referrer"
                             className="w-full h-64 object-cover"
                             onError={(e) => {
-                              e.currentTarget.src =
-                                "/placeholder-book-cover.png";
+                              e.currentTarget.src = PLACEHOLDER_COVER;
                             }}
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">

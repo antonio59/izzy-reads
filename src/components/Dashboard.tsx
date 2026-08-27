@@ -40,11 +40,12 @@ import {
   generateGenreData,
 } from "./DashboardWidgets";
 import { ReadingHeatmap } from "./ReadingHeatmap";
+import { DashboardOnboarding } from "./DashboardOnboarding";
 import type { Book } from "../types";
 import { ReducedMotionAnimatePresence } from "../contexts/MotionPreferenceContext";
 
 const Dashboard: React.FC = () => {
-  const { books, wishlist, readingChallenges, readingStats } = useBooks();
+  const { books, wishlist, readingStats } = useBooks();
   const reactionStats = useQuery(api.reactions.getAllBookReactionStats);
   const { user, updateUserProfile } = useUser();
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
@@ -90,7 +91,7 @@ const Dashboard: React.FC = () => {
   }, [reactionStats, books]);
 
   const totalReactions = reactionStats?.totalReactions ?? 0;
-  const currentChallenge = readingChallenges[0];
+  const yearlyGoal = user?.settings.readingGoal ?? 0;
 
   // Generate chart data
   const monthlyReadingData = generateMonthlyData(books);
@@ -102,7 +103,7 @@ const Dashboard: React.FC = () => {
     {
       to: "/books",
       icon: <BookOpen className="w-5 h-5" />,
-      label: "Add or finish a book",
+      label: "Log a finished book",
       color: "primary" as const,
     },
     {
@@ -133,6 +134,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <DashboardOnboarding />
       {/* Hero */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -197,7 +199,7 @@ const Dashboard: React.FC = () => {
                     to="/books"
                     className="inline-flex items-center gap-1.5 mt-3 text-sm font-semibold text-primary-700 hover:text-primary-800"
                   >
-                    Go to My Books →
+                    Go to My Bookshelf →
                   </Link>
                 )}
               </div>
@@ -220,7 +222,8 @@ const Dashboard: React.FC = () => {
             What do you want to do?
           </h2>
           <p className="text-sm text-stone-500 mb-4">
-            Log a book, write something, or find your next read.
+            Log every book you finish, write something, or find your next read.
+            Reviews are a bonus — the shelf is the habit.
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {quickActions.map((action) => (
@@ -315,14 +318,14 @@ const Dashboard: React.FC = () => {
 
           {activeTab === "activity" ? (
             <div className="space-y-6">
-              {currentChallenge && (
+              {yearlyGoal > 0 && (
                 <ChallengeProgress
-                  title={currentChallenge.title}
-                  current={currentChallenge.current}
-                  target={currentChallenge.target}
-                  icon={currentChallenge.badge}
+                  title={`${new Date().getFullYear()} Reading Goal`}
+                  current={readingStats.booksThisYear}
+                  target={yearlyGoal}
+                  icon="📚"
                   color="accent"
-                  dueDate={currentChallenge.endDate}
+                  dueDate={`${new Date().getFullYear()}-12-31`}
                 />
               )}
 

@@ -81,7 +81,7 @@ const POEM_TEMPLATES = [
 const BACKGROUND_THEMES = [
   {
     name: "Sunset",
-    gradient: "from-orange-100 via-rose-100 to-purple-100",
+    gradient: "from-accent-50 via-cream-100 to-primary-50",
     text: "text-rose-900",
   },
   {
@@ -96,8 +96,8 @@ const BACKGROUND_THEMES = [
   },
   {
     name: "Lavender",
-    gradient: "from-violet-100 via-purple-100 to-fuchsia-100",
-    text: "text-violet-900",
+    gradient: "from-primary-50 via-cream-100 to-accent-50",
+    text: "text-primary-900",
   },
   {
     name: "Golden",
@@ -243,7 +243,7 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center">
                     <Feather className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -267,7 +267,7 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
                   <motion.button
                     key={template.name}
                     onClick={() => handleSelectTemplate(template)}
-                    className="p-6 bg-gradient-to-br from-stone-50 to-stone-100 rounded-2xl text-left hover:from-violet-50 hover:to-fuchsia-50 transition-all border-2 border-transparent hover:border-violet-200 group"
+                    className="p-6 bg-gradient-to-br from-stone-50 to-stone-100 rounded-2xl text-left hover:from-primary-50 hover:to-accent-50 transition-all border-2 border-transparent hover:border-primary-200 group"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
@@ -317,14 +317,14 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
                   <div className="flex items-center gap-1 bg-white rounded-lg border border-stone-200 p-1">
                     <button
                       onClick={() => setIsBold(!isBold)}
-                      className={`p-2 rounded transition-colors ${isBold ? "bg-violet-100 text-violet-700" : "hover:bg-stone-100"}`}
+                      className={`p-2 rounded transition-colors ${isBold ? "bg-primary-100 text-primary-700" : "hover:bg-stone-100"}`}
                       title="Bold"
                     >
                       <Bold className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => setIsItalic(!isItalic)}
-                      className={`p-2 rounded transition-colors ${isItalic ? "bg-violet-100 text-violet-700" : "hover:bg-stone-100"}`}
+                      className={`p-2 rounded transition-colors ${isItalic ? "bg-primary-100 text-primary-700" : "hover:bg-stone-100"}`}
                       title="Italic"
                     >
                       <Italic className="w-4 h-4" />
@@ -332,21 +332,21 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
                     <div className="w-px h-6 bg-stone-200 mx-1" />
                     <button
                       onClick={() => setTextAlign("left")}
-                      className={`p-2 rounded transition-colors ${textAlign === "left" ? "bg-violet-100 text-violet-700" : "hover:bg-stone-100"}`}
+                      className={`p-2 rounded transition-colors ${textAlign === "left" ? "bg-primary-100 text-primary-700" : "hover:bg-stone-100"}`}
                       title="Align Left"
                     >
                       <AlignLeft className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => setTextAlign("center")}
-                      className={`p-2 rounded transition-colors ${textAlign === "center" ? "bg-violet-100 text-violet-700" : "hover:bg-stone-100"}`}
+                      className={`p-2 rounded transition-colors ${textAlign === "center" ? "bg-primary-100 text-primary-700" : "hover:bg-stone-100"}`}
                       title="Align Center"
                     >
                       <AlignCenter className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => setTextAlign("right")}
-                      className={`p-2 rounded transition-colors ${textAlign === "right" ? "bg-violet-100 text-violet-700" : "hover:bg-stone-100"}`}
+                      className={`p-2 rounded transition-colors ${textAlign === "right" ? "bg-primary-100 text-primary-700" : "hover:bg-stone-100"}`}
                       title="Align Right"
                     >
                       <AlignRight className="w-4 h-4" />
@@ -457,7 +457,7 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
                           size="sm"
                           onClick={() => fileInputRef.current?.click()}
                           icon={<Upload className="w-4 h-4" />}
-                          className="mx-auto text-stone-500 hover:text-violet-600"
+                          className="mx-auto text-stone-500 hover:text-primary-600"
                         >
                           Or upload a handwritten poem
                         </Button>
@@ -512,13 +512,13 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
                       onClick={() => setSelectedTheme(index)}
                       className={`aspect-square rounded-xl bg-gradient-to-br ${t.gradient} border-2 transition-all ${
                         selectedTheme === index
-                          ? "border-violet-500 scale-105 shadow-lg"
+                          ? "border-primary-500 scale-105 shadow-lg"
                           : "border-transparent hover:scale-105"
                       }`}
                       title={t.name}
                     >
                       {selectedTheme === index && (
-                        <Check className="w-6 h-6 text-violet-600 mx-auto" />
+                        <Check className="w-6 h-6 text-primary-600 mx-auto" />
                       )}
                     </button>
                   ))}
@@ -538,7 +538,7 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
                       onClick={() => setSelectedFont(index)}
                       className={`px-6 py-4 rounded-xl border-2 transition-all ${
                         selectedFont === index
-                          ? "border-violet-500 bg-violet-50"
+                          ? "border-primary-500 bg-primary-50"
                           : "border-stone-200 hover:border-stone-300"
                       }`}
                     >

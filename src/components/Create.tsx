@@ -20,11 +20,11 @@ import { Button } from "./ui/Button";
 type TabType = "poems" | "posts";
 
 const BACKGROUND_PATTERNS = [
-  "bg-gradient-to-br from-pink-100 to-purple-100",
+  "bg-gradient-to-br from-primary-50 to-accent-50",
   "bg-gradient-to-br from-blue-100 to-cyan-100",
   "bg-gradient-to-br from-amber-100 to-orange-100",
   "bg-gradient-to-br from-green-100 to-emerald-100",
-  "bg-gradient-to-br from-indigo-100 to-purple-100",
+  "bg-gradient-to-br from-accent-50 to-primary-50",
 ];
 
 const Create: React.FC = () => {

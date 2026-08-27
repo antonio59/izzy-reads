@@ -222,7 +222,7 @@ const PublicPortfolio = () => {
             </h1>
 
             <p className="text-base sm:text-lg text-stone-500 max-w-md leading-relaxed">
-              Reviews, poems, and books I love — come take a look.
+              Every book I finish lives here — plus reviews, poems, and writing I&apos;m proud of.
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-3 pt-1">

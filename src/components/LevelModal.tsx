@@ -22,7 +22,7 @@ export function LevelModal({ isOpen, onClose, totalXP }: LevelModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg" title={level.title}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 p-6 text-white relative overflow-hidden -mx-6 -mt-6 mb-6">
+      <div className="bg-gradient-to-r from-primary-500 via-primary-600 to-accent-500 p-6 text-white relative overflow-hidden -mx-6 -mt-6 mb-6">
         {/* Background decoration */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-2 left-4 text-4xl">🌟</div>
@@ -101,7 +101,7 @@ export function LevelModal({ isOpen, onClose, totalXP }: LevelModalProps) {
                         key={lvl.level}
                         className={`
                           relative flex items-center gap-3 p-3 rounded-xl transition-all
-                          ${isCurrent ? "bg-gradient-to-r from-purple-50 to-pink-50 ring-2 ring-purple-300" : ""}
+                          ${isCurrent ? "bg-gradient-to-r from-primary-50 to-accent-50 ring-2 ring-primary-300" : ""}
                           ${isComplete ? "bg-green-50" : ""}
                           ${isLocked ? "opacity-50" : ""}
                         `}
@@ -115,7 +115,7 @@ export function LevelModal({ isOpen, onClose, totalXP }: LevelModalProps) {
                             w-11 h-11 rounded-full flex items-center justify-center text-xl
                             border-4 relative z-10
                             ${isComplete ? "bg-green-100 border-green-400" : ""}
-                            ${isCurrent ? "bg-purple-100 border-purple-400 ring-4 ring-purple-200" : ""}
+                            ${isCurrent ? "bg-primary-100 border-primary-400 ring-4 ring-primary-200" : ""}
                             ${isLocked ? "bg-stone-100 border-stone-300 grayscale" : ""}
                           `}
                         >
@@ -130,7 +130,7 @@ export function LevelModal({ isOpen, onClose, totalXP }: LevelModalProps) {
                               Level {lvl.level}
                             </span>
                             {isCurrent && (
-                              <span className="text-xs bg-purple-500 text-white px-2 py-0.5 rounded-full flex items-center gap-1">
+                              <span className="text-xs bg-primary-500 text-white px-2 py-0.5 rounded-full flex items-center gap-1">
                                 <Sparkles className="w-3 h-3" />
                                 You are here!
                               </span>
@@ -166,37 +166,37 @@ export function LevelModal({ isOpen, onClose, totalXP }: LevelModalProps) {
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="flex justify-between bg-stone-50 rounded-lg px-3 py-2">
                     <span className="text-stone-600">Finish a book</span>
-                    <span className="font-semibold text-purple-600">
+                    <span className="font-semibold text-primary-600">
                       +{XP_REWARDS.finishBook}
                     </span>
                   </div>
                   <div className="flex justify-between bg-stone-50 rounded-lg px-3 py-2">
                     <span className="text-stone-600">Long book (400+)</span>
-                    <span className="font-semibold text-purple-600">
+                    <span className="font-semibold text-primary-600">
                       +{XP_REWARDS.finishLongBook}
                     </span>
                   </div>
                   <div className="flex justify-between bg-stone-50 rounded-lg px-3 py-2">
                     <span className="text-stone-600">Rate a book</span>
-                    <span className="font-semibold text-purple-600">
+                    <span className="font-semibold text-primary-600">
                       +{XP_REWARDS.rateBook}
                     </span>
                   </div>
                   <div className="flex justify-between bg-stone-50 rounded-lg px-3 py-2">
                     <span className="text-stone-600">Write review</span>
-                    <span className="font-semibold text-purple-600">
+                    <span className="font-semibold text-primary-600">
                       +{XP_REWARDS.writeReview}
                     </span>
                   </div>
                   <div className="flex justify-between bg-stone-50 rounded-lg px-3 py-2">
                     <span className="text-stone-600">Write poem</span>
-                    <span className="font-semibold text-purple-600">
+                    <span className="font-semibold text-primary-600">
                       +{XP_REWARDS.writePoem}
                     </span>
                   </div>
                   <div className="flex justify-between bg-stone-50 rounded-lg px-3 py-2">
                     <span className="text-stone-600">Blog post</span>
-                    <span className="font-semibold text-purple-600">
+                    <span className="font-semibold text-primary-600">
                       +{XP_REWARDS.writeBlogPost}
                     </span>
                   </div>

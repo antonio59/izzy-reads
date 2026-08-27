@@ -91,7 +91,7 @@ function ErrorFallback({
   }, [id]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-rose-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-cream-100 via-primary-50 to-accent-50 flex items-center justify-center p-4">
       <Card
         variant="elevated"
         padding="lg"
@@ -151,7 +151,7 @@ function ErrorFallback({
 
           <motion.button
             onClick={onGoHome}
-            className="w-full text-purple-600 py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-purple-50 transition-all"
+            className="w-full text-primary-600 py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary-50 transition-all"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >

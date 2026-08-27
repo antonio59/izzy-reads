@@ -6,7 +6,6 @@ import { useAuth } from "./AuthContext";
 import type {
   Book,
   BlogPost,
-  ReadingChallenge,
   ReadingStats,
   Poem,
 } from "../types";
@@ -17,7 +16,6 @@ interface BookContextType {
   wishlist: Book[];
   blogPosts: BlogPost[];
   poems: Poem[];
-  readingChallenges: ReadingChallenge[];
   readingStats: ReadingStats;
   isLoading: boolean;
   addBook: (book: Omit<Book, "id">) => Promise<string>;
@@ -177,23 +175,6 @@ function convexBlogPostToBlogPost(doc: Doc<"blogPosts">): BlogPost {
   };
 }
 
-function convexChallengeToChallenge(
-  doc: Doc<"readingChallenges">,
-): ReadingChallenge {
-  return {
-    id: doc._id,
-    title: doc.title,
-    description: doc.description,
-    target: doc.target,
-    current: doc.current,
-    type: doc.type,
-    startDate: doc.startDate,
-    endDate: doc.endDate,
-    completed: doc.completed,
-    badge: doc.badge,
-  };
-}
-
 export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
   const { convexUserId } = useAuth();
 
@@ -205,12 +186,6 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
 
   // Blog posts - get all for the site
   const blogPostsData = useQuery(api.blogPosts.getAll);
-
-  // Reading challenges - these are user-specific goals
-  const challengesData = useQuery(
-    api.readingChallenges.getByUser,
-    convexUserId ? { userId: convexUserId } : "skip",
-  );
 
   // Convex mutations
   const addBookMutation = useMutation(api.books.add);
@@ -245,10 +220,6 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
   const blogPosts = useMemo(() => {
     return (blogPostsData || []).map(convexBlogPostToBlogPost);
   }, [blogPostsData]);
-
-  const readingChallenges = useMemo(() => {
-    return (challengesData || []).map(convexChallengeToChallenge);
-  }, [challengesData]);
 
   const isLoading = booksData === undefined || wishlistData === undefined;
 
@@ -489,7 +460,6 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
     wishlist,
     blogPosts,
     poems,
-    readingChallenges,
     readingStats,
     isLoading,
     addBook,

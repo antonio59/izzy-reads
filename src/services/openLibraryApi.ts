@@ -1,6 +1,12 @@
 // Open Library API service for fetching book metadata
 // API Documentation: https://openlibrary.org/developers/api
 
+import {
+  parseIsbn,
+  PLACEHOLDER_COVER,
+  resolveBestCoverUrl,
+} from "../lib/coverUrl";
+
 export interface OpenLibraryBook {
   key: string;
   title: string;
@@ -38,8 +44,10 @@ export async function searchBooks(
   limit: number = 10,
 ): Promise<OpenLibraryBook[]> {
   try {
+    const isbn = parseIsbn(query);
+    const q = isbn ? `isbn:${isbn}` : query;
     const response = await fetch(
-      `${BASE_URL}/search.json?q=${encodeURIComponent(query)}&limit=${limit}`,
+      `${BASE_URL}/search.json?q=${encodeURIComponent(q)}&limit=${limit}`,
     );
 
     if (!response.ok) {
@@ -55,12 +63,9 @@ export async function searchBooks(
 }
 
 /**
- * Get book cover URL by cover ID
+ * Get book cover URL by cover ID (always large)
  */
-function getCoverUrl(
-  coverId: number,
-  size: "S" | "M" | "L" = "M",
-): string {
+function getCoverUrl(coverId: number, size: "S" | "M" | "L" = "L"): string {
   return `${COVER_URL}/id/${coverId}-${size}.jpg`;
 }
 
@@ -68,19 +73,22 @@ function getCoverUrl(
  * Convert Open Library book to our Book format
  */
 export function convertToBookFormat(book: OpenLibraryBook): BookDetails {
-  const coverUrl = book.cover_i
-    ? getCoverUrl(book.cover_i, "M")
-    : "/placeholder-book-cover.png";
+  const isbn = book.isbn?.[0];
+  const coverUrl =
+    resolveBestCoverUrl({
+      imageUrl: book.cover_i ? getCoverUrl(book.cover_i, "L") : "",
+      isbn,
+    }) || PLACEHOLDER_COVER;
 
   return {
     title: book.title,
     author: book.author_name?.[0] || "Unknown Author",
     coverUrl,
-    isbn: book.isbn?.[0],
+    isbn,
     pageCount: book.number_of_pages_median,
     publishYear: book.first_publish_year,
     publisher: book.publisher?.[0],
-    subjects: book.subject?.slice(0, 5), // Limit to 5 subjects
+    subjects: book.subject?.slice(0, 5),
   };
 }
 

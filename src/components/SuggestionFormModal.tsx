@@ -9,11 +9,13 @@ import {
   Search,
   Loader2,
 } from "lucide-react";
+import { upgradeCoverUrl } from "../lib/coverUrl";
 
 // Small cover component with error fallback for search results
 function SearchResultCover({ src, title }: { src?: string; title: string }) {
   const [hasError, setHasError] = useState(false);
-  if (!src || hasError) {
+  const coverSrc = src ? upgradeCoverUrl(src) : "";
+  if (!coverSrc || hasError) {
     return (
       <div className="w-10 h-14 bg-gradient-to-br from-primary-400 to-accent-400 rounded flex items-center justify-center flex-shrink-0">
         <BookOpen className="w-5 h-5 text-white" />
@@ -22,18 +24,19 @@ function SearchResultCover({ src, title }: { src?: string; title: string }) {
   }
   return (
     <img
-      src={src}
+      src={coverSrc}
       alt={title}
+      loading="lazy"
+      decoding="async"
       className="w-10 h-14 object-cover rounded shadow-sm flex-shrink-0"
       onLoad={(e) => {
         const img = e.currentTarget;
-        if (img.naturalWidth < 30 || img.naturalHeight < 30) {
+        if (img.naturalWidth < 40 || img.naturalHeight < 40) {
           setHasError(true);
         }
       }}
       onError={() => setHasError(true)}
       referrerPolicy="no-referrer"
-      crossOrigin="anonymous"
     />
   );
 }

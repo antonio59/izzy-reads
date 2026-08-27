@@ -88,7 +88,7 @@ export function PublicNav() {
   const activeClub = useQuery(api.bookClubs.getActive);
 
   const navItems: NavItem[] = [
-    { id: "home", label: "Portfolio", icon: Book, path: "/", show: true },
+    { id: "home", label: "Bookshelf", icon: Book, path: "/", show: true },
     {
       id: "reviews",
       label: "Reviews",

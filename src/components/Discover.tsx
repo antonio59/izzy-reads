@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useQuery, useMutation, useConvex } from "convex/react";
+import { useQuery, useMutation, useConvex, useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import SwipeCard from "./SwipeCard";
 import { Button } from "./ui/Button";
+import { upgradeCoverUrl } from "../lib/coverUrl";
 
 // Genre mapping from Google Books categories
 const CATEGORY_MAP: Record<string, string> = {
@@ -111,6 +112,7 @@ function Discover() {
   const existingKeys = useQuery(api.discover.getExistingBookKeys);
   const stats = useQuery(api.discover.getStats);
   const recordSwipe = useMutation(api.discover.recordSwipe);
+  const storeCoverImage = useAction(api.covers.storeCoverImage);
   const convex = useConvex();
 
   const [candidates, setCandidates] = useState<BookCandidate[]>([]);
@@ -175,7 +177,9 @@ function Discover() {
               googleBookId: result.googleBookId,
               title: result.title,
               author: result.author,
-              coverUrl: result.coverUrl,
+              coverUrl: result.coverUrl
+                ? upgradeCoverUrl(result.coverUrl)
+                : undefined,
               genre: mapCategoryToGenre(result.categories),
               pageCount: result.pageCount,
               description: result.description,
@@ -222,24 +226,38 @@ function Discover() {
       // Remove from stack immediately
       setCandidates((prev) => prev.slice(1));
 
-      // Record in background
+      // UI feedback timer must not wait on cover hosting
+      setTimeout(() => {
+        setLastSwipeAction(null);
+        setLastSwipeDirection(null);
+      }, 1500);
+
+      // Record in background — re-host liked covers so wishlist stays sharp & permanent
+      let coverUrl = book.coverUrl || undefined;
+      if (action === "liked" && coverUrl) {
+        try {
+          const stored = await storeCoverImage({
+            externalUrl: coverUrl,
+            bookTitle: book.title,
+          });
+          if (stored) coverUrl = stored;
+        } catch {
+          // keep upgraded hotlink
+        }
+      }
+
       await recordSwipe({
         googleBookId: book.googleBookId,
         title: book.title,
         author: book.author,
-        coverUrl: book.coverUrl,
+        coverUrl,
         genre: book.genre,
         pageCount: book.pageCount,
         description: book.description,
         action,
       });
-
-      setTimeout(() => {
-        setLastSwipeAction(null);
-        setLastSwipeDirection(null);
-      }, 1500);
     },
-    [candidates, recordSwipe]
+    [candidates, recordSwipe, storeCoverImage]
   );
 
   // Not enough reading history
@@ -461,8 +479,8 @@ function Discover() {
           </div>
         ) : candidates.length === 0 && !loading ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="w-16 h-16 rounded-full bg-violet-100 flex items-center justify-center mb-4">
-              <Sparkles className="w-8 h-8 text-violet-500" />
+            <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center mb-4">
+              <Sparkles className="w-8 h-8 text-primary-500" />
             </div>
             <h3 className="text-lg font-bold text-stone-700 mb-2">
               All caught up!
@@ -540,8 +558,10 @@ function Discover() {
               <div className="relative h-64 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center p-6">
                 {selectedBook.coverUrl && !modalImageError ? (
                   <img
-                    src={selectedBook.coverUrl}
+                    src={upgradeCoverUrl(selectedBook.coverUrl)}
                     alt={selectedBook.title}
+                    decoding="async"
+                    referrerPolicy="no-referrer"
                     className="h-56 w-auto object-contain rounded shadow-xl"
                     onError={() => setModalImageError(true)}
                   />

@@ -30,12 +30,12 @@ const SkipToContent: React.FC<SkipToContentProps> = ({
       }}
       className={`
         fixed top-0 left-0 z-[100] 
-        bg-purple-600 text-white 
+        bg-primary-600 text-white 
         px-6 py-3 rounded-br-xl 
         font-bold text-sm
         transform -translate-y-full focus:translate-y-0
         transition-transform duration-200
-        focus:outline-none focus:ring-4 focus:ring-purple-300
+        focus:outline-none focus:ring-4 focus:ring-primary-300
         ${className}
       `}
       initial={{ y: "-100%" }}

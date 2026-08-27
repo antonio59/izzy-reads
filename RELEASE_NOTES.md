@@ -39,7 +39,7 @@ Dashboard and editor surfaces moved off purple→pink leftovers onto the berry/t
 ## Deploy notes
 
 1. Deploy Convex schema changes (`books.tags`, `blogPosts.slug`) before or with the frontend.
-2. Existing published posts get slugs on next save; old `/blog` list links fall back to document id until then.
+2. Run once after deploy (as a parent/admin session): `npx convex run blogPosts:backfillSlugs` so existing writing posts get shareable slugs.
 3. No local env changes required beyond existing Convex / Giphy keys.
 
 ```bash

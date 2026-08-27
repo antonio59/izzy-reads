@@ -95,8 +95,8 @@ const REVIEW_REACTIONS: {
     key: "insightful",
     emoji: "💡",
     label: "Insightful",
-    color: "bg-purple-100 hover:bg-purple-200 text-purple-600",
-    activeColor: "bg-purple-500 text-white ring-2 ring-purple-300",
+    color: "bg-primary-100 hover:bg-primary-200 text-primary-600",
+    activeColor: "bg-primary-500 text-white ring-2 ring-primary-300",
   },
 ];
 

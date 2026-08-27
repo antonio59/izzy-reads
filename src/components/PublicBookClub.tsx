@@ -117,7 +117,7 @@ export default function PublicBookClub() {
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center gap-3 mb-6"
           >
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-pink-500 shadow-lg flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-lg flex items-center justify-center">
               <Users className="w-6 h-6 text-white" />
             </div>
             <div>

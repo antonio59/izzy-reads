@@ -138,24 +138,48 @@ async function fetchFromGoogleBooks(query: string, startIndex: number, apiKey?: 
         try {
           if (rawCoverUrl) {
             const u = new URL(rawCoverUrl);
-            if (u.hostname === "books.google.com" || u.hostname.endsWith(".books.google.com")) {
+            if (
+              u.hostname.includes("books.google") ||
+              u.hostname.includes("googleusercontent.com")
+            ) {
+              u.searchParams.delete("edge");
               u.searchParams.set("zoom", "3");
               coverUrl = u.toString();
             }
+          } else if (item.id) {
+            // Search results often omit large imageLinks — build a zoom-3 cover from volume id
+            coverUrl = `https://books.google.com/books/content?id=${encodeURIComponent(item.id)}&printsec=frontcover&img=1&zoom=3&source=gbs_api`;
           }
-        } catch { /* leave as-is */ }
+        } catch {
+          /* leave as-is */
+        }
+
+        const identifiers = (item.volumeInfo?.industryIdentifiers ?? []) as Array<{
+          type: string;
+          identifier: string;
+        }>;
+        const isbn =
+          identifiers.find((id) => id.type === "ISBN_13")?.identifier ||
+          identifiers.find((id) => id.type === "ISBN_10")?.identifier;
+        if (!coverUrl && isbn) {
+          coverUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+        }
 
         return {
           googleBookId: item.id as string,
           title: (item.volumeInfo?.title as string) || "Unknown Title",
-          author: ((item.volumeInfo?.authors as string[]) ?? []).join(", ") || "Unknown Author",
+          author:
+            ((item.volumeInfo?.authors as string[]) ?? []).join(", ") ||
+            "Unknown Author",
           coverUrl,
           pageCount: (item.volumeInfo?.pageCount as number) ?? 0,
           description: (item.volumeInfo?.description as string) ?? "",
           categories: (item.volumeInfo?.categories as string[]) ?? [],
         };
       })
-      .filter((book: any) => isAgeAppropriateBackend(book.categories ?? [], book.title));
+      .filter((book: any) =>
+        isAgeAppropriateBackend(book.categories ?? [], book.title),
+      );
   } catch (err) {
     console.error("Google Books fetch failed:", err);
     return [];
@@ -178,17 +202,28 @@ async function fetchFromOpenLibrary(query: string, limit: number): Promise<any[]
     const docs = (data.docs ?? []) as any[];
 
     return docs
-      .filter((doc) => doc.cover_i)
-      .map((doc) => ({
-        googleBookId: `ol_${doc.cover_i}`,
-        title: doc.title || "Unknown Title",
-        author: (doc.author_name ?? []).join(", ") || "Unknown Author",
-        coverUrl: `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`,
-        pageCount: doc.number_of_pages_median ?? 0,
-        description: doc.first_sentence?.[0] ?? "",
-        categories: doc.subject?.slice(0, 3) ?? [],
-      }))
-      .filter((book: any) => isAgeAppropriateBackend(book.categories ?? [], book.title));
+      .map((doc) => {
+        const isbn = (doc.isbn ?? [])[0] as string | undefined;
+        const coverUrl = doc.cover_i
+          ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`
+          : isbn
+            ? `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`
+            : "";
+        if (!coverUrl) return null;
+        return {
+          googleBookId: `ol_${doc.cover_i ?? isbn}`,
+          title: doc.title || "Unknown Title",
+          author: (doc.author_name ?? []).join(", ") || "Unknown Author",
+          coverUrl,
+          pageCount: doc.number_of_pages_median ?? 0,
+          description: doc.first_sentence?.[0] ?? "",
+          categories: doc.subject?.slice(0, 3) ?? [],
+        };
+      })
+      .filter(Boolean)
+      .filter((book: any) =>
+        isAgeAppropriateBackend(book.categories ?? [], book.title),
+      );
   } catch (err) {
     console.error("OpenLibrary fetch failed:", err);
     return [];

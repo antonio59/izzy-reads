@@ -23,7 +23,7 @@ import { LevelModal } from "./LevelModal";
 // Simplified to 4 core navigation items
 const mainNavItems = [
   { path: "/dashboard", icon: Home, label: "Home" },
-  { path: "/books", icon: BookOpen, label: "My Books" },
+  { path: "/books", icon: BookOpen, label: "My Bookshelf" },
   { path: "/discover", icon: Compass, label: "Discover" },
   { path: "/create", icon: PenTool, label: "Create" },
   { path: "/progress", icon: Trophy, label: "Progress" },

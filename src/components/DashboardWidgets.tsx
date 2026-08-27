@@ -17,6 +17,7 @@ import { Card } from "./ui/Card";
 import { Badge } from "./ui/Badge";
 
 import type { Book } from "../types";
+import { upgradeCoverUrl } from "../lib/coverUrl";
 
 // Chart colors
 const CHART_COLORS = [
@@ -185,7 +186,7 @@ export function MostLovedBooks({ books, totalReactions }: MostLovedBooksProps) {
   return (
     <Card
       padding="lg"
-      className="bg-gradient-to-br from-pink-50 to-rose-50 border-pink-100"
+      className="bg-gradient-to-br from-primary-50 to-accent-50 border-primary-100"
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
@@ -212,8 +213,11 @@ export function MostLovedBooks({ books, totalReactions }: MostLovedBooksProps) {
             </div>
             {book.coverUrl ? (
               <img
-                src={book.coverUrl}
+                src={upgradeCoverUrl(book.coverUrl)}
                 alt={book.title}
+                loading="lazy"
+                decoding="async"
+                referrerPolicy="no-referrer"
                 className="w-10 h-14 object-cover rounded shadow-sm"
               />
             ) : (
@@ -295,7 +299,7 @@ export function RecentBooks({
           </p>
           <Link
             to="/books"
-            className="inline-block mt-4 px-4 py-2 bg-purple-100 text-purple-700 rounded-xl font-medium hover:bg-purple-200 transition-colors"
+            className="inline-block mt-4 px-4 py-2 bg-primary-100 text-primary-700 rounded-xl font-medium hover:bg-primary-200 transition-colors"
           >
             Add Your First Book
           </Link>

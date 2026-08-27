@@ -13,6 +13,8 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import { useBooks } from "../contexts/BookContext";
 import { useUser } from "../contexts/UserContext";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
@@ -40,11 +42,27 @@ const PoemDetail = () => {
   const { user } = useUser();
   const { prefersReducedMotion } = useMotionPreference();
   const [copied, setCopied] = useState(false);
+  const remotePoem = useQuery(
+    api.poems.getBySlug,
+    poemId ? { slug: poemId } : "skip",
+  );
 
-  // Support both slug and id for backward compatibility
-  const poem = poems.find((p) => p.slug === poemId || p.id === poemId);
+  const contextPoem = poems.find((p) => p.slug === poemId || p.id === poemId);
+  const poem = remotePoem
+    ? {
+        id: remotePoem._id,
+        title: remotePoem.title,
+        slug: remotePoem.slug,
+        content: remotePoem.content,
+        emoji: remotePoem.emoji,
+        dateCreated: remotePoem.dateCreated,
+        likes: remotePoem.likes,
+        template: remotePoem.template,
+      }
+    : contextPoem;
+
   const poemIndex = poems.findIndex(
-    (p) => p.slug === poemId || p.id === poemId,
+    (p) => p.slug === poemId || p.id === poemId || p.id === poem?.id,
   );
 
   const prevPoem = poemIndex > 0 ? poems[poemIndex - 1] : null;
@@ -88,6 +106,18 @@ const PoemDetail = () => {
       await navigator.clipboard.writeText(poemUrl);
     }
   };
+
+  if (poemId && remotePoem === undefined && !contextPoem) {
+    return (
+      <div className="min-h-screen bg-cream-100 flex flex-col">
+        <PublicNav />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="w-10 h-10 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin" />
+        </div>
+        <PublicFooter />
+      </div>
+    );
+  }
 
   if (!poem) {
     return (

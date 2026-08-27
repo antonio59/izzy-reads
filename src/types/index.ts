@@ -88,19 +88,6 @@ export interface ParentalControls {
   allowedGenres: string[];
 }
 
-export interface ReadingChallenge {
-  id: string;
-  title: string;
-  description?: string;
-  target: number;
-  current: number;
-  type: "books" | "pages" | "genres";
-  startDate: string;
-  endDate?: string;
-  completed: boolean;
-  badge?: string;
-}
-
 export interface ReadingStats {
   totalBooks: number;
   totalPages: number;

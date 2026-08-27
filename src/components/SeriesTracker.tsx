@@ -18,6 +18,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Card } from "./ui/Card";
+import { upgradeCoverUrl } from "../lib/coverUrl";
 import { Badge } from "./ui/Badge";
 import { Modal } from "./ui/Modal";
 import { Progress } from "./ui/Progress";
@@ -433,7 +434,7 @@ const SeriesTracker: React.FC = () => {
                                     </span>
                                     {book.coverUrl ? (
                                       <img
-                                        src={book.coverUrl}
+                                        src={upgradeCoverUrl(book.coverUrl)}
                                         alt={book.title}
                                         className="w-16 h-24 mx-auto my-2 rounded-lg object-cover shadow-sm"
                                       />
@@ -649,7 +650,7 @@ const SeriesTracker: React.FC = () => {
               >
                 {book.coverUrl ? (
                   <img
-                    src={book.coverUrl}
+                    src={upgradeCoverUrl(book.coverUrl)}
                     alt={book.title}
                     className="w-10 h-14 rounded object-cover"
                   />

@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Shield,
   Database,
-  Users,
   BookOpen,
   ChevronRight,
   LayoutDashboard,
@@ -15,6 +14,7 @@ import {
   Check,
   X,
   Search,
+  Image,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
@@ -23,8 +23,9 @@ import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import { searchBooks } from "../services/bookApi";
 import type { UnifiedBook } from "../services/bookApi";
+import { CoverRefreshPanel } from "../components/CoverRefreshPanel";
 
-type AdminTab = "overview" | "users" | "books" | "bookclub";
+type AdminTab = "overview" | "bookclub" | "covers";
 
 function AdminPage() {
   const [activeTab, setActiveTab] = useState<AdminTab>("overview");
@@ -63,8 +64,7 @@ function AdminPage() {
   const tabs: { id: AdminTab; label: string; icon: typeof Shield }[] = [
     { id: "overview", label: "Overview", icon: LayoutDashboard },
     { id: "bookclub", label: "Book Club", icon: UsersRound },
-    { id: "users", label: "Users", icon: Users },
-    { id: "books", label: "Books", icon: BookOpen },
+    { id: "covers", label: "Covers", icon: Image },
   ];
 
   return (
@@ -173,22 +173,33 @@ function AdminPage() {
                           Create and manage book club picks for friends to read along
                         </p>
                       </div>
+                      <div
+                        onClick={() => setActiveTab("covers")}
+                        className="p-4 bg-gradient-to-br from-accent-50 to-primary-50 rounded-xl border border-accent-100 cursor-pointer hover:shadow-md transition-all"
+                      >
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-10 h-10 bg-accent-500 rounded-lg flex items-center justify-center">
+                            <Image className="w-5 h-5 text-white" />
+                          </div>
+                          <h3 className="font-bold text-stone-800">Covers</h3>
+                        </div>
+                        <p className="text-sm text-stone-600">
+                          Sharpen and save blurry or temporary book covers
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
               )}
 
-              {activeTab === "users" && (
+              {activeTab === "covers" && (
                 <motion.div
-                  key="users"
+                  key="covers"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="bg-white rounded-2xl shadow-sm border border-cream-300 p-12 text-center"
                 >
-                  <Users className="w-16 h-16 text-stone-300 mx-auto mb-4" />
-                  <h2 className="text-xl font-bold text-stone-800 mb-2">User Management</h2>
-                  <p className="text-stone-500">Coming soon...</p>
+                  <CoverRefreshPanel />
                 </motion.div>
               )}
 
@@ -200,20 +211,6 @@ function AdminPage() {
                   exit={{ opacity: 0, y: -10 }}
                 >
                   <BookClubAdminPanel />
-                </motion.div>
-              )}
-
-              {activeTab === "books" && (
-                <motion.div
-                  key="books"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="bg-white rounded-2xl shadow-sm border border-cream-300 p-12 text-center"
-                >
-                  <BookOpen className="w-16 h-16 text-stone-300 mx-auto mb-4" />
-                  <h2 className="text-xl font-bold text-stone-800 mb-2">Book Management</h2>
-                  <p className="text-stone-500">Coming soon...</p>
                 </motion.div>
               )}
             </AnimatePresence>

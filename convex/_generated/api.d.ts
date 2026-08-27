@@ -23,7 +23,6 @@ import type * as migration from "../migration.js";
 import type * as poemReactions from "../poemReactions.js";
 import type * as poems from "../poems.js";
 import type * as reactions from "../reactions.js";
-import type * as readingChallenges from "../readingChallenges.js";
 import type * as seed from "../seed.js";
 import type * as series from "../series.js";
 import type * as users from "../users.js";
@@ -52,7 +51,6 @@ declare const fullApi: ApiFromModules<{
   poemReactions: typeof poemReactions;
   poems: typeof poems;
   reactions: typeof reactions;
-  readingChallenges: typeof readingChallenges;
   seed: typeof seed;
   series: typeof series;
   users: typeof users;

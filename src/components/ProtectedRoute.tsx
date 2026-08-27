@@ -13,9 +13,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   // Wait for both Convex auth and our auth context to be ready
   if (loading || convexLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-cream-100 via-primary-50 to-accent-50">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-16 h-16 border-4 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-stone-600">Loading...</p>
         </div>
       </div>

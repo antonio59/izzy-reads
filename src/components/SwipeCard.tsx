@@ -6,6 +6,7 @@ import {
   type PanInfo,
 } from "framer-motion";
 import { BookOpen, Heart, X, ChevronDown, ChevronUp } from "lucide-react";
+import { upgradeCoverUrl } from "../lib/coverUrl";
 
 interface BookCandidate {
   googleBookId: string;
@@ -79,8 +80,11 @@ function SwipeCard({ book, onSwipe, isTop, onClick, exitDirection }: SwipeCardPr
         >
           {book.coverUrl && !imageError ? (
             <img
-              src={book.coverUrl}
+              src={upgradeCoverUrl(book.coverUrl)}
               alt={book.title}
+              loading="eager"
+              decoding="async"
+              referrerPolicy="no-referrer"
               className="h-full w-auto max-w-[80%] object-contain drop-shadow-xl rounded-md"
               draggable={false}
               onError={() => setImageError(true)}

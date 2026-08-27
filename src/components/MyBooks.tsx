@@ -32,6 +32,7 @@ import type { Id } from "../../convex/_generated/dataModel";
 import { Button } from "./ui/Button";
 import { Input } from "./ui/Input";
 import { Badge } from "./ui/Badge";
+import { upgradeCoverUrl } from "../lib/coverUrl";
 
 type TabType = "read" | "reading" | "wishlist";
 
@@ -172,11 +173,12 @@ const MyBooks: React.FC = () => {
           <div>
             <h1 className="text-3xl font-display font-bold flex items-center gap-3">
               <BookOpen className="w-8 h-8" />
-              My Books
+              My Bookshelf
             </h1>
             <p className="text-white/90 mt-1">
+              Your reading tracker — log every book, review when you want ·{" "}
               {readBooks.length} finished · {readingBooks.length} reading ·{" "}
-              {wishlist.length} on wishlist
+              {wishlist.length} wishlist
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -636,9 +638,15 @@ const ReadBookCard: React.FC<ReadBookCardProps> = ({
       <div className="aspect-[2/3] bg-gradient-to-br from-primary-100 to-accent-100 relative">
         {book.coverUrl ? (
           <img
-            src={book.coverUrl}
+            src={upgradeCoverUrl(book.coverUrl)}
             alt={book.title}
+            loading="lazy"
+            decoding="async"
+            referrerPolicy="no-referrer"
             className="w-full h-full object-cover"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -737,9 +745,15 @@ const ReadingBookCard: React.FC<ReadingBookCardProps> = ({
       <div className="aspect-[2/3] bg-gradient-to-br from-accent-100 to-accent-200 relative">
         {book.coverUrl ? (
           <img
-            src={book.coverUrl}
+            src={upgradeCoverUrl(book.coverUrl)}
             alt={book.title}
+            loading="lazy"
+            decoding="async"
+            referrerPolicy="no-referrer"
             className="w-full h-full object-cover"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -830,9 +844,15 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
       <div className="aspect-[2/3] bg-gradient-to-br from-primary-100 to-accent-100 relative">
         {book.coverUrl ? (
           <img
-            src={book.coverUrl}
+            src={upgradeCoverUrl(book.coverUrl)}
             alt={book.title}
+            loading="lazy"
+            decoding="async"
+            referrerPolicy="no-referrer"
             className="w-full h-full object-cover"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">

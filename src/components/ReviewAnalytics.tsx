@@ -227,11 +227,11 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
     return (
       <Card
         padding="lg"
-        className="bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-100"
+        className="bg-gradient-to-br from-primary-50 to-accent-50 border-primary-100"
       >
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
-            <BarChart3 className="w-5 h-5 text-indigo-600" />
+          <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
+            <BarChart3 className="w-5 h-5 text-primary-600" />
           </div>
           <div>
             <h3 className="font-display font-bold text-stone-900">
@@ -245,13 +245,13 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
 
         <div className="grid grid-cols-2 gap-3 mb-4">
           <Card variant="default" padding="sm" className="text-center">
-            <p className="text-2xl font-bold text-indigo-600">
+            <p className="text-2xl font-bold text-primary-600">
               {totalBookReactions}
             </p>
             <p className="text-xs text-stone-500">Book Reactions</p>
           </Card>
           <Card variant="default" padding="sm" className="text-center">
-            <p className="text-2xl font-bold text-purple-600">
+            <p className="text-2xl font-bold text-primary-600">
               {totalReviewReactions}
             </p>
             <p className="text-xs text-stone-500">Review Reactions</p>
@@ -291,7 +291,7 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="bg-gradient-to-br from-pink-50 to-rose-50 border-pink-100">
+          <Card className="bg-gradient-to-br from-primary-50 to-accent-50 border-primary-100">
             <div className="p-4 text-center">
               <span className="text-3xl mb-2 block">❤️</span>
               <p className="text-3xl font-bold text-pink-600">
@@ -307,10 +307,10 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
         >
-          <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 border-purple-100">
+          <Card className="bg-gradient-to-br from-primary-50 to-accent-50 border-primary-100">
             <div className="p-4 text-center">
               <span className="text-3xl mb-2 block">💬</span>
-              <p className="text-3xl font-bold text-purple-600">
+              <p className="text-3xl font-bold text-primary-600">
                 {totalReviewReactions}
               </p>
               <p className="text-sm text-stone-600">Review Reactions</p>
@@ -443,8 +443,8 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
         >
           <Card padding="lg">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
-                <Star className="w-5 h-5 text-indigo-600" />
+              <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
+                <Star className="w-5 h-5 text-primary-600" />
               </div>
               <div>
                 <h3 className="font-display font-bold text-stone-900">
@@ -570,7 +570,7 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
         >
           <Card padding="lg">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
                 <span className="text-lg">💬</span>
               </div>
               <div>

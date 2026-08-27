@@ -2,19 +2,20 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Star, BookOpen, Heart } from "lucide-react";
 import type { Book } from "../types";
+import { upgradeCoverUrl } from "../lib/coverUrl";
 
 
 // Generate a beautiful gradient from book title
 function getBookGradient(title: string): string {
   const gradients = [
-    "from-violet-400 to-purple-600",
-    "from-blue-400 to-indigo-600",
+    "from-primary-400 to-primary-600",
+    "from-accent-400 to-accent-600",
     "from-emerald-400 to-teal-600",
     "from-orange-400 to-red-500",
-    "from-pink-400 to-rose-600",
+    "from-primary-400 to-accent-500",
     "from-cyan-400 to-blue-600",
     "from-amber-400 to-orange-600",
-    "from-fuchsia-400 to-pink-600",
+    "from-accent-400 to-primary-500",
   ];
   const hash = title
     .split("")
@@ -70,7 +71,7 @@ function BookGridItem({
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         style={{
           boxShadow: isHovered
-            ? "0 20px 40px rgba(0,0,0,0.3), 0 0 0 2px rgba(139, 92, 246, 0.3)"
+            ? "0 20px 40px rgba(0,0,0,0.3), 0 0 0 2px rgba(217, 70, 168, 0.35)"
             : "0 4px 12px rgba(0,0,0,0.15), 4px 4px 0 rgba(0,0,0,0.1)",
         }}
       >
@@ -83,8 +84,11 @@ function BookGridItem({
               />
             )}
             <img
-              src={book.coverUrl}
+              src={upgradeCoverUrl(book.coverUrl)}
               alt={book.title}
+              loading="lazy"
+              decoding="async"
+              referrerPolicy="no-referrer"
               className={`w-full h-full object-cover transition-all duration-300 ${
                 imageLoaded ? "opacity-100" : "opacity-0"
               }`}
@@ -143,7 +147,7 @@ function BookGridItem({
         className="mt-3 text-center max-w-full px-1"
         animate={{ y: isHovered ? -2 : 0 }}
       >
-        <h4 className="font-bold text-stone-900 text-sm line-clamp-2 leading-tight group-hover:text-purple-700 transition-colors">
+        <h4 className="font-bold text-stone-900 text-sm line-clamp-2 leading-tight group-hover:text-primary-700 transition-colors">
           {book.title}
         </h4>
         <p className="text-stone-500 text-xs mt-1 truncate">{book.author}</p>
