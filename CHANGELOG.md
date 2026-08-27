@@ -112,6 +112,11 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Apply vite, typescript-eslint, and convex Dependabot bumps.
+
+Skip TypeScript 7 for now — typescript-eslint 8 still requires typescript < 6.1 — and ignore future TS major bumps in Dependabot.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Patch undici, nanoid, and postcss CVEs; apply open dependency bumps.
 
 Force-resolve vulnerable transitive packages via pnpm workspace overrides, bump convex/react/recharts/eslint/tailwind/stylelint/globals, and update the OSV scanner action.
@@ -685,6 +690,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
