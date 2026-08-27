@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Fix Dependabot failures caused by pnpm minimumReleaseAge.
+
+Add a matching 7-day Dependabot cooldown, soften strict age checks, exclude high-churn packages, and bypass the age gate for Dependabot CI and the weekly update workflow.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - **ci**: Exclude typescript-eslint/postcss from minimumReleaseAge gate
 - **security**: Patch brace-expansion, js-yaml, fast-uri vulnerabilities
 - Resolve remaining security vulnerabilities with pnpmfile hook
@@ -675,6 +680,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
