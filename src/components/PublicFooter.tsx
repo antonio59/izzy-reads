@@ -13,7 +13,7 @@ export function PublicFooter() {
             </span>
           </div>
           <p className="text-stone-500 text-sm">
-            Keep reading, keep dreaming ✨
+            Built one book at a time
           </p>
           <div className="flex items-center gap-4">
             <Link

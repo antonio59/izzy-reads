@@ -20,7 +20,7 @@ const DEFAULT_AVATAR: AvatarConfig = {
   accessory: "none",
   background: "pink",
   outfit: "tshirt",
-  outfitColor: "purple",
+  outfitColor: "pink",
   expression: "happy",
 };
 

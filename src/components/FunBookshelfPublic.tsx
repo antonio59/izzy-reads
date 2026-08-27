@@ -9,40 +9,6 @@ import { Button, SearchInput } from "./ui";
 import { BookCoverImage } from "./ui/BookCoverImage";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 
-function ConfettiParticles() {
-  const particles = useMemo(
-    () =>
-      Array.from({ length: 16 }, (_, i) => ({
-        top: (i * 17) % 100,
-        left: (i * 23) % 100,
-        rotate: (i * 18) % 360,
-        emoji: ["⭐", "✨", "💖", "🌟"][i % 4],
-      })),
-    [],
-  );
-
-  return (
-    <div className="fixed inset-0 pointer-events-none z-[60] overflow-hidden">
-      {particles.map((p, i) => (
-        <motion.div
-          key={i}
-          className="absolute text-2xl"
-          initial={{ top: "50%", left: "50%", scale: 0 }}
-          animate={{
-            top: `${p.top}%`,
-            left: `${p.left}%`,
-            scale: [0, 1, 0],
-            rotate: p.rotate,
-          }}
-          transition={{ duration: 1 }}
-        >
-          {p.emoji}
-        </motion.div>
-      ))}
-    </div>
-  );
-}
-
 function StarRating({
   rating,
   size = "sm",
@@ -85,7 +51,6 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<"title" | "rating">("title");
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-  const [showConfetti, setShowConfetti] = useState(false);
 
   const genres = useMemo(() => {
     const genreSet = new Set(books.map((b) => b.genre).filter(Boolean));
@@ -133,11 +98,6 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
       document.body.style.overflow = "";
     };
   }, [selectedBook, closeModal]);
-
-  const handleReactionConfetti = () => {
-    setShowConfetti(true);
-    setTimeout(() => setShowConfetti(false), 1000);
-  };
 
   const reviewText = selectedBook ? getReviewText(selectedBook) : undefined;
   const hasFullReview = Boolean(reviewText);
@@ -366,8 +326,6 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
             aria-modal="true"
             aria-labelledby="book-peek-title"
           >
-            {showConfetti && <ConfettiParticles />}
-
             <motion.button
               type="button"
               className="absolute inset-0 bg-stone-900/45 backdrop-blur-[2px]"
@@ -489,7 +447,6 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                       <div className="flex justify-center">
                         <BookReactionButtons
                           bookId={selectedBook.id}
-                          onReaction={handleReactionConfetti}
                         />
                       </div>
                     </div>

@@ -9,14 +9,14 @@ import {
 
 function getBookGradient(title: string): [string, string] {
   const colors: [string, string][] = [
-    ["#FF6B6B", "#EE5A5A"],
-    ["#4ECDC4", "#3DBDB5"],
-    ["#45B7D1", "#34A6C0"],
-    ["#96CEB4", "#85BDA3"],
-    ["#DDA0DD", "#CC8FCC"],
-    ["#98D8C8", "#87C7B7"],
-    ["#BB8FCE", "#AA7EBD"],
-    ["#85C1E9", "#74B0D8"],
+    ["#d946a8", "#be3590"],
+    ["#0d9488", "#0f766e"],
+    ["#f472b6", "#d946a8"],
+    ["#2dd4bf", "#0d9488"],
+    ["#fb7185", "#e11d48"],
+    ["#5eead4", "#14b8a6"],
+    ["#f9a8d4", "#db2777"],
+    ["#5eead4", "#0891b2"],
   ];
   const hash = title
     .split("")

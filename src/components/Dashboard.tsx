@@ -60,7 +60,7 @@ const Dashboard: React.FC = () => {
     accessory: "none",
     background: "pink",
     outfit: "tshirt",
-    outfitColor: "purple",
+    outfitColor: "pink",
     expression: "happy",
   };
 

@@ -1,5 +1,5 @@
 /* Design Tokens for Izzy Reads */
-/* Magical, Cozy Reading Nook Design System */
+/* Cream / berry / teal Bookshelf design system */
 
 :root {
   /* ===== SPACING SCALE ===== */
@@ -16,7 +16,7 @@
   --space-16: 4rem; /* 64px */
   --space-20: 5rem; /* 80px */
 
-  /* ===== IZZY'S MAGICAL PALETTE ===== */
+  /* ===== IZZY'S BOOKSHELF PALETTE ===== */
   /*
    * 5-color system with clear roles:
    * 1. Primary Berry - CTAs, active states, key links
@@ -132,8 +132,8 @@
     0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   /* Subtle colored shadows for interactive elements */
-  --shadow-primary: 0 4px 14px rgba(168, 85, 247, 0.2);
-  --shadow-accent: 0 4px 14px rgba(244, 63, 94, 0.2);
+  --shadow-primary: 0 4px 14px rgba(217, 70, 168, 0.2);
+  --shadow-accent: 0 4px 14px rgba(13, 148, 136, 0.2);
 
   /* ===== BORDER RADIUS ===== */
   --radius-sm: 0.375rem;

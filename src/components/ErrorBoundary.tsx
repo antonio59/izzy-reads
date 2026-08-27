@@ -4,11 +4,11 @@ import { RefreshCw, Home, AlertTriangle } from "lucide-react";
 import { Card } from "./ui/Card";
 
 const funMessages = [
-  { emoji: "📖", message: "Oops! This page got a paper cut!" },
-  { emoji: "🔮", message: "Even magic has its limits!" },
-  { emoji: "🐛", message: "A tiny bug is causing trouble!" },
-  { emoji: "🌪️", message: "A wild error appeared!" },
-  { emoji: "🎭", message: "Plot twist: Something went wrong!" },
+  { emoji: "📖", message: "This page got a paper cut" },
+  { emoji: "📚", message: "We lost our place in the book" },
+  { emoji: "🔖", message: "Something slipped off the shelf" },
+  { emoji: "📝", message: "A page didn't load quite right" },
+  { emoji: "📕", message: "That chapter didn't open" },
 ];
 
 interface Props {
@@ -91,49 +91,39 @@ function ErrorFallback({
   }, [id]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream-100 via-primary-50 to-accent-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-cream-100 flex items-center justify-center p-4">
       <Card
         variant="elevated"
         padding="lg"
-        className="max-w-md w-full text-center"
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        className="max-w-md w-full text-center ring-1 ring-cream-300"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35 }}
       >
-        {/* Animated warning icon */}
-        <motion.div
-          className="relative w-24 h-24 mx-auto mb-6"
-          animate={{ rotate: [0, 5, -5, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <div className="w-full h-full bg-gradient-to-br from-orange-400 to-rose-500 rounded-full flex items-center justify-center">
-            <AlertTriangle className="w-12 h-12 text-white" />
+        <div className="relative w-20 h-20 mx-auto mb-6">
+          <div className="w-full h-full bg-primary-100 rounded-full flex items-center justify-center ring-1 ring-primary-200">
+            <AlertTriangle className="w-10 h-10 text-primary-600" />
           </div>
-          <motion.span
-            className="absolute -top-2 -right-2 text-3xl"
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 1, repeat: Infinity }}
-          >
+          <span className="absolute -top-1 -right-1 text-2xl" aria-hidden>
             {randomMessage.emoji}
-          </motion.span>
-        </motion.div>
+          </span>
+        </div>
 
         <h1 className="text-2xl font-display font-bold text-stone-800 mb-2">
           {randomMessage.message}
         </h1>
 
         <p className="text-stone-500 mb-8">
-          Don't worry, even the best stories have unexpected chapters. Let's get
-          you back on track!
+          Don't worry — let's get you back to the shelf.
         </p>
 
         {/* Action buttons */}
         <div className="space-y-3">
           <motion.button
             onClick={onTryAgain}
-            className="w-full bg-gradient-to-r from-primary-600 to-accent-600 text-white py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 hover:from-primary-700 hover:to-accent-700 transition-all shadow-lg"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-md shadow-primary-600/20"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
           >
             <RefreshCw className="w-5 h-5" />
             Try Again
@@ -141,9 +131,9 @@ function ErrorFallback({
 
           <motion.button
             onClick={onReload}
-            className="w-full bg-stone-100 text-stone-700 py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-stone-200 transition-all"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            className="w-full bg-white text-stone-700 py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-cream-50 border border-cream-300 transition-colors"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
           >
             <RefreshCw className="w-5 h-5" />
             Reload Page
@@ -151,24 +141,18 @@ function ErrorFallback({
 
           <motion.button
             onClick={onGoHome}
-            className="w-full text-primary-600 py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary-50 transition-all"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            className="w-full text-primary-600 py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary-50 transition-colors"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
           >
             <Home className="w-5 h-5" />
             Go Home
           </motion.button>
         </div>
 
-        {/* Fun footer */}
-        <motion.p
-          className="mt-8 text-sm text-stone-400"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          Tip: Sometimes turning it off and on again really does work!
-        </motion.p>
+        <p className="mt-8 text-sm text-stone-400">
+          Tip: a quick reload often clears it up.
+        </p>
       </Card>
     </div>
   );

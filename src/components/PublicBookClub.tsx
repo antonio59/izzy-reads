@@ -89,11 +89,11 @@ export default function PublicBookClub() {
 
   if (!clubData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-cream-100 to-accent-50 flex flex-col">
+      <div className="min-h-screen bg-cream-100 flex flex-col">
         <PublicNav />
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="text-center max-w-md">
-            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg ring-1 ring-cream-300">
               <BookOpen className="w-10 h-10 text-primary-400" />
             </div>
             <h1 className="text-2xl font-bold text-stone-800 mb-2">No Active Book Club</h1>
@@ -106,7 +106,7 @@ export default function PublicBookClub() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-cream-100 to-accent-50 flex flex-col">
+    <div className="min-h-screen bg-cream-100 flex flex-col">
       <PublicNav />
 
       {/* Hero */}
@@ -117,7 +117,7 @@ export default function PublicBookClub() {
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center gap-3 mb-6"
           >
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-lg flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-primary-600 shadow-md shadow-primary-600/20 flex items-center justify-center">
               <Users className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -147,7 +147,7 @@ export default function PublicBookClub() {
                     className="w-32 md:w-full rounded-lg shadow-xl"
                   />
                 ) : (
-                  <div className="w-32 h-48 rounded-lg bg-gradient-to-br from-primary-200 to-accent-200 flex items-center justify-center shadow-xl">
+                  <div className="w-32 h-48 rounded-lg bg-cream-200 flex items-center justify-center shadow-md ring-1 ring-cream-300">
                     <BookOpen className="w-12 h-12 text-white/70" />
                   </div>
                 )}
