@@ -64,6 +64,11 @@ updates:
           - "autoprefixer"
           - "postcss"
 
+    # typescript-eslint@8 still requires typescript < 6.1.0
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+
   # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
