@@ -117,6 +117,11 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Improve cover clarity, Bookshelf framing, and dashboard onboarding.
+
+Sharpen and re-host covers (ISBN-aware matching, zoom/-L upgrades, admin refresh), drop dead reading challenges, retoken leftover purple, and guide Izzy through logging every book plus poetry and writing.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Prune unused Convex APIs and retire cover migration UI.
 
 Drop dead users/poems/reactions/wishlist helpers, consolidate covers onto BookCoverImage, and remove the Admin migration panel while keeping CLI migration helpers.
@@ -721,6 +726,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
