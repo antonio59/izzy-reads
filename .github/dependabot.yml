@@ -54,15 +54,12 @@ updates:
         patterns:
           - "@testing-library/*"
           - "vitest"
-          - "jest"
 
       # Group all Tailwind updates together
       tailwind:
         patterns:
           - "tailwindcss"
           - "@tailwindcss/*"
-          - "autoprefixer"
-          - "postcss"
 
     # typescript-eslint@8 still requires typescript < 6.1.0
     # Hold majors that need a coordinated Node/runtime upgrade or migration.

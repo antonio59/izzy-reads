@@ -129,28 +129,6 @@ export interface Poem {
   };
 }
 
-export interface AboutMe {
-  isPublished: boolean;
-  profilePhoto?: string;
-  bio: string;
-  favoriteGenres: string[];
-  favoriteAuthors: string[];
-  whyIRead: string;
-  funFacts: string[];
-  currentlyReading?: string;
-  readingGoals: string[];
-  achievements: string[];
-}
-
-export interface BookRecommendation {
-  id: string;
-  bookId: string;
-  reason: string;
-  recommendedFor: string;
-  tags: string[];
-  featured: boolean;
-}
-
 export interface BookSeries {
   id: string;
   name: string;

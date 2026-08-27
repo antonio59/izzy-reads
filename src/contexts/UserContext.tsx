@@ -5,8 +5,6 @@ import type { User, UserSettings, AvatarConfig } from "../types";
 interface UserContextType {
   user: User | null;
   setUser: (user: User | null) => void;
-  isParentMode: boolean;
-  setIsParentMode: (mode: boolean) => void;
   updateUserSettings: (settings: Partial<UserSettings>) => void;
   updateUserProfile: (profile: {
     avatar?: AvatarConfig;
@@ -68,7 +66,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       },
     };
   });
-  const [isParentMode, setIsParentMode] = useState(false);
 
   const updateUserSettings = (newSettings: Partial<UserSettings>) => {
     if (user) {
@@ -101,8 +98,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const value = {
     user,
     setUser,
-    isParentMode,
-    setIsParentMode,
     updateUserSettings,
     updateUserProfile,
   };

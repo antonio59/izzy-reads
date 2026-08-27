@@ -8,9 +8,6 @@ export type BadgeVariant =
   | "warning"
   | "error"
   | "outline"
-  | "iris"
-  | "coral"
-  | "sage"
   | "gray"
   | "default";
 export type BadgeSize = "sm" | "md" | "lg";
@@ -35,10 +32,6 @@ const variantStyles: Record<BadgeVariant, string> = {
   error: "bg-error-50 text-error-600 border-error-100",
   outline: "bg-transparent text-stone-600 border-stone-300",
   default: "bg-stone-100 text-stone-600 border-stone-200",
-  // Legacy aliases
-  iris: "bg-primary-100 text-primary-700 border-primary-200",
-  coral: "bg-accent-100 text-accent-700 border-accent-200",
-  sage: "bg-success-50 text-success-600 border-success-100",
   gray: "bg-stone-100 text-stone-700 border-stone-200",
 };
 

@@ -1,77 +1,66 @@
-# Release Notes - v1.2.0
+# Release Notes - v1.3.0
 
-**Release Date:** December 24, 2025
+**Release Date:** August 27, 2026
 
-## 🎉 What's New
+## What's New
 
-### Simplified Deployment with Netlify
+### Public site redesign
 
-We've migrated from Coolify (self-hosted Docker) to Netlify for a more reliable and simpler deployment experience.
+Home, About, Poetry, Writing, Wishlist, and Reviews now share one brand-forward look: cream backgrounds, berry/teal accents, Fredoka display type, cover-led shelves, and fewer card chrome.
 
-**Benefits:**
+Writing posts use shareable URLs (`/blog/:slug`) instead of a modal — same pattern as poems and reviews.
 
-- ⚡ Faster deployments
-- 🔒 Automatic SSL certificates
-- 🌍 Global CDN for better performance
-- 🔄 Automatic branch deploys
-- 👀 Preview deployments for PRs
+### Reading experience
 
-### How It Works
+- **Finish ritual** when marking a book finished *and* when adding a book already as Read
+- **Mood tags** when adding or editing books, with public shelf filters
+- **Reading heatmap** on Activity / Insights
+- **Series tracker**: reorder books and explicitly mark a series complete (plus auto-sync when all books are read)
 
-| What you do          | What happens                     |
-| -------------------- | -------------------------------- |
-| Push to `main`       | Staging deploys automatically    |
-| Push to `production` | Production deploys automatically |
-| Open a PR            | Preview deployment created       |
+### Admin polish
+
+Dashboard and editor surfaces moved off purple→pink leftovers onto the berry/teal system (editors, Progress, covers, emails, Create).
+
+### Security & deps
+
+- Patched undici, nanoid, postcss, `@auth/core`, and react-router advisories
+- Dependabot aligned with pnpm `minimumReleaseAge` (cooldown + excludes)
+- Allowed MIT-0 licenses (e.g. `postal-mime` via Resend)
 
 ---
 
-## 🌐 Live Sites
+## Live Sites
 
 - **Production:** [izzysbookshelf.com](https://izzysbookshelf.com)
 - **Staging:** [izzysbookshelf.antoniosmith.xyz](https://izzysbookshelf.antoniosmith.xyz)
 
 ---
 
-## 🗑️ Removed
+## Deploy notes
 
-The following files were removed as they're no longer needed:
-
-- `Dockerfile` and `Dockerfile.staging`
-- `nginx.conf`
-- `deploy-staging.sh` and `deploy-production.sh`
-- `.dockerignore`
-- GitHub Actions workflows for Coolify
-
----
-
-## 📋 Previous Release (v1.1.0)
-
-### Rebranding
-
-- Renamed from "Izzy Reads" to "Izzy's Bookshelf"
-- New domains: izzysbookshelf.com and izzysbookshelf.antoniosmith.xyz
-
-### Security Fixes
-
-- Fixed insecure randomness vulnerability (Math.random → crypto.randomUUID)
-- Updated all dependencies to latest secure versions
-
----
-
-## 🚀 Getting Started
-
-No changes needed for local development. Just run:
+1. Deploy Convex schema changes (`books.tags`, `blogPosts.slug`) before or with the frontend.
+2. Existing published posts get slugs on next save; old `/blog` list links fall back to document id until then.
+3. No local env changes required beyond existing Convex / Giphy keys.
 
 ```bash
-bun install
-bun run dev
+pnpm install
+pnpm run dev
 ```
-
-For deployment, just push to the appropriate branch - Netlify handles everything else!
 
 ---
 
-## 📝 Full Changelog
+## Cleanup in this release
 
-See [CHANGELOG.md](./CHANGELOG.md) for complete version history.
+Removed unused Signup / OnboardingTour / Skeleton UI, bare `emoji-mart` dependency, broken deploy script entries, and dead parent-mode context API.
+
+---
+
+## Previous Release (v1.2.0)
+
+Migrated hosting from Coolify to Netlify. See git history / older section below for detail.
+
+---
+
+## Full Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md) for commit-level history.

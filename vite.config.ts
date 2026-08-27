@@ -44,7 +44,7 @@ export default defineConfig({
               return "vendor-emoji";
             }
           }
-          if (id.includes("components/Login") || id.includes("components/Signup")) {
+          if (id.includes("components/Login")) {
             return "feature-auth";
           }
           if (id.includes("components/Dashboard") || id.includes("components/EnhancedBookshelf")) {

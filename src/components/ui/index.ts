@@ -8,8 +8,3 @@ export { SearchInput } from "./Input";
 
 // Card components
 export { Card } from "./Card";
-
-// Progress components
-
-// Skeleton
-export { default as Skeleton } from "./Skeleton";
