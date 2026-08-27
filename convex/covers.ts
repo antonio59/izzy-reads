@@ -1,8 +1,9 @@
 // Cover image storage utilities for Convex
 import { v } from "convex/values";
-import { action } from "./_generated/server";
+import { action, type ActionCtx } from "./_generated/server";
 import { api } from "./_generated/api";
 import { auth } from "./auth";
+import type { Doc, Id } from "./_generated/dataModel";
 
 /** Mirror of src/lib/coverUrl.upgradeCoverUrl — keep in sync for Convex runtime. */
 function upgradeCoverUrl(url: string): string {
@@ -65,6 +66,53 @@ function isConvexStorageUrl(url?: string): boolean {
   }
 }
 
+/** Fetch + store a cover; shared so refresh can avoid circular api.covers refs. */
+async function persistCoverImage(
+  ctx: ActionCtx,
+  externalUrl: string,
+  bookTitle: string,
+): Promise<string | null> {
+  try {
+    const fetchUrl = upgradeCoverUrl(externalUrl) || externalUrl;
+    const response = await fetch(fetchUrl, {
+      headers: { Accept: "image/*,*/*" },
+      redirect: "follow",
+    });
+    if (!response.ok) {
+      console.log(
+        `Failed to fetch cover for "${bookTitle}": ${response.status}`,
+      );
+      return null;
+    }
+
+    const blob = await response.blob();
+
+    if (
+      !blob.type.startsWith("image/") &&
+      blob.type !== "application/octet-stream"
+    ) {
+      console.log(`Invalid image type for "${bookTitle}": ${blob.type}`);
+      return null;
+    }
+
+    if (blob.size < 2000) {
+      console.log(`Image too small for "${bookTitle}": ${blob.size} bytes`);
+      return null;
+    }
+
+    const storageId = await ctx.storage.store(blob);
+    const url = await ctx.storage.getUrl(storageId);
+
+    console.log(
+      `Stored cover for "${bookTitle}" in Convex storage: ${storageId}`,
+    );
+    return url;
+  } catch (error) {
+    console.error(`Error storing cover for "${bookTitle}":`, error);
+    return null;
+  }
+}
+
 /**
  * Store a book cover image in Convex storage
  * This ensures covers never expire (unlike Google Books/Open Library URLs)
@@ -76,48 +124,21 @@ export const storeCoverImage = action({
   },
   returns: v.union(v.string(), v.null()),
   handler: async (ctx, { externalUrl, bookTitle }) => {
-    try {
-      const fetchUrl = upgradeCoverUrl(externalUrl) || externalUrl;
-      const response = await fetch(fetchUrl, {
-        headers: { Accept: "image/*,*/*" },
-        redirect: "follow",
-      });
-      if (!response.ok) {
-        console.log(
-          `Failed to fetch cover for "${bookTitle}": ${response.status}`,
-        );
-        return null;
-      }
-
-      const blob = await response.blob();
-
-      if (
-        !blob.type.startsWith("image/") &&
-        blob.type !== "application/octet-stream"
-      ) {
-        console.log(`Invalid image type for "${bookTitle}": ${blob.type}`);
-        return null;
-      }
-
-      // Open Library "image not available" stubs are ~807 bytes; real covers are larger
-      if (blob.size < 2000) {
-        console.log(`Image too small for "${bookTitle}": ${blob.size} bytes`);
-        return null;
-      }
-
-      const storageId = await ctx.storage.store(blob);
-      const url = await ctx.storage.getUrl(storageId);
-
-      console.log(
-        `Stored cover for "${bookTitle}" in Convex storage: ${storageId}`,
-      );
-      return url;
-    } catch (error) {
-      console.error(`Error storing cover for "${bookTitle}":`, error);
-      return null;
-    }
+    return await persistCoverImage(ctx, externalUrl, bookTitle);
   },
 });
+
+type RefreshResult = {
+  processed: number;
+  upgraded: number;
+  stored: number;
+  failed: number;
+  skipped: number;
+  totalPending: number;
+  hasMore: boolean;
+  nextOffset?: number;
+  results: Array<{ title: string; status: string }>;
+};
 
 /**
  * Parent-only: sharpen external covers (zoom/-L) and re-host into Convex storage.
@@ -145,20 +166,20 @@ export const refreshLibraryCovers = action({
       }),
     ),
   }),
-  handler: async (ctx, { target, batchSize = 8, offset = 0 }) => {
+  handler: async (ctx, { target, batchSize = 8, offset = 0 }): Promise<RefreshResult> => {
     const userId = await auth.getUserId(ctx);
     if (!userId) throw new Error("Not authenticated");
 
     const isAdmin = await ctx.runQuery(api.users.isCurrentUserAdmin, {});
     if (!isAdmin) throw new Error("Admin access required");
 
-    const items =
+    const items: Array<Doc<"books"> | Doc<"wishlist">> =
       target === "wishlist"
         ? await ctx.runQuery(api.wishlist.getAll, {})
         : await ctx.runQuery(api.books.getAll, {});
 
     const pending = items.filter(
-      (item: { coverUrl?: string }) =>
+      (item): item is Doc<"books"> | Doc<"wishlist"> =>
         Boolean(item.coverUrl) && !isConvexStorageUrl(item.coverUrl),
     );
 
@@ -176,16 +197,12 @@ export const refreshLibraryCovers = action({
 
     for (const item of batch) {
       processed += 1;
-      const title = item.title as string;
-      const oldUrl = item.coverUrl as string;
+      const title = item.title;
+      const oldUrl = item.coverUrl!;
       const sharpened = upgradeCoverUrl(oldUrl) || oldUrl;
 
       try {
-        const permanentUrl = await ctx.runAction(api.covers.storeCoverImage, {
-          externalUrl: sharpened,
-          bookTitle: title,
-        });
-
+        const permanentUrl = await persistCoverImage(ctx, sharpened, title);
         const newUrl = permanentUrl || sharpened;
         if (newUrl === oldUrl) {
           skipped += 1;
@@ -195,12 +212,12 @@ export const refreshLibraryCovers = action({
 
         if (target === "wishlist") {
           await ctx.runMutation(api.wishlist.updateCover, {
-            wishlistId: item._id,
+            wishlistId: item._id as Id<"wishlist">,
             coverUrl: newUrl,
           });
         } else {
           await ctx.runMutation(api.books.updateBookCover, {
-            bookId: item._id,
+            bookId: item._id as Id<"books">,
             coverUrl: newUrl,
           });
         }
