@@ -107,6 +107,11 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Redesign public surfaces and add finish ritual, tags, and heatmap.
+
+Unify Home, About, Poetry, Writing, Wishlist, and Reviews around a brand-forward cream/berry/teal look, simplify the kid dashboard path, celebrate finished books, and ship mood tags plus a reading heatmap with series completion sync.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Merge pull request #156 from antonio59/dependabot/github_actions/actions/checkout-7
 
 ci: bump actions/checkout from 6 to 7
@@ -665,6 +670,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
