@@ -117,6 +117,11 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Sweep leftover purple/magic chrome from the public Bookshelf.
+
+Align scrollbars, focus rings, placeholders, avatar fallbacks, footer voice, book club, and error UI with cream/berry/teal — and drop reaction confetti.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Polish public Bookshelf pages and WhatsApp share previews.
 
 Add review filters with shareable URLs, currently-reading strips, SEO meta, and a proper landscape OG image plus icons so social crawlers show more than plain text.
@@ -741,6 +746,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
