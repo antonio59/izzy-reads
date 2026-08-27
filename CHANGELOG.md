@@ -117,6 +117,11 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Make the login page personal for Izzy with helpful reminders.
+
+Add a welcome with avatar, shelf tips, and after-sign-in notes so the private entry feels like her bookshelf, not a generic form.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Fix unused reviewUrl that broke the frontend build.
 
 Co-authored-by: Cursor <cursoragent@cursor.com>
@@ -749,6 +754,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
