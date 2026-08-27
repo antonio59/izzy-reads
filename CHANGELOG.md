@@ -112,6 +112,11 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Patch undici, nanoid, and postcss CVEs; apply open dependency bumps.
+
+Force-resolve vulnerable transitive packages via pnpm workspace overrides, bump convex/react/recharts/eslint/tailwind/stylelint/globals, and update the OSV scanner action.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Add shareable blog routes, series controls, and security bumps.
 
 Finish ritual on add-as-Read, mood tags in search add, series reorder/complete UI, admin berry/teal cleanup, and patch auth/router advisories.
@@ -680,6 +685,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
