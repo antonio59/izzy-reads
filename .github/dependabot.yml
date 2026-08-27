@@ -65,8 +65,15 @@ updates:
           - "postcss"
 
     # typescript-eslint@8 still requires typescript < 6.1.0
+    # Hold majors that need a coordinated Node/runtime upgrade or migration.
     ignore:
       - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "framer-motion"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "jsdom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
 
   # Enable version updates for GitHub Actions
