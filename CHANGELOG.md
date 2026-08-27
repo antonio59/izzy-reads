@@ -117,6 +117,11 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Harden cover host checks and polish the public Bookshelf home.
+
+Replace incomplete hostname substring matches with exact/suffix checks for CodeQL, skip blank covers in the hero, and rename leftover Portfolio labels.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Fix Convex covers circular type that broke the frontend build.
 
 Call a shared persist helper instead of api.covers.storeCoverImage from within the same module so tsc can resolve refreshLibraryCovers.
@@ -731,6 +736,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
