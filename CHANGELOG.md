@@ -117,6 +117,11 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Allow MIT-0 in dependency review license checks.
+
+postal-mime (via resend) uses MIT-0, a permissive MIT No Attribution license that was incorrectly failing the allow-list.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Ignore TypeScript major bumps in Dependabot until eslint supports them.
 
 Co-authored-by: Cursor <cursoragent@cursor.com>
@@ -698,6 +703,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
