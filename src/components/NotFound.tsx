@@ -1,356 +1,121 @@
-import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "./ui/Button";
-import { Home, BookOpen, Sparkles, ArrowLeft } from "lucide-react";
-
-// Fun messages that rotate
-const MESSAGES = [
-  {
-    emoji: "📚",
-    title: "Oops! This page got lost in a book!",
-    subtitle: "Even the best explorers take wrong turns sometimes.",
-  },
-  {
-    emoji: "🔮",
-    title: "This page vanished like magic!",
-    subtitle: "Not even a wizard could find it here.",
-  },
-  {
-    emoji: "🗺️",
-    title: "X marks the spot... but not here!",
-    subtitle: "This treasure map led to the wrong island.",
-  },
-  {
-    emoji: "🚀",
-    title: "Houston, we have a problem!",
-    subtitle: "This page is floating somewhere in space.",
-  },
-  {
-    emoji: "🦄",
-    title: "Even unicorns can't find this page!",
-    subtitle: "It's more mythical than magical creatures.",
-  },
-  {
-    emoji: "🐉",
-    title: "A dragon ate this page!",
-    subtitle: "Sorry, it was extra crispy.",
-  },
-  {
-    emoji: "🌈",
-    title: "This page is at the end of a rainbow!",
-    subtitle: "And we haven't found it yet.",
-  },
-  {
-    emoji: "🧙‍♂️",
-    title: "Abracadabra... nope, still gone!",
-    subtitle: "Even magic spells can't bring it back.",
-  },
-];
-
-// Floating book animation component
-const FloatingBook = ({
-  delay,
-  x,
-  size,
-  emoji,
-  duration,
-}: {
-  delay: number;
-  x: number;
-  size: number;
-  emoji: string;
-  duration: number;
-}) => (
-  <motion.div
-    className="absolute text-4xl pointer-events-none select-none"
-    style={{ left: `${x}%`, fontSize: `${size}rem` }}
-    initial={{ y: "100vh", opacity: 0, rotate: 0 }}
-    animate={{
-      y: "-100vh",
-      opacity: [0, 1, 1, 0],
-      rotate: [0, 10, -10, 0],
-    }}
-    transition={{
-      duration,
-      delay,
-      repeat: Infinity,
-      ease: "linear",
-    }}
-  >
-    {emoji}
-  </motion.div>
-);
-
-// Sparkle effect
-const Sparkle = ({ x, y, repeatDelay }: { x: number; y: number; repeatDelay: number }) => (
-  <motion.div
-    className="absolute w-2 h-2 bg-yellow-400 rounded-full pointer-events-none"
-    style={{ left: `${x}%`, top: `${y}%` }}
-    initial={{ scale: 0, opacity: 1 }}
-    animate={{
-      scale: [0, 1, 0],
-      opacity: [1, 1, 0],
-    }}
-    transition={{
-      duration: 0.8,
-      repeat: Infinity,
-      repeatDelay,
-    }}
-  />
-);
+import { motion } from "framer-motion";
+import { ArrowLeft, BookOpen, Feather, Star } from "lucide-react";
+import { Helmet } from "react-helmet-async";
+import { PublicNav, BookLogo } from "./PublicNav";
+import { PublicFooter } from "./PublicFooter";
+import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 
 const NotFound: React.FC = () => {
-  const [messageIndex, setMessageIndex] = useState(0);
-  const [sparkles] = useState<
-    { id: number; x: number; y: number }[]
-  >(() =>
-    Array.from({ length: 15 }, (_, i) => ({
-      id: i,
-      x: (i * 17 + 3) % 100,
-      y: (i * 23 + 7) % 100,
-    })),
-  );
-
-  // Rotate messages
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setMessageIndex((prev) => (prev + 1) % MESSAGES.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const currentMessage = MESSAGES[messageIndex];
-
-  const floatingBooks = useMemo(
-    () =>
-      Array.from({ length: 8 }, (_, i) => ({
-        delay: i * 1.5,
-        x: 10 + i * 12,
-        size: 2 + (i % 3) * 0.7 + 0.5,
-        emoji: ["📕", "📗", "📘", "📙", "📚", "📖"][i % 6],
-        duration: 8 + (i % 4) + 1,
-      })),
-    [],
-  );
-
-  const sparkleData = useMemo(
-    () =>
-      sparkles.map((s) => ({
-        ...s,
-        repeatDelay: (s.id % 5) * 0.4 + 0.2,
-      })),
-    [sparkles],
-  );
+  const { prefersReducedMotion } = useMotionPreference();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-cream-100 to-accent-50 flex items-center justify-center p-4 overflow-hidden relative">
-      {/* Floating books background */}
-      {floatingBooks.map((book, i) => (
-        <FloatingBook
-          key={i}
-          delay={book.delay}
-          x={book.x}
-          size={book.size}
-          emoji={book.emoji}
-          duration={book.duration}
+    <div className="min-h-screen bg-cream-100 flex flex-col">
+      <Helmet>
+        <title>Page not found | Izzy&apos;s Bookshelf</title>
+        <meta
+          name="description"
+          content="This page wandered off the shelf. Head back to Izzy's Bookshelf."
         />
-      ))}
+      </Helmet>
 
-      {/* Sparkles */}
-      {sparkleData.map((sparkle) => (
-        <Sparkle key={sparkle.id} x={sparkle.x} y={sparkle.y} repeatDelay={sparkle.repeatDelay} />
-      ))}
+      <PublicNav />
 
-      {/* Main content */}
-      <motion.div
-        className="relative z-10 max-w-2xl w-full"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        {/* Big 404 */}
+      <main className="relative flex-1 flex items-center justify-center px-4 py-16 sm:py-24 overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-80 pointer-events-none"
+          aria-hidden
+          style={{
+            backgroundImage:
+              "radial-gradient(ellipse at 25% 10%, rgba(217,70,168,0.10), transparent 55%), radial-gradient(ellipse at 85% 90%, rgba(13,148,136,0.12), transparent 50%)",
+          }}
+        />
+
         <motion.div
-          className="text-center mb-8"
-          initial={{ scale: 0.5 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 200, damping: 15 }}
-        >
-          <div className="relative inline-block">
-            <motion.h1
-              className="text-[12rem] md:text-[16rem] font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 leading-tight select-none"
-              animate={{
-                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              style={{
-                backgroundSize: "200% 200%",
-              }}
-            >
-              404
-            </motion.h1>
-
-            {/* Decorative elements around 404 */}
-            <motion.span
-              className="absolute -top-4 -left-4 text-5xl"
-              animate={{ rotate: [0, 10, -10, 0], y: [0, -5, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              ✨
-            </motion.span>
-            <motion.span
-              className="absolute -top-4 -right-4 text-5xl"
-              animate={{ rotate: [0, -10, 10, 0], y: [0, -5, 0] }}
-              transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-            >
-              ⭐
-            </motion.span>
-            <motion.span
-              className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-6xl"
-              animate={{ scale: [1, 1.2, 1], rotate: [0, 5, -5, 0] }}
-              transition={{ duration: 3, repeat: Infinity }}
-            >
-              📚
-            </motion.span>
-          </div>
-        </motion.div>
-
-        {/* Message card */}
-        <motion.div
-          className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl p-8 md:p-12 text-center"
-          initial={{ opacity: 0, y: 20 }}
+          className="relative z-10 max-w-lg w-full text-center"
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={
+            prefersReducedMotion
+              ? { duration: 0 }
+              : { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+          }
         >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={messageIndex}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.span
-                className="text-7xl block mb-4"
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 0.5 }}
-              >
-                {currentMessage.emoji}
-              </motion.span>
-              <h2 className="text-2xl md:text-3xl font-display font-bold text-stone-800 mb-2">
-                {currentMessage.title}
-              </h2>
-              <p className="text-stone-600 text-lg mb-8">
-                {currentMessage.subtitle}
-              </p>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Action buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/">
-              <motion.button
-                className="group relative overflow-hidden bg-gradient-to-r from-primary-600 to-accent-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3 w-full sm:w-auto"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Home className="w-5 h-5" />
-                Go Home
-                <motion.div
-                  className="absolute inset-0 bg-white/20"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: "100%" }}
-                  transition={{ duration: 0.5 }}
-                />
-              </motion.button>
-            </Link>
-
-            <Link to="/dashboard">
-              <Button
-                variant="secondary"
-                size="lg"
-                icon={<BookOpen className="w-5 h-5" />}
-              >
-                My Bookshelf
-              </Button>
-            </Link>
+          <div className="flex justify-center mb-6">
+            <div className="w-16 h-16 rounded-2xl bg-primary-100 text-primary-600 flex items-center justify-center">
+              <BookLogo className="w-9 h-9" />
+            </div>
           </div>
 
-          {/* Fun suggestion */}
-          <motion.div
-            className="mt-8 pt-8 border-t border-stone-200"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-          >
-            <p className="text-stone-500 text-sm flex items-center justify-center gap-2">
-              <Sparkles className="w-4 h-4 text-primary-500" />
-              While you're here, why not read a book?
-              <Sparkles className="w-4 h-4 text-pink-500" />
-            </p>
-          </motion.div>
-        </motion.div>
+          <p className="font-accent text-sm sm:text-base text-primary-600 tracking-wide mb-3">
+            Lost on the shelf
+          </p>
 
-        {/* Back button */}
-        <motion.div
-          className="text-center mt-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-        >
-          <Button
-            variant="ghost"
-            onClick={() => window.history.back()}
-            className="mx-auto"
+          <p
+            className="font-accent text-7xl sm:text-8xl font-semibold text-stone-900/10 select-none mb-2 leading-none"
+            aria-hidden
           >
-            <ArrowLeft className="w-4 h-4" />
-            Go back to previous page
-          </Button>
-        </motion.div>
-      </motion.div>
+            404
+          </p>
 
-      {/* Bottom decorative wave */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 overflow-hidden">
-        <svg
-          viewBox="0 0 1200 120"
-          preserveAspectRatio="none"
-          className="absolute bottom-0 w-full h-full"
-        >
-          <motion.path
-            d="M0,60 C150,90 350,30 600,60 C850,90 1050,30 1200,60 L1200,120 L0,120 Z"
-            fill="url(#wave-gradient)"
-            animate={{
-              d: [
-                "M0,60 C150,90 350,30 600,60 C850,90 1050,30 1200,60 L1200,120 L0,120 Z",
-                "M0,60 C150,30 350,90 600,60 C850,30 1050,90 1200,60 L1200,120 L0,120 Z",
-                "M0,60 C150,90 350,30 600,60 C850,90 1050,30 1200,60 L1200,120 L0,120 Z",
-              ],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-          <defs>
-            <linearGradient
-              id="wave-gradient"
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="0%"
+          <h1 className="font-accent text-3xl sm:text-4xl font-semibold text-stone-900 tracking-tight leading-tight mb-3">
+            This page wandered off
+          </h1>
+          <p className="text-stone-500 leading-relaxed mb-8 max-w-md mx-auto">
+            It isn&apos;t on Izzy&apos;s Bookshelf — or it moved. Try home, or
+            pick a favourite corner below.
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-display font-bold text-sm shadow-md shadow-primary-600/20 transition-colors"
             >
-              <stop offset="0%" stopColor="#a855f7" stopOpacity="0.3" />
-              <stop offset="50%" stopColor="#ec4899" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#f97316" stopOpacity="0.3" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
+              <BookOpen className="w-4 h-4" />
+              Back to Bookshelf
+            </Link>
+            <button
+              type="button"
+              onClick={() => window.history.back()}
+              className="inline-flex items-center gap-2 px-5 py-3 text-stone-600 hover:text-primary-700 font-display font-semibold text-sm transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Go back
+            </button>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm">
+            <Link
+              to="/reviews"
+              className="inline-flex items-center gap-1.5 text-stone-500 hover:text-primary-700 font-medium transition-colors"
+            >
+              <Star className="w-3.5 h-3.5" />
+              Reviews
+            </Link>
+            <Link
+              to="/poetry"
+              className="inline-flex items-center gap-1.5 text-stone-500 hover:text-primary-700 font-medium transition-colors"
+            >
+              <Feather className="w-3.5 h-3.5" />
+              Poems
+            </Link>
+            <Link
+              to="/my-wishlist"
+              className="inline-flex items-center gap-1.5 text-stone-500 hover:text-primary-700 font-medium transition-colors"
+            >
+              Wishlist
+            </Link>
+            <Link
+              to="/about"
+              className="inline-flex items-center gap-1.5 text-stone-500 hover:text-primary-700 font-medium transition-colors"
+            >
+              About
+            </Link>
+          </div>
+        </motion.div>
+      </main>
+
+      <PublicFooter />
     </div>
   );
 };

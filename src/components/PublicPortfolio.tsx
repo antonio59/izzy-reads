@@ -10,6 +10,9 @@ import { AvatarPreview, type AvatarConfig } from "./AvatarCreator";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
 import { BookCoverImage } from "./ui/BookCoverImage";
+import { PageMeta } from "./PageMeta";
+import { CurrentlyReadingStrip } from "./CurrentlyReadingStrip";
+import { pageMeta } from "../lib/seo";
 import type { Book } from "../types";
 import { isLikelyInvalidCover } from "../lib/coverUrl";
 
@@ -200,6 +203,11 @@ const PublicPortfolio = () => {
 
   return (
     <div className="min-h-screen bg-cream-100">
+      <PageMeta
+        title={pageMeta.home.title}
+        description={pageMeta.home.description}
+        path="/"
+      />
       <PublicNav />
 
       {/* ── Hero: one composition — brand, voice, CTA, cover shelf ── */}
@@ -257,6 +265,8 @@ const PublicPortfolio = () => {
       </section>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pb-16">
+        <CurrentlyReadingStrip books={books} className="mt-10 sm:mt-12 mb-2" />
+
         {/* Izzy's Picks */}
         {featuredBooks.length > 0 && (
           <section className="pt-14 sm:pt-20 mb-16 sm:mb-20">

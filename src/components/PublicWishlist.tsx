@@ -4,10 +4,11 @@ import {
   Gift,
   BookOpen,
   X,
-  Lightbulb,
   Share2,
   Check,
   ShoppingBag,
+  Copy,
+  Link2,
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
@@ -19,6 +20,8 @@ import { PublicFooter } from "./PublicFooter";
 import { SuggestionFormModal } from "./SuggestionFormModal";
 import { Input } from "./ui/Input";
 import { BookCoverImage } from "./ui/BookCoverImage";
+import { PageMeta } from "./PageMeta";
+import { absoluteUrl, pageMeta } from "../lib/seo";
 
 const PublicWishlist = () => {
   const { wishlist, isLoading } = useBooks();
@@ -30,7 +33,42 @@ const PublicWishlist = () => {
   const [buyError, setBuyError] = useState("");
   const [buySuccess, setBuySuccess] = useState(false);
   const [shareStatus, setShareStatus] = useState<"idle" | "copied">("idle");
+  const [showSharePanel, setShowSharePanel] = useState(false);
   const markAsBought = useMutation(api.wishlist.markAsBought);
+
+  const wishlistUrl = absoluteUrl("/my-wishlist");
+
+  const copyWishlistLink = async () => {
+    try {
+      await navigator.clipboard.writeText(wishlistUrl);
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = wishlistUrl;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    }
+    setShareStatus("copied");
+    setTimeout(() => setShareStatus("idle"), 2200);
+  };
+
+  const handleNativeShare = async () => {
+    if (!navigator.share) {
+      setShowSharePanel(true);
+      return;
+    }
+    try {
+      await navigator.share({
+        title: pageMeta.wishlist.title,
+        text: pageMeta.wishlist.description,
+        url: wishlistUrl,
+      });
+    } catch {
+      // Cancelled or unsupported — open copy panel instead
+      setShowSharePanel(true);
+    }
+  };
 
   const handleMarkAsBought = async (bookId: string) => {
     if (!buyerName.trim()) {
@@ -52,28 +90,6 @@ const PublicWishlist = () => {
     }
   };
 
-  const handleShare = async () => {
-    const url = `${window.location.origin}/my-wishlist`;
-    const shareData = {
-      title: "Izzy's Book Wishlist",
-      text: "Check out Izzy's book wishlist! Know a great book? Suggest one!",
-      url,
-    };
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else {
-        await navigator.clipboard.writeText(url);
-        setShareStatus("copied");
-        setTimeout(() => setShareStatus("idle"), 2000);
-      }
-    } catch {
-      await navigator.clipboard.writeText(url);
-      setShareStatus("copied");
-      setTimeout(() => setShareStatus("idle"), 2000);
-    }
-  };
-
   const sortedWishlist = [...wishlist].sort((a, b) =>
     a.title.localeCompare(b.title),
   );
@@ -85,6 +101,12 @@ const PublicWishlist = () => {
 
   return (
     <div className="min-h-screen bg-cream-100 flex flex-col">
+      <PageMeta
+        title={pageMeta.wishlist.title}
+        description={pageMeta.wishlist.description}
+        path="/my-wishlist"
+      />
+
       <PublicNav />
 
       {/* Hero — matches home/reviews language */}
@@ -142,27 +164,77 @@ const PublicWishlist = () => {
                 whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-display font-bold text-sm shadow-md shadow-primary-600/20 transition-colors"
               >
-                <Lightbulb className="w-4 h-4" />
+                <Gift className="w-4 h-4" />
                 Suggest a book
               </motion.button>
               <button
                 type="button"
-                onClick={handleShare}
+                onClick={() => setShowSharePanel((open) => !open)}
                 className="inline-flex items-center gap-2 px-5 py-3 text-stone-600 hover:text-primary-700 font-display font-semibold text-sm transition-colors"
+                aria-expanded={showSharePanel}
               >
-                {shareStatus === "copied" ? (
-                  <>
-                    <Check className="w-4 h-4 text-green-600" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Share2 className="w-4 h-4" />
-                    Share wishlist
-                  </>
-                )}
+                <Share2 className="w-4 h-4" />
+                Share wishlist
               </button>
             </div>
+
+            <AnimatePresence>
+              {showSharePanel && (
+                <motion.div
+                  initial={
+                    prefersReducedMotion ? false : { opacity: 0, y: 8 }
+                  }
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 6 }}
+                  transition={
+                    prefersReducedMotion ? { duration: 0 } : { duration: 0.2 }
+                  }
+                  className="mt-5 mx-auto max-w-md text-left rounded-2xl border border-cream-300 bg-white/90 backdrop-blur-sm p-4 shadow-sm"
+                >
+                  <p className="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-2 flex items-center gap-1.5">
+                    <Link2 className="w-3.5 h-3.5" />
+                    Wishlist link
+                  </p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      readOnly
+                      value={wishlistUrl}
+                      onFocus={(e) => e.currentTarget.select()}
+                      className="flex-1 min-w-0 px-3 py-2.5 rounded-xl border border-cream-300 bg-cream-50 text-sm text-stone-700 font-mono truncate"
+                      aria-label="Wishlist URL"
+                    />
+                    <button
+                      type="button"
+                      onClick={copyWishlistLink}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-display font-bold transition-colors shrink-0"
+                    >
+                      {shareStatus === "copied" ? (
+                        <>
+                          <Check className="w-4 h-4" />
+                          Copied
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-4 h-4" />
+                          Copy
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  {"share" in navigator && (
+                    <button
+                      type="button"
+                      onClick={handleNativeShare}
+                      className="mt-3 w-full inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border border-cream-300 text-stone-600 hover:text-primary-700 hover:border-primary-200 text-sm font-display font-semibold transition-colors"
+                    >
+                      <Share2 className="w-4 h-4" />
+                      Share via device…
+                    </button>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         </div>
       </section>
@@ -293,7 +365,7 @@ const PublicWishlist = () => {
                 onClick={() => setShowSuggestionForm(true)}
                 className="inline-flex items-center gap-2 mt-8 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-display font-bold text-sm shadow-md shadow-primary-600/20 transition-colors"
               >
-                <Lightbulb className="w-4 h-4" />
+                <Gift className="w-4 h-4" />
                 Suggest a book
               </button>
             </motion.div>

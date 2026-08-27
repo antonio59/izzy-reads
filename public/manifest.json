@@ -1,24 +1,42 @@
 {
   "name": "Izzy's Bookshelf",
   "short_name": "Izzy's Bookshelf",
-  "description": "A magical reading portfolio and tracker for young book lovers",
+  "description": "Izzy's reading bookshelf — finished books, reviews, poems, writing, and a wishlist friends can suggest titles for.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FFF7EB",
-  "theme_color": "#8b5cf6",
+  "theme_color": "#d946a8",
   "orientation": "portrait-primary",
   "icons": [
+    {
+      "src": "/icons/favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
     {
       "src": "/icons/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
-    },
-    {
-      "src": "/icons/icon.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
     }
   ],
   "categories": ["education", "books", "lifestyle"],

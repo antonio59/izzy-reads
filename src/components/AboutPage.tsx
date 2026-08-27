@@ -6,6 +6,8 @@ import { PublicFooter } from "./PublicFooter";
 import { useUser } from "../contexts/UserContext";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 import { AvatarPreview, type AvatarConfig } from "./AvatarCreator";
+import { PageMeta } from "./PageMeta";
+import { pageMeta } from "../lib/seo";
 
 interface AboutPageProps {
   aboutData: {
@@ -61,6 +63,11 @@ function AboutPage({ aboutData }: AboutPageProps) {
   if (!aboutData.isPublished) {
     return (
       <div className="min-h-screen bg-cream-100 flex flex-col">
+        <PageMeta
+          title={pageMeta.about.title}
+          description={pageMeta.about.description}
+          path="/about"
+        />
         <PublicNav />
         <div className="flex-1 flex items-center justify-center px-4 py-16 text-center">
           <div className="max-w-md">
@@ -88,6 +95,11 @@ function AboutPage({ aboutData }: AboutPageProps) {
 
   return (
     <div className="min-h-screen bg-cream-100 flex flex-col">
+      <PageMeta
+        title={pageMeta.about.title}
+        description={pageMeta.about.description}
+        path="/about"
+      />
       <PublicNav />
 
       {/* ── Hero: one composition — avatar, brand, bio, CTA ── */}

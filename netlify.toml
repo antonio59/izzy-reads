@@ -11,7 +11,11 @@
 [context.production]
   environment = { NODE_VERSION = "22" }
 
-# Edge function for social media crawlers on poem/review pages
+# Edge function for social media crawlers (WhatsApp, iMessage, Slack, etc.)
+[[edge_functions]]
+  function = "social-meta"
+  path = "/"
+
 [[edge_functions]]
   function = "social-meta"
   path = "/poetry/*"
@@ -50,6 +54,23 @@
   for = "/index.html"
   [headers.values]
     Cache-Control = "no-cache, no-store, must-revalidate"
+
+# Cache social / brand images (WhatsApp scrapers need a stable public URL)
+[[headers]]
+  for = "/og-image.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+    Content-Type = "image/jpeg"
+
+[[headers]]
+  for = "/og-image.png"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/icons/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
 
 # Cache static assets (they have hashed filenames so immutable is safe)
 [[headers]]

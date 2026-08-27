@@ -2,50 +2,72 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link
-      rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>"
-    />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
 
     <!-- SEO Meta Tags -->
-    <title>Izzy's Bookshelf | Book Reviews, Poetry & Reading Adventures</title>
+    <title>Izzy's Bookshelf | Books, Reviews, Poems & Writing</title>
     <meta
       name="description"
-      content="Welcome to Izzy's Bookshelf! Discover book reviews, poetry, and reading recommendations from a young book lover. Join the reading adventure!"
+      content="Explore Izzy's Bookshelf: every book she finishes, honest reviews, original poems and writing, plus a wishlist where friends can suggest the next great read."
     />
     <meta
       name="keywords"
-      content="kids books, book reviews, children's poetry, reading, young reader, book recommendations"
+      content="Izzy's Bookshelf, kids book reviews, children's poetry, reading tracker, young reader, book wishlist, middle grade books"
     />
     <meta name="author" content="Izzy" />
 
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Izzy's Bookshelf" />
+    <meta property="og:site_name" content="Izzy's Bookshelf" />
+    <meta
+      property="og:title"
+      content="Izzy's Bookshelf | Books, Reviews, Poems & Writing"
+    />
     <meta
       property="og:description"
-      content="Book reviews, poetry, and reading adventures from a young book lover!"
+      content="A young reader's shelf — finished books, honest reviews, poems & stories, and a wishlist for what's next."
     />
-    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:url" content="https://izzysbookshelf.com/" />
+    <meta
+      property="og:image"
+      content="https://izzysbookshelf.com/og-image.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta
+      property="og:image:alt"
+      content="Izzy's Bookshelf — a young reader with her owl friend, books, reviews, poems, and wishlist"
+    />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Izzy's Bookshelf" />
     <meta
       name="twitter:description"
-      content="Book reviews, poetry, and reading adventures!"
+      content="Books Izzy has finished, reviews she wrote, poems & writing — plus a wishlist you can suggest books for."
+    />
+    <meta
+      name="twitter:image"
+      content="https://izzysbookshelf.com/og-image.jpg"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Izzy's Bookshelf — a young reader with her owl friend, books, reviews, poems, and wishlist"
     />
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
 
     <!-- Apple Touch Icons -->
-    <link rel="apple-touch-icon" href="/icons/icon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
     <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -56,31 +78,36 @@
     />
 
     <!-- Theme Color for Mobile -->
-    <meta
-      name="theme-color"
-      content="#8b5cf6"
-      media="(prefers-color-scheme: light)"
-    />
-    <meta
-      name="theme-color"
-      content="#1f1f23"
-      media="(prefers-color-scheme: dark)"
-    />
+    <meta name="theme-color" content="#d946a8" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Izzy's Bookshelf" />
-
-    <!-- Splash screens for iOS -->
     <meta name="mobile-web-app-capable" content="yes" />
   </head>
   <body>
     <div id="root">
       <!-- Initial loading state for Lighthouse CI / SSR fallback -->
-      <div id="initial-loader" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #faf5ff 0%, #f0fdfa 100%);">
-        <div style="text-align: center; font-family: 'Nunito', system-ui, sans-serif;">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
-          <h1 style="color: #8b5cf6; font-size: 1.5rem; font-weight: 700; margin: 0;">Izzy's Bookshelf</h1>
-          <p style="color: #78716c; margin-top: 0.5rem;">Loading your reading adventure...</p>
+      <div
+        id="initial-loader"
+        style="
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #fff7eb;
+        "
+      >
+        <div
+          style="
+            text-align: center;
+            font-family: 'Fredoka', 'Nunito', system-ui, sans-serif;
+          "
+        >
+          <div style="font-size: 3.5rem; margin-bottom: 0.75rem">📚</div>
+          <h1 style="color: #d946a8; font-size: 1.5rem; font-weight: 600; margin: 0">
+            Izzy's Bookshelf
+          </h1>
+          <p style="color: #78716c; margin-top: 0.5rem">Loading the shelf…</p>
         </div>
       </div>
     </div>

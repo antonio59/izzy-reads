@@ -7,6 +7,8 @@ import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
 import { SearchInput } from "./ui";
+import { PageMeta } from "./PageMeta";
+import { pageMeta } from "../lib/seo";
 
 const PublicPoetry = () => {
   const { poems } = useBooks();
@@ -26,6 +28,11 @@ const PublicPoetry = () => {
 
   return (
     <div className="min-h-screen bg-cream-100 flex flex-col">
+      <PageMeta
+        title={pageMeta.poetry.title}
+        description={pageMeta.poetry.description}
+        path="/poetry"
+      />
       <PublicNav />
 
       <section className="relative overflow-hidden">

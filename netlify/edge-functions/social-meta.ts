@@ -18,9 +18,18 @@ const CRAWLER_AGENTS = [
   "bingbot",
 ];
 
+const SITE_NAME = "Izzy's Bookshelf";
+const OG_IMAGE_PATH = "/og-image.jpg";
+const OG_IMAGE_WIDTH = "1200";
+const OG_IMAGE_HEIGHT = "630";
+const OG_IMAGE_ALT =
+  "Izzy's Bookshelf — a young reader with her owl friend, books, reviews, poems, and wishlist";
+
 function isCrawler(request: Request): boolean {
   const userAgent = request.headers.get("user-agent")?.toLowerCase() || "";
-  return CRAWLER_AGENTS.some((agent) => userAgent.includes(agent.toLowerCase()));
+  return CRAWLER_AGENTS.some((agent) =>
+    userAgent.includes(agent.toLowerCase()),
+  );
 }
 
 function slugToTitle(slug: string): string {
@@ -43,11 +52,14 @@ function buildMetaHtml(params: {
   description: string;
   url: string;
   image: string;
+  type?: "website" | "article";
 }): string {
   const title = escapeHtml(params.title);
   const description = escapeHtml(params.description);
   const url = escapeHtml(params.url);
   const image = escapeHtml(params.image);
+  const type = params.type ?? "article";
+  const alt = escapeHtml(OG_IMAGE_ALT);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,21 +67,37 @@ function buildMetaHtml(params: {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${title}</title>
   <meta name="description" content="${description}" />
-  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="${escapeHtml(SITE_NAME)}" />
+  <meta property="og:type" content="${type}" />
   <meta property="og:title" content="${title}" />
   <meta property="og:description" content="${description}" />
   <meta property="og:url" content="${url}" />
   <meta property="og:image" content="${image}" />
+  <meta property="og:image:width" content="${OG_IMAGE_WIDTH}" />
+  <meta property="og:image:height" content="${OG_IMAGE_HEIGHT}" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:alt" content="${alt}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${title}" />
   <meta name="twitter:description" content="${description}" />
   <meta name="twitter:image" content="${image}" />
+  <meta name="twitter:image:alt" content="${alt}" />
+  <link rel="canonical" href="${url}" />
 </head>
 <body>
-  <p>Redirecting to ${title}...</p>
-  <script>window.location.href="${url}"</script>
+  <p>${title}</p>
 </body>
 </html>`;
+}
+
+function htmlResponse(html: string): Response {
+  return new Response(html, {
+    status: 200,
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "public, max-age=300",
+    },
+  });
 }
 
 export default async (request: Request, _context: Context) => {
@@ -79,66 +107,77 @@ export default async (request: Request, _context: Context) => {
 
   const url = new URL(request.url);
   const origin = url.origin;
-  const ogImage = `${origin}/og-image.png`;
+  const ogImage = `${origin}${OG_IMAGE_PATH}`;
+  const canonical = `${origin}${url.pathname === "/" ? "/" : url.pathname}`;
+
+  // Homepage
+  if (url.pathname === "/" || url.pathname === "") {
+    return htmlResponse(
+      buildMetaHtml({
+        title: `${SITE_NAME} | Books, Reviews, Poems & Writing`,
+        description:
+          "Explore Izzy's Bookshelf: every book she finishes, honest reviews, original poems and writing, plus a wishlist where friends can suggest the next great read.",
+        url: canonical,
+        image: ogImage,
+        type: "website",
+      }),
+    );
+  }
 
   // Poetry pages
   const poemMatch = url.pathname.match(/^\/poetry\/(.+)$/);
   if (poemMatch) {
     const slug = poemMatch[1];
-    const title = `${slugToTitle(slug)} | Izzy's Poetry Corner`;
-    const description = `Read "${slugToTitle(slug)}" - a poem by Izzy on Izzy's Bookshelf.`;
-    return new Response(
-      buildMetaHtml({ title, description, url: request.url, image: ogImage }),
-      {
-        status: 200,
-        headers: {
-          "Content-Type": "text/html",
-          "Cache-Control": "no-cache, no-store, must-revalidate",
-          "Pragma": "no-cache",
-          "Expires": "0",
-        },
-      }
+    const title = `${slugToTitle(slug)} | Izzy's Poetry`;
+    const description = `Read "${slugToTitle(slug)}" — a poem by Izzy on ${SITE_NAME}.`;
+    return htmlResponse(
+      buildMetaHtml({
+        title,
+        description,
+        url: canonical,
+        image: ogImage,
+      }),
     );
   }
 
   // Review pages
   const reviewMatch = url.pathname.match(/^\/reviews\/(.+)$/);
   if (reviewMatch) {
-    const _bookId = reviewMatch[1];
-    const title = `Izzy's Book Review | Izzy's Bookshelf`;
-    const description = `Read Izzy's review of this book on Izzy's Bookshelf.`;
-    return new Response(
-      buildMetaHtml({ title, description, url: request.url, image: ogImage }),
-      {
-        status: 200,
-        headers: { "Content-Type": "text/html" },
-      }
+    return htmlResponse(
+      buildMetaHtml({
+        title: `Izzy's Book Review | ${SITE_NAME}`,
+        description: `Read Izzy's review of this book on ${SITE_NAME}.`,
+        url: canonical,
+        image: ogImage,
+      }),
     );
   }
 
   // Blog/writing pages
   if (url.pathname === "/blog") {
-    const title = `Izzy's Writing | Izzy's Bookshelf`;
-    const description = `Thoughts, reading adventures, and stories from Izzy's reading journey.`;
-    return new Response(
-      buildMetaHtml({ title, description, url: request.url, image: ogImage }),
-      {
-        status: 200,
-        headers: { "Content-Type": "text/html" },
-      }
+    return htmlResponse(
+      buildMetaHtml({
+        title: `Writing | ${SITE_NAME}`,
+        description:
+          "Longer stories and thoughts from Izzy's reading life — adventures on the page, reflections, and writing she's proud to share.",
+        url: canonical,
+        image: ogImage,
+        type: "website",
+      }),
     );
   }
 
   // Reviews list
   if (url.pathname === "/reviews") {
-    const title = `Izzy's Book Reviews | Izzy's Bookshelf`;
-    const description = `Honest book reviews from a young reader. Discover what Izzy thinks about fantasy, adventure, mystery and more!`;
-    return new Response(
-      buildMetaHtml({ title, description, url: request.url, image: ogImage }),
-      {
-        status: 200,
-        headers: { "Content-Type": "text/html" },
-      }
+    return htmlResponse(
+      buildMetaHtml({
+        title: `Book Reviews | ${SITE_NAME}`,
+        description:
+          "Honest book reviews from Izzy — what she loved, what surprised her, and which stories she'd recommend.",
+        url: canonical,
+        image: ogImage,
+        type: "website",
+      }),
     );
   }
 

@@ -4,21 +4,29 @@ import {
   BookOpen,
   X,
   Send,
-  Lightbulb,
+  Gift,
   Check,
   Search,
   Loader2,
 } from "lucide-react";
-import { upgradeCoverUrl } from "../lib/coverUrl";
+import { useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
+import {
+  searchBooks,
+  suggestGenre,
+  type UnifiedBook,
+} from "../services/bookApi";
+import { Input, Textarea, Select } from "./ui/Input";
+import { useMotionPreference } from "../contexts/MotionPreferenceContext";
+import { upgradeCoverUrl, PLACEHOLDER_COVER } from "../lib/coverUrl";
 
-// Small cover component with error fallback for search results
 function SearchResultCover({ src, title }: { src?: string; title: string }) {
   const [hasError, setHasError] = useState(false);
   const coverSrc = src ? upgradeCoverUrl(src) : "";
   if (!coverSrc || hasError) {
     return (
-      <div className="w-10 h-14 bg-gradient-to-br from-primary-400 to-accent-400 rounded flex items-center justify-center flex-shrink-0">
-        <BookOpen className="w-5 h-5 text-white" />
+      <div className="w-10 h-14 bg-gradient-to-br from-primary-100 to-accent-100 rounded-lg flex items-center justify-center flex-shrink-0 ring-1 ring-cream-300">
+        <BookOpen className="w-5 h-5 text-primary-400" />
       </div>
     );
   }
@@ -28,7 +36,7 @@ function SearchResultCover({ src, title }: { src?: string; title: string }) {
       alt={title}
       loading="lazy"
       decoding="async"
-      className="w-10 h-14 object-cover rounded shadow-sm flex-shrink-0"
+      className="w-10 h-14 object-cover rounded-lg shadow-sm flex-shrink-0 ring-1 ring-cream-300"
       onLoad={(e) => {
         const img = e.currentTarget;
         if (img.naturalWidth < 40 || img.naturalHeight < 40) {
@@ -40,14 +48,6 @@ function SearchResultCover({ src, title }: { src?: string; title: string }) {
     />
   );
 }
-import { useMutation } from "convex/react";
-import { api } from "../../convex/_generated/api";
-import {
-  searchBooks,
-  suggestGenre,
-  type UnifiedBook,
-} from "../services/bookApi";
-import { Input, Textarea, Select } from "./ui/Input";
 
 interface SuggestionFormModalProps {
   isOpen: boolean;
@@ -69,8 +69,9 @@ const GENRES = [
 export function SuggestionFormModal({
   isOpen,
   onClose,
-  recipientName = "them",
+  recipientName = "Izzy",
 }: SuggestionFormModalProps) {
+  const { prefersReducedMotion } = useMotionPreference();
   const [suggestionSubmitted, setSuggestionSubmitted] = useState(false);
   const [suggestionForm, setSuggestionForm] = useState({
     title: "",
@@ -82,7 +83,6 @@ export function SuggestionFormModal({
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Book search state
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<UnifiedBook[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -90,6 +90,20 @@ export function SuggestionFormModal({
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const submitSuggestion = useMutation(api.bookSuggestions.submit);
+
+  const resetForm = () => {
+    setSuggestionForm({
+      title: "",
+      author: "",
+      coverUrl: "",
+      suggestedBy: "",
+      reason: "",
+      genre: "Fiction",
+    });
+    setSearchQuery("");
+    setSearchResults([]);
+    setShowSearchResults(false);
+  };
 
   const handleBookSearch = useCallback(async (query: string) => {
     if (query.length < 2) {
@@ -114,7 +128,7 @@ export function SuggestionFormModal({
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery(value);
-    setSuggestionForm({ ...suggestionForm, title: value });
+    setSuggestionForm((prev) => ({ ...prev, title: value, coverUrl: "" }));
 
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
@@ -126,13 +140,13 @@ export function SuggestionFormModal({
   };
 
   const handleSelectSearchResult = (book: UnifiedBook) => {
-    setSuggestionForm({
-      ...suggestionForm,
+    setSuggestionForm((prev) => ({
+      ...prev,
       title: book.title,
       author: book.author,
-      coverUrl: book.coverUrl || "",
+      coverUrl: book.coverUrl ? upgradeCoverUrl(book.coverUrl) : "",
       genre: suggestGenre(book),
-    });
+    }));
     setSearchQuery(book.title);
     setShowSearchResults(false);
     setSearchResults([]);
@@ -159,19 +173,11 @@ export function SuggestionFormModal({
         genre: suggestionForm.genre || undefined,
       });
       setSuggestionSubmitted(true);
-      setSuggestionForm({
-        title: "",
-        author: "",
-        coverUrl: "",
-        suggestedBy: "",
-        reason: "",
-        genre: "Fiction",
-      });
-      setSearchQuery("");
+      resetForm();
       setTimeout(() => {
         setSuggestionSubmitted(false);
         onClose();
-      }, 3000);
+      }, 2800);
     } catch (error) {
       console.error("Failed to submit suggestion:", error);
     } finally {
@@ -182,100 +188,151 @@ export function SuggestionFormModal({
   const handleClose = () => {
     if (!isSubmitting) {
       onClose();
-      // Reset state after close animation
       setTimeout(() => {
         setSuggestionSubmitted(false);
-        setSuggestionForm({
-          title: "",
-          author: "",
-          coverUrl: "",
-          suggestedBy: "",
-          reason: "",
-          genre: "Fiction",
-        });
-        setSearchQuery("");
-        setSearchResults([]);
+        resetForm();
       }, 200);
     }
   };
 
   if (!isOpen) return null;
 
+  const selectedCover = suggestionForm.coverUrl
+    ? upgradeCoverUrl(suggestionForm.coverUrl)
+    : "";
+
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
+        transition={prefersReducedMotion ? { duration: 0 } : undefined}
       >
-        <motion.div
-          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        <button
+          type="button"
+          aria-label="Close suggest a book"
+          className="absolute inset-0 bg-stone-900/45 backdrop-blur-sm"
           onClick={handleClose}
         />
 
         <motion.div
-          className="relative bg-white rounded-2xl shadow-xl overflow-hidden w-full max-w-md max-h-[90vh] overflow-y-auto"
-          initial={{ scale: 0.9, y: 50 }}
-          animate={{ scale: 1, y: 0 }}
-          exit={{ scale: 0.9, y: 50 }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="suggest-book-title"
+          className="relative w-full max-w-lg bg-cream-50 rounded-t-3xl sm:rounded-3xl shadow-2xl border border-cream-300 overflow-hidden max-h-[92vh] overflow-y-auto"
+          initial={
+            prefersReducedMotion ? false : { opacity: 0, y: 28, scale: 0.98 }
+          }
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={
+            prefersReducedMotion
+              ? { opacity: 0 }
+              : { opacity: 0, y: 16, scale: 0.98 }
+          }
+          transition={
+            prefersReducedMotion
+              ? { duration: 0 }
+              : { type: "spring", damping: 26, stiffness: 320 }
+          }
         >
           {suggestionSubmitted ? (
-            <div className="p-8 text-center">
+            <div className="p-10 sm:p-12 text-center">
               <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6"
+                initial={prefersReducedMotion ? false : { scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={
+                  prefersReducedMotion
+                    ? { duration: 0 }
+                    : { type: "spring", stiffness: 280, damping: 18 }
+                }
+                className="w-16 h-16 rounded-2xl bg-accent-100 text-accent-700 flex items-center justify-center mx-auto mb-5"
               >
-                <Check className="w-10 h-10 text-white" />
+                <Check className="w-8 h-8" strokeWidth={2.5} />
               </motion.div>
-              <h3 className="text-2xl font-bold text-stone-800 mb-2">
-                Thank You!
+              <h3
+                id="suggest-book-title"
+                className="font-accent text-3xl font-semibold text-stone-900 mb-2"
+              >
+                Sent!
               </h3>
-              <p className="text-stone-600">
-                Your book suggestion has been sent! They'll review it soon.
+              <p className="text-stone-500 leading-relaxed max-w-sm mx-auto">
+                Thanks — {recipientName} will see your suggestion on the
+                wishlist soon.
               </p>
-              <motion.div
-                className="mt-4 text-4xl"
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 0.5, repeat: 2 }}
-              >
-                📚✨
-              </motion.div>
             </div>
           ) : (
             <>
-              {/* Header */}
-              <div className="bg-gradient-to-r from-accent-500 to-primary-500 p-6 text-white">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                      <Lightbulb className="w-6 h-6" />
+              <div className="relative px-6 pt-6 pb-4 border-b border-cream-300">
+                <div
+                  className="absolute inset-0 opacity-70 pointer-events-none"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(ellipse at 20% 0%, rgba(217,70,168,0.10), transparent 55%), radial-gradient(ellipse at 90% 100%, rgba(13,148,136,0.10), transparent 50%)",
+                  }}
+                />
+                <div className="relative flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    <div className="w-11 h-11 rounded-2xl bg-primary-100 text-primary-700 flex items-center justify-center flex-shrink-0">
+                      <Gift className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold">Suggest a Book</h3>
-                      <p className="text-white/80 text-sm">
-                        Help {recipientName} discover new reads!
+                      <p className="text-xs font-semibold uppercase tracking-wider text-primary-600 mb-1">
+                        Wishlist
+                      </p>
+                      <h3
+                        id="suggest-book-title"
+                        className="font-accent text-2xl sm:text-3xl font-semibold text-stone-900 leading-tight"
+                      >
+                        Suggest a book
+                      </h3>
+                      <p className="text-sm text-stone-500 mt-1 leading-relaxed">
+                        Help {recipientName} find the next great read.
                       </p>
                     </div>
                   </div>
                   <button
+                    type="button"
                     onClick={handleClose}
-                    className="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors"
+                    className="p-2 rounded-full text-stone-400 hover:text-stone-700 hover:bg-white/80 transition-colors"
                     disabled={isSubmitting}
+                    aria-label="Close"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-5 h-5" />
                   </button>
                 </div>
               </div>
 
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                {/* Book Search Input */}
+              <form onSubmit={handleSubmit} className="p-6 space-y-5">
+                {selectedCover && (
+                  <div className="flex items-center gap-4 p-3 rounded-2xl bg-white border border-cream-300">
+                    <img
+                      src={selectedCover}
+                      alt=""
+                      className="w-14 h-20 object-cover rounded-lg shadow-md ring-1 ring-cream-300"
+                      onError={(e) => {
+                        e.currentTarget.src = PLACEHOLDER_COVER;
+                      }}
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-accent-600 mb-1">
+                        Selected
+                      </p>
+                      <p className="font-display font-bold text-stone-900 truncate">
+                        {suggestionForm.title}
+                      </p>
+                      <p className="text-sm text-stone-500 truncate">
+                        {suggestionForm.author}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 <div className="relative">
-                  <label className="block text-sm font-semibold text-stone-700 mb-1">
-                    Search for a Book *
+                  <label className="block text-sm font-display font-bold text-stone-800 mb-1.5">
+                    Find a book
                   </label>
                   <div className="relative">
                     <Input
@@ -284,35 +341,39 @@ export function SuggestionFormModal({
                       onFocus={() =>
                         searchResults.length > 0 && setShowSearchResults(true)
                       }
-                      placeholder="Start typing to search..."
+                      placeholder="Search by title or author…"
                       disabled={isSubmitting}
                       icon={<Search className="w-4 h-4" />}
-                      className="pr-10"
+                      className="bg-white border-cream-300 pr-10"
                     />
                     {isSearching && (
                       <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary-500 animate-spin" />
                     )}
                   </div>
 
-                  {/* Search Results Dropdown */}
                   <AnimatePresence>
                     {showSearchResults && searchResults.length > 0 && (
                       <motion.div
-                        initial={{ opacity: 0, y: -10 }}
+                        initial={
+                          prefersReducedMotion ? false : { opacity: 0, y: -6 }
+                        }
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute z-10 w-full mt-1 bg-white border border-stone-200 rounded-xl shadow-lg max-h-64 overflow-y-auto"
+                        exit={{ opacity: 0, y: -6 }}
+                        className="absolute z-10 w-full mt-2 bg-white border border-cream-300 rounded-2xl shadow-lg max-h-64 overflow-y-auto"
                       >
                         {searchResults.map((book) => (
                           <button
                             key={book.id}
                             type="button"
                             onClick={() => handleSelectSearchResult(book)}
-                            className="w-full flex items-center gap-3 p-3 hover:bg-primary-50 transition-colors text-left border-b border-stone-100 last:border-b-0"
+                            className="w-full flex items-center gap-3 p-3 hover:bg-primary-50/80 transition-colors text-left border-b border-cream-200 last:border-b-0"
                           >
-                            <SearchResultCover src={book.coverUrl} title={book.title} />
+                            <SearchResultCover
+                              src={book.coverUrl}
+                              title={book.title}
+                            />
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium text-stone-800 truncate">
+                              <p className="font-display font-bold text-stone-800 truncate">
                                 {book.title}
                               </p>
                               <p className="text-sm text-stone-500 truncate">
@@ -324,51 +385,75 @@ export function SuggestionFormModal({
                       </motion.div>
                     )}
                   </AnimatePresence>
-
-                  <p className="text-xs text-stone-400 mt-1">
-                    Select a result or type the title manually below
+                  <p className="text-xs text-stone-400 mt-1.5">
+                    Pick a result, or fill in the details yourself below.
                   </p>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-stone-700 mb-1">
-                    Book Title *
-                  </label>
-                  <Input
-                    value={suggestionForm.title}
-                    onChange={(e) =>
-                      setSuggestionForm({
-                        ...suggestionForm,
-                        title: e.target.value,
-                      })
-                    }
-                    placeholder="e.g., Percy Jackson"
-                    required
-                    disabled={isSubmitting}
-                  />
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="sm:col-span-2">
+                    <label className="block text-sm font-display font-bold text-stone-800 mb-1.5">
+                      Title <span className="text-primary-500">*</span>
+                    </label>
+                    <Input
+                      value={suggestionForm.title}
+                      onChange={(e) =>
+                        setSuggestionForm({
+                          ...suggestionForm,
+                          title: e.target.value,
+                        })
+                      }
+                      placeholder="e.g. Percy Jackson"
+                      required
+                      disabled={isSubmitting}
+                      className="bg-white border-cream-300"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-display font-bold text-stone-800 mb-1.5">
+                      Author <span className="text-primary-500">*</span>
+                    </label>
+                    <Input
+                      value={suggestionForm.author}
+                      onChange={(e) =>
+                        setSuggestionForm({
+                          ...suggestionForm,
+                          author: e.target.value,
+                        })
+                      }
+                      placeholder="e.g. Rick Riordan"
+                      required
+                      disabled={isSubmitting}
+                      className="bg-white border-cream-300"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-display font-bold text-stone-800 mb-1.5">
+                      Genre
+                    </label>
+                    <Select
+                      value={suggestionForm.genre}
+                      onChange={(e) =>
+                        setSuggestionForm({
+                          ...suggestionForm,
+                          genre: e.target.value,
+                        })
+                      }
+                      disabled={isSubmitting}
+                      className="bg-white border-cream-300"
+                      options={GENRES.map((genre) => ({
+                        value: genre,
+                        label: genre,
+                      }))}
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-stone-700 mb-1">
-                    Author *
-                  </label>
-                  <Input
-                    value={suggestionForm.author}
-                    onChange={(e) =>
-                      setSuggestionForm({
-                        ...suggestionForm,
-                        author: e.target.value,
-                      })
-                    }
-                    placeholder="e.g., Rick Riordan"
-                    required
-                    disabled={isSubmitting}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-stone-700 mb-1">
-                    Your Name *
+                  <label className="block text-sm font-display font-bold text-stone-800 mb-1.5">
+                    Your name <span className="text-primary-500">*</span>
                   </label>
                   <Input
                     value={suggestionForm.suggestedBy}
@@ -378,32 +463,16 @@ export function SuggestionFormModal({
                         suggestedBy: e.target.value,
                       })
                     }
-                    placeholder="Your first name"
+                    placeholder="First name is perfect"
                     required
                     disabled={isSubmitting}
+                    className="bg-white border-cream-300"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-stone-700 mb-1">
-                    Genre
-                  </label>
-                  <Select
-                    value={suggestionForm.genre}
-                    onChange={(e) =>
-                      setSuggestionForm({
-                        ...suggestionForm,
-                        genre: e.target.value,
-                      })
-                    }
-                    disabled={isSubmitting}
-                    options={GENRES.map((genre) => ({ value: genre, label: genre }))}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-stone-700 mb-1">
-                    Why would {recipientName} love this book?
+                  <label className="block text-sm font-display font-bold text-stone-800 mb-1.5">
+                    Why would {recipientName} love this?
                   </label>
                   <Textarea
                     value={suggestionForm.reason}
@@ -414,16 +483,15 @@ export function SuggestionFormModal({
                       })
                     }
                     rows={3}
-                    placeholder="Tell them why this book is amazing!"
+                    placeholder="A short note is plenty — funny, exciting, cozy…"
                     disabled={isSubmitting}
+                    className="bg-white border-cream-300"
                   />
                 </div>
 
-                <motion.button
+                <button
                   type="submit"
-                  className="w-full py-3 bg-gradient-to-r from-accent-500 to-primary-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-                  whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                  className="w-full py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-display font-bold rounded-xl flex items-center justify-center gap-2 shadow-md shadow-primary-600/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   disabled={
                     isSubmitting ||
                     !suggestionForm.title ||
@@ -434,15 +502,15 @@ export function SuggestionFormModal({
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      Sending...
+                      Sending…
                     </>
                   ) : (
                     <>
                       <Send className="w-5 h-5" />
-                      Send Suggestion
+                      Send suggestion
                     </>
                   )}
-                </motion.button>
+                </button>
               </form>
             </>
           )}

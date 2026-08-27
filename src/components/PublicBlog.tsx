@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
-import { Helmet } from "react-helmet-async";
 import { useBooks } from "../contexts/BookContext";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
+import { PageMeta } from "./PageMeta";
+import { pageMeta } from "../lib/seo";
 
 const PublicBlog = () => {
   const { blogPosts } = useBooks();
@@ -21,20 +22,13 @@ const PublicBlog = () => {
   const getPreviewText = (content: string): string =>
     content.replace(/!\[GIF\]\([^)]+\)/g, "").trim();
 
-  const pageUrl = `${window.location.origin}/blog`;
-
   return (
     <div className="min-h-screen bg-cream-100 flex flex-col">
-      <Helmet>
-        <title>Izzy&apos;s Writing | Izzy&apos;s Bookshelf</title>
-        <meta
-          name="description"
-          content="Thoughts, reading adventures, and stories from Izzy's reading journey."
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Izzy's Writing" />
-        <meta property="og:url" content={pageUrl} />
-      </Helmet>
+      <PageMeta
+        title={pageMeta.writing.title}
+        description={pageMeta.writing.description}
+        path="/blog"
+      />
 
       <PublicNav />
 

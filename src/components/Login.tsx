@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
-import { BookOpen, Mail, LogIn, AlertCircle, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
-import { Button } from "./ui/Button";
-import { Card } from "./ui/Card";
+import { Helmet } from "react-helmet-async";
+import { Mail, LogIn, AlertCircle, ArrowLeft } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import { useMotionPreference } from "../contexts/MotionPreferenceContext";
+import { BookLogo } from "./PublicNav";
 import { Input, PasswordInput } from "./ui/Input";
 
 const Login = () => {
   const navigate = useNavigate();
   const { signIn } = useAuth();
+  const { prefersReducedMotion } = useMotionPreference();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -35,43 +37,79 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream-100 via-primary-50 to-accent-50 flex items-center justify-center p-4">
-      <motion.div
-        className="max-w-md w-full"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        {/* Logo / Header */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-block">
-            <motion.div
-              className="w-20 h-20 mx-auto bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg"
-              whileHover={{ scale: 1.05, rotate: -3 }}
-            >
-              <BookOpen className="w-10 h-10 text-white" />
-            </motion.div>
-            <h1 className="text-3xl font-display font-bold text-stone-800">
-              Welcome back, Izzy!
-            </h1>
-          </Link>
-          <p className="text-stone-500 mt-2 flex items-center justify-center gap-1.5">
-            <Sparkles className="w-4 h-4 text-accent-500" />
-            Ready to dive into your next adventure?
-          </p>
-        </div>
+    <div className="min-h-screen bg-cream-100 flex flex-col">
+      <Helmet>
+        <title>Sign in | Izzy&apos;s Bookshelf</title>
+        <meta name="robots" content="noindex" />
+      </Helmet>
 
-        {/* Login Form */}
-        <Card variant="elevated" padding="lg" className="shadow-xl border border-cream-300">
-          <form onSubmit={handleSubmit} className="space-y-5">
+      <header className="relative z-10 px-4 pt-6">
+        <div className="max-w-md mx-auto flex items-center justify-between">
+          <Link
+            to="/"
+            className="flex items-center gap-2 group"
+            aria-label="Izzy's Bookshelf home"
+          >
+            <BookLogo className="w-8 h-8 text-primary-500 group-hover:scale-105 transition-transform" />
+            <span className="font-display font-bold text-stone-800">
+              Izzy&apos;s Bookshelf
+            </span>
+          </Link>
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-stone-500 hover:text-primary-700 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Shelf
+          </Link>
+        </div>
+      </header>
+
+      <main className="relative flex-1 flex items-center justify-center px-4 py-12 sm:py-16 overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-80 pointer-events-none"
+          aria-hidden
+          style={{
+            backgroundImage:
+              "radial-gradient(ellipse at 20% 0%, rgba(217,70,168,0.10), transparent 55%), radial-gradient(ellipse at 90% 100%, rgba(13,148,136,0.12), transparent 50%)",
+          }}
+        />
+
+        <motion.div
+          className="relative z-10 w-full max-w-md"
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={
+            prefersReducedMotion
+              ? { duration: 0 }
+              : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
+          }
+        >
+          <div className="text-center mb-8">
+            <p className="font-accent text-sm sm:text-base text-primary-600 tracking-wide mb-3">
+              Private bookshelf
+            </p>
+            <h1 className="font-accent text-3xl sm:text-4xl font-semibold text-stone-900 tracking-tight leading-tight mb-2">
+              Welcome back
+            </h1>
+            <p className="text-stone-500 leading-relaxed">
+              Sign in to log books, write poems, and keep your shelf growing.
+            </p>
+          </div>
+
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-5 bg-white/70 backdrop-blur-sm border border-cream-300 rounded-3xl p-6 sm:p-8"
+          >
             {error && (
               <motion.div
-                className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3"
-                initial={{ opacity: 0, y: -10 }}
+                className="bg-red-50 border border-red-100 rounded-xl p-3.5 flex items-start gap-3"
+                initial={prefersReducedMotion ? false : { opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
+                role="alert"
               >
                 <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-red-800">{error}</p>
+                <p className="text-sm text-red-800 leading-snug">{error}</p>
               </motion.div>
             )}
 
@@ -83,8 +121,9 @@ const Login = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              placeholder="izzy@example.com"
+              placeholder="you@example.com"
               icon={<Mail className="w-5 h-5" />}
+              className="bg-white border-cream-300"
             />
 
             <PasswordInput
@@ -94,52 +133,42 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              placeholder="Your secret code"
+              placeholder="Your password"
+              className="bg-white border-cream-300"
             />
 
-            <Button
+            <button
               type="submit"
               disabled={loading}
-              fullWidth
-              size="lg"
-              variant="primary"
+              className="w-full inline-flex items-center justify-center gap-2 py-3.5 bg-primary-600 hover:bg-primary-700 disabled:opacity-60 disabled:cursor-not-allowed text-white rounded-xl font-display font-bold text-sm shadow-md shadow-primary-600/20 transition-colors"
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <span
+                  className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
+                  aria-hidden
+                />
               ) : (
                 <>
                   <LogIn className="w-5 h-5" />
-                  Sign In
+                  Sign in
                 </>
               )}
-            </Button>
+            </button>
           </form>
 
-          <div className="mt-6 text-center">
+          <p className="mt-6 text-center text-sm text-stone-500 leading-relaxed">
+            This sign-in is for Izzy&apos;s bookshelf — friends can still
+            browse the{" "}
             <Link
               to="/"
-              className="text-sm text-stone-500 hover:text-primary-600 font-medium transition-colors"
+              className="text-primary-600 hover:text-primary-700 font-medium"
             >
-              Back to Izzy's Bookshelf
+              public shelf
             </Link>
-          </div>
-        </Card>
-
-        {/* Warm footer */}
-        <motion.div
-          className="mt-6 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-        >
-          <p className="text-sm text-stone-500">
-            This is Izzy's personal space. Only she can sign in here.
-          </p>
-          <p className="text-xs text-stone-400 mt-1.5">
-            Keep reading, keep dreaming
+            .
           </p>
         </motion.div>
-      </motion.div>
+      </main>
     </div>
   );
 };
