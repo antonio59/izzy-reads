@@ -117,6 +117,11 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Fix Convex covers circular type that broke the frontend build.
+
+Call a shared persist helper instead of api.covers.storeCoverImage from within the same module so tsc can resolve refreshLibraryCovers.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Improve cover clarity, Bookshelf framing, and dashboard onboarding.
 
 Sharpen and re-host covers (ISBN-aware matching, zoom/-L upgrades, admin refresh), drop dead reading challenges, retoken leftover purple, and guide Izzy through logging every book plus poetry and writing.
@@ -726,6 +731,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
