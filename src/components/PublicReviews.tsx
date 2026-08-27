@@ -2,57 +2,54 @@ import { useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  MessageSquare,
   Star,
-  Filter,
-  BookOpen,
-  Calendar,
   ArrowLeft,
-  Sparkles,
-  X,
+  ArrowRight,
+  Calendar,
+  BookOpen,
 } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { useBooks } from "../contexts/BookContext";
 import { useUser } from "../contexts/UserContext";
+import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
 import { ReviewCard } from "./ReviewCard";
 import { AvatarPreview, type AvatarConfig } from "./AvatarCreator";
 import { ReviewReactionButtons } from "./ReactionButtons";
 import { ShareReviewButton } from "./ShareButton";
+import { BookCoverImage } from "./ui/BookCoverImage";
 import type { Book } from "../types";
 
 type SortOption = "recent" | "rating";
 type FilterGenre = string | "all";
 
+const DEFAULT_AVATAR: AvatarConfig = {
+  skinTone: "fair",
+  hairStyle: "long",
+  hairColor: "brown",
+  eyeColor: "brown",
+  accessory: "none",
+  background: "pink",
+  outfit: "tshirt",
+  outfitColor: "purple",
+  expression: "happy",
+};
+
 function PublicReviews() {
   const { bookId } = useParams<{ bookId?: string }>();
   const { books } = useBooks();
   const { user } = useUser();
+  const { prefersReducedMotion } = useMotionPreference();
   const [sortBy, setSortBy] = useState<SortOption>("recent");
   const [filterGenre, setFilterGenre] = useState<FilterGenre>("all");
-  const [showFilters, setShowFilters] = useState(false);
 
-  // Default avatar
-  const defaultAvatar: AvatarConfig = {
-    skinTone: "fair",
-    hairStyle: "long",
-    hairColor: "brown",
-    eyeColor: "brown",
-    accessory: "none",
-    background: "pink",
-    outfit: "tshirt",
-    outfitColor: "purple",
-    expression: "happy",
-  };
-  const userAvatar = user?.avatar || defaultAvatar;
+  const userAvatar = user?.avatar || DEFAULT_AVATAR;
 
-  // Get books with reviews
   const booksWithReviews = useMemo(() => {
     return books.filter((book) => book.isRead && (book.notes || book.review));
   }, [books]);
 
-  // Get unique genres
   const genres = useMemo(() => {
     const genreSet = new Set(
       booksWithReviews.map((b) => b.genre).filter(Boolean),
@@ -60,16 +57,13 @@ function PublicReviews() {
     return Array.from(genreSet).sort();
   }, [booksWithReviews]);
 
-  // Filter and sort reviews
   const filteredReviews = useMemo(() => {
     let result = [...booksWithReviews];
 
-    // Filter by genre
     if (filterGenre !== "all") {
       result = result.filter((book) => book.genre === filterGenre);
     }
 
-    // Sort
     switch (sortBy) {
       case "recent":
         result.sort((a, b) => {
@@ -86,189 +80,180 @@ function PublicReviews() {
     return result;
   }, [booksWithReviews, filterGenre, sortBy]);
 
-  // If viewing a specific review
   const selectedBook = bookId ? books.find((b) => b.id === bookId) : null;
 
-  // Single review view
   if (selectedBook) {
     return <SingleReviewView book={selectedBook} userAvatar={userAvatar} />;
   }
 
   const pageUrl = `${window.location.origin}/reviews`;
+  const avgRating =
+    booksWithReviews.filter((b) => b.rating).length > 0
+      ? booksWithReviews.reduce((sum, b) => sum + (b.rating || 0), 0) /
+        booksWithReviews.filter((b) => b.rating).length
+      : 0;
 
-  // Reviews list view
   return (
     <div className="min-h-screen bg-cream-100 flex flex-col">
       <Helmet>
-        <title>Izzy's Book Reviews | Izzy's Bookshelf</title>
-        <meta name="description" content="Honest book reviews from a young reader. Discover what Izzy thinks about fantasy, adventure, mystery and more!" />
+        <title>Izzy&apos;s Book Reviews | Izzy&apos;s Bookshelf</title>
+        <meta
+          name="description"
+          content="Honest book reviews from a young reader. Discover what Izzy thinks about fantasy, adventure, mystery and more!"
+        />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Izzy's Book Reviews" />
-        <meta property="og:description" content="Honest book reviews from a young reader. Discover what Izzy thinks about fantasy, adventure, mystery and more!" />
+        <meta
+          property="og:description"
+          content="Honest book reviews from a young reader. Discover what Izzy thinks about fantasy, adventure, mystery and more!"
+        />
         <meta property="og:url" content={pageUrl} />
-        <meta property="og:image" content={`${window.location.origin}/og-image.png`} />
+        <meta
+          property="og:image"
+          content={`${window.location.origin}/og-image.png`}
+        />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Izzy's Book Reviews" />
-        <meta name="twitter:description" content="Honest book reviews from a young reader. Discover what Izzy thinks about fantasy, adventure, mystery and more!" />
+        <meta
+          name="twitter:description"
+          content="Honest book reviews from a young reader. Discover what Izzy thinks about fantasy, adventure, mystery and more!"
+        />
       </Helmet>
-      {/* Navigation */}
+
       <PublicNav />
 
-      {/* Compact Hero Section */}
-      <section className="py-8 bg-gradient-to-r from-primary-50 to-accent-50 border-b border-primary-100">
-        <div className="max-w-6xl mx-auto px-4">
+      {/* Hero — matches home/about language */}
+      <section className="relative overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-80"
+          style={{
+            backgroundImage:
+              "radial-gradient(ellipse at 30% 0%, rgba(217,70,168,0.10), transparent 55%), radial-gradient(ellipse at 80% 100%, rgba(13,148,136,0.10), transparent 50%)",
+          }}
+        />
+        <div className="relative z-10 max-w-3xl mx-auto px-4 pt-10 sm:pt-14 pb-8 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col sm:flex-row items-center justify-between gap-4"
+            transition={
+              prefersReducedMotion
+                ? { duration: 0 }
+                : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
+            }
           >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-400 to-primary-600 shadow-lg flex items-center justify-center">
-                <MessageSquare className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl md:text-3xl font-display font-bold text-stone-800">
-                  Izzy's Book Reviews
-                </h1>
-                <p className="text-sm text-stone-500">
-                  Honest thoughts about every book I've read
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
-                <span className="text-2xl font-bold text-primary-600">
+            <p className="font-accent text-sm sm:text-base text-primary-600 tracking-wide mb-3">
+              Honest thoughts
+            </p>
+            <h1 className="font-accent text-4xl sm:text-5xl font-semibold text-stone-900 tracking-tight leading-[1.05] mb-3">
+              Book Reviews
+            </h1>
+            <p className="text-base text-stone-500 max-w-md mx-auto leading-relaxed">
+              What I really thought about the books I&apos;ve read.
+            </p>
+            {booksWithReviews.length > 0 && (
+              <p className="mt-5 text-sm text-stone-400">
+                <span className="font-display font-bold text-stone-700 tabular-nums">
                   {booksWithReviews.length}
-                </span>
-                <span className="text-sm text-stone-500">reviews</span>
-              </div>
-              <div className="w-px h-10 bg-stone-200" />
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
-                <Star className="w-4 h-4 text-amber-500" />
-                <span className="text-2xl font-bold text-amber-500">
-                  {(
-                    booksWithReviews.reduce(
-                      (sum, b) => sum + (b.rating || 0),
-                      0,
-                    ) / booksWithReviews.filter((b) => b.rating).length || 0
-                  ).toFixed(1)}
-                </span>
-                <span className="text-sm text-stone-500">avg</span>
-              </div>
-            </div>
+                </span>{" "}
+                reviews
+                {avgRating > 0 && (
+                  <>
+                    {" · "}
+                    <span className="inline-flex items-center gap-1 align-middle">
+                      <Star className="w-3.5 h-3.5 text-star fill-star" />
+                      <span className="font-display font-bold text-stone-700 tabular-nums">
+                        {avgRating.toFixed(1)}
+                      </span>{" "}
+                      avg
+                    </span>
+                  </>
+                )}
+              </p>
+            )}
           </motion.div>
         </div>
       </section>
 
-      {/* Filters & Sort */}
-      <div className="bg-white border-b border-cream-200 sticky top-[57px] z-30">
-        <div className="max-w-6xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
+      {/* Filters — quiet, not a sticky dashboard bar */}
+      {booksWithReviews.length > 0 && (
+        <div className="max-w-3xl mx-auto px-4 w-full pb-2">
+          <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
+            <button
+              type="button"
+              onClick={() => setFilterGenre("all")}
+              className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                filterGenre === "all"
+                  ? "bg-primary-600 text-white"
+                  : "bg-white text-stone-600 border border-cream-300 hover:border-primary-300"
+              }`}
+            >
+              All
+            </button>
+            {genres.map((genre) => (
               <button
-                onClick={() => setShowFilters(!showFilters)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                  showFilters || filterGenre !== "all"
-                    ? "bg-primary-100 text-primary-700"
-                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                type="button"
+                key={genre}
+                onClick={() =>
+                  setFilterGenre(filterGenre === genre ? "all" : genre)
+                }
+                className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  filterGenre === genre
+                    ? "bg-primary-600 text-white"
+                    : "bg-white text-stone-600 border border-cream-300 hover:border-primary-300"
                 }`}
               >
-                <Filter className="w-4 h-4" />
-                Filter
-                {filterGenre !== "all" && (
-                  <span className="bg-primary-500 text-white text-xs px-1.5 rounded-full">
-                    1
-                  </span>
-                )}
+                {genre}
               </button>
-
-              {showFilters && (
-                <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="flex items-center gap-2"
-                >
-                  <select
-                    value={filterGenre}
-                    onChange={(e) => setFilterGenre(e.target.value)}
-                    className="px-3 py-2 rounded-lg border border-stone-200 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  >
-                    <option value="all">All Genres</option>
-                    {genres.map((genre) => (
-                      <option key={genre} value={genre}>
-                        {genre}
-                      </option>
-                    ))}
-                  </select>
-                  {filterGenre !== "all" && (
-                    <button
-                      onClick={() => setFilterGenre("all")}
-                      className="p-1 text-stone-400 hover:text-stone-600"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
-                </motion.div>
-              )}
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-stone-500 hidden sm:inline">
-                Sort by:
-              </span>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="px-3 py-2 rounded-lg border border-stone-200 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              >
-                <option value="recent">Most Recent</option>
-                <option value="rating">Highest Rated</option>
-              </select>
-            </div>
+            ))}
+            <div className="w-px h-6 bg-cream-300 mx-1 hidden sm:block" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              className="px-3 py-1.5 rounded-lg border border-cream-300 bg-white text-sm text-stone-600 focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+              aria-label="Sort reviews"
+            >
+              <option value="recent">Most recent</option>
+              <option value="rating">Highest rated</option>
+            </select>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Reviews Grid */}
-      <main className="flex-1 py-8">
-        <div className="max-w-6xl mx-auto px-4">
+      <main className="flex-1 py-10 sm:py-12">
+        <div className="max-w-3xl mx-auto px-4">
           {filteredReviews.length > 0 ? (
-            <div className="space-y-6">
+            <div className="space-y-10 sm:space-y-12 divide-y divide-cream-300">
               {filteredReviews.map((book, index) => (
-                <motion.div
-                  key={book.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <ReviewCard book={book} featured={index === 0} />
-                </motion.div>
+                <div key={book.id} className={index === 0 ? "" : "pt-10 sm:pt-12"}>
+                  <ReviewCard
+                    book={book}
+                    featured={index === 0 && sortBy === "recent"}
+                    index={index}
+                  />
+                </div>
               ))}
             </div>
           ) : (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center py-16 px-4"
-            >
-              <div className="w-28 h-28 bg-gradient-to-br from-primary-100 to-accent-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-5xl">📝</span>
-              </div>
+            <div className="text-center py-16 px-4">
+              <BookOpen className="w-12 h-12 text-primary-300 mx-auto mb-4" />
               <h3 className="text-2xl font-display font-bold text-stone-700 mb-3">
-                Reviews Coming Soon!
+                {filterGenre !== "all"
+                  ? "No reviews in this genre"
+                  : "Reviews coming soon"}
               </h3>
               <p className="text-stone-500 max-w-md mx-auto mb-6">
-                I'm working on writing my first book reviews. Check out my
-                favourite books on the homepage while you wait!
+                {filterGenre !== "all"
+                  ? "Try another genre, or browse the full shelf."
+                  : "I'm writing my first reviews — peek at my bookshelf while you wait!"}
               </p>
-              <a
-                href="/"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-500 to-accent-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all"
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-display font-bold text-sm shadow-md transition-colors"
               >
-                <BookOpen className="w-5 h-5" />
-                See My Bookshelf
-              </a>
-            </motion.div>
+                Browse my shelf
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           )}
         </div>
       </main>
@@ -278,7 +263,6 @@ function PublicReviews() {
   );
 }
 
-// Single Review View Component
 function SingleReviewView({
   book,
   userAvatar,
@@ -286,148 +270,161 @@ function SingleReviewView({
   book: Book;
   userAvatar: AvatarConfig;
 }) {
-  const [imageError, setImageError] = useState(false);
+  const { prefersReducedMotion } = useMotionPreference();
+  const { books } = useBooks();
   const reviewText = book.notes || book.review;
   const reviewUrl = `${window.location.origin}/reviews/${book.id}`;
+
+  const moreReviews = useMemo(() => {
+    return books
+      .filter(
+        (b) =>
+          b.id !== book.id && b.isRead && (b.notes || b.review),
+      )
+      .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+      .slice(0, 3);
+  }, [books, book.id]);
 
   return (
     <div className="min-h-screen bg-cream-100 flex flex-col">
       <Helmet>
         <title>{`Izzy's Review: ${book.title} | Izzy's Bookshelf`}</title>
-        <meta name="description" content={`Read Izzy's review of "${book.title}" by ${book.author}.`} />
+        <meta
+          name="description"
+          content={`Read Izzy's review of "${book.title}" by ${book.author}.`}
+        />
         <meta property="og:type" content="article" />
         <meta property="og:title" content={`Izzy's Review: ${book.title}`} />
-        <meta property="og:description" content={`Read Izzy's review of "${book.title}" by ${book.author}.`} />
+        <meta
+          property="og:description"
+          content={`Read Izzy's review of "${book.title}" by ${book.author}.`}
+        />
         <meta property="og:url" content={reviewUrl} />
-        <meta property="og:image" content={book.coverUrl || `${window.location.origin}/og-image.png`} />
+        <meta
+          property="og:image"
+          content={
+            book.coverUrl || `${window.location.origin}/og-image.png`
+          }
+        />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`Izzy's Review: ${book.title}`} />
-        <meta name="twitter:description" content={`Read Izzy's review of "${book.title}" by ${book.author}.`} />
+        <meta
+          name="twitter:description"
+          content={`Read Izzy's review of "${book.title}" by ${book.author}.`}
+        />
       </Helmet>
-      {/* Navigation */}
-      <nav className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-cream-300 shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <Link
-              to="/reviews"
-              className="flex items-center gap-2 text-stone-500 hover:text-stone-700 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              <span className="font-medium">All Reviews</span>
-            </Link>
-            <ShareReviewButton
-              book={book}
-              size="md"
-              className="bg-primary-500 hover:bg-primary-600 text-white"
-            />
-          </div>
-        </div>
-      </nav>
 
-      {/* Review Content */}
-      <main className="flex-1 py-8">
-        <article className="max-w-4xl mx-auto px-4">
+      <PublicNav />
+
+      <div className="max-w-3xl mx-auto px-4 pt-6 w-full">
+        <Link
+          to="/reviews"
+          className="inline-flex items-center gap-2 text-stone-500 hover:text-primary-700 transition-colors text-sm font-medium"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          All reviews
+        </Link>
+      </div>
+
+      <main className="flex-1 py-8 sm:py-10">
+        <article className="max-w-3xl mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-3xl shadow-lg overflow-hidden"
+            transition={
+              prefersReducedMotion
+                ? { duration: 0 }
+                : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
+            }
           >
-            {/* Book Header */}
-            <div className="relative bg-gradient-to-br from-primary-500 to-accent-500 p-8 text-white">
-              <div className="flex flex-col md:flex-row items-center gap-6">
-                {/* Book Cover */}
-                <div className="w-32 h-48 rounded-xl overflow-hidden shadow-xl flex-shrink-0 ring-4 ring-white/20">
-                  {book.coverUrl && !imageError ? (
-                    <img
-                      src={book.coverUrl}
-                      alt={book.title}
-                      className="w-full h-full object-cover"
-                      onError={() => setImageError(true)}
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-white/20 flex items-center justify-center">
-                      <BookOpen className="w-12 h-12 text-white/80" />
+            {/* Book header — open layout, no purple gradient card */}
+            <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start mb-10">
+              <div className="w-36 sm:w-44 aspect-[2/3] rounded-xl overflow-hidden shadow-xl ring-1 ring-cream-300 flex-shrink-0">
+                <BookCoverImage book={book} className="w-full h-full" />
+              </div>
+
+              <div className="text-center sm:text-left flex-1 pt-1">
+                {book.genre && (
+                  <p className="text-xs font-semibold uppercase tracking-wider text-accent-600 mb-2">
+                    {book.genre}
+                  </p>
+                )}
+                <h1 className="text-3xl sm:text-4xl font-display font-bold text-stone-900 leading-tight mb-2">
+                  {book.title}
+                </h1>
+                <p className="text-lg text-stone-500 mb-4">by {book.author}</p>
+
+                {book.rating && book.rating > 0 && (
+                  <div className="flex items-center gap-2 justify-center sm:justify-start mb-4">
+                    <div className="flex items-center gap-0.5">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-5 h-5 ${
+                            i < book.rating!
+                              ? "text-star fill-star"
+                              : "text-stone-200"
+                          }`}
+                        />
+                      ))}
                     </div>
-                  )}
-                </div>
-
-                {/* Book Info */}
-                <div className="text-center md:text-left">
-                  <h1 className="text-3xl md:text-4xl font-display font-bold mb-2">
-                    {book.title}
-                  </h1>
-                  <p className="text-white/90 text-lg mb-4">by {book.author}</p>
-
-                  {/* Rating */}
-                  {book.rating && book.rating > 0 && (
-                    <div className="flex items-center gap-2 justify-center md:justify-start mb-4">
-                      <div className="flex items-center gap-1">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-6 h-6 ${
-                              i < book.rating!
-                                ? "text-amber-300 fill-amber-300"
-                                : "text-white/30"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-xl font-bold">{book.rating}/5</span>
-                    </div>
-                  )}
-
-                  {/* Meta */}
-                  <div className="flex items-center gap-4 justify-center md:justify-start text-white/80 text-sm">
-                    {book.genre && (
-                      <span className="bg-white/20 px-3 py-1 rounded-full">
-                        {book.genre}
-                      </span>
-                    )}
-                    {book.dateRead && (
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        Read{" "}
-                        {new Date(book.dateRead).toLocaleDateString("en-US", {
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </span>
-                    )}
+                    <span className="font-display font-bold text-stone-700">
+                      {book.rating}/5
+                    </span>
                   </div>
+                )}
+
+                {book.dateRead && (
+                  <p className="flex items-center gap-1.5 text-sm text-stone-400 justify-center sm:justify-start">
+                    <Calendar className="w-4 h-4" aria-hidden />
+                    Read{" "}
+                    {new Date(book.dateRead).toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </p>
+                )}
+
+                <div className="mt-5 flex justify-center sm:justify-start">
+                  <ShareReviewButton
+                    book={book}
+                    size="md"
+                    className="bg-cream-200 hover:bg-cream-300 text-stone-700 border border-cream-300"
+                  />
                 </div>
               </div>
             </div>
 
-            {/* Review Body */}
-            <div className="p-8">
-              {/* Author Attribution */}
-              <div className="flex items-center gap-3 mb-6 pb-6 border-b border-stone-100">
-                <div className="w-12 h-12 rounded-full overflow-hidden">
-                  <AvatarPreview config={userAvatar} size="md" />
+            {/* Attribution + body */}
+            <div className="border-t border-cream-300 pt-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="rounded-full overflow-hidden ring-2 ring-primary-100">
+                  <AvatarPreview config={userAvatar} size="sm" />
                 </div>
                 <div>
-                  <p className="font-semibold text-stone-800">Izzy's Review</p>
-                  <p className="text-sm text-stone-500">
-                    Young book enthusiast
+                  <p className="font-display font-bold text-stone-800">
+                    Izzy&apos;s review
                   </p>
+                  <p className="text-sm text-stone-500">Young book enthusiast</p>
                 </div>
               </div>
 
-              {/* Review Text */}
-              <div className="prose prose-lg max-w-none mb-8">
-                <p className="text-stone-700 leading-relaxed text-lg whitespace-pre-wrap">
-                  {reviewText}
+              {reviewText ? (
+                <div className="prose prose-lg max-w-none mb-10">
+                  <p className="text-stone-700 leading-relaxed text-lg whitespace-pre-wrap">
+                    {reviewText}
+                  </p>
+                </div>
+              ) : (
+                <p className="text-stone-400 italic mb-10">
+                  Review coming soon!
                 </p>
-              </div>
+              )}
 
-              {/* Reactions Section */}
-              <div className="bg-stone-50 rounded-2xl p-6">
-                <h3 className="font-bold text-stone-700 mb-4 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-primary-500" />
+              <div className="py-6 border-y border-cream-300 mb-10">
+                <p className="text-sm font-medium text-stone-500 mb-3 text-center sm:text-left">
                   What do you think of this review?
-                </h3>
-
+                </p>
                 <ReviewReactionButtons
                   bookId={book.id}
                   maxVisible={5}
@@ -437,14 +434,38 @@ function SingleReviewView({
             </div>
           </motion.div>
 
-          {/* Back Link */}
-          <div className="text-center mt-8">
+          {/* Continue reading */}
+          {moreReviews.length > 0 && (
+            <section className="mb-8">
+              <h2 className="text-xl font-display font-bold text-stone-800 mb-6">
+                More reviews
+              </h2>
+              <div className="grid grid-cols-3 gap-4 sm:gap-6">
+                {moreReviews.map((b) => (
+                  <Link
+                    key={b.id}
+                    to={`/reviews/${b.id}`}
+                    className="group block"
+                  >
+                    <div className="aspect-[2/3] rounded-xl overflow-hidden shadow-md ring-1 ring-cream-300 group-hover:ring-primary-400 transition-all group-hover:-translate-y-1 mb-2">
+                      <BookCoverImage book={b} className="w-full h-full" />
+                    </div>
+                    <p className="font-display font-bold text-sm text-stone-800 line-clamp-2 group-hover:text-primary-700 transition-colors">
+                      {b.title}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <div className="text-center pt-4">
             <Link
               to="/reviews"
-              className="inline-flex items-center gap-2 text-primary-500 hover:text-primary-600 font-medium"
+              className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold text-sm"
             >
               <ArrowLeft className="w-4 h-4" />
-              See all of Izzy's reviews
+              See all reviews
             </Link>
           </div>
         </article>

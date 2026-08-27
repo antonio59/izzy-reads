@@ -79,10 +79,13 @@ function AboutPageContent() {
     return (
       <div className="min-h-screen bg-cream-100 flex flex-col">
         <PublicNav />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-12 h-12 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-stone-500 font-medium">Loading...</p>
+        <div className="flex-1 pt-14 pb-16 px-4">
+          <div className="max-w-2xl mx-auto text-center space-y-4">
+            <div className="w-20 h-20 rounded-full bg-stone-100 animate-pulse mx-auto" />
+            <div className="h-10 w-48 bg-stone-100 rounded-lg mx-auto animate-pulse" />
+            <div className="h-4 w-80 max-w-full bg-stone-100 rounded mx-auto animate-pulse" />
+            <div className="h-4 w-64 max-w-full bg-stone-100 rounded mx-auto animate-pulse" />
+            <div className="h-11 w-40 bg-stone-100 rounded-xl mx-auto animate-pulse mt-2" />
           </div>
         </div>
         <PublicFooter />

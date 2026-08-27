@@ -1,149 +1,121 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Card } from "./ui/Card";
-import { Star, BookOpen, Calendar, MessageCircle } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRight, Calendar, Star } from "lucide-react";
 import type { Book } from "../types";
+import { BookCoverImage } from "./ui/BookCoverImage";
 import { ReviewReactionButtons } from "./ReactionButtons";
-import { ShareReviewButton } from "./ShareButton";
+import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 
 interface ReviewCardProps {
   book: Book;
   featured?: boolean;
+  index?: number;
 }
 
-export function ReviewCard({ book, featured = false }: ReviewCardProps) {
-  const [imageError, setImageError] = useState(false);
-
+export function ReviewCard({ book, featured = false, index = 0 }: ReviewCardProps) {
+  const { prefersReducedMotion } = useMotionPreference();
   const reviewText = book.notes || book.review;
   if (!reviewText) return null;
 
   return (
-    <Card
-      variant="default"
-      padding="none"
-      className={`shadow-md hover:shadow-xl transition-all duration-300 ${
-        featured ? "ring-2 ring-primary-300" : ""
-      }`}
-      initial={{ opacity: 0, y: 20 }}
+    <motion.article
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4 }}
+      transition={
+        prefersReducedMotion
+          ? { duration: 0 }
+          : { delay: Math.min(index * 0.04, 0.24) }
+      }
+      className={`group relative flex gap-4 sm:gap-6 ${
+        featured ? "pb-2" : ""
+      }`}
     >
-      <div className="flex flex-col md:flex-row">
-        {/* Book Cover */}
-        <div className="md:w-48 flex-shrink-0">
-          <Link
-            to={`/reviews/${book.id}`}
-            className="block relative aspect-[2/3] md:aspect-auto md:h-full"
-          >
-            {book.coverUrl && !imageError ? (
-              <img
-                src={book.coverUrl}
-                alt={book.title}
-                className="w-full h-full object-cover"
-                onError={() => setImageError(true)}
-              />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-primary-400 to-accent-500 flex items-center justify-center">
-                <BookOpen className="w-12 h-12 text-white/80" />
-              </div>
-            )}
-            {featured && (
-              <div className="absolute top-2 left-2 bg-primary-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                Featured
-              </div>
-            )}
-          </Link>
+      {/* Cover */}
+      <Link
+        to={`/reviews/${book.id}`}
+        className="flex-shrink-0 w-24 sm:w-28 md:w-32"
+        aria-label={`Read review of ${book.title}`}
+      >
+        <div className="aspect-[2/3] rounded-xl overflow-hidden shadow-md ring-1 ring-cream-300 group-hover:ring-primary-400 transition-all group-hover:-translate-y-1">
+          <BookCoverImage book={book} className="w-full h-full" />
+        </div>
+      </Link>
+
+      {/* Content */}
+      <div className="flex-1 min-w-0 flex flex-col py-0.5">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1.5">
+          {book.genre && (
+            <span className="text-xs font-semibold uppercase tracking-wider text-accent-600">
+              {book.genre}
+            </span>
+          )}
+          {book.dateRead && (
+            <span className="flex items-center gap-1 text-xs text-stone-400">
+              <Calendar className="w-3 h-3" aria-hidden />
+              {new Date(book.dateRead).toLocaleDateString("en-US", {
+                month: "short",
+                year: "numeric",
+              })}
+            </span>
+          )}
+          {featured && (
+            <span className="text-xs font-bold text-primary-600">Latest</span>
+          )}
         </div>
 
-        {/* Review Content */}
-        <div className="flex-1 p-5 md:p-6">
-          {/* Header */}
-          <div className="flex items-start justify-between gap-4 mb-3">
-            <div>
-              <Link
-                to={`/reviews/${book.id}`}
-                className="text-xl font-display font-bold text-stone-800 hover:text-primary-600 transition-colors line-clamp-1"
-              >
-                {book.title}
-              </Link>
-              <p className="text-stone-500 text-sm">by {book.author}</p>
-            </div>
+        <Link
+          to={`/reviews/${book.id}`}
+          className="block"
+        >
+          <h2 className="text-lg sm:text-xl font-display font-bold text-stone-900 group-hover:text-primary-700 transition-colors leading-snug line-clamp-2">
+            {book.title}
+          </h2>
+          <p className="text-sm text-stone-500 mt-0.5">by {book.author}</p>
+        </Link>
 
-            {/* Rating */}
-            {book.rating && book.rating > 0 && (
-              <div className="flex items-center gap-1 flex-shrink-0">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-4 h-4 ${
-                      i < book.rating!
-                        ? "text-amber-400 fill-amber-400"
-                        : "text-stone-200"
-                    }`}
-                  />
-                ))}
-              </div>
-            )}
+        {book.rating && book.rating > 0 && (
+          <div
+            className="flex items-center gap-1 mt-2"
+            aria-label={`${book.rating} out of 5 stars`}
+          >
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`w-3.5 h-3.5 ${
+                  i < book.rating!
+                    ? "text-star fill-star"
+                    : "text-stone-200"
+                }`}
+              />
+            ))}
           </div>
+        )}
 
-          {/* Meta info */}
-          <div className="flex items-center gap-4 text-xs text-stone-400 mb-4">
-            {book.genre && (
-              <span className="bg-accent-100 text-accent-600 px-2 py-1 rounded-full font-medium">
-                {book.genre}
-              </span>
-            )}
-            {book.dateRead && (
-              <span className="flex items-center gap-1">
-                <Calendar className="w-3 h-3" />
-                {new Date(book.dateRead).toLocaleDateString("en-US", {
-                  month: "short",
-                  year: "numeric",
-                })}
-              </span>
-            )}
-          </div>
+        <blockquote className="mt-3 text-stone-600 leading-relaxed line-clamp-3 text-sm sm:text-base">
+          “{reviewText}”
+        </blockquote>
 
-          {/* Review Text */}
-          <div className="mb-4">
-            <p className="text-stone-600 leading-relaxed line-clamp-3">
-              "{reviewText}"
-            </p>
-            {reviewText.length > 200 && (
-              <Link
-                to={`/reviews/${book.id}`}
-                className="text-primary-500 hover:text-primary-600 text-sm font-medium mt-2 inline-block"
-              >
-                Read full review →
-              </Link>
-            )}
-          </div>
+        <div className="mt-auto pt-4 flex flex-wrap items-center justify-between gap-3">
+          <Link
+            to={`/reviews/${book.id}`}
+            className="inline-flex items-center gap-1.5 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors group/link"
+          >
+            Read full review
+            <ArrowRight className="w-4 h-4 group-hover/link:translate-x-0.5 transition-transform" />
+          </Link>
 
-          {/* Actions & Reactions */}
-          <div className="border-t border-stone-100 pt-4">
-            <div className="flex items-center justify-between gap-4">
-              {/* Reaction buttons */}
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs text-stone-400 mr-1">
-                  <MessageCircle className="w-3 h-3 inline mr-1" />
-                  React:
-                </span>
-                <ReviewReactionButtons
-                  bookId={book.id}
-                  showLabel={false}
-                  size="sm"
-                  maxVisible={3}
-                  showMoreButton={true}
-                />
-              </div>
-
-              {/* Share button */}
-              <ShareReviewButton book={book} size="sm" />
-            </div>
+          <div className="flex items-center gap-2">
+            <ReviewReactionButtons
+              bookId={book.id}
+              showLabel={false}
+              size="sm"
+              maxVisible={3}
+              showMoreButton={true}
+            />
           </div>
         </div>
       </div>
-    </Card>
+    </motion.article>
   );
 }
 

@@ -144,7 +144,7 @@ const NotFound: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-orange-100 flex items-center justify-center p-4 overflow-hidden relative">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-cream-100 to-accent-50 flex items-center justify-center p-4 overflow-hidden relative">
       {/* Floating books background */}
       {floatingBooks.map((book, i) => (
         <FloatingBook
@@ -178,7 +178,7 @@ const NotFound: React.FC = () => {
         >
           <div className="relative inline-block">
             <motion.h1
-              className="text-[12rem] md:text-[16rem] font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 leading-tight select-none"
+              className="text-[12rem] md:text-[16rem] font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 leading-tight select-none"
               animate={{
                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
               }}
@@ -254,7 +254,7 @@ const NotFound: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/">
               <motion.button
-                className="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3 w-full sm:w-auto"
+                className="group relative overflow-hidden bg-gradient-to-r from-primary-600 to-accent-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3 w-full sm:w-auto"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >

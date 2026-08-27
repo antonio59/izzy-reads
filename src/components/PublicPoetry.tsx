@@ -1,23 +1,16 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Feather, Search, Quote } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRight, Search } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
+import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
-import { Input } from "./ui/Input";
-
-const BACKGROUND_PATTERNS = [
-  "from-violet-100/80 via-purple-50/80 to-fuchsia-100/80",
-  "from-sky-100/80 via-cyan-50/80 to-teal-100/80",
-  "from-amber-100/80 via-yellow-50/80 to-orange-100/80",
-  "from-emerald-100/80 via-green-50/80 to-teal-100/80",
-  "from-rose-100/80 via-pink-50/80 to-fuchsia-100/80",
-  "from-indigo-100/80 via-blue-50/80 to-violet-100/80",
-];
+import { SearchInput } from "./ui";
 
 const PublicPoetry = () => {
   const { poems } = useBooks();
+  const { prefersReducedMotion } = useMotionPreference();
   const [searchQuery, setSearchQuery] = useState("");
 
   const sortedPoems = [...poems].sort(
@@ -32,210 +25,139 @@ const PublicPoetry = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-rose-50">
+    <div className="min-h-screen bg-cream-100 flex flex-col">
       <PublicNav />
 
-      {/* Hero Section */}
-      <section className="relative py-16 md:py-24 bg-gradient-to-r from-violet-50 to-fuchsia-50 border-b border-violet-100 overflow-hidden">
-        {/* Decorative background */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <section className="relative overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-80"
+          style={{
+            backgroundImage:
+              "radial-gradient(ellipse at 30% 0%, rgba(217,70,168,0.10), transparent 55%), radial-gradient(ellipse at 80% 100%, rgba(13,148,136,0.10), transparent 50%)",
+          }}
+        />
+        <div className="relative z-10 max-w-3xl mx-auto px-4 pt-10 sm:pt-14 pb-8 text-center">
           <motion.div
-            className="absolute top-10 left-[10%] text-6xl opacity-20"
-            animate={{ y: [0, -15, 0], rotate: [0, 10, 0] }}
-            transition={{ duration: 5, repeat: Infinity }}
-          >
-            ✨
-          </motion.div>
-          <motion.div
-            className="absolute top-20 right-[15%] text-5xl opacity-15"
-            animate={{ y: [0, 10, 0], rotate: [0, -10, 0] }}
-            transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
-          >
-            🌙
-          </motion.div>
-          <motion.div
-            className="absolute bottom-10 left-[20%] text-4xl opacity-10"
-            animate={{ scale: [1, 1.3, 1] }}
-            transition={{ duration: 3, repeat: Infinity, delay: 1 }}
-          >
-            💫
-          </motion.div>
-        </div>
-
-        <div className="max-w-6xl mx-auto px-4 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center max-w-2xl mx-auto"
+            transition={
+              prefersReducedMotion
+                ? { duration: 0 }
+                : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
+            }
           >
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-lg mb-6">
-              <Feather className="w-8 h-8 text-white" />
-            </div>
-
-            <h1 className="text-4xl md:text-5xl font-display font-bold text-stone-800 mb-4">
-              Poetry Corner
-            </h1>
-            <p className="text-lg text-stone-600 mb-8">
-              A collection of words woven with magic, imagination, and heart
+            <p className="font-accent text-sm sm:text-base text-primary-600 tracking-wide mb-3">
+              Words from the heart
             </p>
-
-            <div className="flex items-center justify-center gap-6">
-              <div className="flex items-center gap-2 bg-white px-5 py-2.5 rounded-full shadow-sm">
-                <span className="text-2xl font-bold text-violet-600">{poems.length}</span>
-                <span className="text-stone-500">poems</span>
-              </div>
-              <div className="hidden sm:flex items-center gap-2 bg-white px-5 py-2.5 rounded-full shadow-sm">
-                <Quote className="w-4 h-4 text-violet-500" />
-                <span className="text-stone-500">Original works</span>
-              </div>
-            </div>
+            <h1 className="font-accent text-4xl sm:text-5xl font-semibold text-stone-900 tracking-tight leading-[1.05] mb-3">
+              Poetry
+            </h1>
+            <p className="text-base text-stone-500 max-w-md mx-auto leading-relaxed">
+              Poems I&apos;ve written — imagination, feelings, and a little magic.
+            </p>
+            {poems.length > 0 && (
+              <p className="mt-5 text-sm text-stone-400">
+                <span className="font-display font-bold text-stone-700 tabular-nums">
+                  {poems.length}
+                </span>{" "}
+                {poems.length === 1 ? "poem" : "poems"}
+              </p>
+            )}
           </motion.div>
         </div>
       </section>
 
-      {/* Search Section */}
       {poems.length > 0 && (
-        <section className="py-8 px-4 bg-white/50 border-b border-violet-100">
-          <div className="max-w-xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <Input
-                type="text"
-                placeholder="Search poems..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                icon={<Search className="w-5 h-5" />}
-                iconPosition="left"
-                className="border-2 border-violet-100 focus:border-violet-400"
-              />
-            </motion.div>
-          </div>
-        </section>
+        <div className="max-w-3xl mx-auto px-4 w-full pb-2">
+          <SearchInput
+            placeholder="Search poems…"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onClear={() => setSearchQuery("")}
+            className="bg-white border-cream-300"
+            aria-label="Search poems"
+          />
+        </div>
       )}
 
-      {/* Poems Grid */}
-      <section className="py-12 px-4">
-        <div className="max-w-6xl mx-auto">
+      <main className="flex-1 py-10 sm:py-12">
+        <div className="max-w-3xl mx-auto px-4">
           {filteredPoems.length > 0 ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="space-y-10 sm:space-y-12 divide-y divide-cream-300">
               {filteredPoems.map((poem, index) => (
                 <Link
                   key={poem.id}
                   to={`/poetry/${poem.slug || poem.id}`}
-                  className="group block"
+                  className={`group block ${index === 0 ? "" : "pt-10 sm:pt-12"}`}
                 >
                   <motion.article
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={
+                      prefersReducedMotion ? false : { opacity: 0, y: 12 }
+                    }
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05, duration: 0.4 }}
-                    className="h-full"
+                    transition={
+                      prefersReducedMotion
+                        ? { duration: 0 }
+                        : { delay: Math.min(index * 0.04, 0.2) }
+                    }
                   >
-                    <div className="relative h-full bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-stone-100 group-hover:-translate-y-1"
-                    >
-                      {/* Card Header - Clean gradient, no placeholder emoji */}
-                      <div
-                        className={`h-32 bg-gradient-to-br ${BACKGROUND_PATTERNS[index % BACKGROUND_PATTERNS.length]} relative overflow-hidden`}
-                      >
-                        {/* Only show image if one exists */}
-                        {poem.imageUrl && (
-                          <img
-                            src={poem.imageUrl}
-                            alt={poem.title}
-                            className="w-full h-full object-cover"
-                          />
-                        )}
-
-                        {/* Template badge - positioned better */}
-                        {poem.template && (
-                          <span className="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-bold text-stone-700 shadow-sm">
-                            {poem.template}
-                          </span>
-                        )}
-
-                        {/* Subtle decorative element */}
-                        <div className="absolute bottom-0 right-0 w-24 h-24 bg-white/10 rounded-tl-full" />
-                      </div>
-
-                      {/* Card Content */}
-                      <div className="p-5">
-                        <h3 className="text-lg font-display font-bold text-stone-800 mb-2 group-hover:text-violet-600 transition-colors line-clamp-1"
-                        >
-                          {poem.title}
-                        </h3>
-
-                        <p className="text-stone-500 font-serif italic line-clamp-3 leading-relaxed text-sm mb-4"
-                        >
-                          {poem.content.substring(0, 120)}
-                          {poem.content.length > 120 && "..."}
-                        </p>
-
-                        <div className="flex items-center justify-between pt-3 border-t border-stone-100">
-                          <span className="text-xs text-stone-400">
-                            {new Date(poem.dateCreated).toLocaleDateString(
-                              "en-US",
-                              {
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                              },
-                            )}
-                          </span>
-                          <span className="text-xs font-medium text-violet-600 opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            Read more →
-                          </span>
-                        </div>
-                      </div>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2">
+                      {poem.template && (
+                        <span className="text-xs font-semibold uppercase tracking-wider text-accent-600">
+                          {poem.template}
+                        </span>
+                      )}
+                      <span className="text-xs text-stone-400">
+                        {new Date(poem.dateCreated).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
                     </div>
+                    <h2 className="text-xl sm:text-2xl font-display font-bold text-stone-900 group-hover:text-primary-700 transition-colors leading-snug mb-3">
+                      {poem.title}
+                    </h2>
+                    <p className="text-stone-600 font-serif italic leading-relaxed line-clamp-3">
+                      {poem.content}
+                    </p>
+                    <span className="inline-flex items-center gap-1.5 mt-4 text-primary-600 font-semibold text-sm group-hover:gap-2.5 transition-all">
+                      Read poem <ArrowRight className="w-4 h-4" />
+                    </span>
                   </motion.article>
                 </Link>
               ))}
             </div>
           ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-20"
-            >
+            <div className="text-center py-16">
               {searchQuery ? (
                 <>
-                  <div className="w-20 h-20 bg-gradient-to-br from-violet-100 to-fuchsia-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Search className="w-10 h-10 text-violet-400" />
-                  </div>
+                  <Search className="w-10 h-10 text-primary-300 mx-auto mb-4" />
                   <h3 className="text-xl font-display font-bold text-stone-800 mb-2">
                     No poems found
                   </h3>
-                  <p className="text-stone-500">
-                    Try a different search term
-                  </p>
                   <button
+                    type="button"
                     onClick={() => setSearchQuery("")}
-                    className="mt-4 text-violet-600 font-semibold hover:text-violet-700"
+                    className="mt-2 text-primary-600 font-semibold text-sm hover:text-primary-700"
                   >
                     Clear search
                   </button>
                 </>
               ) : (
                 <>
-                  <div className="w-24 h-24 bg-gradient-to-br from-violet-100 to-fuchsia-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Feather className="w-12 h-12 text-violet-400" />
-                  </div>
                   <h3 className="text-2xl font-display font-bold text-stone-800 mb-3">
-                    Poems Coming Soon!
+                    Poems coming soon
                   </h3>
                   <p className="text-stone-500 max-w-md mx-auto">
-                    Izzy is busy crafting beautiful words. Check back soon for
-                    magical poetry!
+                    Izzy is crafting beautiful words. Check back soon!
                   </p>
                 </>
               )}
-            </motion.div>
+            </div>
           )}
         </div>
-      </section>
+      </main>
 
       <PublicFooter />
     </div>

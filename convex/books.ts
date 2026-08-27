@@ -73,6 +73,7 @@ export const add = mutation({
     isRead: v.boolean(),
     notes: v.optional(v.string()),
     giftFrom: v.optional(v.string()),
+    tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
@@ -100,6 +101,7 @@ export const update = mutation({
     isRead: v.optional(v.boolean()),
     notes: v.optional(v.string()),
     giftFrom: v.optional(v.string()),
+    tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
@@ -199,6 +201,7 @@ export const bulkAdd = mutation({
         rating: v.optional(v.number()),
         isRead: v.boolean(),
         notes: v.optional(v.string()),
+        tags: v.optional(v.array(v.string())),
       }),
     ),
   },

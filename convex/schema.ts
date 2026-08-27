@@ -52,11 +52,12 @@ export default defineSchema({
     description: v.optional(v.string()),
     ageRating: v.string(),
     dateAdded: v.string(),
-    dateRead: v.optional(v.string()), // Format: "YYYY-MM" for month/year
+    dateRead: v.optional(v.string()), // "YYYY-MM" or "YYYY-MM-DD"
     rating: v.optional(v.number()),
     isRead: v.boolean(),
     notes: v.optional(v.string()),
     giftFrom: v.optional(v.string()), // Who gave this book as a gift
+    tags: v.optional(v.array(v.string())), // mood / custom tags for filtering
   })
     .index("by_user", ["userId"])
     .index("by_user_isRead", ["userId", "isRead"])

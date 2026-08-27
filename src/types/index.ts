@@ -9,7 +9,7 @@ export interface Book {
   description?: string;
   ageRating: string;
   dateAdded: string;
-  dateRead?: string; // Format: "YYYY-MM" for month/year
+  dateRead?: string; // "YYYY-MM" or "YYYY-MM-DD"
   rating?: number;
   isRead: boolean;
   notes?: string;
@@ -17,6 +17,7 @@ export interface Book {
   giftFrom?: string; // Who gave this book as a gift
   boughtBy?: string; // Visitor who bought this wishlist item
   boughtAt?: number; // When it was marked as bought
+  tags?: string[]; // mood / custom tags
   reactions?: BookReactions;
   reviewReactions?: ReviewReactions;
 }

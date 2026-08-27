@@ -1,25 +1,28 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { X, ArrowRight, Star } from "lucide-react";
 import type { Book } from "../types";
 import { BookReactionButtons } from "./ReactionButtons";
 import { ShareBookButton } from "./ShareButton";
-import { Button, Card, SearchInput } from "./ui";
-import { BookCoverImage, getBookGradient } from "./ui/BookCoverImage";
+import { Button, SearchInput } from "./ui";
+import { BookCoverImage } from "./ui/BookCoverImage";
+import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 
 function ConfettiParticles() {
   const particles = useMemo(
     () =>
-      Array.from({ length: 20 }, (_, i) => ({
+      Array.from({ length: 16 }, (_, i) => ({
         top: (i * 17) % 100,
         left: (i * 23) % 100,
         rotate: (i * 18) % 360,
-        emoji: ["⭐", "✨", "💖", "🎉", "🌟"][i % 5],
+        emoji: ["⭐", "✨", "💖", "🌟"][i % 4],
       })),
     [],
   );
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-[60] overflow-hidden">
       {particles.map((p, i) => (
         <motion.div
           key={i}
@@ -40,107 +43,46 @@ function ConfettiParticles() {
   );
 }
 
+function StarRating({
+  rating,
+  size = "sm",
+}: {
+  rating: number;
+  size?: "sm" | "md";
+}) {
+  const starClass = size === "md" ? "w-5 h-5" : "w-3.5 h-3.5";
+  return (
+    <div className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
+      {[...Array(5)].map((_, i) => (
+        <Star
+          key={i}
+          className={`${starClass} ${
+            i < rating ? "text-star fill-star" : "text-stone-200"
+          }`}
+        />
+      ))}
+    </div>
+  );
+}
+
+function getReviewText(book: Book): string | undefined {
+  const text = book.notes || book.review;
+  return text?.trim() || undefined;
+}
+
 interface FunBookshelfPublicProps {
   books: Book[];
   showFilters?: boolean;
 }
 
-// Genre styles with distinct colors for badges
-const GENRE_STYLES: Record<
-  string,
-  {
-    bg: string;
-    text: string;
-    emoji: string;
-    badgeColor: string;
-    textColor: string;
-  }
-> = {
-  Fantasy: {
-    bg: "bg-purple-100",
-    text: "text-purple-600",
-    emoji: "🧙‍♂️",
-    badgeColor: "#ddd6fe",
-    textColor: "#7c3aed",
-  },
-  Adventure: {
-    bg: "bg-orange-100",
-    text: "text-orange-600",
-    emoji: "🗺️",
-    badgeColor: "#fed7aa",
-    textColor: "#ea580c",
-  },
-  Mystery: {
-    bg: "bg-slate-100",
-    text: "text-slate-600",
-    emoji: "🔍",
-    badgeColor: "#e2e8f0",
-    textColor: "#475569",
-  },
-  Fiction: {
-    bg: "bg-blue-100",
-    text: "text-blue-600",
-    emoji: "📖",
-    badgeColor: "#dbeafe",
-    textColor: "#2563eb",
-  },
-  "Science Fiction": {
-    bg: "bg-cyan-100",
-    text: "text-cyan-600",
-    emoji: "🚀",
-    badgeColor: "#cffafe",
-    textColor: "#0891b2",
-  },
-  "Non-Fiction": {
-    bg: "bg-emerald-100",
-    text: "text-emerald-600",
-    emoji: "🎓",
-    badgeColor: "#d1fae5",
-    textColor: "#059669",
-  },
-  Humor: {
-    bg: "bg-yellow-100",
-    text: "text-yellow-600",
-    emoji: "😂",
-    badgeColor: "#fef3c7",
-    textColor: "#d97706",
-  },
-  "Graphic Novel": {
-    bg: "bg-pink-100",
-    text: "text-pink-600",
-    emoji: "🎨",
-    badgeColor: "#fce7f3",
-    textColor: "#db2777",
-  },
-  Horror: {
-    bg: "bg-red-100",
-    text: "text-red-600",
-    emoji: "👻",
-    badgeColor: "#fee2e2",
-    textColor: "#dc2626",
-  },
-  Romance: {
-    bg: "bg-rose-100",
-    text: "text-rose-600",
-    emoji: "💕",
-    badgeColor: "#ffe4e6",
-    textColor: "#e11d48",
-  },
-  default: {
-    bg: "bg-accent-100",
-    text: "text-accent-600",
-    emoji: "📖",
-    badgeColor: "#ccfbf1",
-    textColor: "#0d9488",
-  },
-};
-
 const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
   books,
   showFilters = true,
 }) => {
+  const { prefersReducedMotion } = useMotionPreference();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<"title" | "rating">("title");
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -150,132 +92,173 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
     return Array.from(genreSet).sort();
   }, [books]);
 
+  const allTags = useMemo(() => {
+    const tagSet = new Set<string>();
+    books.forEach((b) => b.tags?.forEach((t) => tagSet.add(t)));
+    return Array.from(tagSet).sort();
+  }, [books]);
+
   const filteredBooks = useMemo(() => {
     const filtered = books.filter((book) => {
       const matchesSearch =
         !searchQuery ||
         book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        book.author.toLowerCase().includes(searchQuery.toLowerCase());
+        book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        book.tags?.some((t) =>
+          t.toLowerCase().includes(searchQuery.toLowerCase()),
+        );
       const matchesGenre = !selectedGenre || book.genre === selectedGenre;
-      return matchesSearch && matchesGenre;
+      const matchesTag =
+        !selectedTag || book.tags?.includes(selectedTag);
+      return matchesSearch && matchesGenre && matchesTag;
     });
 
-    // Sort based on selected sort option
     if (sortBy === "rating") {
       return filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     }
-    // Default: alphabetically by title
     return filtered.sort((a, b) => a.title.localeCompare(b.title));
-  }, [books, searchQuery, selectedGenre, sortBy]);
+  }, [books, searchQuery, selectedGenre, selectedTag, sortBy]);
+
+  const closeModal = useCallback(() => setSelectedBook(null), []);
+
+  useEffect(() => {
+    if (!selectedBook) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeModal();
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [selectedBook, closeModal]);
 
   const handleReactionConfetti = () => {
     setShowConfetti(true);
     setTimeout(() => setShowConfetti(false), 1000);
   };
 
-  const getGenreStyle = (genre: string) =>
-    GENRE_STYLES[genre] || GENRE_STYLES.default;
+  const reviewText = selectedBook ? getReviewText(selectedBook) : undefined;
+  const hasFullReview = Boolean(reviewText);
 
   return (
     <div>
-      {/* Filters */}
       {showFilters && (
-        <Card variant="outlined" padding="none" className="mb-10 shadow-sm border-cream-300 p-5">
-          {/* Search Bar */}
-          <div className="max-w-md mx-auto mb-5">
-            <label className="block text-xs font-semibold text-stone-500 uppercase mb-2">
-              🔍 Search Books
-            </label>
+        <div className="mb-8 sm:mb-10 space-y-4">
+          <div className="max-w-md">
             <SearchInput
-              placeholder="Type a book title or author..."
+              placeholder="Search by title or author…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onClear={() => setSearchQuery("")}
-              className="bg-cream-50 border-cream-300 focus:bg-white"
+              className="bg-white border-cream-300 focus:bg-white"
+              aria-label="Search books"
             />
           </div>
 
-          {/* Sort Options */}
-          <div className="mb-5">
-            <label className="block text-xs font-semibold text-stone-500 uppercase mb-2 text-center">
-              📊 Sort By
-            </label>
-            <div className="flex justify-center gap-2">
-              <Button
-                onClick={() => setSortBy("title")}
-                size="sm"
-                className={`${
-                  sortBy === "title"
-                    ? "bg-stone-800 text-white hover:bg-stone-800"
-                    : "bg-cream-100 text-stone-500 hover:bg-stone-100"
-                }`}
-              >
-                A-Z
-              </Button>
-              <Button
-                onClick={() => setSortBy("rating")}
-                size="sm"
-                icon={<span>⭐</span>}
-                iconPosition="left"
-                className={`${
-                  sortBy === "rating"
-                    ? ""
-                    : "bg-cream-100 text-stone-500 hover:bg-primary-50 hover:text-primary-600"
-                }`}
-              >
-                Highest Rated
-              </Button>
-            </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-stone-400 mr-1">
+              Sort
+            </span>
+            <button
+              type="button"
+              onClick={() => setSortBy("title")}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                sortBy === "title"
+                  ? "bg-stone-800 text-white"
+                  : "bg-cream-200 text-stone-600 hover:bg-cream-300"
+              }`}
+            >
+              A–Z
+            </button>
+            <button
+              type="button"
+              onClick={() => setSortBy("rating")}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                sortBy === "rating"
+                  ? "bg-stone-800 text-white"
+                  : "bg-cream-200 text-stone-600 hover:bg-cream-300"
+              }`}
+            >
+              Highest rated
+            </button>
           </div>
 
-          {/* Filter Pills */}
-          <div>
-            <label className="block text-xs font-semibold text-stone-500 uppercase mb-2 text-center">
-              📚 Filter by Genre
-            </label>
+          {genres.length > 0 && (
             <div
-              className="flex flex-wrap justify-center gap-2"
+              className="flex flex-wrap gap-2"
               role="group"
               aria-label="Filter by genre"
             >
               <button
+                type="button"
                 onClick={() => setSelectedGenre(null)}
                 aria-pressed={!selectedGenre}
-                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
                   !selectedGenre
-                    ? "bg-primary-500 text-white shadow-lg shadow-primary-500/30 ring-2 ring-primary-500 ring-offset-2"
-                    : "bg-cream-100 text-stone-600 border-2 border-cream-300 hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600 active:scale-95"
+                    ? "bg-primary-600 text-white"
+                    : "bg-white text-stone-600 border border-cream-300 hover:border-primary-300 hover:text-primary-700"
                 }`}
               >
-                All Books
+                All
               </button>
               {genres.map((genre) => (
                 <button
+                  type="button"
                   key={genre}
                   onClick={() =>
                     setSelectedGenre(selectedGenre === genre ? null : genre)
                   }
                   aria-pressed={selectedGenre === genre}
-                  className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
                     selectedGenre === genre
-                      ? "bg-primary-500 text-white shadow-lg shadow-primary-500/30 ring-2 ring-primary-500 ring-offset-2"
-                      : "bg-cream-100 text-stone-600 border-2 border-cream-300 hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600 active:scale-95"
+                      ? "bg-primary-600 text-white"
+                      : "bg-white text-stone-600 border border-cream-300 hover:border-primary-300 hover:text-primary-700"
                   }`}
                 >
                   {genre}
                 </button>
               ))}
             </div>
-          </div>
-        </Card>
+          )}
+
+          {allTags.length > 0 && (
+            <div
+              className="flex flex-wrap gap-2"
+              role="group"
+              aria-label="Filter by mood tag"
+            >
+              <span className="text-xs font-semibold uppercase tracking-wider text-stone-400 self-center mr-1">
+                Mood
+              </span>
+              {allTags.map((tag) => (
+                <button
+                  type="button"
+                  key={tag}
+                  onClick={() =>
+                    setSelectedTag(selectedTag === tag ? null : tag)
+                  }
+                  aria-pressed={selectedTag === tag}
+                  className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                    selectedTag === tag
+                      ? "bg-accent-600 text-white"
+                      : "bg-accent-50 text-accent-700 border border-accent-100 hover:border-accent-300"
+                  }`}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       )}
 
-      {/* Books Grid - Clean covers with fun animations */}
       {filteredBooks.length > 0 ? (
         <motion.div
-          className="grid gap-4 sm:gap-5 md:gap-6"
+          className="grid gap-x-4 gap-y-8 sm:gap-x-5 sm:gap-y-10"
           style={{
-            gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fill, minmax(132px, 1fr))",
           }}
           initial="hidden"
           animate="visible"
@@ -283,88 +266,72 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
             hidden: { opacity: 0 },
             visible: {
               opacity: 1,
-              transition: {
-                staggerChildren: 0.05,
-                delayChildren: 0.1,
-              },
+              transition: prefersReducedMotion
+                ? { duration: 0 }
+                : { staggerChildren: 0.04, delayChildren: 0.05 },
             },
           }}
         >
           {filteredBooks.map((book) => {
+            const hasReview = Boolean(getReviewText(book));
             return (
-              <motion.div
+              <motion.button
                 key={book.id}
-                className="cursor-pointer group"
+                type="button"
+                className="group text-left w-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded-xl"
                 variants={{
-                  hidden: { opacity: 0, y: 30, scale: 0.9 },
+                  hidden: prefersReducedMotion
+                    ? { opacity: 1 }
+                    : { opacity: 0, y: 20 },
                   visible: {
                     opacity: 1,
                     y: 0,
-                    scale: 1,
-                    transition: {
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 24,
-                    },
+                    transition: prefersReducedMotion
+                      ? { duration: 0 }
+                      : { type: "spring", stiffness: 320, damping: 26 },
                   },
                 }}
                 onClick={() => setSelectedBook(book)}
+                aria-label={`${book.title} by ${book.author}${hasReview ? ", has a review" : ""}`}
               >
                 <motion.div
-                  className="relative aspect-[2/3] overflow-hidden rounded-xl shadow-md ring-1 ring-cream-300 group-hover:ring-primary-400 transition-all duration-300"
-                  whileHover={{
-                    y: -10,
-                    scale: 1.03,
-                    rotateY: 5,
-                    boxShadow: "0 20px 40px -12px rgba(0, 0, 0, 0.25)",
-                  }}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 25,
-                  }}
-                  style={{ transformStyle: "preserve-3d" }}
+                  className="relative aspect-[2/3] overflow-hidden rounded-xl shadow-md ring-1 ring-cream-300 group-hover:ring-primary-400 group-focus-visible:ring-primary-400 transition-shadow"
+                  whileHover={
+                    prefersReducedMotion ? undefined : { y: -6, scale: 1.02 }
+                  }
+                  whileTap={
+                    prefersReducedMotion ? undefined : { scale: 0.98 }
+                  }
+                  transition={{ type: "spring", stiffness: 400, damping: 28 }}
                 >
                   <BookCoverImage book={book} className="w-full h-full" />
-
-                  {/* Desktop hover overlay with title, genre, and rating */}
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-3 pt-10 hidden sm:block opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    {/* Genre tag - only visible on hover */}
-                    {book.genre && (
-                      <span className="inline-block px-2 py-0.5 mb-1.5 rounded-full text-xs font-medium bg-white/20 text-white/90 backdrop-blur-sm">
-                        {book.genre}
-                      </span>
-                    )}
-                    {/* Star rating on hover */}
-                    {book.rating && book.rating > 0 && (
-                      <div className="flex items-center gap-0.5 mb-1.5">
-                        {[...Array(5)].map((_, i) => (
-                          <span
-                            key={i}
-                            className={`text-xs ${i < book.rating! ? "text-amber-300" : "text-white/30"}`}
-                          >
-                            ★
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    <p className="text-white text-xs font-semibold leading-tight line-clamp-2 drop-shadow-lg">
-                      {book.title}
-                    </p>
-                    <p className="text-white/70 text-xs mt-1">
-                      {book.author}
-                    </p>
-                  </div>
+                  {hasReview && (
+                    <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-primary-600 text-white shadow-sm">
+                      Review
+                    </span>
+                  )}
                 </motion.div>
-              </motion.div>
+
+                <div className="mt-3 px-0.5">
+                  {book.rating && book.rating > 0 && (
+                    <div className="mb-1.5">
+                      <StarRating rating={book.rating} />
+                    </div>
+                  )}
+                  <p className="font-display font-bold text-sm text-stone-800 leading-snug line-clamp-2 group-hover:text-primary-700 transition-colors">
+                    {book.title}
+                  </p>
+                  <p className="text-xs text-stone-500 mt-0.5 line-clamp-1">
+                    {book.author}
+                  </p>
+                </div>
+              </motion.button>
             );
           })}
         </motion.div>
       ) : (
         <div className="text-center py-12">
-          <span className="text-5xl mb-3 block">🔍</span>
-          <h3 className="text-lg font-bold text-stone-700 mb-1">
+          <h3 className="text-lg font-display font-bold text-stone-700 mb-1">
             No books found
           </h3>
           <p className="text-stone-500 text-sm mb-4">
@@ -374,166 +341,164 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
             onClick={() => {
               setSearchQuery("");
               setSelectedGenre(null);
+              setSelectedTag(null);
             }}
             size="sm"
-            className="rounded-full px-5 py-2.5"
           >
-            Show All
+            Show all
           </Button>
         </div>
       )}
 
-      {/* Modal */}
+      {/* Book peek → full review */}
       <AnimatePresence>
         {selectedBook && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="book-peek-title"
           >
             {showConfetti && <ConfettiParticles />}
 
-            <motion.div
-              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-              onClick={() => setSelectedBook(null)}
+            <motion.button
+              type="button"
+              className="absolute inset-0 bg-stone-900/45 backdrop-blur-[2px]"
+              aria-label="Close"
+              onClick={closeModal}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             />
 
-            <Card
-              variant="elevated"
-              padding="none"
-              className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-xl"
-              initial={{ scale: 0.9, y: 50 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 50 }}
+            <motion.div
+              className="relative w-full sm:max-w-2xl max-h-[92vh] overflow-y-auto bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl"
+              initial={
+                prefersReducedMotion
+                  ? false
+                  : { opacity: 0, y: 40, scale: 0.98 }
+              }
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={
+                prefersReducedMotion
+                  ? undefined
+                  : { opacity: 0, y: 24, scale: 0.98 }
+              }
+              transition={{ type: "spring", stiffness: 320, damping: 28 }}
             >
-              {/* Cover */}
-              <div className="relative h-72 bg-gradient-to-br from-cream-100 to-cream-200 flex items-center justify-center p-6">
-                {selectedBook.coverUrl ? (
-                  <img
-                    src={selectedBook.coverUrl}
-                    alt={selectedBook.title}
-                    className="h-56 w-auto shadow-xl rounded-md"
-                    onError={(e) => {
-                      // If image fails, replace with gradient fallback
-                      const target = e.currentTarget;
-                      target.style.display = 'none';
-                      const parent = target.parentElement;
-                      if (parent) {
-                        const fallback = document.createElement('div');
-                        fallback.className = 'h-56 w-40 shadow-xl flex items-center justify-center text-white p-4 rounded';
-                        const [c1, c2] = getBookGradient(selectedBook.title);
-                        fallback.style.background = `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`;
-                        fallback.innerHTML = `<span class="text-xl font-bold text-center">${selectedBook.title}</span>`;
-                        parent.appendChild(fallback);
-                      }
-                    }}
-                  />
-                ) : (
-                  <div
-                    className="h-56 w-40 shadow-xl flex items-center justify-center text-white p-4 rounded"
-                    style={{
-                      background: `linear-gradient(135deg, ${getBookGradient(selectedBook.title)[0]} 0%, ${getBookGradient(selectedBook.title)[1]} 100%)`,
-                    }}
-                  >
-                    <span className="text-xl font-bold text-center">
-                      {selectedBook.title}
-                    </span>
-                  </div>
-                )}
-                <button
-                  onClick={() => setSelectedBook(null)}
-                  className="absolute top-4 right-4 w-10 h-10 bg-white hover:bg-cream-100 rounded-full flex items-center justify-center shadow-lg transition-colors"
-                >
-                  <svg
-                    className="w-5 h-5 text-stone-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
+              <button
+                type="button"
+                onClick={closeModal}
+                className="absolute top-3 right-3 z-10 w-10 h-10 bg-white/95 hover:bg-cream-100 rounded-full flex items-center justify-center shadow-md border border-cream-200 transition-colors"
+                aria-label="Close book details"
+              >
+                <X className="w-5 h-5 text-stone-600" />
+              </button>
+
+              <div className="flex flex-col sm:flex-row">
+                {/* Cover column */}
+                <div className="sm:w-[42%] flex-shrink-0 bg-gradient-to-b from-primary-50/80 via-cream-100 to-accent-50/40 p-6 sm:p-8 flex items-center justify-center">
+                  <div className="w-36 sm:w-44 aspect-[2/3] rounded-lg overflow-hidden shadow-xl ring-1 ring-black/5">
+                    <BookCoverImage
+                      book={selectedBook}
+                      className="w-full h-full"
                     />
-                  </svg>
-                </button>
-              </div>
-
-              {/* Content */}
-              <div className="p-6">
-                <h2 className="text-2xl font-bold text-stone-700 mb-1">
-                  {selectedBook.title}
-                </h2>
-                <p className="text-stone-500 mb-4">By {selectedBook.author}</p>
-
-                {selectedBook.rating && (
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="flex gap-0.5">
-                      {[...Array(5)].map((_, i) => (
-                        <span key={i} className="text-xl text-star">
-                          {i < selectedBook.rating! ? "★" : "☆"}
-                        </span>
-                      ))}
-                    </div>
-                    <span className="text-lg font-bold text-stone-600">
-                      {selectedBook.rating}/5
-                    </span>
                   </div>
-                )}
+                </div>
 
-                <div className="flex flex-wrap gap-2 mb-6">
+                {/* Details */}
+                <div className="flex-1 p-6 sm:p-8 sm:pt-10">
                   {selectedBook.genre && (
-                    <span
-                      className={`px-4 py-2 rounded-full text-sm font-medium ${getGenreStyle(selectedBook.genre).bg} ${getGenreStyle(selectedBook.genre).text}`}
-                    >
-                      {getGenreStyle(selectedBook.genre).emoji}{" "}
+                    <p className="text-xs font-semibold uppercase tracking-wider text-accent-600 mb-2">
                       {selectedBook.genre}
-                    </span>
-                  )}
-                  {selectedBook.pageCount && (
-                    <span className="px-4 py-2 bg-cream-200 text-stone-600 rounded-full text-sm font-medium">
-                      {selectedBook.pageCount} pages
-                    </span>
-                  )}
-                </div>
-
-                <div className="bg-cream-100 rounded-xl p-5 border border-cream-300 mb-6">
-                  <h3 className="font-bold text-stone-700 mb-2 text-lg">
-                    Izzy's Review
-                  </h3>
-                  {selectedBook.notes || selectedBook.review ? (
-                    <p className="text-stone-600 leading-relaxed">
-                      {selectedBook.notes || selectedBook.review}
+                      {selectedBook.pageCount
+                        ? ` · ${selectedBook.pageCount} pages`
+                        : ""}
                     </p>
-                  ) : (
-                    <p className="text-stone-400 italic">Review coming soon!</p>
                   )}
-                </div>
 
-                <div className="space-y-3">
-                  <p className="text-center font-medium text-stone-600">
-                    What do you think of this book?
+                  <h2
+                    id="book-peek-title"
+                    className="text-2xl font-display font-bold text-stone-900 leading-tight mb-1"
+                  >
+                    {selectedBook.title}
+                  </h2>
+                  <p className="text-stone-500 mb-4">
+                    by {selectedBook.author}
                   </p>
-                  <div className="flex justify-center">
-                    <BookReactionButtons
-                      bookId={selectedBook.id}
-                      onReaction={handleReactionConfetti}
+
+                  {selectedBook.rating && selectedBook.rating > 0 && (
+                    <div className="flex items-center gap-2 mb-5">
+                      <StarRating rating={selectedBook.rating} size="md" />
+                      <span className="text-sm font-semibold text-stone-600">
+                        {selectedBook.rating}/5
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="mb-6">
+                    <h3 className="font-display font-bold text-stone-800 mb-2">
+                      Izzy&apos;s take
+                    </h3>
+                    {reviewText ? (
+                      <>
+                        <p className="text-stone-600 leading-relaxed whitespace-pre-line line-clamp-5">
+                          {reviewText}
+                        </p>
+                        {reviewText.length > 180 && (
+                          <Link
+                            to={`/reviews/${selectedBook.id}`}
+                            onClick={closeModal}
+                            className="inline-flex items-center gap-1.5 mt-3 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors"
+                          >
+                            Read full review
+                            <ArrowRight className="w-4 h-4" />
+                          </Link>
+                        )}
+                      </>
+                    ) : (
+                      <p className="text-stone-400 italic">
+                        Review coming soon — check back later!
+                      </p>
+                    )}
+                  </div>
+
+                  {hasFullReview && (
+                    <Link
+                      to={`/reviews/${selectedBook.id}`}
+                      onClick={closeModal}
+                      className="flex items-center justify-center gap-2 w-full px-5 py-3 mb-5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-display font-bold text-sm shadow-md shadow-primary-600/20 transition-colors"
+                    >
+                      Open full review
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  )}
+
+                  <div className="pt-5 border-t border-cream-200 space-y-4">
+                    <div>
+                      <p className="text-center text-sm font-medium text-stone-500 mb-2">
+                        Like this book?
+                      </p>
+                      <div className="flex justify-center">
+                        <BookReactionButtons
+                          bookId={selectedBook.id}
+                          onReaction={handleReactionConfetti}
+                        />
+                      </div>
+                    </div>
+                    <ShareBookButton
+                      book={selectedBook}
+                      variant="button"
+                      size="md"
+                      className="w-full justify-center py-2.5 bg-cream-100 hover:bg-cream-200 text-stone-700 border border-cream-300"
                     />
                   </div>
                 </div>
-
-                <div className="mt-4">
-                  <ShareBookButton
-                    book={selectedBook}
-                    variant="button"
-                    size="lg"
-                    className="w-full justify-center py-3 bg-primary-500 hover:bg-primary-600 text-white"
-                  />
-                </div>
               </div>
-            </Card>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

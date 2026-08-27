@@ -148,3 +148,31 @@ export const checkCompletion = mutation({
     return allRead;
   },
 });
+
+/** After marking a book read, sync completion for every series that includes it */
+export const syncCompletionForBook = mutation({
+  args: { bookId: v.id("books") },
+  handler: async (ctx, args) => {
+    const book = await ctx.db.get(args.bookId);
+    if (!book) return;
+
+    const seriesList = await ctx.db
+      .query("bookSeries")
+      .withIndex("by_user", (q) => q.eq("userId", book.userId))
+      .collect();
+
+    for (const series of seriesList) {
+      if (!series.bookIds.includes(args.bookId)) continue;
+
+      const books = await Promise.all(
+        series.bookIds.map((id) => ctx.db.get(id)),
+      );
+      const allRead =
+        series.bookIds.length > 0 && books.every((b) => b?.isRead);
+
+      if (allRead !== series.completed) {
+        await ctx.db.patch(series._id, { completed: allRead });
+      }
+    }
+  },
+});

@@ -4,14 +4,15 @@ import {
   BookOpen,
   TrendingUp,
   Heart,
-  PenTool,
   Feather,
   Sparkles,
   Star,
   User,
   BarChart3,
   Activity,
+  Library,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useBooks } from "../contexts/BookContext";
@@ -38,6 +39,7 @@ import {
   generateMonthlyData,
   generateGenreData,
 } from "./DashboardWidgets";
+import { ReadingHeatmap } from "./ReadingHeatmap";
 import type { Book } from "../types";
 import { ReducedMotionAnimatePresence } from "../contexts/MotionPreferenceContext";
 
@@ -95,50 +97,43 @@ const Dashboard: React.FC = () => {
   const genreData = generateGenreData(books);
 
   // Quick actions configuration
+  // Kid path first — add, write, discover, series
   const quickActions = [
     {
       to: "/books",
       icon: <BookOpen className="w-5 h-5" />,
-      label: "Add a Book",
+      label: "Add or finish a book",
       color: "primary" as const,
     },
     {
       to: "/create",
       icon: <Feather className="w-5 h-5" />,
-      label: "Write a Poem",
+      label: "Write a poem or post",
       color: "accent" as const,
     },
     {
-      to: "/create",
-      icon: <PenTool className="w-5 h-5" />,
-      label: "Write a Post",
+      to: "/discover",
+      icon: <Sparkles className="w-5 h-5" />,
+      label: "Discover next reads",
       color: "sage" as const,
     },
     {
-      to: "/books",
-      icon: <Heart className="w-5 h-5" />,
-      label: "Update Wishlist",
+      to: "/series",
+      icon: <Library className="w-5 h-5" />,
+      label: "Track a series",
       color: "primary" as const,
-    },
-    {
-      onClick: () => setShowAvatarCreator(true),
-      icon: <User className="w-5 h-5" />,
-      label: "Edit My Avatar",
-      color: "accent" as const,
-    },
-    {
-      to: "/profile",
-      icon: <User className="w-5 h-5" />,
-      label: "Edit About Me",
-      color: "sage" as const,
     },
   ];
 
-  const [activeTab, setActiveTab] = useState<"activity" | "insights">("activity");
+  const [activeTab, setActiveTab] = useState<"activity" | "insights">(
+    "activity",
+  );
+
+  const unfinishedCount = books.filter((b) => !b.isRead).length;
 
   return (
     <div className="space-y-6">
-      {/* Hero Section */}
+      {/* Hero */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -151,7 +146,6 @@ const Dashboard: React.FC = () => {
         >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              {/* Avatar */}
               <button
                 onClick={() => setShowAvatarCreator(true)}
                 className="relative group flex-shrink-0"
@@ -173,25 +167,39 @@ const Dashboard: React.FC = () => {
                   </span>
                 </div>
                 <h1 className="text-3xl md:text-4xl font-display font-bold text-stone-900 mb-2">
-                  Welcome back, {user?.name || "Reader"}!
+                  Hi, {user?.name || "Reader"}!
                 </h1>
                 <p className="text-stone-600 max-w-md">
-                  {readingStats.booksThisMonth === 0 ? (
+                  {unfinishedCount > 0 ? (
                     <>
-                      Ready to start a new reading adventure this month? Pick up
-                      a book and let the magic begin!
+                      You have{" "}
+                      <span className="font-semibold text-primary-600">
+                        {unfinishedCount} book
+                        {unfinishedCount === 1 ? "" : "s"}
+                      </span>{" "}
+                      in progress — finish one and celebrate!
                     </>
+                  ) : readingStats.booksThisMonth === 0 ? (
+                    <>Ready for a new adventure? Add a book and start reading.</>
                   ) : (
                     <>
-                      Amazing! You've read{" "}
+                      You&apos;ve finished{" "}
                       <span className="font-semibold text-primary-600">
                         {readingStats.booksThisMonth}{" "}
                         {readingStats.booksThisMonth === 1 ? "book" : "books"}
                       </span>{" "}
-                      this month. Keep it up!
+                      this month. Keep going!
                     </>
                   )}
                 </p>
+                {unfinishedCount > 0 && (
+                  <Link
+                    to="/books"
+                    className="inline-flex items-center gap-1.5 mt-3 text-sm font-semibold text-primary-700 hover:text-primary-800"
+                  >
+                    Go to My Books →
+                  </Link>
+                )}
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -201,8 +209,40 @@ const Dashboard: React.FC = () => {
         </Card>
       </motion.div>
 
-      {/* Stats Grid */}
-      <StaggerContainer className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+      {/* Kid path — primary actions */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25 }}
+      >
+        <Card padding="lg" className="border border-cream-300">
+          <h2 className="font-display font-bold text-stone-900 text-lg mb-1">
+            What do you want to do?
+          </h2>
+          <p className="text-sm text-stone-500 mb-4">
+            Log a book, write something, or find your next read.
+          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {quickActions.map((action) => (
+              <Link
+                key={action.label}
+                to={action.to!}
+                className="flex items-center gap-3 p-4 rounded-xl bg-cream-100 hover:bg-primary-50 border border-cream-300 hover:border-primary-200 transition-colors group"
+              >
+                <div className="p-2 rounded-lg bg-white text-primary-600 shadow-sm group-hover:scale-105 transition-transform">
+                  {action.icon}
+                </div>
+                <span className="font-display font-bold text-sm text-stone-800">
+                  {action.label}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </Card>
+      </motion.div>
+
+      {/* Compact stats */}
+      <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StaggerItem>
           <StatCard
             label="Books Read"
@@ -239,24 +279,16 @@ const Dashboard: React.FC = () => {
             color="primary"
           />
         </StaggerItem>
-        {totalReactions > 0 && (
-          <StaggerItem>
-            <StatCard
-              label="Reader Reactions"
-              value={totalReactions}
-              icon={<span className="text-xl">❤️</span>}
-              color="accent"
-            />
-          </StaggerItem>
-        )}
       </StaggerContainer>
 
       {/* Main Content Grid */}
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* Left Column - 2/3 width */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Tabs */}
-          <Card variant="default" padding="none" className="p-1.5 shadow-sm border border-stone-100 flex gap-1">
+          <Card
+            variant="default"
+            padding="none"
+            className="p-1.5 shadow-sm border border-stone-100 flex gap-1"
+          >
             <button
               onClick={() => setActiveTab("activity")}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
@@ -283,119 +315,80 @@ const Dashboard: React.FC = () => {
 
           {activeTab === "activity" ? (
             <div className="space-y-6">
-              {/* Reading Challenge */}
               {currentChallenge && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.25 }}
-                >
-                  <ChallengeProgress
-                    title={currentChallenge.title}
-                    current={currentChallenge.current}
-                    target={currentChallenge.target}
-                    icon={currentChallenge.badge}
-                    color="accent"
-                    dueDate={currentChallenge.endDate}
-                  />
-                </motion.div>
+                <ChallengeProgress
+                  title={currentChallenge.title}
+                  current={currentChallenge.current}
+                  target={currentChallenge.target}
+                  icon={currentChallenge.badge}
+                  color="accent"
+                  dueDate={currentChallenge.endDate}
+                />
               )}
 
-              {/* Recent Books */}
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.25, delay: 0.05 }}
-              >
-                <RecentBooks
-                  books={recentBooks}
-                  onBookClick={setSelectedBook}
-                  BookGridComponent={BookGrid}
-                />
-              </motion.div>
+              <Card padding="lg" className="border border-cream-300">
+                <ReadingHeatmap books={books} />
+              </Card>
+
+              <RecentBooks
+                books={recentBooks}
+                onBookClick={setSelectedBook}
+                BookGridComponent={BookGrid}
+              />
             </div>
           ) : (
             <div className="space-y-6">
-              {/* Reading Activity Chart */}
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.25 }}
-              >
-                <ReadingActivityChart data={monthlyReadingData} />
-              </motion.div>
+              <ReadingActivityChart data={monthlyReadingData} />
 
-              {/* Most Loved Books */}
               {totalReactions > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.25, delay: 0.05 }}
-                >
-                  <MostLovedBooks
-                    books={mostLovedBooks}
-                    totalReactions={totalReactions}
-                  />
-                </motion.div>
+                <MostLovedBooks
+                  books={mostLovedBooks}
+                  totalReactions={totalReactions}
+                />
               )}
 
-              {/* Analytics Section */}
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.25, delay: 0.1 }}
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
-                    <BarChart3 className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-display font-bold text-stone-900">
-                      Reviews & Engagement
-                    </h2>
-                    <p className="text-stone-600 text-sm">
-                      See how readers engage with your books
-                    </p>
-                  </div>
-                </div>
+              <div>
+                <h2 className="text-xl font-display font-bold text-stone-900 mb-1">
+                  Reviews &amp; engagement
+                </h2>
+                <p className="text-stone-500 text-sm mb-4">
+                  How readers react to your books
+                </p>
                 <ReviewAnalytics />
-              </motion.div>
+              </div>
             </div>
           )}
         </div>
 
-        {/* Right Column - 1/3 width */}
         <div className="space-y-6">
-          {/* Quick Actions */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25 }}
-          >
-            <QuickActions actions={quickActions} />
-          </motion.div>
+          <QuickActions
+            actions={[
+              {
+                to: "/profile",
+                icon: <User className="w-5 h-5" />,
+                label: "Edit About Me",
+                color: "sage" as const,
+              },
+              {
+                onClick: () => setShowAvatarCreator(true),
+                icon: <User className="w-5 h-5" />,
+                label: "Edit My Avatar",
+                color: "accent" as const,
+              },
+              {
+                to: "/progress",
+                icon: <Star className="w-5 h-5" />,
+                label: "Reading goals",
+                color: "primary" as const,
+              },
+            ]}
+          />
 
-          {/* Genre Distribution */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, delay: 0.05 }}
-          >
-            <GenrePieChart data={genreData} />
-          </motion.div>
-
-          {/* Weekly Quote */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, delay: 0.1 }}
-          >
-            <WeeklyQuote quote={getWeeklyQuote()} />
-          </motion.div>
+          <GenrePieChart data={genreData} />
+          <WeeklyQuote quote={getWeeklyQuote()} />
         </div>
       </div>
 
-      {/* Book Detail Modal */}
       {selectedBook && (
         <BookDetailModal
           book={selectedBook}
@@ -405,7 +398,6 @@ const Dashboard: React.FC = () => {
         />
       )}
 
-      {/* Avatar Creator Modal */}
       <ReducedMotionAnimatePresence>
         {showAvatarCreator && (
           <AvatarCreator

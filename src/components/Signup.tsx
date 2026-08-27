@@ -66,7 +66,7 @@ const Signup = () => {
     error.toLowerCase().includes("sign in");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-cream-100 to-accent-50 flex items-center justify-center p-4">
       <motion.div
         className="max-w-md w-full"
         initial={{ opacity: 0, y: 20 }}
@@ -77,12 +77,12 @@ const Signup = () => {
         <div className="text-center mb-8">
           <Link to="/" className="inline-block">
             <motion.div
-              className="w-20 h-20 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-4 shadow-lg"
+              className="w-20 h-20 mx-auto bg-gradient-to-r from-primary-500 to-accent-500 rounded-full flex items-center justify-center mb-4 shadow-lg"
               whileHover={{ scale: 1.05, rotate: -5 }}
             >
               <BookOpen className="w-10 h-10 text-white" />
             </motion.div>
-            <h1 className="text-4xl font-display font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-display font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
               Izzy's Bookshelf
             </h1>
           </Link>

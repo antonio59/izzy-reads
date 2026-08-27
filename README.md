@@ -285,15 +285,15 @@ pnpm run security-audit
 
 ### Coming Soon
 
-- [ ] Series Tracker - Track progress through book series
-- [ ] Book Tags & Filters - Browse by mood, genre, custom tags
-- [ ] Reading Journey Timeline - Visual timeline of milestones
+- [x] Series Tracker - Track progress through book series
+- [x] Book Tags & Filters - Browse by mood, genre, custom tags
+- [x] Reading Heatmap Calendar
 
 ### Future Ideas
 
 - [ ] Friend Recommendations
 - [ ] Book Club Features
-- [ ] Reading Heatmap Calendar
+- [ ] Reading Journey Timeline - Visual timeline of milestones
 - [ ] Mobile App (PWA)
 
 ---

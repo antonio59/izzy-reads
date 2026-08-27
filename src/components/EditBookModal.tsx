@@ -117,6 +117,8 @@ export function EditBookModal({
   const toast = useToastActions();
   const [rating, setRating] = useState(() => book?.rating || 0);
   const [notes, setNotes] = useState(() => book?.notes || "");
+  const [tags, setTags] = useState<string[]>(() => book?.tags || []);
+  const [tagInput, setTagInput] = useState("");
   const [month, setMonth] = useState(() => {
     if (book?.dateRead) {
       return book.dateRead.split("-")[1] || "";
@@ -207,6 +209,7 @@ export function EditBookModal({
         dateRead,
         giftFrom: giftFrom || undefined,
         coverUrl: coverUrl || undefined,
+        tags,
       });
       toast.success("Changes saved!", `Updated "${book.title}"`);
       onClose();
@@ -460,6 +463,98 @@ export function EditBookModal({
                     </motion.div>
                   )}
                 </AnimatePresence>
+              </div>
+
+              {/* Mood / tags */}
+              <div>
+                <label className="block text-sm font-medium text-stone-700 mb-2">
+                  Mood tags
+                </label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {(
+                    [
+                      "cozy",
+                      "funny",
+                      "scary",
+                      "magical",
+                      "sad",
+                      "adventure",
+                      "must-read",
+                      "reread",
+                    ] as const
+                  ).map((tag) => {
+                    const active = tags.includes(tag);
+                    return (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() =>
+                          setTags((prev) =>
+                            active
+                              ? prev.filter((t) => t !== tag)
+                              : [...prev, tag],
+                          )
+                        }
+                        className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                          active
+                            ? "bg-primary-600 text-white"
+                            : "bg-cream-200 text-stone-600 hover:bg-primary-50"
+                        }`}
+                      >
+                        {tag}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    placeholder="Add a custom tag…"
+                    size="sm"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        const next = tagInput.trim().toLowerCase();
+                        if (next && !tags.includes(next)) {
+                          setTags((prev) => [...prev, next]);
+                        }
+                        setTagInput("");
+                      }
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => {
+                      const next = tagInput.trim().toLowerCase();
+                      if (next && !tags.includes(next)) {
+                        setTags((prev) => [...prev, next]);
+                      }
+                      setTagInput("");
+                    }}
+                  >
+                    Add
+                  </Button>
+                </div>
+                {tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {tags.map((tag) => (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() =>
+                          setTags((prev) => prev.filter((t) => t !== tag))
+                        }
+                        className="px-2 py-0.5 rounded-full text-xs bg-accent-100 text-accent-700 hover:bg-accent-200"
+                        title="Remove tag"
+                      >
+                        {tag} ×
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Review/Notes with Emoji Picker */}

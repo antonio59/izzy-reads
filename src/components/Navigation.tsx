@@ -71,13 +71,13 @@ const Navigation: React.FC = () => {
             {/* Level indicator - clickable */}
             <motion.button
               onClick={() => setShowLevelModal(true)}
-              className="hidden lg:flex items-center gap-1 ml-2 px-2.5 py-1.5 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full hover:from-purple-200 hover:to-pink-200 transition-colors cursor-pointer"
+              className="hidden lg:flex items-center gap-1 ml-2 px-2.5 py-1.5 bg-primary-50 rounded-full hover:bg-primary-100 transition-colors cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               title="View your reading level"
             >
               <span className="text-sm">{level.icon}</span>
-              <span className="text-xs font-medium text-purple-700">
+              <span className="text-xs font-medium text-primary-700">
                 Lvl {level.level}
               </span>
             </motion.button>

@@ -20,12 +20,12 @@ import type { Book } from "../types";
 
 // Chart colors
 const CHART_COLORS = [
-  "#8b5cf6",
-  "#f97f5e",
-  "#14b8a6",
+  "#d946a8",
+  "#0d9488",
   "#f59e0b",
-  "#ec4899",
-  "#6366f1",
+  "#be3590",
+  "#2dd4bf",
+  "#9d2d77",
 ];
 
 // ============================================
@@ -55,8 +55,8 @@ export function ReadingActivityChart({ data }: ReadingActivityChartProps) {
           <AreaChart data={data}>
             <defs>
               <linearGradient id="colorBooks" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
+                <stop offset="5%" stopColor="#d946a8" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#d946a8" stopOpacity={0} />
               </linearGradient>
             </defs>
             <XAxis
@@ -82,7 +82,7 @@ export function ReadingActivityChart({ data }: ReadingActivityChartProps) {
             <Area
               type="monotone"
               dataKey="books"
-              stroke="#8b5cf6"
+              stroke="#d946a8"
               strokeWidth={2}
               fillOpacity={1}
               fill="url(#colorBooks)"

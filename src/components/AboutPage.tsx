@@ -1,10 +1,10 @@
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { User, BookOpen, Heart, Target, Award, Sparkles } from "lucide-react";
-import { Card } from "./ui/Card";
-import { Badge } from "./ui/Badge";
+import { ArrowRight, BookOpen } from "lucide-react";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
 import { useUser } from "../contexts/UserContext";
+import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 import { AvatarPreview, type AvatarConfig } from "./AvatarCreator";
 
 interface AboutPageProps {
@@ -22,270 +22,279 @@ interface AboutPageProps {
   };
 }
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
+const DEFAULT_AVATAR: AvatarConfig = {
+  skinTone: "fair",
+  hairStyle: "long",
+  hairColor: "brown",
+  eyeColor: "brown",
+  accessory: "none",
+  background: "pink",
+  outfit: "tshirt",
+  outfitColor: "purple",
+  expression: "happy",
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
+function SectionHeader({
+  title,
+  subtitle,
+}: {
+  title: string;
+  subtitle?: string;
+}) {
+  return (
+    <header className="mb-6 sm:mb-8">
+      <h2 className="text-2xl sm:text-3xl font-display font-bold text-stone-800">
+        {title}
+      </h2>
+      {subtitle && (
+        <p className="text-sm text-stone-500 mt-1">{subtitle}</p>
+      )}
+    </header>
+  );
+}
 
 function AboutPage({ aboutData }: AboutPageProps) {
   const { user } = useUser();
-
-  // Default avatar config
-  const defaultAvatar: AvatarConfig = {
-    skinTone: "fair",
-    hairStyle: "long",
-    hairColor: "brown",
-    eyeColor: "brown",
-    accessory: "none",
-    background: "pink",
-    outfit: "tshirt",
-    outfitColor: "purple",
-    expression: "happy",
-  };
-
-  const userAvatar = user?.avatar || defaultAvatar;
+  const { prefersReducedMotion } = useMotionPreference();
+  const userAvatar = user?.avatar || DEFAULT_AVATAR;
 
   if (!aboutData.isPublished) {
     return (
-      <div className="min-h-screen bg-stone-50 py-12 px-4">
-        <div className="max-w-2xl mx-auto text-center">
-          <Card className="p-12">
-            <div className="w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <User className="w-12 h-12 text-primary-500" />
+      <div className="min-h-screen bg-cream-100 flex flex-col">
+        <PublicNav />
+        <div className="flex-1 flex items-center justify-center px-4 py-16 text-center">
+          <div className="max-w-md">
+            <div className="mx-auto mb-6 rounded-full overflow-hidden ring-2 ring-primary-100 shadow-md w-fit">
+              <AvatarPreview config={userAvatar} size="lg" />
             </div>
-            <h1 className="text-2xl font-display font-bold text-stone-800 mb-2">
-              About Me - Coming Soon!
+            <h1 className="font-accent text-3xl sm:text-4xl font-semibold text-stone-900 mb-3">
+              About Izzy
             </h1>
-            <p className="text-stone-500">
-              Check back soon to learn more about Izzy!
+            <p className="text-stone-500 leading-relaxed">
+              This page is still being written — check back soon!
             </p>
-          </Card>
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 mt-8 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors"
+            >
+              Back to my bookshelf <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
+        <PublicFooter />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-cream-100 flex flex-col">
-      {/* Navigation */}
       <PublicNav />
 
-      <div className="flex-1 py-8 px-4">
-        <motion.div
-          className="max-w-4xl mx-auto space-y-6"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {/* Hero Section */}
-          <motion.div variants={itemVariants}>
-            <Card className="overflow-hidden">
-              <div className="relative p-6 sm:p-8 bg-primary-600">
-                <div className="flex flex-col sm:flex-row items-center gap-6">
-                  {/* Profile Photo / Avatar */}
-                  <div className="flex-shrink-0 rounded-full border-4 border-white shadow-lg overflow-hidden">
-                    <AvatarPreview config={userAvatar} size="lg" />
-                  </div>
+      {/* ── Hero: one composition — avatar, brand, bio, CTA ── */}
+      <section className="relative overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-80"
+          style={{
+            backgroundImage:
+              "radial-gradient(ellipse at 30% 0%, rgba(217,70,168,0.12), transparent 55%), radial-gradient(ellipse at 70% 100%, rgba(13,148,136,0.12), transparent 50%)",
+          }}
+        />
 
-                  {/* Bio */}
-                  <div className="flex-1 text-center sm:text-left">
-                    <h1 className="text-2xl sm:text-3xl font-display font-bold text-white mb-3">
-                      Hi, I'm Izzy!
-                    </h1>
-                    <p className="text-white/90 leading-relaxed">
-                      {aboutData.bio}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
+        <div className="relative z-10 max-w-2xl mx-auto px-4 pt-10 sm:pt-14 md:pt-16 pb-12 sm:pb-16 text-center">
+          <motion.div
+            className="flex flex-col items-center gap-5"
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={
+              prefersReducedMotion
+                ? { duration: 0 }
+                : { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+            }
+          >
+            <div className="rounded-full overflow-hidden ring-2 ring-primary-100 shadow-lg">
+              <AvatarPreview config={userAvatar} size="lg" />
+            </div>
 
-          {/* Two Column Grid */}
-          <div className="grid sm:grid-cols-2 gap-4">
-            {/* Currently Reading */}
-            {aboutData.currentlyReading && (
-              <motion.div variants={itemVariants}>
-                <Card className="h-full p-5">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 bg-sage-100 rounded-xl flex items-center justify-center">
-                      <BookOpen className="w-5 h-5 text-sage-600" />
-                    </div>
-                    <h2 className="font-display font-bold text-stone-800">
-                      Currently Reading
-                    </h2>
-                  </div>
-                  <p className="text-stone-600 bg-sage-50 p-3 rounded-lg text-sm">
-                    {aboutData.currentlyReading}
-                  </p>
-                </Card>
-              </motion.div>
-            )}
-
-            {/* Why I Love Reading */}
-            <motion.div variants={itemVariants}>
-              <Card className="h-full p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 bg-accent-100 rounded-xl flex items-center justify-center">
-                    <Heart className="w-5 h-5 text-accent-600" />
-                  </div>
-                  <h2 className="font-display font-bold text-stone-800">
-                    Why I Love Reading
-                  </h2>
-                </div>
-                <p className="text-stone-600 text-sm leading-relaxed">
-                  {aboutData.whyIRead}
-                </p>
-              </Card>
-            </motion.div>
-
-            {/* Favorite Genres */}
-            <motion.div variants={itemVariants}>
-              <Card className="h-full p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-primary-600" />
-                  </div>
-                  <h2 className="font-display font-bold text-stone-800">
-                    Favorite Genres
-                  </h2>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {aboutData.favoriteGenres.map((genre, idx) => (
-                    <Badge key={idx} variant="primary">
-                      {genre}
-                    </Badge>
-                  ))}
-                </div>
-              </Card>
-            </motion.div>
-
-            {/* Favorite Authors */}
-            <motion.div variants={itemVariants}>
-              <Card className="h-full p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                    <User className="w-5 h-5 text-amber-600" />
-                  </div>
-                  <h2 className="font-display font-bold text-stone-800">
-                    Favorite Authors
-                  </h2>
-                </div>
-                <ul className="space-y-1.5">
-                  {aboutData.favoriteAuthors.map((author, idx) => (
-                    <li
-                      key={idx}
-                      className="text-stone-600 text-sm flex items-center gap-2"
-                    >
-                      <span className="w-1.5 h-1.5 bg-amber-400 rounded-full" />
-                      {author}
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-            </motion.div>
-          </div>
-
-          {/* Fun Facts */}
-          {aboutData.funFacts.length > 0 && (
-            <motion.div variants={itemVariants}>
-              <Card className="p-5">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-amber-600" />
-                  </div>
-                  <h2 className="font-display font-bold text-stone-800">
-                    Fun Facts About Me
-                  </h2>
-                </div>
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {aboutData.funFacts.map((fact, idx) => (
-                    <div
-                      key={idx}
-                      className="bg-amber-50 p-3 rounded-lg text-sm text-stone-600 border border-amber-100"
-                    >
-                      {fact}
-                    </div>
-                  ))}
-                </div>
-              </Card>
-            </motion.div>
-          )}
-
-          {/* Reading Goals */}
-          {aboutData.readingGoals.length > 0 && (
-            <motion.div variants={itemVariants}>
-              <Card className="p-5">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-sage-100 rounded-xl flex items-center justify-center">
-                    <Target className="w-5 h-5 text-sage-600" />
-                  </div>
-                  <h2 className="font-display font-bold text-stone-800">
-                    My Reading Goals
-                  </h2>
-                </div>
-                <ul className="space-y-2">
-                  {aboutData.readingGoals.map((goal, idx) => (
-                    <li
-                      key={idx}
-                      className="flex items-start gap-3 bg-sage-50 p-3 rounded-lg text-sm text-stone-600 border border-sage-100"
-                    >
-                      <Target className="w-4 h-4 text-sage-500 flex-shrink-0 mt-0.5" />
-                      {goal}
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-            </motion.div>
-          )}
-
-          {/* Achievements */}
-          {aboutData.achievements.length > 0 && (
-            <motion.div variants={itemVariants}>
-              <Card className="p-5">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
-                    <Award className="w-5 h-5 text-primary-600" />
-                  </div>
-                  <h2 className="font-display font-bold text-stone-800">
-                    Reading Achievements
-                  </h2>
-                </div>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {aboutData.achievements.map((achievement, idx) => (
-                    <div
-                      key={idx}
-                      className="bg-primary-50 p-3 rounded-lg text-sm text-stone-700 font-medium flex items-center gap-2 border border-primary-100"
-                    >
-                      <Award className="w-4 h-4 text-primary-500" />
-                      {achievement}
-                    </div>
-                  ))}
-                </div>
-              </Card>
-            </motion.div>
-          )}
-
-          {/* Signature Tagline */}
-          <motion.div variants={itemVariants} className="text-center pt-8 pb-4">
-            <p className="text-stone-600 font-medium">
-              Keep reading, keep dreaming, keep being awesome ✨
+            <p className="font-accent text-sm sm:text-base text-primary-600 tracking-wide">
+              Get to know me
             </p>
-          </motion.div>
-        </motion.div>
-      </div>
 
-      {/* Footer */}
+            <h1 className="font-accent text-4xl sm:text-5xl md:text-6xl font-semibold text-stone-900 tracking-tight leading-[1.05]">
+              About Izzy
+            </h1>
+
+            <p className="text-base sm:text-lg text-stone-500 max-w-lg leading-relaxed">
+              {aboutData.bio}
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-display font-bold text-sm shadow-md shadow-primary-600/20 transition-colors"
+              >
+                Browse my shelf
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              {aboutData.currentlyReading && (
+                <a
+                  href="#currently-reading"
+                  className="inline-flex items-center gap-2 px-5 py-3 text-stone-600 hover:text-primary-700 font-display font-semibold text-sm transition-colors"
+                >
+                  What I&apos;m reading
+                </a>
+              )}
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Soft shelf wash under hero — visual continuity with home */}
+        <div className="relative h-16 sm:h-20 overflow-hidden" aria-hidden>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cream-200/40 to-cream-100" />
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-cream-300" />
+        </div>
+      </section>
+
+      <main className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 w-full pb-16">
+        {/* Why I read — lead story, not a card */}
+        <section className="pt-4 sm:pt-6 mb-14 sm:mb-16">
+          <SectionHeader title="Why I love reading" />
+          <p className="text-lg text-stone-600 leading-relaxed font-serif italic">
+            {aboutData.whyIRead}
+          </p>
+        </section>
+
+        {/* Currently reading */}
+        {aboutData.currentlyReading && (
+          <section
+            id="currently-reading"
+            className="mb-14 sm:mb-16 scroll-mt-24"
+          >
+            <SectionHeader title="Currently reading" />
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-accent-100 flex items-center justify-center">
+                <BookOpen className="w-5 h-5 text-accent-600" aria-hidden />
+              </div>
+              <p className="text-lg font-display font-bold text-stone-800 leading-snug pt-2">
+                {aboutData.currentlyReading}
+              </p>
+            </div>
+          </section>
+        )}
+
+        {/* Favourites — open layout, no card grid */}
+        <section className="mb-14 sm:mb-16 py-10 border-y border-cream-300">
+          <div className="grid sm:grid-cols-2 gap-10 sm:gap-12">
+            <div>
+              <h2 className="text-xl font-display font-bold text-stone-800 mb-4">
+                Favourite genres
+              </h2>
+              <ul className="flex flex-wrap gap-2">
+                {aboutData.favoriteGenres.map((genre) => (
+                  <li
+                    key={genre}
+                    className="px-3 py-1.5 rounded-full text-sm font-medium bg-primary-50 text-primary-700"
+                  >
+                    {genre}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h2 className="text-xl font-display font-bold text-stone-800 mb-4">
+                Favourite authors
+              </h2>
+              <ul className="space-y-2.5">
+                {aboutData.favoriteAuthors.map((author) => (
+                  <li
+                    key={author}
+                    className="text-stone-600 flex items-center gap-2.5"
+                  >
+                    <span
+                      className="w-1.5 h-1.5 rounded-full bg-accent-500 flex-shrink-0"
+                      aria-hidden
+                    />
+                    {author}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Fun facts */}
+        {aboutData.funFacts.length > 0 && (
+          <section className="mb-14 sm:mb-16">
+            <SectionHeader
+              title="Fun facts"
+              subtitle="A few things you might not know"
+            />
+            <ol className="space-y-4">
+              {aboutData.funFacts.map((fact, idx) => (
+                <li key={idx} className="flex gap-4">
+                  <span className="font-accent text-primary-500 text-lg font-semibold tabular-nums w-6 flex-shrink-0">
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <p className="text-stone-600 leading-relaxed pt-0.5">
+                    {fact}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {/* Goals */}
+        {aboutData.readingGoals.length > 0 && (
+          <section className="mb-14 sm:mb-16">
+            <SectionHeader title="Reading goals" />
+            <ul className="space-y-3">
+              {aboutData.readingGoals.map((goal) => (
+                <li
+                  key={goal}
+                  className="flex items-start gap-3 text-stone-600 leading-relaxed"
+                >
+                  <span
+                    className="mt-2 w-2 h-2 rounded-full bg-accent-400 flex-shrink-0"
+                    aria-hidden
+                  />
+                  {goal}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* Achievements */}
+        {aboutData.achievements.length > 0 && (
+          <section className="mb-14 sm:mb-16">
+            <SectionHeader title="Achievements" />
+            <ul className="flex flex-wrap gap-2.5">
+              {aboutData.achievements.map((achievement) => (
+                <li
+                  key={achievement}
+                  className="px-3.5 py-2 rounded-xl text-sm font-medium bg-cream-200 text-stone-700 border border-cream-300"
+                >
+                  {achievement}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* Closing */}
+        <p className="text-center text-stone-500 font-medium pt-4 pb-2">
+          Keep reading, keep dreaming, keep being awesome
+        </p>
+        <div className="text-center">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors"
+          >
+            Back to my bookshelf <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </main>
+
       <PublicFooter />
     </div>
   );

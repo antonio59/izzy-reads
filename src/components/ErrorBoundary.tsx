@@ -131,7 +131,7 @@ function ErrorFallback({
         <div className="space-y-3">
           <motion.button
             onClick={onTryAgain}
-            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg"
+            className="w-full bg-gradient-to-r from-primary-600 to-accent-600 text-white py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 hover:from-primary-700 hover:to-accent-700 transition-all shadow-lg"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >

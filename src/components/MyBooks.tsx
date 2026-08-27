@@ -26,6 +26,7 @@ import type { BookDestination } from "./ui/BookSearchModal";
 import { BookDetailModal } from "./BookDetailModal";
 import { EditBookModal } from "./EditBookModal";
 import { BookSuggestionsList } from "./BookSuggestionsList";
+import { FinishRitual } from "./FinishRitual";
 import type { Book } from "../types";
 import type { Id } from "../../convex/_generated/dataModel";
 import { Button } from "./ui/Button";
@@ -51,6 +52,7 @@ const MyBooks: React.FC = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [editingBook, setEditingBook] = useState<Book | null>(null);
+  const [finishedBook, setFinishedBook] = useState<Book | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [giftFromFilter, setGiftFromFilter] = useState<string>("");
@@ -62,6 +64,7 @@ const MyBooks: React.FC = () => {
   const approveSuggestion = useMutation(api.bookSuggestions.addToWishlist);
   const updateSuggestionStatus = useMutation(api.bookSuggestions.updateStatus);
   const removeSuggestion = useMutation(api.bookSuggestions.remove);
+  const syncSeriesCompletion = useMutation(api.series.syncCompletionForBook);
 
   const readBooks = books.filter((book) => book.isRead);
   const readingBooks = books.filter((book) => !book.isRead);
@@ -426,10 +429,20 @@ const MyBooks: React.FC = () => {
                 key={book.id}
                 book={book}
                 onMarkFinished={async () => {
+                  const today = new Date().toISOString().slice(0, 10);
                   await updateBook(book.id, {
                     isRead: true,
-                    dateRead: new Date().toISOString().slice(0, 7),
+                    dateRead: today,
                   });
+                  try {
+                    await syncSeriesCompletion({
+                      bookId: book.id as Id<"books">,
+                    });
+                  } catch {
+                    // Series sync is best-effort
+                  }
+                  setFinishedBook({ ...book, isRead: true, dateRead: today });
+                  setActiveTab("read");
                 }}
                 onRemove={() => handleDeleteBook(book.id)}
                 onEdit={() => setEditingBook(book)}
@@ -524,6 +537,15 @@ const MyBooks: React.FC = () => {
         onSave={async (bookId, updates) => {
           await updateBook(bookId, updates);
           setEditingBook(null);
+        }}
+      />
+
+      <FinishRitual
+        book={finishedBook}
+        onClose={() => setFinishedBook(null)}
+        onWriteReview={(book) => {
+          setFinishedBook(null);
+          setEditingBook(book);
         }}
       />
     </div>

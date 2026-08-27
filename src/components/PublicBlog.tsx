@@ -1,42 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { PenTool, Calendar, X, Sparkles } from "lucide-react";
+import { Calendar, X, ArrowRight } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { useBooks } from "../contexts/BookContext";
 import { useUser } from "../contexts/UserContext";
+import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
 import { WritingReactionButtons } from "./ReactionButtons";
 import { AvatarPreview, type AvatarConfig } from "./AvatarCreator";
 
-const BACKGROUND_PATTERNS = [
-  "from-rose-100 via-pink-50 to-fuchsia-100",
-  "from-amber-100 via-orange-50 to-yellow-100",
-  "from-emerald-100 via-teal-50 to-cyan-100",
-  "from-violet-100 via-purple-50 to-indigo-100",
-  "from-sky-100 via-blue-50 to-indigo-100",
-  "from-lime-100 via-green-50 to-emerald-100",
-];
+const DEFAULT_AVATAR: AvatarConfig = {
+  skinTone: "fair",
+  hairStyle: "long",
+  hairColor: "brown",
+  eyeColor: "brown",
+  accessory: "none",
+  background: "pink",
+  outfit: "tshirt",
+  outfitColor: "purple",
+  expression: "happy",
+};
 
 const PublicBlog = () => {
   const { blogPosts } = useBooks();
   const { user } = useUser();
+  const { prefersReducedMotion } = useMotionPreference();
   const [selectedPost, setSelectedPost] = useState<
     (typeof blogPosts)[0] | null
   >(null);
 
-  const defaultAvatar: AvatarConfig = {
-    skinTone: "fair",
-    hairStyle: "long",
-    hairColor: "brown",
-    eyeColor: "brown",
-    accessory: "none",
-    background: "pink",
-    outfit: "tshirt",
-    outfitColor: "purple",
-    expression: "happy",
-  };
-  const userAvatar = user?.avatar || defaultAvatar;
+  const userAvatar = user?.avatar || DEFAULT_AVATAR;
 
   const sortedPosts = [...blogPosts]
     .filter((post) => post.status === "published")
@@ -45,7 +39,6 @@ const PublicBlog = () => {
         new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
     );
 
-  // Render content with GIF support
   const renderContent = (content: string) => {
     const parts = content.split(/(!\[GIF\]\([^)]+\))/g);
     return parts.map((part, idx) => {
@@ -68,302 +61,245 @@ const PublicBlog = () => {
     });
   };
 
-  // Get first image/GIF from content for card preview
-  const getPreviewImage = (content: string): string | null => {
-    const gifMatch = content.match(/!\[GIF\]\(([^)]+)\)/);
-    return gifMatch ? gifMatch[1] : null;
-  };
+  const getPreviewText = (content: string): string =>
+    content.replace(/!\[GIF\]\([^)]+\)/g, "").trim();
 
-  // Get preview text without GIF markdown
-  const getPreviewText = (content: string): string => {
-    return content.replace(/!\[GIF\]\([^)]+\)/g, "").trim();
-  };
+  useEffect(() => {
+    if (!selectedPost) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedPost(null);
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [selectedPost]);
 
   const pageUrl = `${window.location.origin}/blog`;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-orange-50">
+    <div className="min-h-screen bg-cream-100 flex flex-col">
       <Helmet>
-        <title>Izzy's Writing | Izzy's Bookshelf</title>
-        <meta name="description" content="Thoughts, reading adventures, and stories from Izzy's reading journey." />
+        <title>Izzy&apos;s Writing | Izzy&apos;s Bookshelf</title>
+        <meta
+          name="description"
+          content="Thoughts, reading adventures, and stories from Izzy's reading journey."
+        />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Izzy's Writing" />
-        <meta property="og:description" content="Thoughts, reading adventures, and stories from Izzy's reading journey." />
+        <meta
+          property="og:description"
+          content="Thoughts, reading adventures, and stories from Izzy's reading journey."
+        />
         <meta property="og:url" content={pageUrl} />
-        <meta property="og:image" content={`${window.location.origin}/og-image.png`} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Izzy's Writing" />
-        <meta name="twitter:description" content="Thoughts, reading adventures, and stories from Izzy's reading journey." />
+        <meta
+          property="og:image"
+          content={`${window.location.origin}/og-image.png`}
+        />
       </Helmet>
-      {/* Navigation */}
+
       <PublicNav />
 
-      {/* Compact Hero Section */}
-      <section className="py-8 bg-gradient-to-r from-rose-50 to-orange-50 border-b border-rose-100">
-        <div className="max-w-6xl mx-auto px-4">
+      <section className="relative overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-80"
+          style={{
+            backgroundImage:
+              "radial-gradient(ellipse at 30% 0%, rgba(217,70,168,0.10), transparent 55%), radial-gradient(ellipse at 80% 100%, rgba(13,148,136,0.10), transparent 50%)",
+          }}
+        />
+        <div className="relative z-10 max-w-3xl mx-auto px-4 pt-10 sm:pt-14 pb-8 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col sm:flex-row items-center justify-between gap-4"
+            transition={
+              prefersReducedMotion
+                ? { duration: 0 }
+                : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
+            }
           >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-orange-500 shadow-lg flex items-center justify-center">
-                <PenTool className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl md:text-3xl font-display font-bold text-stone-800">
-                  Izzy's Writing
-                </h1>
-                <p className="text-sm text-stone-500">
-                  Thoughts & adventures from my reading journey
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
-              <span className="text-2xl font-bold text-rose-600">
-                {sortedPosts.length}
-              </span>
-              <span className="text-sm text-stone-500">posts</span>
-            </div>
+            <p className="font-accent text-sm sm:text-base text-primary-600 tracking-wide mb-3">
+              Thoughts & adventures
+            </p>
+            <h1 className="font-accent text-4xl sm:text-5xl font-semibold text-stone-900 tracking-tight leading-[1.05] mb-3">
+              Writing
+            </h1>
+            <p className="text-base text-stone-500 max-w-md mx-auto leading-relaxed">
+              Stories from my reading journey — challenges, adventures, and ideas.
+            </p>
+            {sortedPosts.length > 0 && (
+              <p className="mt-5 text-sm text-stone-400">
+                <span className="font-display font-bold text-stone-700 tabular-nums">
+                  {sortedPosts.length}
+                </span>{" "}
+                {sortedPosts.length === 1 ? "post" : "posts"}
+              </p>
+            )}
           </motion.div>
         </div>
       </section>
 
-      {/* Blog Posts Grid */}
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
+      <main className="flex-1 py-10 sm:py-12">
+        <div className="max-w-3xl mx-auto px-4">
           {sortedPosts.length > 0 ? (
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="space-y-10 sm:space-y-12 divide-y divide-cream-300">
               {sortedPosts.map((post, index) => {
-                const previewImage = getPreviewImage(post.content);
                 const previewText = getPreviewText(post.content);
-
                 return (
-                  <motion.article
+                  <button
+                    type="button"
                     key={post.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1, duration: 0.5 }}
                     onClick={() => setSelectedPost(post)}
-                    className="group cursor-pointer"
+                    className={`group block w-full text-left ${index === 0 ? "" : "pt-10 sm:pt-12"}`}
                   >
-                    <div className="relative bg-white rounded-3xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden border border-stone-100 hover:-translate-y-2">
-                      {/* Card Header */}
-                      <div
-                        className={`h-48 bg-gradient-to-br ${BACKGROUND_PATTERNS[index % BACKGROUND_PATTERNS.length]} relative overflow-hidden`}
-                      >
-                        {previewImage ? (
-                          <img
-                            src={previewImage}
-                            alt={post.title}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <motion.span
-                              className="text-7xl"
-                              whileHover={{ scale: 1.2, rotate: 10 }}
-                              transition={{ type: "spring", stiffness: 300 }}
-                            >
-                              {post.emoji || "📝"}
-                            </motion.span>
-                          </div>
-                        )}
-
-                        {/* Decorative corner */}
-                        <div className="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-bl-full" />
-                      </div>
-
-                      {/* Card Content */}
-                      <div className="p-6">
-                        <h3 className="text-xl font-display font-bold text-stone-800 mb-3 group-hover:text-rose-600 transition-colors">
-                          {post.title}
-                        </h3>
-
-                        <p className="text-stone-500 line-clamp-3 leading-relaxed mb-4">
-                          {previewText || "Click to read more..."}
-                        </p>
-
-                        <div className="flex items-center justify-between pt-4 border-t border-stone-100">
-                          <span className="text-xs text-stone-400 font-medium flex items-center gap-1">
-                            <Calendar className="w-3 h-3" />
-                            {new Date(post.dateCreated).toLocaleDateString(
-                              "en-US",
-                              {
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                              },
-                            )}
+                    <motion.article
+                      initial={
+                        prefersReducedMotion ? false : { opacity: 0, y: 12 }
+                      }
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={
+                        prefersReducedMotion
+                          ? { duration: 0 }
+                          : { delay: Math.min(index * 0.04, 0.2) }
+                      }
+                    >
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2">
+                        {post.tags?.[0] && (
+                          <span className="text-xs font-semibold uppercase tracking-wider text-accent-600">
+                            {post.tags[0]}
                           </span>
-
-                          {post.tags && post.tags.length > 0 && (
-                            <div className="flex gap-1">
-                              {post.tags.slice(0, 2).map((tag) => (
-                                <span
-                                  key={tag}
-                                  className="text-xs bg-rose-50 text-rose-600 px-2 py-0.5 rounded-full"
-                                >
-                                  {tag}
-                                </span>
-                              ))}
-                            </div>
+                        )}
+                        <span className="flex items-center gap-1 text-xs text-stone-400">
+                          <Calendar className="w-3 h-3" aria-hidden />
+                          {new Date(post.dateCreated).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            },
                           )}
-                        </div>
+                        </span>
                       </div>
-                    </div>
-                  </motion.article>
+                      <h2 className="text-xl sm:text-2xl font-display font-bold text-stone-900 group-hover:text-primary-700 transition-colors leading-snug mb-3">
+                        {post.title}
+                      </h2>
+                      <p className="text-stone-600 leading-relaxed line-clamp-3">
+                        {previewText || "Open to read more…"}
+                      </p>
+                      <span className="inline-flex items-center gap-1.5 mt-4 text-primary-600 font-semibold text-sm group-hover:gap-2.5 transition-all">
+                        Read post <ArrowRight className="w-4 h-4" />
+                      </span>
+                    </motion.article>
+                  </button>
                 );
               })}
             </div>
           ) : (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center py-20 px-4"
-            >
-              <div className="w-32 h-32 bg-gradient-to-br from-rose-100 to-orange-100 rounded-full flex items-center justify-center mx-auto mb-8">
-                <span className="text-6xl">✍️</span>
-              </div>
+            <div className="text-center py-16">
               <h3 className="text-2xl font-display font-bold text-stone-800 mb-3">
-                Writing Coming Soon!
+                Writing coming soon
               </h3>
-              <p className="text-stone-500 max-w-md mx-auto mb-6">
-                Soon I'll be sharing reading challenges, book adventures, and
-                stories here. It's going to be fun!
+              <p className="text-stone-500 max-w-md mx-auto">
+                Soon I&apos;ll share reading challenges, book adventures, and
+                stories here.
               </p>
-              <div className="flex flex-wrap justify-center gap-3">
-                <div className="bg-rose-50 px-4 py-2 rounded-full text-sm text-rose-600 font-medium">
-                  📚 Reading Challenges
-                </div>
-                <div className="bg-orange-50 px-4 py-2 rounded-full text-sm text-orange-600 font-medium">
-                  ✨ Book Adventures
-                </div>
-                <div className="bg-amber-50 px-4 py-2 rounded-full text-sm text-amber-600 font-medium">
-                  💭 My Thoughts
-                </div>
-              </div>
-            </motion.div>
+            </div>
           )}
         </div>
-      </section>
+      </main>
 
-      {/* Post Detail Modal */}
       <AnimatePresence>
         {selectedPost && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="post-title"
           >
-            {/* Backdrop */}
-            <motion.div
-              className="absolute inset-0 bg-black/60 backdrop-blur-md"
+            <button
+              type="button"
+              className="absolute inset-0 bg-stone-900/45 backdrop-blur-[2px]"
+              aria-label="Close"
               onClick={() => setSelectedPost(null)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
             />
-
-            {/* Modal Content */}
             <motion.div
-              className="relative w-full max-w-3xl max-h-[90vh] overflow-hidden"
-              initial={{ scale: 0.9, y: 50 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 50 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="relative w-full sm:max-w-2xl max-h-[92vh] overflow-y-auto bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl"
+              initial={
+                prefersReducedMotion ? false : { opacity: 0, y: 40 }
+              }
+              animate={{ opacity: 1, y: 0 }}
+              exit={prefersReducedMotion ? undefined : { opacity: 0, y: 24 }}
             >
-              <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
-                {/* Header with gradient */}
-                <div
-                  className={`relative h-32 bg-gradient-to-br ${BACKGROUND_PATTERNS[sortedPosts.indexOf(selectedPost) % BACKGROUND_PATTERNS.length]}`}
+              <button
+                type="button"
+                onClick={() => setSelectedPost(null)}
+                className="absolute top-3 right-3 z-10 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md border border-cream-200"
+                aria-label="Close post"
+              >
+                <X className="w-5 h-5 text-stone-600" />
+              </button>
+
+              <div className="p-6 sm:p-10 pt-14">
+                <p className="text-xs text-stone-400 mb-3 flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5" aria-hidden />
+                  {new Date(selectedPost.dateCreated).toLocaleDateString(
+                    "en-US",
+                    {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    },
+                  )}
+                </p>
+                <h2
+                  id="post-title"
+                  className="text-3xl font-display font-bold text-stone-900 mb-4"
                 >
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <motion.span
-                      className="text-6xl"
-                      animate={{
-                        scale: [1, 1.1, 1],
-                        rotate: [0, 5, -5, 0],
-                      }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                    >
-                      {selectedPost.emoji || "📝"}
-                    </motion.span>
+                  {selectedPost.title}
+                </h2>
+
+                {selectedPost.tags && selectedPost.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {selectedPost.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm font-medium"
+                      >
+                        {tag}
+                      </span>
+                    ))}
                   </div>
+                )}
 
-                  {/* Close button */}
-                  <button
-                    onClick={() => setSelectedPost(null)}
-                    className="absolute top-4 right-4 p-2 bg-white/90 hover:bg-white rounded-full shadow-lg transition-all"
-                  >
-                    <X className="w-5 h-5 text-stone-600" />
-                  </button>
-
-                  {/* Floating sparkles */}
-                  <Sparkles className="absolute bottom-4 left-4 w-6 h-6 text-white/50" />
+                <div className="prose prose-lg max-w-none text-stone-700 leading-relaxed mb-8">
+                  {renderContent(selectedPost.content)}
                 </div>
 
-                {/* Content */}
-                <div className="p-8 md:p-12 max-h-[60vh] overflow-y-auto">
-                  <div className="mb-6">
-                    <h2 className="text-3xl md:text-4xl font-display font-bold text-stone-800 mb-3">
-                      {selectedPost.title}
-                    </h2>
-                    <p className="text-stone-500 flex items-center gap-2">
-                      <Calendar className="w-4 h-4" />
-                      {new Date(selectedPost.dateCreated).toLocaleDateString(
-                        "en-US",
-                        {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        },
-                      )}
+                <div className="pt-6 border-t border-cream-200 mb-6">
+                  <p className="text-sm font-medium text-stone-500 mb-3">
+                    What do you think?
+                  </p>
+                  <WritingReactionButtons postId={selectedPost.id} />
+                </div>
+
+                <div className="flex items-center gap-3 pt-6 border-t border-cream-200">
+                  <div className="rounded-full overflow-hidden ring-2 ring-primary-100">
+                    <AvatarPreview config={userAvatar} size="sm" />
+                  </div>
+                  <div>
+                    <p className="font-display font-bold text-stone-800 text-sm">
+                      Written by Izzy
                     </p>
-                  </div>
-
-                  {/* Tags */}
-                  {selectedPost.tags && selectedPost.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {selectedPost.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-sm font-medium"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Post Content */}
-                  <div className="prose prose-lg max-w-none text-stone-700 leading-relaxed">
-                    {renderContent(selectedPost.content)}
-                  </div>
-
-                  {/* Reactions */}
-                  <div className="mt-8 pt-6 border-t border-stone-100">
-                    <p className="text-sm font-semibold text-stone-600 mb-3">
-                      What do you think?
+                    <p className="text-xs text-stone-500">
+                      Book lover &amp; storyteller
                     </p>
-                    <WritingReactionButtons postId={selectedPost.id} />
-                  </div>
-
-                  {/* Footer */}
-                  <div className="flex items-center gap-3 mt-8 pt-6 border-t border-stone-100">
-                    <div className="w-12 h-12 rounded-full overflow-hidden shadow-sm ring-2 ring-rose-100">
-                      <AvatarPreview config={userAvatar} size="md" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-stone-800">
-                        Written by Izzy
-                      </p>
-                      <p className="text-sm text-stone-500">
-                        Book Lover & Storyteller
-                      </p>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -372,7 +308,6 @@ const PublicBlog = () => {
         )}
       </AnimatePresence>
 
-      {/* Footer */}
       <PublicFooter />
     </div>
   );

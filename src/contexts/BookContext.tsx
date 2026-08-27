@@ -127,6 +127,7 @@ function convexBookToBook(doc: Doc<"books">): Book {
     isRead: doc.isRead,
     notes: doc.notes,
     giftFrom: doc.giftFrom,
+    tags: doc.tags,
   };
 }
 
@@ -321,6 +322,7 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
       isRead: book.isRead,
       notes: book.notes,
       giftFrom: book.giftFrom,
+      tags: book.tags,
     });
   };
 
@@ -361,6 +363,8 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
       rating: rest.rating,
       isRead: rest.isRead,
       notes: rest.notes,
+      giftFrom: rest.giftFrom,
+      tags: rest.tags,
     });
   };
 
