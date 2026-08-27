@@ -117,6 +117,9 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Bump framer-motion to 12.43.0.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Apply safe Dependabot bumps; hold risky major upgrades.
 
 Bump auth, lucide, resend, react-refresh, jest-dom, and vitest. Ignore framer-motion/jsdom/@types/node majors until Node and motion migrations are planned.
@@ -708,6 +711,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
