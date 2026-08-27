@@ -10,7 +10,6 @@ import {
   X,
   RefreshCw,
   BookOpen,
-  TrendingUp,
   Loader2,
   ArrowRight,
   ArrowLeft,
@@ -303,12 +302,16 @@ function Discover() {
               exit={{ scale: 0.9, y: 30 }}
             >
               {/* Header */}
-              <div className="bg-gradient-to-br from-primary-400 to-accent-400 p-6 text-center">
-                <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Compass className="w-7 h-7 text-white" />
+              <div className="bg-primary-600 px-6 py-6 text-center">
+                <div className="w-12 h-12 bg-white/15 rounded-full flex items-center justify-center mx-auto mb-3 ring-1 ring-white/20">
+                  <Compass className="w-6 h-6 text-white" />
                 </div>
-                <h2 className="text-xl font-bold text-white">Discover New Books</h2>
-                <p className="text-white/80 text-sm mt-1">Find your next adventure, Izzy!</p>
+                <h2 className="font-display text-xl font-bold text-white">
+                  How Discover works
+                </h2>
+                <p className="text-white/85 text-sm mt-1">
+                  Find your next read, Izzy
+                </p>
               </div>
 
               {/* Steps */}
@@ -381,19 +384,22 @@ function Discover() {
 
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-400 to-accent-400 flex items-center justify-center">
+        <div className="flex items-start gap-3 mb-4">
+          <div className="w-11 h-11 rounded-xl bg-primary-600 shadow-md shadow-primary-600/20 flex items-center justify-center flex-shrink-0">
             <Compass className="w-5 h-5 text-white" />
           </div>
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-stone-800">Discover</h1>
-            <p className="text-sm text-stone-500">
-              Find your next favourite book, Izzy
+          <div className="flex-1 min-w-0">
+            <h1 className="font-display text-2xl font-bold text-stone-900">
+              Discover
+            </h1>
+            <p className="text-sm text-stone-500 mt-0.5">
+              Swipe right to save books to your wishlist
             </p>
           </div>
           <button
+            type="button"
             onClick={() => setShowOnboarding(true)}
-            className="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center transition-colors"
+            className="w-9 h-9 rounded-full bg-white ring-1 ring-cream-300 hover:ring-primary-300 flex items-center justify-center transition-colors flex-shrink-0"
             title="How Discover works"
           >
             <Info className="w-4 h-4 text-stone-500" />
@@ -402,35 +408,42 @@ function Discover() {
 
         {/* Stats bar */}
         {stats && (stats.liked > 0 || stats.passed > 0) && (
-          <div className="flex items-center gap-4 mt-4 px-4 py-3 bg-stone-50 rounded-xl">
-            <div className="flex items-center gap-1.5 text-sm">
-              <Heart className="w-4 h-4 text-green-500" />
-              <span className="font-medium text-stone-700">{stats.liked}</span>
-              <span className="text-stone-400">liked</span>
+          <div className="grid grid-cols-3 gap-2 mb-4">
+            <div className="rounded-xl bg-white ring-1 ring-cream-300 px-3 py-2.5 text-center">
+              <p className="font-display text-lg font-bold text-stone-800 tabular-nums">
+                {stats.liked}
+              </p>
+              <p className="text-[11px] text-stone-500 flex items-center justify-center gap-1">
+                <Heart className="w-3 h-3 text-primary-500" /> liked
+              </p>
             </div>
-            <div className="flex items-center gap-1.5 text-sm">
-              <X className="w-4 h-4 text-red-400" />
-              <span className="font-medium text-stone-700">{stats.passed}</span>
-              <span className="text-stone-400">passed</span>
+            <div className="rounded-xl bg-white ring-1 ring-cream-300 px-3 py-2.5 text-center">
+              <p className="font-display text-lg font-bold text-stone-800 tabular-nums">
+                {stats.passed}
+              </p>
+              <p className="text-[11px] text-stone-500 flex items-center justify-center gap-1">
+                <X className="w-3 h-3 text-stone-400" /> passed
+              </p>
             </div>
-            <div className="flex items-center gap-1.5 text-sm">
-              <TrendingUp className="w-4 h-4 text-primary-500" />
-              <span className="font-medium text-stone-700">
+            <div className="rounded-xl bg-white ring-1 ring-cream-300 px-3 py-2.5 text-center">
+              <p className="font-display text-lg font-bold text-accent-700 tabular-nums">
                 {stats.addedToWishlist}
-              </span>
-              <span className="text-stone-400">wishlisted</span>
+              </p>
+              <p className="text-[11px] text-stone-500 flex items-center justify-center gap-1">
+                <Gift className="w-3 h-3 text-accent-600" /> wishlist
+              </p>
             </div>
           </div>
         )}
 
         {/* Reading taste pills */}
         {profile && profile.topGenres.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-4">
-            <span className="text-xs text-stone-400 self-center">Based on:</span>
+          <div className="flex flex-wrap gap-2">
+            <span className="text-xs text-stone-400 self-center">Your taste:</span>
             {profile.topGenres.slice(0, 4).map((genre: string) => (
               <span
                 key={genre}
-                className="px-2.5 py-1 rounded-full bg-primary-50 text-primary-600 text-xs font-medium"
+                className="px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-xs font-semibold ring-1 ring-primary-100"
               >
                 {genre}
               </span>
@@ -446,10 +459,10 @@ function Discover() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full shadow-lg text-sm font-medium ${
+            className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full shadow-lg text-sm font-semibold ring-1 ${
               lastSwipeAction === "liked"
-                ? "bg-green-500 text-white"
-                : "bg-stone-500 text-white"
+                ? "bg-primary-600 text-white ring-primary-500"
+                : "bg-white text-stone-600 ring-cream-300"
             }`}
           >
             {lastSwipeAction === "liked" ? (
@@ -466,7 +479,7 @@ function Discover() {
       </AnimatePresence>
 
       {/* Card stack */}
-      <div className="relative w-full" style={{ height: "520px" }}>
+      <div className="relative w-full" style={{ height: "540px" }}>
         {loading && candidates.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full">
             <Loader2 className="w-10 h-10 text-primary-400 animate-spin mb-4" />
@@ -506,6 +519,7 @@ function Discover() {
                 book={book}
                 onSwipe={handleSwipe}
                 isTop={index === 0}
+                stackIndex={index}
                 exitDirection={index === 0 ? lastSwipeDirection : null}
                 onClick={() => {
                   setModalImageError(false);
@@ -555,7 +569,12 @@ function Discover() {
               exit={{ scale: 0.9, y: 50 }}
             >
               {/* Cover */}
-              <div className="relative h-64 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center p-6">
+              <div className="relative h-64 flex items-center justify-center p-6"
+                style={{
+                  background:
+                    "linear-gradient(165deg, #fdf2f8 0%, #fff7eb 45%, #ccfbf1 100%)",
+                }}
+              >
                 {selectedBook.coverUrl && !modalImageError ? (
                   <img
                     src={upgradeCoverUrl(selectedBook.coverUrl)}

@@ -36,25 +36,27 @@ function AdminPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-cream-100 to-accent-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-cream-100 flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center"
+          className="bg-white rounded-2xl shadow-sm ring-1 ring-cream-300 p-8 max-w-md w-full text-center"
         >
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 ring-1 ring-red-100">
             <Shield className="w-8 h-8 text-red-500" />
           </div>
-          <h1 className="text-2xl font-bold text-stone-800 mb-2">Admin Access Required</h1>
-          <p className="text-stone-500 mb-6">
-            You don't have permission to access the admin panel.
+          <h1 className="font-display text-2xl font-bold text-stone-900 mb-2">
+            Admin access required
+          </h1>
+          <p className="text-stone-500 mb-6 leading-relaxed">
+            You don&apos;t have permission to open the admin panel.
           </p>
           <Link
             to="/"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-white rounded-xl font-semibold hover:bg-primary-600 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-xl font-display font-bold text-sm hover:bg-primary-700 transition-colors shadow-sm"
           >
             <ArrowLeft className="w-5 h-5" />
-            Go Home
+            Back to site
           </Link>
         </motion.div>
       </div>
@@ -68,26 +70,30 @@ function AdminPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-cream-100 to-accent-50">
+    <div className="min-h-screen bg-cream-100">
       {/* Header */}
       <header className="bg-white border-b border-cream-300 sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-sm">
                 <Shield className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-stone-800">Admin Panel</h1>
-                <p className="text-xs text-stone-500">Izzy's Bookshelf Management</p>
+                <h1 className="font-display text-xl font-bold text-stone-900">
+                  Admin
+                </h1>
+                <p className="text-xs text-stone-500">
+                  Izzy&apos;s Bookshelf management
+                </p>
               </div>
             </div>
             <Link
               to="/"
-              className="flex items-center gap-2 px-4 py-2 text-stone-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-stone-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg transition-colors text-sm font-medium"
             >
               <ArrowLeft className="w-4 h-4" />
-              Back to Site
+              Back to site
             </Link>
           </div>
         </div>
@@ -151,42 +157,29 @@ function AdminPage() {
                   className="space-y-6"
                 >
                   <div className="bg-white rounded-2xl shadow-sm border border-cream-300 p-6">
-                    <h2 className="text-xl font-bold text-stone-800 mb-4">
-                      Welcome to Admin Panel
+                    <h2 className="font-display text-xl font-bold text-stone-900 mb-2">
+                      Welcome back
                     </h2>
-                    <p className="text-stone-600 mb-6">
-                      Manage Izzy's Bookshelf from here. Use the sidebar to navigate between different admin functions.
+                    <p className="text-stone-500 mb-6 leading-relaxed">
+                      Manage book club picks, refresh blurry covers, and keep
+                      Izzy&apos;s public shelf looking sharp.
                     </p>
 
                     <div className="grid sm:grid-cols-2 gap-4">
-                      <div
+                      <AdminOverviewCard
+                        title="Book Club"
+                        description="Create and manage shared reads for friends to follow along"
+                        icon={UsersRound}
+                        accent="primary"
                         onClick={() => setActiveTab("bookclub")}
-                        className="p-4 bg-gradient-to-br from-primary-50 to-accent-50 rounded-xl border border-primary-100 cursor-pointer hover:shadow-md transition-all"
-                      >
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">
-                            <UsersRound className="w-5 h-5 text-white" />
-                          </div>
-                          <h3 className="font-bold text-stone-800">Book Club</h3>
-                        </div>
-                        <p className="text-sm text-stone-600">
-                          Create and manage book club picks for friends to read along
-                        </p>
-                      </div>
-                      <div
+                      />
+                      <AdminOverviewCard
+                        title="Covers"
+                        description="Sharpen and permanently save blurry book thumbnails"
+                        icon={Image}
+                        accent="accent"
                         onClick={() => setActiveTab("covers")}
-                        className="p-4 bg-gradient-to-br from-accent-50 to-primary-50 rounded-xl border border-accent-100 cursor-pointer hover:shadow-md transition-all"
-                      >
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="w-10 h-10 bg-accent-500 rounded-lg flex items-center justify-center">
-                            <Image className="w-5 h-5 text-white" />
-                          </div>
-                          <h3 className="font-bold text-stone-800">Covers</h3>
-                        </div>
-                        <p className="text-sm text-stone-600">
-                          Sharpen and save blurry or temporary book covers
-                        </p>
-                      </div>
+                      />
                     </div>
                   </div>
                 </motion.div>
@@ -222,6 +215,49 @@ function AdminPage() {
 }
 
 export default AdminPage;
+
+function AdminOverviewCard({
+  title,
+  description,
+  icon: Icon,
+  accent,
+  onClick,
+}: {
+  title: string;
+  description: string;
+  icon: typeof Shield;
+  accent: "primary" | "accent";
+  onClick: () => void;
+}) {
+  const iconBg = accent === "primary" ? "bg-primary-600" : "bg-accent-600";
+  const ringHover =
+    accent === "primary" ? "hover:ring-primary-200" : "hover:ring-accent-200";
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`group w-full text-left p-5 rounded-2xl bg-cream-50/60 border border-cream-300 ring-1 ring-cream-200 ${ringHover} hover:bg-white hover:shadow-md transition-all`}
+    >
+      <div className="flex items-start gap-3">
+        <div
+          className={`w-11 h-11 ${iconBg} rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm`}
+        >
+          <Icon className="w-5 h-5 text-white" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="font-display font-bold text-stone-900">{title}</h3>
+            <ChevronRight className="w-4 h-4 text-stone-400 group-hover:text-primary-600 group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+          </div>
+          <p className="text-sm text-stone-500 mt-1 leading-snug">
+            {description}
+          </p>
+        </div>
+      </div>
+    </button>
+  );
+}
 
 
 function BookClubAdminPanel() {
@@ -283,22 +319,31 @@ function BookClubAdminPanel() {
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-cream-300 p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-stone-800">Book Club Management</h2>
+      <div className="flex items-center justify-between mb-6 gap-4">
+        <div>
+          <h2 className="font-display text-xl font-bold text-stone-900">
+            Book Club
+          </h2>
+          <p className="text-sm text-stone-500 mt-0.5">
+            Pick a book for friends to read along with Izzy
+          </p>
+        </div>
         <motion.button
           onClick={() => setIsCreating(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-600 transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 bg-primary-600 text-white rounded-xl font-display font-bold text-sm hover:bg-primary-700 transition-colors shadow-sm flex-shrink-0"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
           <Plus className="w-4 h-4" />
-          New Pick
+          New pick
         </motion.button>
       </div>
 
       {isCreating && (
-        <div className="mb-8 p-5 bg-cream-50 rounded-xl border border-cream-200">
-          <h3 className="font-bold text-stone-800 mb-4">Create New Book Club Pick</h3>
+        <div className="mb-8 p-5 bg-cream-50 rounded-2xl border border-cream-300 ring-1 ring-cream-200">
+          <h3 className="font-display font-bold text-stone-900 mb-4">
+            Create new book club pick
+          </h3>
           
           <div className="space-y-4">
             <div className="relative">
@@ -333,8 +378,8 @@ function BookClubAdminPanel() {
                       {book.coverUrl ? (
                         <img src={book.coverUrl} alt={book.title} className="w-10 h-14 object-cover rounded shadow-sm flex-shrink-0" />
                       ) : (
-                        <div className="w-10 h-14 bg-gradient-to-br from-primary-400 to-accent-400 rounded flex items-center justify-center flex-shrink-0">
-                          <BookOpen className="w-5 h-5 text-white" />
+                        <div className="w-10 h-14 bg-cream-200 rounded flex items-center justify-center flex-shrink-0 ring-1 ring-cream-300">
+                          <BookOpen className="w-5 h-5 text-stone-400" />
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
@@ -352,8 +397,8 @@ function BookClubAdminPanel() {
                 {selectedBook.coverUrl ? (
                   <img src={selectedBook.coverUrl} alt={selectedBook.title} className="w-12 h-16 object-cover rounded shadow-sm" />
                 ) : (
-                  <div className="w-12 h-16 bg-gradient-to-br from-primary-400 to-accent-400 rounded flex items-center justify-center">
-                    <BookOpen className="w-6 h-6 text-white" />
+                  <div className="w-12 h-16 bg-cream-200 rounded flex items-center justify-center ring-1 ring-cream-300">
+                    <BookOpen className="w-6 h-6 text-stone-400" />
                   </div>
                 )}
                 <div className="flex-1">
@@ -411,26 +456,41 @@ function BookClubAdminPanel() {
           clubs.map((club) => (
             <div
               key={club._id}
-              className={`flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl border ${club.isActive ? "border-green-300 bg-green-50/50" : "border-stone-200 bg-white"}`}
+              className={`flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-2xl border ring-1 transition-colors ${
+                club.isActive
+                  ? "border-emerald-200 bg-emerald-50/40 ring-emerald-100"
+                  : "border-cream-300 bg-white ring-cream-200"
+              }`}
             >
               {club.coverUrl ? (
-                <img src={club.coverUrl} alt={club.title} className="w-14 h-20 object-cover rounded-lg shadow-sm flex-shrink-0" />
+                <img
+                  src={club.coverUrl}
+                  alt={club.title}
+                  className="w-16 h-24 object-cover rounded-lg shadow-md ring-1 ring-cream-300 flex-shrink-0"
+                />
               ) : (
-                <div className="w-14 h-20 bg-gradient-to-br from-stone-200 to-stone-300 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <BookOpen className="w-6 h-6 text-white" />
+                <div className="w-16 h-24 bg-cream-200 rounded-lg flex items-center justify-center flex-shrink-0 ring-1 ring-cream-300">
+                  <BookOpen className="w-6 h-6 text-stone-400" />
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <h4 className="font-bold text-stone-800">{club.title}</h4>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h4 className="font-display font-bold text-stone-900">
+                    {club.title}
+                  </h4>
                   {club.isActive && (
-                    <span className="px-2 py-0.5 bg-green-500 text-white text-xs font-bold rounded-full uppercase tracking-wide">
-                      Active
+                    <span className="px-2 py-0.5 bg-emerald-600 text-white text-[10px] font-bold rounded-full uppercase tracking-wide">
+                      Live
                     </span>
                   )}
                 </div>
                 <p className="text-sm text-stone-500">by {club.author}</p>
-                <p className="text-xs text-stone-400 mt-1 flex items-center gap-1">
+                {club.description && (
+                  <p className="text-sm text-stone-600 mt-1 line-clamp-2">
+                    {club.description}
+                  </p>
+                )}
+                <p className="text-xs text-stone-400 mt-2 flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
                   Ends {new Date(club.endDate).toLocaleDateString()}
                 </p>
@@ -457,10 +517,14 @@ function BookClubAdminPanel() {
             </div>
           ))
         ) : (
-          <div className="text-center py-12 bg-cream-50 rounded-xl border border-dashed border-cream-300">
+          <div className="text-center py-14 bg-cream-50 rounded-2xl border border-dashed border-cream-300">
             <UsersRound className="w-12 h-12 text-stone-300 mx-auto mb-3" />
-            <p className="text-stone-500">No book clubs yet.</p>
-            <p className="text-sm text-stone-400">Create one to get friends reading along!</p>
+            <p className="font-display font-bold text-stone-700">
+              No book clubs yet
+            </p>
+            <p className="text-sm text-stone-500 mt-1">
+              Create a pick so friends can read along with Izzy
+            </p>
           </div>
         )}
       </div>
