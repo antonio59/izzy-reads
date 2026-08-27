@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Fix changelog workflow rebase conflicts on concurrent main pushes.
+
+Keep the regenerated CHANGELOG during rebase retries so the bot does not fail when another docs commit lands first.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Fix Dependabot failures caused by pnpm minimumReleaseAge.
 
 Add a matching 7-day Dependabot cooldown, soften strict age checks, exclude high-churn packages, and bypass the age gate for Dependabot CI and the weekly update workflow.
@@ -112,6 +117,9 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Ignore TypeScript major bumps in Dependabot until eslint supports them.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Apply vite, typescript-eslint, and convex Dependabot bumps.
 
 Skip TypeScript 7 for now — typescript-eslint 8 still requires typescript < 6.1 — and ignore future TS major bumps in Dependabot.
@@ -690,6 +698,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
