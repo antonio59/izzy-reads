@@ -107,6 +107,11 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Add shareable blog routes, series controls, and security bumps.
+
+Finish ritual on add-as-Read, mood tags in search add, series reorder/complete UI, admin berry/teal cleanup, and patch auth/router advisories.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Redesign public surfaces and add finish ritual, tags, and heatmap.
 
 Unify Home, About, Poetry, Writing, Wishlist, and Reviews around a brand-forward cream/berry/teal look, simplify the kid dashboard path, celebrate finished books, and ship mood tags plus a reading heatmap with series completion sync.
@@ -670,6 +675,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
