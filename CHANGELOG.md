@@ -117,6 +117,9 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Fix unused reviewUrl that broke the frontend build.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
 - Sweep leftover purple/magic chrome from the public Bookshelf.
 
 Align scrollbars, focus rings, placeholders, avatar fallbacks, footer voice, book club, and error UI with cream/berry/teal — and drop reaction confetti.
@@ -746,6 +749,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
