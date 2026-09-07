@@ -696,6 +696,8 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- **deps**: Bump lucide-react from 1.34.0 to 1.38.0 (#201)
+- **deps**: Bump resend from 6.24.0 to 6.25.0 (#200)
 - **deps-dev**: Bump @vitejs/plugin-react in the vite group (#199)
 - **deps**: Bump react-router-dom in the react group (#198)
 - Update dependencies (#164)
