@@ -696,6 +696,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- **deps-dev**: Bump @vitejs/plugin-react in the vite group (#199)
 - **deps**: Bump react-router-dom in the react group (#198)
 - Update dependencies (#164)
 - Update dependencies (#162)
@@ -760,6 +761,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
