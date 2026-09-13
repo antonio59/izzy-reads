@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { PenTool, Gift, ArrowRight, BookOpen } from "lucide-react";
@@ -34,7 +34,7 @@ function scrollToShelf() {
     ?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-/** Full-bleed overlapping cover shelf for the hero */
+/** Full-bleed overlapping cover shelf for the hero — hover a cover for the review */
 function HeroCoverShelf({
   books,
   reducedMotion,
@@ -42,6 +42,8 @@ function HeroCoverShelf({
   books: Book[];
   reducedMotion: boolean;
 }) {
+  const [hovered, setHovered] = useState<number | null>(null);
+
   if (books.length === 0) {
     return (
       <div className="relative h-48 sm:h-64 md:h-72 w-full overflow-hidden">
@@ -55,18 +57,18 @@ function HeroCoverShelf({
 
   const display = books.slice(0, 7);
   const mid = (display.length - 1) / 2;
+  const last = display.length - 1;
 
   return (
-    <div
-      className="relative h-52 sm:h-72 md:h-80 lg:h-[22rem] w-full overflow-hidden"
-      aria-hidden={false}
-      role="img"
-      aria-label="A shelf of Izzy's favourite book covers"
-    >
+    <div className="relative h-52 sm:h-72 md:h-80 lg:h-[22rem] w-full overflow-hidden">
       {/* Atmospheric wash */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary-50/40 via-cream-100 to-accent-50/30" />
+      <div
+        className="absolute inset-0 bg-gradient-to-b from-primary-50/40 via-cream-100 to-accent-50/30"
+        aria-hidden
+      />
       <div
         className="absolute inset-0 opacity-[0.35]"
+        aria-hidden
         style={{
           backgroundImage:
             "radial-gradient(ellipse at 20% 0%, rgba(217,70,168,0.12), transparent 50%), radial-gradient(ellipse at 80% 100%, rgba(13,148,136,0.14), transparent 45%)",
@@ -74,7 +76,10 @@ function HeroCoverShelf({
       />
 
       {/* Shelf shadow line */}
-      <div className="absolute bottom-6 left-0 right-0 h-3 bg-gradient-to-b from-stone-900/10 to-transparent blur-sm" />
+      <div
+        className="absolute bottom-6 left-0 right-0 h-3 bg-gradient-to-b from-stone-900/10 to-transparent blur-sm"
+        aria-hidden
+      />
 
       <div className="absolute inset-0 flex items-end justify-center px-2 sm:px-6 pb-8">
         <div className="flex items-end justify-center -space-x-6 sm:-space-x-8 md:-space-x-10">
@@ -83,22 +88,24 @@ function HeroCoverShelf({
             const rotate = offset * 4;
             const y = Math.abs(offset) * 8;
             const z = 20 - Math.abs(offset);
+            const isHovered = hovered === i;
+            // Neighbours lean and slide away from the hovered cover
+            const away = hovered !== null && !isHovered ? Math.sign(i - hovered) : 0;
+            const snippet = book.review || book.notes;
+            // Keep the tooltip inside the container for edge covers
+            const tooltipNudge = i === 0 ? 30 : i === last ? -30 : 0;
 
             return (
               <motion.div
                 key={book.id}
-                className="relative w-[4.5rem] sm:w-24 md:w-28 lg:w-32 aspect-[2/3] rounded-md overflow-hidden shadow-xl ring-1 ring-white/60"
-                style={{ zIndex: z }}
+                className="relative w-[4.5rem] sm:w-24 md:w-28 lg:w-32"
+                style={{ zIndex: isHovered ? 40 : z }}
                 initial={
                   reducedMotion
                     ? false
                     : { opacity: 0, y: 48, rotate: rotate * 1.4 }
                 }
-                animate={{
-                  opacity: 1,
-                  y,
-                  rotate,
-                }}
+                animate={{ opacity: 1, y, rotate }}
                 transition={
                   reducedMotion
                     ? { duration: 0 }
@@ -109,13 +116,76 @@ function HeroCoverShelf({
                         delay: 0.15 + i * 0.06,
                       }
                 }
-                whileHover={
-                  reducedMotion
-                    ? undefined
-                    : { y: y - 14, scale: 1.06, rotate: 0, zIndex: 40 }
-                }
+                onHoverStart={() => setHovered(i)}
+                onHoverEnd={() => setHovered(null)}
+                onFocus={() => setHovered(i)}
+                onBlur={() => setHovered(null)}
               >
-                <BookCoverImage book={book} className="w-full h-full" />
+                {/* Hover layer: lift + neighbours parting, snappy spring (no entrance delay) */}
+                <motion.div
+                  className="relative aspect-[2/3] rounded-md overflow-hidden shadow-xl ring-1 ring-white/60"
+                  animate={
+                    reducedMotion
+                      ? undefined
+                      : {
+                          y: isHovered ? -16 : 0,
+                          x: away * 12,
+                          rotate: isHovered ? -rotate : away * 2.5,
+                          scale: isHovered ? 1.08 : 1,
+                        }
+                  }
+                  transition={{ type: "spring", stiffness: 320, damping: 24 }}
+                >
+                  <Link
+                    to={`/reviews/${book.id}`}
+                    className="block w-full h-full rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+                    aria-label={`${book.title}${snippet ? " — read Izzy's review" : ""}`}
+                  >
+                    <BookCoverImage book={book} className="w-full h-full" />
+                  </Link>
+                </motion.div>
+
+                {/* Review tooltip */}
+                <motion.div
+                  className="absolute bottom-full left-1/2 mb-3 w-40 sm:w-48 pointer-events-none z-50"
+                  style={{ marginLeft: tooltipNudge }}
+                  initial={false}
+                  animate={
+                    isHovered
+                      ? { opacity: 1, y: 0, scale: 1, x: "-50%" }
+                      : { opacity: 0, y: 8, scale: 0.95, x: "-50%" }
+                  }
+                  transition={
+                    reducedMotion ? { duration: 0 } : { duration: 0.18, ease: "easeOut" }
+                  }
+                >
+                  <div className="bg-white rounded-xl shadow-2xl ring-1 ring-stone-200 p-3 text-left">
+                    <p className="text-xs font-display font-bold text-stone-800 leading-tight line-clamp-2">
+                      {book.title}
+                    </p>
+                    {book.rating != null && book.rating > 0 && (
+                      <p
+                        className="text-amber-400 text-xs mt-1 tracking-tight"
+                        aria-label={`${book.rating} out of 5 stars`}
+                      >
+                        {"★".repeat(Math.round(book.rating))}
+                        <span className="text-stone-300">
+                          {"★".repeat(5 - Math.round(book.rating))}
+                        </span>
+                      </p>
+                    )}
+                    {snippet ? (
+                      <p className="text-[11px] text-stone-500 italic leading-snug mt-1.5 line-clamp-3">
+                        “{snippet}”
+                      </p>
+                    ) : (
+                      <p className="text-[11px] text-stone-400 mt-1.5">
+                        On Izzy&apos;s shelf
+                      </p>
+                    )}
+                  </div>
+                  <div className="mx-auto w-3 h-3 -mt-[7px] rotate-45 bg-white ring-1 ring-stone-200 border-t-0 border-l-0" />
+                </motion.div>
               </motion.div>
             );
           })}
