@@ -19,9 +19,11 @@ dist-ssr
 # Environment variables (NEVER commit these!)
 .env
 .env.local
-.env.production
 .env.staging
 .env*.local
+# .env.production IS committed on purpose — it only holds the public
+# Convex deployment URL (shipped to browsers anyway), so CI builds work
+# without dashboard env vars. Secrets still go in .env.local / dashboard.
 
 # Editor directories and files
 .vscode/*
