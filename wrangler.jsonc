@@ -2,10 +2,10 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "izzys-bookshelf",
   "compatibility_date": "2026-09-01",
-  // Cloudflare Pages: build output + functions/ directory support
-  "pages_build_output_dir": "dist",
   // Cloudflare Workers (static assets): Worker runs first so it can
-  // intercept social crawlers, then falls through to dist/ with SPA handling
+  // intercept social crawlers, then falls through to dist/ with SPA handling.
+  // NOTE: do not add pages_build_output_dir here — wrangler would treat the
+  // project as Pages and reject `wrangler deploy` on Workers Builds.
   "main": "workers/index.ts",
   "assets": {
     "directory": "./dist",
