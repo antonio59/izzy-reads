@@ -117,6 +117,9 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Merge pull request #197 from antonio59/dependency-updates
+
+chore: Weekly dependency updates
 - Polish Discover swipe cards and admin dashboard cards.
 
 Align card layout, stats, and cover refresh progress with the cream/berry Bookshelf design on Discover and admin pages.
@@ -696,6 +699,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- Update dependencies
 - **deps**: Bump lucide-react from 1.34.0 to 1.38.0 (#201)
 - **deps**: Bump resend from 6.24.0 to 6.25.0 (#200)
 - **deps-dev**: Bump @vitejs/plugin-react in the vite group (#199)
@@ -763,6 +767,8 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
