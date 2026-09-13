@@ -117,6 +117,25 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Hero cover shelf: review tooltips + fix dead hover
+
+The entrance delay (up to ~0.6s per cover) was baked into the shared
+transition, so whileHover inherited it and hover felt unresponsive.
+
+- Split into two motion layers: outer handles the staggered entrance
+  (with delay), inner handles hover with a snappy spring (no delay)
+- Hovered cover lifts, straightens and scales; neighbours slide and lean
+  away so the shelf "makes room"
+- Tooltip above the hovered cover shows title, star rating, and the
+  review/notes snippet (falls back to "On Izzy's shelf"); nudged inward
+  on edge covers to avoid clipping
+- Each cover is now a link to /reviews/:id - tap works on mobile, and
+  keyboard focus shows the tooltip too
+- Reduced-motion users get instant states, no springs
+
+Generated with [Devin](https://devin.ai)
+
+Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>
 - Automate Convex deploys in CI; drop staging remnants
 
 - ci.yml: new deploy-convex job runs `convex deploy --yes` on pushes to
@@ -885,6 +904,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Clean stale README references; delete feat/discover-swipe branch
 - Update changelog [skip ci]
 - Update changelog [skip ci]
