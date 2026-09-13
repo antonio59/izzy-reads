@@ -21,11 +21,13 @@
 - `/wishlist` redirects to the Wishlist tab instead of the default Finished tab.
 - Public-site link relabeled to "Public Site" (no longer duplicates "My Bookshelf").
 
-### Hosting: Netlify → Cloudflare Pages
+### Hosting: Netlify → Cloudflare
 
 - `netlify.toml` replaced by `public/_redirects` (SPA fallback) and `public/_headers` (security + cache headers).
-- Social-crawler OG meta moved from a Netlify edge function to a Pages Function (`functions/_middleware.ts`).
-- `wrangler.jsonc` added; `pnpm run deploy:cf` / `pnpm run preview:cf` for manual deploys and local Pages testing.
+- Social-crawler OG meta moved from a Netlify edge function into shared logic (`src/edge/socialMeta.ts`), wired for **both** hosting modes:
+  - **Workers static assets** (new default): `workers/index.ts` runs before asset serving (`run_worker_first`), returns meta HTML to crawlers, serves the SPA otherwise.
+  - **Pages**: `functions/_middleware.ts` does the same as a Pages Function.
+- `wrangler.jsonc` configures both modes; `pnpm run deploy:workers` / `deploy:cf` for manual deploys, `preview:workers` / `preview:cf` for local testing.
 
 ### Cleanup
 
@@ -42,10 +44,10 @@
 
 ## Deploy notes
 
-1. **Create the Cloudflare Pages project** (dashboard → Workers & Pages → Pages → Connect to Git):
+1. **Create the Cloudflare project** (dashboard → Workers & Pages → Create → Connect to Git). Either mode works:
    - Build command: `pnpm install --frozen-lockfile && pnpm run build`
-   - Output directory: `dist`
-   - Set `VITE_CONVEX_URL` in Pages → Settings → Environment variables (production + preview).
+   - Output directory: `dist` (Pages); Workers picks it up from `assets.directory`
+   - Env vars: `VITE_CONVEX_URL` (production + preview), plus `PNPM_VERSION=11.1.1` and `NODE_VERSION=22` to match local.
 2. Deploy Convex with the frontend: `convex/schema.ts` drops the unused `readingChallenges` table and adds `wishlist.bulkAdd`; function signatures for `series.getByUser` / `series.create` changed.
 3. Re-point `izzysbookshelf.com` DNS to Pages (custom domain), then retire the Netlify site.
 4. No new env vars needed — Goodreads import runs entirely client-side; covers come from Open Library by ISBN.

@@ -1,6 +1,16 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "izzys-bookshelf",
-  "pages_build_output_dir": "dist",
   "compatibility_date": "2026-09-01",
+  // Cloudflare Pages: build output + functions/ directory support
+  "pages_build_output_dir": "dist",
+  // Cloudflare Workers (static assets): Worker runs first so it can
+  // intercept social crawlers, then falls through to dist/ with SPA handling
+  "main": "workers/index.ts",
+  "assets": {
+    "directory": "./dist",
+    "binding": "STATIC_ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": true,
+  },
 }

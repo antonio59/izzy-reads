@@ -120,8 +120,10 @@ izzy-reads/
 ├── .github/
 │   ├── workflows/            # CI/CD automation
 │   └── SECURITY.md           # Security policy
-├── wrangler.jsonc            # Cloudflare Pages config
-└── public/                   # Static assets
+├── wrangler.jsonc            # Cloudflare config (Pages + Workers static assets)
+├── functions/_middleware.ts  # Pages Function: social-crawler OG/Twitter meta
+├── workers/index.ts          # Workers entrypoint: crawler meta + static assets
+└── public/                   # Static assets (incl. _redirects/_headers)
 ```
 
 ---
@@ -213,9 +215,20 @@ pnpm run dev:backend  # Convex only
 pnpm run build
 ```
 
-### Deployment with Cloudflare Pages
+### Deployment with Cloudflare
 
-This project uses Cloudflare Pages with automatic branch deploys:
+The repo supports **both** Cloudflare hosting modes — pick whichever you connected in the dashboard:
+
+- **Workers static assets** (recommended / new default): `workers/index.ts` runs before asset serving — it returns OG/Twitter meta HTML to social crawlers and passes everything else through to `dist/` with SPA fallback. Configured via `main` + `assets` in `wrangler.jsonc`.
+- **Pages**: `functions/_middleware.ts` does the same job as a Pages Function; `public/_redirects` provides the SPA fallback. Configured via `pages_build_output_dir` in `wrangler.jsonc`.
+
+Both share the crawler-meta logic in `src/edge/socialMeta.ts` and the security headers in `public/_headers`.
+
+**Project settings (Workers or Pages):**
+
+- Build command: `pnpm install --frozen-lockfile && pnpm run build`
+- Build output directory: `dist`
+- Env vars: `VITE_CONVEX_URL` (production + preview), `PNPM_VERSION=11.1.1`, `NODE_VERSION=22`
 
 | Branch       | Environment | Auto-deploy |
 | ------------ | ----------- | ----------- |
@@ -223,19 +236,11 @@ This project uses Cloudflare Pages with automatic branch deploys:
 | `main`       | Preview     | ✅          |
 | PR branches  | Preview     | ✅          |
 
-**Pages project settings:**
+**To deploy manually:**
 
-- Build command: `pnpm install --frozen-lockfile && pnpm run build`
-- Build output directory: `dist`
-- Functions: `functions/_middleware.ts` serves OG/Twitter meta to social crawlers
-- SPA fallback + headers: `public/_redirects` and `public/_headers` (copied into `dist` on build)
-- Env var: `VITE_CONVEX_URL` (set in Pages → Settings → Environment variables)
-
-**To deploy:**
-
-1. Push to `main` → Preview deploys automatically
-2. Merge to `production` → Production deploys automatically
-3. Or deploy manually: `pnpm run deploy:cf` (uses `wrangler pages deploy dist`)
+- Workers: `pnpm run deploy:workers` (`wrangler deploy`)
+- Pages: `pnpm run deploy:cf` (`wrangler pages deploy dist`)
+- Local previews: `pnpm run preview:workers` / `pnpm run preview:cf`
 
 ---
 
