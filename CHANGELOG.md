@@ -885,6 +885,8 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Clean stale README references; delete feat/discover-swipe branch
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update stale netlify.toml reference in review summary
 - Update changelog [skip ci]
