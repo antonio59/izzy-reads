@@ -117,6 +117,15 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Document real production Convex URL in env example
+
+.env.local points at the dev deployment (impressive-elk-411); the prod
+deployment is loyal-vulture-39. Calling it out explicitly so the Worker
+env var does not get set to the dev database again.
+
+Generated with [Devin](https://devin.ai)
+
+Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>
 - Fix Workers Builds failure: move _redirects out of public/
 
 Cloudflare Workers static assets parse _redirects from the asset dir and
@@ -851,6 +860,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
