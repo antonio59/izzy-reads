@@ -3,23 +3,9 @@
 All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
-### Features
-
-- **goodreads**: Import library from Goodreads CSV export (My Bookshelf → Import) and link books out to Goodreads pages
-- **nav**: Reach Profile and Admin from the desktop navigation
-- **hosting**: Migrate from Netlify to Cloudflare — `_redirects`/`_headers` for Pages, shared crawler OG-meta logic wired for both Pages Functions and Workers static assets, wrangler deploy scripts
-
 ### Bug Fixes
 
-- **security**: Require auth on all series functions; admin-gate migration, seed, suggestions, and reaction-stat APIs
-- **routing**: `/wishlist` now lands on the Wishlist tab
-- Fix setState-in-effect lint warning on dashboard onboarding
-
-### Cleanup
-
-- Remove unused react-is dependency, react.svg asset, readingChallenges table, and one-off seed/migration scripts
-
-- Fix changelog workflow rebase conflicts on concurrent main pushes (below is the previous generated history)
+- Fix changelog workflow rebase conflicts on concurrent main pushes.
 
 Keep the regenerated CHANGELOG during rebase retries so the bot does not fail when another docs commit lands first.
 
@@ -131,6 +117,75 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Fix Workers Builds deploy: drop pages_build_output_dir
+
+wrangler treats any config containing pages_build_output_dir as a Pages
+project and rejects `wrangler deploy`, which is what Cloudflare Workers
+Builds runs after the build. The Workers path (main + assets) doesn't
+need it, and manual Pages deploys still work via `wrangler pages deploy
+dist` since that command takes the output dir directly.
+
+Verified with `wrangler deploy --dry-run`.
+
+Generated with [Devin](https://devin.ai)
+
+Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>
+- Support Cloudflare Workers static-assets deploys alongside Pages
+
+The connected Cloudflare project is Workers, not Pages - a Pages-only
+config (pages_build_output_dir + functions/) doesn't deploy there.
+
+- Extract crawler OG-meta logic to src/edge/socialMeta.ts, shared by both
+  hosting modes
+- functions/_middleware.ts becomes a thin Pages Function wrapper
+- workers/index.ts Worker entrypoint runs before asset serving
+  (run_worker_first), serves meta to crawlers and dist/ with SPA fallback
+  to everyone else; assets binding renamed STATIC_ASSETS (ASSETS is
+  reserved in Pages projects)
+- wrangler.jsonc now configures both modes; add deploy:workers /
+  preview:workers scripts
+- Verified with wrangler dev: crawler gets OG meta, users get SPA,
+  /books fallback + security headers intact
+
+Generated with [Devin](https://devin.ai)
+
+Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>
+- Migrate hosting from Netlify to Cloudflare Pages
+
+- public/_redirects + public/_headers replace netlify.toml (SPA fallback,
+  security headers, cache rules)
+- functions/_middleware.ts replaces the Netlify edge function for
+  social-crawler OG/Twitter meta (verified locally with wrangler pages dev)
+- wrangler.jsonc + wrangler devDep; add deploy:cf and preview:cf scripts
+- Allow workerd build script in pnpm-workspace.yaml; update README/env docs
+
+Generated with [Devin](https://devin.ai)
+
+Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>
+- Add Goodreads import, harden Convex auth, and clean up dead code
+
+Security:
+- Require sign-in on every series query/mutation and derive userId from auth
+- Admin-gate migration API, seed/cleanup mutations, suggestions and
+  book-club admin lists, and reaction-stat queries
+- Split cron stats into internal twins so the weekly email keeps working
+
+Features:
+- Goodreads CSV import on My Bookshelf (shelves map to Finished/Reading/
+  Wishlist, dedupes against the library, ISBN covers via Open Library)
+- Goodreads outbound links on book details; wishlist bulkAdd mutation
+
+UX:
+- Profile/Admin links on desktop nav; /wishlist lands on the Wishlist tab
+- Fix setState-in-effect lint warning in dashboard onboarding
+
+Cleanup:
+- Drop unused react-is dep, react.svg, readingChallenges table, and nine
+  one-off seed/migration scripts; merge weekly dependency update PR
+
+Generated with [Devin](https://devin.ai)
+
+Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>
 - Merge pull request #197 from antonio59/dependency-updates
 
 chore: Weekly dependency updates
@@ -781,6 +836,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
