@@ -38,7 +38,6 @@
 ## Live Sites
 
 - **Production:** [izzysbookshelf.com](https://izzysbookshelf.com)
-- **Staging:** [izzysbookshelf.antoniosmith.xyz](https://izzysbookshelf.antoniosmith.xyz)
 
 ---
 
@@ -49,9 +48,9 @@
    - Build command (Pages): `pnpm install --frozen-lockfile && pnpm run build && cp pages/_redirects dist/`
    - Output directory: `dist` (Pages); Workers picks it up from `assets.directory`
    - Env vars: `VITE_CONVEX_URL` (production + preview), plus `PNPM_VERSION=11.1.1` and `NODE_VERSION=22` to match local.
-2. Deploy Convex with the frontend: `convex/schema.ts` drops the unused `readingChallenges` table and adds `wishlist.bulkAdd`; function signatures for `series.getByUser` / `series.create` changed.
-3. Re-point `izzysbookshelf.com` DNS to Pages (custom domain), then retire the Netlify site.
-4. No new env vars needed — Goodreads import runs entirely client-side; covers come from Open Library by ISBN.
+2. Convex deploys are automated: the `deploy-convex` CI job runs `convex deploy --yes` on pushes to `main`. Set the `CONVEX_DEPLOY_KEY` repo secret (Convex dashboard → Team Settings → Deploy Keys). This release's schema change — dropping `readingChallenges` — plus `wishlist.bulkAdd` and the new `series` signatures have already been deployed manually.
+3. `izzysbookshelf.com` is live on the Cloudflare Worker (custom domain attached; DNS was already on Cloudflare nameservers). Retire the Netlify site: remove the domain under Site configuration → Domain management, stop builds/unlink the repo, then delete the site under Danger zone.
+4. `VITE_CONVEX_URL` is committed in `.env.production` (public value) so builds don't depend on dashboard env vars. Goodreads import runs entirely client-side; covers come from Open Library by ISBN.
 
 ```bash
 pnpm install
@@ -106,7 +105,6 @@ Dashboard and editor surfaces moved off purple→pink leftovers onto the berry/t
 ## Live Sites
 
 - **Production:** [izzysbookshelf.com](https://izzysbookshelf.com)
-- **Staging:** [izzysbookshelf.antoniosmith.xyz](https://izzysbookshelf.antoniosmith.xyz)
 
 ---
 

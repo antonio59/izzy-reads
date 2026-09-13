@@ -232,15 +232,17 @@ Both share the crawler-meta logic in `src/edge/socialMeta.ts` and the security h
 - Build output directory: `dist`
 - Env vars: `VITE_CONVEX_URL` (production + preview), `PNPM_VERSION=11.1.1`, `NODE_VERSION=22`
 
-| Branch       | Environment | Auto-deploy |
-| ------------ | ----------- | ----------- |
-| `production` | Production  | ✅          |
-| `main`       | Preview     | ✅          |
-| PR branches  | Preview     | ✅          |
+| Branch      | Environment | Auto-deploy |
+| ----------- | ----------- | ----------- |
+| `main`      | Production  | ✅          |
+| PR branches | Preview     | ✅          |
+
+**Convex deploys:** CI runs `convex deploy --yes` on every push to `main` (`.github/workflows/ci.yml` → `deploy-convex` job). Requires a `CONVEX_DEPLOY_KEY` repo secret — generate one in the Convex dashboard → Team Settings → Deploy Keys, then add it in GitHub → Settings → Secrets → Actions.
 
 **To deploy manually:**
 
-- Workers: `pnpm run deploy:workers` (`wrangler deploy`)
+- Frontend (Workers): `pnpm run deploy:workers` (`wrangler deploy`)
+- Backend (Convex): `pnpm run deploy:convex`
 - Pages: `pnpm run deploy:cf` (`wrangler pages deploy dist`)
 - Local previews: `pnpm run preview:workers` / `pnpm run preview:cf`
 
@@ -282,7 +284,7 @@ pnpm run security-audit
 | `pnpm run dev:frontend`   | Frontend only             |
 | `pnpm run dev:backend`    | Convex only               |
 | `pnpm run build`          | Production build          |
-| `pnpm run build:staging`  | Staging build             |
+| `pnpm run deploy:convex`  | Deploy Convex to prod     |
 | `pnpm run lint`           | Run ESLint                |
 | `pnpm run test`           | Run tests                 |
 | `pnpm run security-audit` | Check vulnerabilities     |
