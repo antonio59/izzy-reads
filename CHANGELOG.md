@@ -117,6 +117,17 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Commit .env.production with public prod Convex URL
+
+The deployed bundle fell back to https://placeholder.convex.cloud and
+the Convex client fatals on it - the Workers Build ran before
+VITE_CONVEX_URL existed in dashboard settings (or it is not exposed to
+the build env). The deployment URL is public (shipped to every browser),
+so commit it and stop depending on dashboard env vars for the build.
+
+Generated with [Devin](https://devin.ai)
+
+Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>
 - Document real production Convex URL in env example
 
 .env.local points at the dev deployment (impressive-elk-411); the prod
@@ -860,6 +871,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
