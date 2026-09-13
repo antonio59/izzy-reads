@@ -117,6 +117,21 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Fix Workers Builds failure: move _redirects out of public/
+
+Cloudflare Workers static assets parse _redirects from the asset dir and
+reject `/* /index.html 200` as an infinite loop (Workers already strip
+index.html). SPA fallback in Workers mode comes from
+not_found_handling: single-page-application, so the file is only needed
+for Pages deploys - moved to pages/_redirects and copied into dist by
+the Pages build/deploy commands instead of shipping in public/.
+
+Also align wrangler name (izzy-reads) with the CI-expected Worker name
+to silence the mismatch warning.
+
+Generated with [Devin](https://devin.ai)
+
+Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>
 - Fix Workers Builds deploy: drop pages_build_output_dir
 
 wrangler treats any config containing pages_build_output_dir as a Pages
@@ -836,6 +851,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
