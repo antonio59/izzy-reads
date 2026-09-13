@@ -1,10 +1,12 @@
 import { mutation } from "./_generated/server";
 import { izzyBooks } from "../src/data/seedBooks";
+import { requireAdmin } from "./authGuards";
 
 // Clean up orphaned auth data (accounts without corresponding users)
 export const cleanupOrphanedAuth = mutation({
   args: {},
   handler: async (ctx) => {
+    await requireAdmin(ctx);
     // Get all accounts
     const accounts = await ctx.db.query("authAccounts").collect();
     let deletedCount = 0;
@@ -38,6 +40,8 @@ export const cleanupOrphanedAuth = mutation({
 export const seedDatabase = mutation({
   args: {},
   handler: async (ctx) => {
+    await requireAdmin(ctx);
+
     // Check if data is already seeded
     const existingBooks = await ctx.db.query("books").take(1);
     if (existingBooks.length > 0) {

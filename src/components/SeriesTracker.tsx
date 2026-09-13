@@ -82,7 +82,7 @@ const SeriesTracker: React.FC = () => {
   // Convex queries and mutations
   const seriesData = useQuery(
     api.series.getByUser,
-    convexUserId ? { userId: convexUserId } : "skip",
+    convexUserId ? {} : "skip",
   );
   const createSeries = useMutation(api.series.create);
   const deleteSeries = useMutation(api.series.remove);
@@ -130,7 +130,6 @@ const SeriesTracker: React.FC = () => {
     if (!name.trim() || !convexUserId) return;
 
     await createSeries({
-      userId: convexUserId,
       name: name.trim(),
     });
 

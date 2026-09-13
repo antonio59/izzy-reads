@@ -54,6 +54,37 @@ export const add = mutation({
   },
 });
 
+// Bulk add to wishlist - requires authentication (used by Goodreads import)
+export const bulkAdd = mutation({
+  args: {
+    items: v.array(
+      v.object({
+        title: v.string(),
+        author: v.string(),
+        coverUrl: v.optional(v.string()),
+        isbn: v.optional(v.string()),
+        genre: v.string(),
+        pageCount: v.optional(v.number()),
+        description: v.optional(v.string()),
+        ageRating: v.string(),
+        dateAdded: v.string(),
+      }),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+    const insertedIds = [];
+    for (const item of args.items) {
+      const id = await ctx.db.insert("wishlist", { userId, ...item });
+      insertedIds.push(id);
+    }
+    return insertedIds;
+  },
+});
+
 // Mark a wishlist item as bought (public - no auth required)
 export const markAsBought = mutation({
   args: {

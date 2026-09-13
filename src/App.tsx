@@ -271,7 +271,7 @@ function App() {
                     />
                     <Route
                       path="/wishlist"
-                      element={<Navigate to="/books" replace />}
+                      element={<Navigate to="/books?tab=wishlist" replace />}
                     />
                     <Route
                       path="/poems"

@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import {
   BookOpen,
@@ -16,6 +16,7 @@ import {
   BookMarked,
   CheckCircle2,
   Sparkles,
+  Upload,
 } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { useAuth } from "../contexts/AuthContext";
@@ -27,6 +28,7 @@ import { BookDetailModal } from "./BookDetailModal";
 import { EditBookModal } from "./EditBookModal";
 import { BookSuggestionsList } from "./BookSuggestionsList";
 import { FinishRitual } from "./FinishRitual";
+import { GoodreadsImportModal } from "./GoodreadsImportModal";
 import type { Book } from "../types";
 import type { Id } from "../../convex/_generated/dataModel";
 import { Button } from "./ui/Button";
@@ -49,8 +51,13 @@ const MyBooks: React.FC = () => {
     deleteBook,
   } = useBooks();
   const { convexUserId } = useAuth();
-  const [activeTab, setActiveTab] = useState<TabType>("read");
+  const [searchParams] = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState<TabType>(
+    tabParam === "reading" || tabParam === "wishlist" ? tabParam : "read",
+  );
   const [showSearch, setShowSearch] = useState(false);
+  const [showImport, setShowImport] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [finishedBook, setFinishedBook] = useState<Book | null>(null);
@@ -182,6 +189,15 @@ const MyBooks: React.FC = () => {
             </p>
           </div>
           <div className="flex items-center gap-3">
+            <Button
+              variant="secondary"
+              size="md"
+              icon={<Upload className="w-5 h-5" />}
+              iconPosition="left"
+              onClick={() => setShowImport(true)}
+            >
+              Import
+            </Button>
             <Button
               variant="primary"
               size="md"
@@ -553,6 +569,12 @@ const MyBooks: React.FC = () => {
           await updateBook(bookId, updates);
           setEditingBook(null);
         }}
+      />
+
+      {/* Goodreads Import Modal */}
+      <GoodreadsImportModal
+        isOpen={showImport}
+        onClose={() => setShowImport(false)}
       />
 
       <FinishRitual

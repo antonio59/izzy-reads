@@ -1,7 +1,7 @@
 import { internalAction } from "./_generated/server";
 import { v } from "convex/values";
 import { Resend } from "resend";
-import { api } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 
 declare const process: { env: Record<string, string | undefined> };
 
@@ -111,10 +111,10 @@ export const sendWeeklySummary = internalAction({
     const resend = new Resend(apiKey);
 
     // Gather stats
-    const bookStats = await ctx.runQuery(api.reactions.getAllBookReactionStats);
-    const reviewStats = await ctx.runQuery(api.reactions.getAllReviewReactionStats);
-    const poemStats = await ctx.runQuery(api.poemReactions.getAllPoemReactionStats);
-    const writingStats = await ctx.runQuery(api.writingReactions.getAllWritingReactionStats);
+    const bookStats = await ctx.runQuery(internal.reactions.getAllBookReactionStatsInternal);
+    const reviewStats = await ctx.runQuery(internal.reactions.getAllReviewReactionStatsInternal);
+    const poemStats = await ctx.runQuery(internal.poemReactions.getAllPoemReactionStatsInternal);
+    const writingStats = await ctx.runQuery(internal.writingReactions.getAllWritingReactionStats);
 
     const books = await ctx.runQuery(api.books.getAll);
     const readBooks = books.filter((b) => b.isRead);

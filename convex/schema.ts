@@ -108,19 +108,6 @@ export default defineSchema({
     .index("by_status", ["status"])
     .index("by_slug", ["slug"]),
 
-  readingChallenges: defineTable({
-    userId: v.id("users"),
-    title: v.string(),
-    description: v.optional(v.string()),
-    target: v.number(),
-    current: v.number(),
-    type: v.union(v.literal("books"), v.literal("pages"), v.literal("genres")),
-    startDate: v.string(),
-    endDate: v.optional(v.string()),
-    completed: v.boolean(),
-    badge: v.optional(v.string()),
-  }).index("by_user", ["userId"]),
-
   // Book discovery swipe decisions (Tinder-style recommendations)
   bookSwipes: defineTable({
     userId: v.id("users"),

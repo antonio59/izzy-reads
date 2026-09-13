@@ -5,6 +5,7 @@ import { query, mutation, action, internalMutation, internalAction } from "./_ge
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import { api } from "./_generated/api";
+import { requireAdmin, requireAdminAction } from "./authGuards";
 import type { Doc, Id } from "./_generated/dataModel";
 
 // Duplicate here to avoid import issues with Convex runtime
@@ -76,6 +77,7 @@ export const logMigrationResult = mutation({
     error: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    await requireAdmin(ctx);
     await ctx.db.insert("migrationLogs", {
       ...args,
       migratedAt: new Date().toISOString(),
@@ -91,6 +93,7 @@ export const getMigrationLogs = query({
     failedOnly: v.optional(v.boolean()),
   },
   handler: async (ctx, { failedOnly }) => {
+    await requireAdmin(ctx);
     if (failedOnly) {
       return ctx.db
         .query("migrationLogs")
@@ -122,6 +125,7 @@ export const migrateSingleBookCover = action({
     alreadyMigrated: v.optional(v.boolean()),
   }),
   handler: async (ctx, { bookId, externalUrl, bookTitle, maxRetries = 3 }) => {
+    await requireAdminAction(ctx);
     if (isConvexStorageUrl(externalUrl)) {
       return { success: true, newUrl: externalUrl, alreadyMigrated: true };
     }
@@ -230,6 +234,7 @@ export const migrateSingleWishlistCover = action({
     alreadyMigrated: v.optional(v.boolean()),
   }),
   handler: async (ctx, { wishlistId, externalUrl, bookTitle, maxRetries = 3 }) => {
+    await requireAdminAction(ctx);
     if (isConvexStorageUrl(externalUrl)) {
       return { success: true, newUrl: externalUrl, alreadyMigrated: true };
     }
@@ -322,6 +327,7 @@ export const migrateSingleWishlistCover = action({
 export const getMigrationStatus = query({
   args: {},
   handler: async (ctx) => {
+    await requireAdmin(ctx);
     const books = await ctx.db.query("books").collect();
     const wishlist = await ctx.db.query("wishlist").collect();
 
@@ -413,6 +419,7 @@ export const bulkMigrateBookCovers = action({
     ),
   }),
   handler: async (ctx, { batchSize = 10, offset = 0, dryRun = false, maxRetries = 3 }) => {
+    await requireAdminAction(ctx);
     const books = (await ctx.runQuery(api.books.getAll)) as Doc<"books">[];
 
     const booksToMigrate = books.filter(
@@ -534,6 +541,7 @@ export const bulkMigrateWishlistCovers = action({
     ),
   }),
   handler: async (ctx, { batchSize = 10, offset = 0, dryRun = false, maxRetries = 3 }) => {
+    await requireAdminAction(ctx);
     const wishlist = (await ctx.runQuery(api.wishlist.getAll)) as Doc<"wishlist">[];
 
     const itemsToMigrate = wishlist.filter(

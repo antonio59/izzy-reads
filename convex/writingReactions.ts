@@ -1,4 +1,4 @@
-import { query, mutation } from "./_generated/server";
+import { query, mutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
 
 const writingReactionTypes = v.union(
@@ -91,8 +91,8 @@ export const addReaction = mutation({
   },
 });
 
-// Get total reaction stats for all writing (for summary emails)
-export const getAllWritingReactionStats = query({
+// Get total reaction stats for all writing (for summary emails) - internal only
+export const getAllWritingReactionStats = internalQuery({
   args: {},
   handler: async (ctx) => {
     const allReactions = await ctx.db.query("writingReactions").collect();

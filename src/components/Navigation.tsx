@@ -127,7 +127,27 @@ const Navigation: React.FC = () => {
                 title="View your public bookshelf"
               >
                 <Globe className="h-4 w-4" />
-                <span className="hidden lg:inline">My Bookshelf</span>
+                <span className="hidden lg:inline">Public Site</span>
+              </Link>
+
+              {/* Profile */}
+              <Link
+                to="/profile"
+                className="p-2.5 rounded-lg text-stone-400 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                title="Edit profile"
+                aria-label="Edit profile"
+              >
+                <User className="h-5 w-5" />
+              </Link>
+
+              {/* Admin */}
+              <Link
+                to="/admin"
+                className="p-2.5 rounded-lg text-stone-400 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                title="Admin"
+                aria-label="Admin"
+              >
+                <Shield className="h-5 w-5" />
               </Link>
 
               {/* Logout */}

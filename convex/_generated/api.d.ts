@@ -10,6 +10,7 @@
 
 import type * as aboutProfile from "../aboutProfile.js";
 import type * as auth from "../auth.js";
+import type * as authGuards from "../authGuards.js";
 import type * as blogPosts from "../blogPosts.js";
 import type * as bookClubs from "../bookClubs.js";
 import type * as bookSuggestions from "../bookSuggestions.js";
@@ -38,6 +39,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   aboutProfile: typeof aboutProfile;
   auth: typeof auth;
+  authGuards: typeof authGuards;
   blogPosts: typeof blogPosts;
   bookClubs: typeof bookClubs;
   bookSuggestions: typeof bookSuggestions;

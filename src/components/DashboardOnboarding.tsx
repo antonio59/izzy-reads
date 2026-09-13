@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -96,14 +96,8 @@ function markOnboardingDone() {
 
 export function DashboardOnboarding() {
   const { prefersReducedMotion } = useMotionPreference();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(() => !hasCompletedOnboarding());
   const [stepIndex, setStepIndex] = useState(0);
-
-  useEffect(() => {
-    if (!hasCompletedOnboarding()) {
-      setOpen(true);
-    }
-  }, []);
 
   const close = () => {
     markOnboardingDone();

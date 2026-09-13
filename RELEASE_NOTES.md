@@ -1,3 +1,63 @@
+# Release Notes - v1.4.0
+
+**Release Date:** September 13, 2026
+
+## What's New
+
+### Goodreads integration
+
+- **Import from Goodreads**: new Import button on My Bookshelf accepts the Goodreads "Export Library" CSV. Finished, currently-reading, and to-read shelves are mapped to Finished / Reading / Wishlist, ratings and reviews come along, and books already on the shelf are skipped automatically.
+- **Goodreads links**: every book detail now has a "Goodreads" button that opens the book's page (ISBN search when available).
+
+### Security hardening
+
+- All `series` mutations and the series list query now require sign-in (previously callable anonymously).
+- Admin-gated the cover migration API (`migration.*`), seed/cleanup mutations (`seed.*`), suggestions lists, book club admin list, and reaction-stat queries.
+- Weekly summary email now uses internal-only stats queries.
+
+### UX fixes
+
+- Desktop nav now reaches **Profile** and **Admin** (previously mobile-menu only).
+- `/wishlist` redirects to the Wishlist tab instead of the default Finished tab.
+- Public-site link relabeled to "Public Site" (no longer duplicates "My Bookshelf").
+
+### Cleanup
+
+- Removed unused `react-is` dependency, dead `react.svg` asset, the unused `readingChallenges` table, and nine one-off seed/migration scripts superseded by `convex/seed.ts` and the Goodreads importer.
+
+---
+
+## Live Sites
+
+- **Production:** [izzysbookshelf.com](https://izzysbookshelf.com)
+- **Staging:** [izzysbookshelf.antoniosmith.xyz](https://izzysbookshelf.antoniosmith.xyz)
+
+---
+
+## Deploy notes
+
+1. Deploy Convex with the frontend: `convex/schema.ts` drops the unused `readingChallenges` table and adds `wishlist.bulkAdd`; function signatures for `series.getByUser` / `series.create` changed.
+2. No new env vars needed — Goodreads import runs entirely client-side; covers come from Open Library by ISBN.
+
+```bash
+pnpm install
+pnpm run dev
+```
+
+---
+
+## Missing / worth considering next
+
+- **Currently-reading progress** (page X of Y, % complete) — the Reading tab has no progress tracking.
+- **Reading streaks on the dashboard** — streak is computed but not surfaced as a daily habit loop.
+- **Reading challenges/goals UI** — goals exist in profile settings but there's no dedicated challenge tracker.
+- **Export/backup** — Goodreads import exists; a matching "export my library" CSV/JSON would complete the loop.
+- **Undo for deletes** — deletes use `confirm()`; a toast-with-undo would be friendlier.
+- **Search on the public bookshelf** — visitors can't search/filter the public shelf.
+- **Book club discussion** — comments were removed; if book club gets traction a moderated comment thread may be worth revisiting.
+
+---
+
 # Release Notes - v1.3.0
 
 **Release Date:** August 27, 2026

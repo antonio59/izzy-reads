@@ -23,6 +23,7 @@ interface BookContextType {
   updateBook: (id: string, updates: Partial<Book>) => Promise<void>;
   deleteBook: (id: string) => Promise<void>;
   addToWishlist: (book: Omit<Book, "id">) => Promise<void>;
+  bulkAddToWishlist: (items: Omit<Book, "id">[]) => Promise<void>;
   removeFromWishlist: (id: string) => Promise<void>;
   moveToBookshelf: (id: string) => Promise<void>;
   moveToWishlist: (id: string) => Promise<void>;
@@ -194,6 +195,7 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
   const removeBookMutation = useMutation(api.books.remove);
 
   const addWishlistMutation = useMutation(api.wishlist.add);
+  const bulkAddWishlistMutation = useMutation(api.wishlist.bulkAdd);
   const removeWishlistMutation = useMutation(api.wishlist.remove);
 
   const addPoemMutation = useMutation(api.poems.add);
@@ -361,6 +363,23 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
     });
   };
 
+  const bulkAddToWishlist = async (items: Omit<Book, "id">[]) => {
+    if (!convexUserId) throw new Error("Not authenticated");
+    await bulkAddWishlistMutation({
+      items: items.map((book) => ({
+        title: book.title,
+        author: book.author,
+        coverUrl: book.coverUrl,
+        isbn: book.isbn,
+        genre: book.genre,
+        pageCount: book.pageCount,
+        description: book.description,
+        ageRating: book.ageRating || "8+",
+        dateAdded: book.dateAdded || new Date().toISOString().split("T")[0],
+      })),
+    });
+  };
+
   const removeFromWishlist = async (id: string) => {
     await removeWishlistMutation({ id: id as Id<"wishlist"> });
   };
@@ -467,6 +486,7 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
     updateBook,
     deleteBook,
     addToWishlist,
+    bulkAddToWishlist,
     removeFromWishlist,
     moveToBookshelf,
     moveToWishlist,

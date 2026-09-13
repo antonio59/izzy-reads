@@ -1,28 +1,30 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { requireUser } from "./authGuards";
 
-// Get all series for a user
+// Get all series for the signed-in user
 export const getByUser = query({
-  args: { userId: v.id("users") },
-  handler: async (ctx, args) => {
+  args: {},
+  handler: async (ctx) => {
+    const userId = await requireUser(ctx);
     return await ctx.db
       .query("bookSeries")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .withIndex("by_user", (q) => q.eq("userId", userId))
       .collect();
   },
 });
 
-// Create a new series
+// Create a new series for the signed-in user
 export const create = mutation({
   args: {
-    userId: v.id("users"),
     name: v.string(),
     description: v.optional(v.string()),
     bookIds: v.optional(v.array(v.id("books"))),
   },
   handler: async (ctx, args) => {
+    const userId = await requireUser(ctx);
     return await ctx.db.insert("bookSeries", {
-      userId: args.userId,
+      userId,
       name: args.name,
       description: args.description,
       bookIds: args.bookIds || [],
@@ -42,6 +44,7 @@ export const update = mutation({
     completed: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    await requireUser(ctx);
     const { id, ...updates } = args;
     const filteredUpdates = Object.fromEntries(
       Object.entries(updates).filter(([, value]) => value !== undefined),
@@ -57,6 +60,7 @@ export const addBook = mutation({
     bookId: v.id("books"),
   },
   handler: async (ctx, args) => {
+    await requireUser(ctx);
     const series = await ctx.db.get(args.seriesId);
     if (!series) throw new Error("Series not found");
 
@@ -78,6 +82,7 @@ export const removeBook = mutation({
     bookId: v.id("books"),
   },
   handler: async (ctx, args) => {
+    await requireUser(ctx);
     const series = await ctx.db.get(args.seriesId);
     if (!series) throw new Error("Series not found");
 
@@ -94,6 +99,7 @@ export const reorderBooks = mutation({
     bookIds: v.array(v.id("books")),
   },
   handler: async (ctx, args) => {
+    await requireUser(ctx);
     await ctx.db.patch(args.seriesId, {
       bookIds: args.bookIds,
     });
@@ -104,6 +110,7 @@ export const reorderBooks = mutation({
 export const remove = mutation({
   args: { id: v.id("bookSeries") },
   handler: async (ctx, args) => {
+    await requireUser(ctx);
     await ctx.db.delete(args.id);
   },
 });
@@ -112,6 +119,7 @@ export const remove = mutation({
 export const syncCompletionForBook = mutation({
   args: { bookId: v.id("books") },
   handler: async (ctx, args) => {
+    await requireUser(ctx);
     const book = await ctx.db.get(args.bookId);
     if (!book) return;
 

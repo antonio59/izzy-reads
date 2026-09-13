@@ -1,5 +1,6 @@
-import { query, mutation } from "./_generated/server";
+import { query, mutation, internalQuery, type QueryCtx } from "./_generated/server";
 import { v } from "convex/values";
+import { auth } from "./auth";
 
 const poemReactionTypes = v.union(
   v.literal("love"),
@@ -91,11 +92,24 @@ export const addReaction = mutation({
   },
 });
 
-// Get total reaction stats for all poems (for summary emails)
+// Get total reaction stats for all poems (for summary emails) - requires auth
 export const getAllPoemReactionStats = query({
   args: {},
   handler: async (ctx) => {
-    const allReactions = await ctx.db.query("poemReactions").collect();
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return null;
+    return await computePoemReactionStats(ctx);
+  },
+});
+
+// Internal twin for scheduled emails (no auth context available)
+export const getAllPoemReactionStatsInternal = internalQuery({
+  args: {},
+  handler: async (ctx) => await computePoemReactionStats(ctx),
+});
+
+async function computePoemReactionStats(ctx: QueryCtx) {
+  const allReactions = await ctx.db.query("poemReactions").collect();
 
     const poemReactions: Record<string, number> = {};
     let totalReactions = 0;
@@ -115,5 +129,4 @@ export const getAllPoemReactionStats = query({
       topPoems,
       reactionsByPoem: poemReactions,
     };
-  },
-});
+}

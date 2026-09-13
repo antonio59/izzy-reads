@@ -3,9 +3,22 @@
 All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
+### Features
+
+- **goodreads**: Import library from Goodreads CSV export (My Bookshelf → Import) and link books out to Goodreads pages
+- **nav**: Reach Profile and Admin from the desktop navigation
+
 ### Bug Fixes
 
-- Fix changelog workflow rebase conflicts on concurrent main pushes.
+- **security**: Require auth on all series functions; admin-gate migration, seed, suggestions, and reaction-stat APIs
+- **routing**: `/wishlist` now lands on the Wishlist tab
+- Fix setState-in-effect lint warning on dashboard onboarding
+
+### Cleanup
+
+- Remove unused react-is dependency, react.svg asset, readingChallenges table, and one-off seed/migration scripts
+
+- Fix changelog workflow rebase conflicts on concurrent main pushes (below is the previous generated history)
 
 Keep the regenerated CHANGELOG during rebase retries so the bot does not fail when another docs commit lands first.
 

@@ -12,10 +12,12 @@ import {
   Share2,
   Edit3,
   Trash2,
+  ExternalLink,
 } from "lucide-react";
 import type { Book } from "../types";
 import { Button } from "./ui/Button";
 import { upgradeCoverUrl } from "../lib/coverUrl";
+import { goodreadsSearchUrl } from "../lib/goodreads";
 
 // Generate gradient from title
 function getBookGradient(title: string): string {
@@ -330,6 +332,16 @@ export function BookDetailModal({
                 >
                   Share
                 </Button>
+
+                <a
+                  href={goodreadsSearchUrl(book)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-display font-medium text-base bg-[#f4f1ea] text-[#372213] border border-[#e3dccb] hover:bg-[#ece7d9] transition-colors"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Goodreads
+                </a>
 
                 {showActions && onEdit && (
                   <Button

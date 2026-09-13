@@ -1,5 +1,6 @@
-import { query, mutation } from "./_generated/server";
+import { query, mutation, internalQuery, type QueryCtx } from "./_generated/server";
 import { v } from "convex/values";
+import { auth } from "./auth";
 
 // Reaction types
 const reactionTypes = v.union(
@@ -137,65 +138,89 @@ export const addReaction = mutation({
   },
 });
 
-// Get reaction stats for all books (for Dashboard)
+// Get reaction stats for all books (for Dashboard) - requires auth
 export const getAllBookReactionStats = query({
   args: {},
   handler: async (ctx) => {
-    // Get all book reactions (not review reactions)
-    const allReactions = await ctx.db
-      .query("bookReactions")
-      .filter((q) => q.eq(q.field("isReviewReaction"), false))
-      .collect();
-
-    // Aggregate by book
-    const bookReactions: Record<string, number> = {};
-    let totalReactions = 0;
-
-    for (const r of allReactions) {
-      const bookId = r.bookId as string;
-      bookReactions[bookId] = (bookReactions[bookId] || 0) + 1;
-      totalReactions++;
-    }
-
-    // Convert to array sorted by count
-    const topBooks = Object.entries(bookReactions)
-      .map(([bookId, count]) => ({ bookId, count }))
-      .sort((a, b) => b.count - a.count);
-
-    return {
-      totalReactions,
-      topBooks,
-      reactionsByBook: bookReactions,
-    };
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return null;
+    return await computeBookReactionStats(ctx);
   },
 });
 
-// Get reaction stats for all reviews (for summary emails)
+// Internal twin for scheduled emails (no auth context available)
+export const getAllBookReactionStatsInternal = internalQuery({
+  args: {},
+  handler: async (ctx) => await computeBookReactionStats(ctx),
+});
+
+// Get reaction stats for all reviews (for summary emails) - requires auth
 export const getAllReviewReactionStats = query({
   args: {},
   handler: async (ctx) => {
-    const allReactions = await ctx.db
-      .query("bookReactions")
-      .filter((q) => q.eq(q.field("isReviewReaction"), true))
-      .collect();
-
-    const reviewReactions: Record<string, number> = {};
-    let totalReactions = 0;
-
-    for (const r of allReactions) {
-      const bookId = r.bookId as string;
-      reviewReactions[bookId] = (reviewReactions[bookId] || 0) + 1;
-      totalReactions++;
-    }
-
-    const topReviews = Object.entries(reviewReactions)
-      .map(([bookId, count]) => ({ bookId, count }))
-      .sort((a, b) => b.count - a.count);
-
-    return {
-      totalReactions,
-      topReviews,
-      reactionsByReview: reviewReactions,
-    };
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return null;
+    return await computeReviewReactionStats(ctx);
   },
 });
+
+// Internal twin for scheduled emails (no auth context available)
+export const getAllReviewReactionStatsInternal = internalQuery({
+  args: {},
+  handler: async (ctx) => await computeReviewReactionStats(ctx),
+});
+
+async function computeBookReactionStats(ctx: QueryCtx) {
+  // Get all book reactions (not review reactions)
+  const allReactions = await ctx.db
+    .query("bookReactions")
+    .filter((q) => q.eq(q.field("isReviewReaction"), false))
+    .collect();
+
+  // Aggregate by book
+  const bookReactions: Record<string, number> = {};
+  let totalReactions = 0;
+
+  for (const r of allReactions) {
+    const bookId = r.bookId as string;
+    bookReactions[bookId] = (bookReactions[bookId] || 0) + 1;
+    totalReactions++;
+  }
+
+  // Convert to array sorted by count
+  const topBooks = Object.entries(bookReactions)
+    .map(([bookId, count]) => ({ bookId, count }))
+    .sort((a, b) => b.count - a.count);
+
+  return {
+    totalReactions,
+    topBooks,
+    reactionsByBook: bookReactions,
+  };
+}
+
+async function computeReviewReactionStats(ctx: QueryCtx) {
+  const allReactions = await ctx.db
+    .query("bookReactions")
+    .filter((q) => q.eq(q.field("isReviewReaction"), true))
+    .collect();
+
+  const reviewReactions: Record<string, number> = {};
+  let totalReactions = 0;
+
+  for (const r of allReactions) {
+    const bookId = r.bookId as string;
+    reviewReactions[bookId] = (reviewReactions[bookId] || 0) + 1;
+    totalReactions++;
+  }
+
+  const topReviews = Object.entries(reviewReactions)
+    .map(([bookId, count]) => ({ bookId, count }))
+    .sort((a, b) => b.count - a.count);
+
+  return {
+    totalReactions,
+    topReviews,
+    reactionsByReview: reviewReactions,
+  };
+}

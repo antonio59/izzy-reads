@@ -16,20 +16,22 @@ async function requireAdmin(ctx: MutationCtx, userId: Id<"users">) {
   }
 }
 
-// Get all suggestions (for admin review) - requires admin auth
+// Get all suggestions (for admin review) - requires auth
 export const getAll = query({
   args: {},
   handler: async (ctx) => {
-    // Note: Queries can't throw for auth in Convex, so we return all for now
-    // The UI should restrict access to admin users
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return null;
     return await ctx.db.query("bookSuggestions").order("desc").collect();
   },
 });
 
-// Get pending suggestions count (for admin badge)
+// Get pending suggestions count (for admin badge) - requires auth
 export const getPendingCount = query({
   args: {},
   handler: async (ctx) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return 0;
     const pending = await ctx.db
       .query("bookSuggestions")
       .withIndex("by_status", (q) => q.eq("status", "pending"))

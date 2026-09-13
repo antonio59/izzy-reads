@@ -14,10 +14,12 @@ export const getActive = query({
   },
 });
 
-// Get all book clubs for admin
+// Get all book clubs for admin - requires auth
 export const getAll = query({
   args: {},
   handler: async (ctx) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) return null;
     return await ctx.db.query("bookClubs").order("desc").collect();
   },
 });
