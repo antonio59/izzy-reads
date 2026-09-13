@@ -23,7 +23,7 @@
 
 ### Hosting: Netlify → Cloudflare
 
-- `netlify.toml` replaced by `public/_redirects` (SPA fallback) and `public/_headers` (security + cache headers).
+- `netlify.toml` replaced by `pages/_redirects` (SPA fallback, Pages only — Workers uses `not_found_handling: single-page-application`) and `public/_headers` (security + cache headers).
 - Social-crawler OG meta moved from a Netlify edge function into shared logic (`src/edge/socialMeta.ts`), wired for **both** hosting modes:
   - **Workers static assets** (new default): `workers/index.ts` runs before asset serving (`run_worker_first`), returns meta HTML to crawlers, serves the SPA otherwise.
   - **Pages**: `functions/_middleware.ts` does the same as a Pages Function.
@@ -45,7 +45,8 @@
 ## Deploy notes
 
 1. **Create the Cloudflare project** (dashboard → Workers & Pages → Create → Connect to Git). Either mode works:
-   - Build command: `pnpm install --frozen-lockfile && pnpm run build`
+   - Build command (Workers): `pnpm install --frozen-lockfile && pnpm run build`
+   - Build command (Pages): `pnpm install --frozen-lockfile && pnpm run build && cp pages/_redirects dist/`
    - Output directory: `dist` (Pages); Workers picks it up from `assets.directory`
    - Env vars: `VITE_CONVEX_URL` (production + preview), plus `PNPM_VERSION=11.1.1` and `NODE_VERSION=22` to match local.
 2. Deploy Convex with the frontend: `convex/schema.ts` drops the unused `readingChallenges` table and adds `wishlist.bulkAdd`; function signatures for `series.getByUser` / `series.create` changed.

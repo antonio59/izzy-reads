@@ -123,7 +123,8 @@ izzy-reads/
 ├── wrangler.jsonc            # Cloudflare config (Pages + Workers static assets)
 ├── functions/_middleware.ts  # Pages Function: social-crawler OG/Twitter meta
 ├── workers/index.ts          # Workers entrypoint: crawler meta + static assets
-└── public/                   # Static assets (incl. _redirects/_headers)
+├── pages/_redirects          # Pages-only SPA fallback (copied to dist by Pages build)
+└── public/                   # Static assets (incl. _headers)
 ```
 
 ---
@@ -220,13 +221,14 @@ pnpm run build
 The repo supports **both** Cloudflare hosting modes — pick whichever you connected in the dashboard:
 
 - **Workers static assets** (recommended / new default): `workers/index.ts` runs before asset serving — it returns OG/Twitter meta HTML to social crawlers and passes everything else through to `dist/` with SPA fallback. Configured via `main` + `assets` in `wrangler.jsonc`.
-- **Pages**: `functions/_middleware.ts` does the same job as a Pages Function; `public/_redirects` provides the SPA fallback. Configured via `pages_build_output_dir` in `wrangler.jsonc`.
+- **Pages**: `functions/_middleware.ts` does the same job as a Pages Function; `pages/_redirects` provides the SPA fallback (copied into `dist` by the Pages build — see build command below).
 
 Both share the crawler-meta logic in `src/edge/socialMeta.ts` and the security headers in `public/_headers`.
 
-**Project settings (Workers or Pages):**
+**Project settings:**
 
-- Build command: `pnpm install --frozen-lockfile && pnpm run build`
+- Build command (Workers Builds): `pnpm install --frozen-lockfile && pnpm run build`
+- Build command (Pages): `pnpm install --frozen-lockfile && pnpm run build && cp pages/_redirects dist/`
 - Build output directory: `dist`
 - Env vars: `VITE_CONVEX_URL` (production + preview), `PNPM_VERSION=11.1.1`, `NODE_VERSION=22`
 

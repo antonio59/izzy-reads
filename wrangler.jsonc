@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "izzys-bookshelf",
+  "name": "izzy-reads",
   "compatibility_date": "2026-09-01",
   // Cloudflare Workers (static assets): Worker runs first so it can
   // intercept social crawlers, then falls through to dist/ with SPA handling.
