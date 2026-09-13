@@ -43,7 +43,7 @@ You mentioned earlier you can't access Giphy's developer portal. The app handles
 ### What's Good
 - ✅ No hardcoded secrets in source
 - ✅ Proper `.env` examples with placeholders
-- ✅ Security headers in `netlify.toml` (CSP, XSS protection, etc.)
+- ✅ Security headers in `public/_headers` (CSP, XSS protection, etc.) — served by Cloudflare
 - ✅ Convex Auth for secure authentication
 - ✅ No sensitive data logged to console
 
