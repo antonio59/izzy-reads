@@ -4,20 +4,20 @@ A beautiful, magical reading tracker and public portfolio for young book lovers.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-19-61dafb.svg)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178c6.svg)
-![Tailwind](https://img.shields.io/badge/Tailwind-3.4-38bdf8.svg)
-![Convex](https://img.shields.io/badge/Convex-1.31-ff6b6b.svg)
-![Cloudflare Pages](https://img.shields.io/badge/Cloudflare_Pages-deployed-F38020.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178c6.svg)
+![Tailwind](https://img.shields.io/badge/Tailwind-4.3-38bdf8.svg)
+![Convex](https://img.shields.io/badge/Convex-1.45-ff6b6b.svg)
+![Cloudflare Workers](https://img.shields.io/badge/Cloudflare_Workers-deployed-F38020.svg)
 
 ---
 
 ## 🌐 Deployment
 
-This is a private application deployed via Cloudflare Pages.
+This is a private application deployed via Cloudflare Workers.
 
-| Environment    | Branch       |
-| -------------- | ------------ |
-| **Production** | `production` |
+| Environment    | Branch |
+| -------------- | ------ |
+| **Production** | `main` |
 
 ---
 
@@ -43,6 +43,12 @@ This is a private application deployed via Cloudflare Pages.
 - "Izzy's Picks" - Automatically showcases 4+ star books
 - Beautiful cover displays with quote snippets
 
+### 📥 Goodreads Import
+
+- Import an existing library from a Goodreads CSV export (My Bookshelf → Import)
+- Shelves map to Finished / Reading / Wishlist; ratings, reviews, and ISBNs come along
+- "View on Goodreads" links on every book
+
 ### 🎨 Magical Design
 
 - Playful Fredoka font for a kid-friendly aesthetic
@@ -65,7 +71,7 @@ This is a private application deployed via Cloudflare Pages.
 
 ### Prerequisites
 
-- Node.js 18+ or pnpm
+- Node.js 22+ and pnpm
 - Convex account (free at [convex.dev](https://convex.dev))
 
 ### Installation
@@ -133,13 +139,13 @@ izzy-reads/
 
 | Category       | Technology                              |
 | -------------- | --------------------------------------- |
-| **Frontend**   | React 19, TypeScript 5.9, Vite 6        |
-| **Styling**    | Tailwind CSS 3.4, Custom animations     |
+| **Frontend**   | React 19, TypeScript 6.0, Vite 8        |
+| **Styling**    | Tailwind CSS 4.3, Custom animations     |
 | **Backend**    | Convex (real-time database & functions) |
 | **Book Data**  | Open Library API (free cover images)    |
 | **Icons**      | Lucide React                            |
 | **Routing**    | React Router 7                          |
-| **Deployment** | Cloudflare Pages                        |
+| **Deployment** | Cloudflare Workers (static assets)      |
 
 ---
 
@@ -186,7 +192,7 @@ VITE_CONVEX_URL=your-convex-deployment-url
 | Environment | Convex URL                              |
 | ----------- | --------------------------------------- |
 | Production  | `https://loyal-vulture-39.convex.cloud` |
-| Staging     | `https://aware-gecko-889.convex.cloud`  |
+| Development | set automatically by `npx convex dev`   |
 
 ### Customization
 
@@ -230,7 +236,7 @@ Both share the crawler-meta logic in `src/edge/socialMeta.ts` and the security h
 - Build command (Workers Builds): `pnpm install --frozen-lockfile && pnpm run build`
 - Build command (Pages): `pnpm install --frozen-lockfile && pnpm run build && cp pages/_redirects dist/`
 - Build output directory: `dist`
-- Env vars: `VITE_CONVEX_URL` (production + preview), `PNPM_VERSION=11.1.1`, `NODE_VERSION=22`
+- Env vars: `PNPM_VERSION=11.1.1`, `NODE_VERSION=22`. `VITE_CONVEX_URL` is committed in `.env.production` — only override it in the dashboard if you intentionally want a different Convex deployment.
 
 | Branch      | Environment | Auto-deploy |
 | ----------- | ----------- | ----------- |
@@ -264,7 +270,7 @@ Both share the crawler-meta logic in `src/edge/socialMeta.ts` and the security h
 - ✅ Input validation on all forms
 - ✅ Protected routes with authentication
 - ✅ Regular dependency updates
-- ✅ Security headers via Cloudflare Pages `_headers`
+- ✅ Security headers via `public/_headers` (served by Cloudflare)
 
 ### Run Security Audit
 
@@ -346,7 +352,7 @@ Built with amazing open-source tools:
 - [Convex](https://convex.dev/) - Backend
 - [Open Library](https://openlibrary.org/) - Book Data
 - [Lucide](https://lucide.dev/) - Icons
-- [Cloudflare Pages](https://pages.cloudflare.com/) - Hosting
+- [Cloudflare Workers](https://workers.cloudflare.com/) - Hosting
 
 ---
 
