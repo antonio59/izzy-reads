@@ -117,6 +117,20 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Automate Convex deploys in CI; drop staging remnants
+
+- ci.yml: new deploy-convex job runs `convex deploy --yes` on pushes to
+  main, gated behind the test job; uses CONVEX_DEPLOY_KEY repo secret
+- Remove build:staging / deploy:convex:staging scripts (staging env is
+  retired); add deploy:convex for manual prod deploys
+- README: main is the production branch now (no production branch
+  exists), document CONVEX_DEPLOY_KEY setup and manual deploy commands
+- RELEASE_NOTES: drop dead staging URL, mark domain migration + Convex
+  deploy as done, add Netlify retirement steps
+
+Generated with [Devin](https://devin.ai)
+
+Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>
 - Commit .env.production with public prod Convex URL
 
 The deployed bundle fell back to https://placeholder.convex.cloud and
@@ -871,6 +885,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update stale netlify.toml reference in review summary
 - Update changelog [skip ci]
 - Update changelog [skip ci]
