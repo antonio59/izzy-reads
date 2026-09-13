@@ -1,20 +1,27 @@
-import type { Context } from "@netlify/edge-functions";
+// Cloudflare Pages Function — social crawler meta tags.
+// Intercepts requests from link-preview bots (WhatsApp, iMessage, Slack, etc.)
+// and returns OG/Twitter meta HTML; everyone else gets the normal SPA.
+
+interface PagesEventContext {
+  request: Request;
+  next: () => Promise<Response>;
+}
 
 // List of known social crawler user agents
 const CRAWLER_AGENTS = [
   "facebookexternalhit",
-  "Facebot",
-  "Twitterbot",
+  "facebot",
+  "twitterbot",
   "whatsapp",
-  "LinkedInBot",
-  "Slackbot",
-  "Discordbot",
-  "TelegramBot",
-  "SkypeUriPreview",
-  "Pinterestbot",
+  "linkedinbot",
+  "slackbot",
+  "discordbot",
+  "telegrambot",
+  "skypeuripreview",
+  "pinterestbot",
   "redditbot",
-  "Applebot",
-  "Googlebot",
+  "applebot",
+  "googlebot",
   "bingbot",
 ];
 
@@ -27,9 +34,7 @@ const OG_IMAGE_ALT =
 
 function isCrawler(request: Request): boolean {
   const userAgent = request.headers.get("user-agent")?.toLowerCase() || "";
-  return CRAWLER_AGENTS.some((agent) =>
-    userAgent.includes(agent.toLowerCase()),
-  );
+  return CRAWLER_AGENTS.some((agent) => userAgent.includes(agent));
 }
 
 function slugToTitle(slug: string): string {
@@ -100,9 +105,11 @@ function htmlResponse(html: string): Response {
   });
 }
 
-export default async (request: Request, _context: Context) => {
+export async function onRequest(context: PagesEventContext): Promise<Response> {
+  const { request, next } = context;
+
   if (!isCrawler(request)) {
-    return;
+    return next();
   }
 
   const url = new URL(request.url);
@@ -181,5 +188,6 @@ export default async (request: Request, _context: Context) => {
     );
   }
 
-  return;
-};
+  // Crawler on a non-meta path — serve the app as normal
+  return next();
+}

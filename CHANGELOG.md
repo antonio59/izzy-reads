@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 
 - **goodreads**: Import library from Goodreads CSV export (My Bookshelf → Import) and link books out to Goodreads pages
 - **nav**: Reach Profile and Admin from the desktop navigation
+- **hosting**: Migrate from Netlify to Cloudflare Pages (`_redirects`, `_headers`, Pages Function for crawler OG meta, wrangler deploy scripts)
 
 ### Bug Fixes
 

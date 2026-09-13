@@ -66,6 +66,12 @@ coverage/
 
 # Local Netlify folder
 .netlify
+
+# Cloudflare / Wrangler
+.wrangler/
+.dev.vars
+.dev.vars.*
+
 package-lock.json
 
 # Fallow cache

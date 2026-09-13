@@ -7,13 +7,13 @@ A beautiful, magical reading tracker and public portfolio for young book lovers.
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178c6.svg)
 ![Tailwind](https://img.shields.io/badge/Tailwind-3.4-38bdf8.svg)
 ![Convex](https://img.shields.io/badge/Convex-1.31-ff6b6b.svg)
-![Netlify](https://img.shields.io/badge/Netlify-deployed-00C7B7.svg)
+![Cloudflare Pages](https://img.shields.io/badge/Cloudflare_Pages-deployed-F38020.svg)
 
 ---
 
 ## 🌐 Deployment
 
-This is a private application deployed via Netlify.
+This is a private application deployed via Cloudflare Pages.
 
 | Environment    | Branch       |
 | -------------- | ------------ |
@@ -120,7 +120,7 @@ izzy-reads/
 ├── .github/
 │   ├── workflows/            # CI/CD automation
 │   └── SECURITY.md           # Security policy
-├── netlify.toml              # Netlify deployment config
+├── wrangler.jsonc            # Cloudflare Pages config
 └── public/                   # Static assets
 ```
 
@@ -136,7 +136,7 @@ izzy-reads/
 | **Book Data**  | Open Library API (free cover images)    |
 | **Icons**      | Lucide React                            |
 | **Routing**    | React Router 7                          |
-| **Deployment** | Netlify                                 |
+| **Deployment** | Cloudflare Pages                        |
 
 ---
 
@@ -213,9 +213,9 @@ pnpm run dev:backend  # Convex only
 pnpm run build
 ```
 
-### Deployment with Netlify
+### Deployment with Cloudflare Pages
 
-This project uses Netlify with automatic branch deploys:
+This project uses Cloudflare Pages with automatic branch deploys:
 
 | Branch       | Environment | Auto-deploy |
 | ------------ | ----------- | ----------- |
@@ -223,12 +223,19 @@ This project uses Netlify with automatic branch deploys:
 | `main`       | Preview     | ✅          |
 | PR branches  | Preview     | ✅          |
 
-**Configuration is in `netlify.toml`** - no manual setup required.
+**Pages project settings:**
+
+- Build command: `pnpm install --frozen-lockfile && pnpm run build`
+- Build output directory: `dist`
+- Functions: `functions/_middleware.ts` serves OG/Twitter meta to social crawlers
+- SPA fallback + headers: `public/_redirects` and `public/_headers` (copied into `dist` on build)
+- Env var: `VITE_CONVEX_URL` (set in Pages → Settings → Environment variables)
 
 **To deploy:**
 
 1. Push to `main` → Preview deploys automatically
 2. Merge to `production` → Production deploys automatically
+3. Or deploy manually: `pnpm run deploy:cf` (uses `wrangler pages deploy dist`)
 
 ---
 
@@ -248,7 +255,7 @@ This project uses Netlify with automatic branch deploys:
 - ✅ Input validation on all forms
 - ✅ Protected routes with authentication
 - ✅ Regular dependency updates
-- ✅ Security headers via Netlify
+- ✅ Security headers via Cloudflare Pages `_headers`
 
 ### Run Security Audit
 
@@ -330,7 +337,7 @@ Built with amazing open-source tools:
 - [Convex](https://convex.dev/) - Backend
 - [Open Library](https://openlibrary.org/) - Book Data
 - [Lucide](https://lucide.dev/) - Icons
-- [Netlify](https://netlify.com/) - Hosting
+- [Cloudflare Pages](https://pages.cloudflare.com/) - Hosting
 
 ---
 

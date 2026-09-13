@@ -1,0 +1,3 @@
+# SPA routing - serve index.html for all app routes
+# Cloudflare Pages serves matching static files first; this catches the rest.
+/* /index.html 200

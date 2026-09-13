@@ -21,6 +21,12 @@
 - `/wishlist` redirects to the Wishlist tab instead of the default Finished tab.
 - Public-site link relabeled to "Public Site" (no longer duplicates "My Bookshelf").
 
+### Hosting: Netlify → Cloudflare Pages
+
+- `netlify.toml` replaced by `public/_redirects` (SPA fallback) and `public/_headers` (security + cache headers).
+- Social-crawler OG meta moved from a Netlify edge function to a Pages Function (`functions/_middleware.ts`).
+- `wrangler.jsonc` added; `pnpm run deploy:cf` / `pnpm run preview:cf` for manual deploys and local Pages testing.
+
 ### Cleanup
 
 - Removed unused `react-is` dependency, dead `react.svg` asset, the unused `readingChallenges` table, and nine one-off seed/migration scripts superseded by `convex/seed.ts` and the Goodreads importer.
@@ -36,8 +42,13 @@
 
 ## Deploy notes
 
-1. Deploy Convex with the frontend: `convex/schema.ts` drops the unused `readingChallenges` table and adds `wishlist.bulkAdd`; function signatures for `series.getByUser` / `series.create` changed.
-2. No new env vars needed — Goodreads import runs entirely client-side; covers come from Open Library by ISBN.
+1. **Create the Cloudflare Pages project** (dashboard → Workers & Pages → Pages → Connect to Git):
+   - Build command: `pnpm install --frozen-lockfile && pnpm run build`
+   - Output directory: `dist`
+   - Set `VITE_CONVEX_URL` in Pages → Settings → Environment variables (production + preview).
+2. Deploy Convex with the frontend: `convex/schema.ts` drops the unused `readingChallenges` table and adds `wishlist.bulkAdd`; function signatures for `series.getByUser` / `series.create` changed.
+3. Re-point `izzysbookshelf.com` DNS to Pages (custom domain), then retire the Netlify site.
+4. No new env vars needed — Goodreads import runs entirely client-side; covers come from Open Library by ISBN.
 
 ```bash
 pnpm install

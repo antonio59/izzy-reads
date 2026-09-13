@@ -3,6 +3,7 @@ packages:
 
 allowBuilds:
   esbuild: true
+  workerd: true
 
 overrides:
   brace-expansion: ^5.0.9
