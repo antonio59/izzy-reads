@@ -118,6 +118,7 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Add 'Share your words' prompt to weekly summary
 - Redesign templates to match site design, split admin/izzy links
 - Remediate audit findings — enforce admin authz, fail-closed signup, input validation
 - Hero cover shelf: review tooltips + fix dead hover
@@ -909,6 +910,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
