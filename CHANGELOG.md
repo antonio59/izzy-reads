@@ -102,6 +102,7 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### CI/CD
 
+- Bump dependabot/fetch-metadata from 2 to 3 (#204)
 - Consolidate dependency updates on Dependabot, auto-merge patch/minor
 - Bump actions/setup-node from 6 to 7 (#163)
 - Bump actions/checkout from 6 to 7
@@ -914,6 +915,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
