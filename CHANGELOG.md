@@ -118,6 +118,7 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- British english + no em-dashes across app and emails
 - Refine weekly summary — latest review, preheader, plain-text part
 - Add 'Share your words' prompt to weekly summary
 - Redesign templates to match site design, split admin/izzy links
@@ -911,6 +912,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
