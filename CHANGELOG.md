@@ -836,6 +836,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- Update dependencies (#203)
 - **deps-dev**: Bump vitest from 4.1.11 to 5.0.0 in the testing group (#202)
 - Update dependencies
 - **deps**: Bump lucide-react from 1.34.0 to 1.38.0 (#201)
@@ -905,6 +906,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Clean stale README references; delete feat/discover-swipe branch
