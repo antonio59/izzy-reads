@@ -150,7 +150,7 @@ function ErrorFallback({
           </motion.button>
         </div>
 
-        <p className="mt-8 text-sm text-stone-400">
+        <p className="mt-8 text-sm text-stone-500">
           Tip: a quick reload often clears it up.
         </p>
       </Card>

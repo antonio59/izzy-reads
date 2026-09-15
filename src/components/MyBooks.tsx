@@ -33,6 +33,7 @@ import type { Book } from "../types";
 import type { Id } from "../../convex/_generated/dataModel";
 import { Button } from "./ui/Button";
 import { Input } from "./ui/Input";
+import { EmptyState } from "./ui/EmptyState";
 import { Badge } from "./ui/Badge";
 import { upgradeCoverUrl } from "../lib/coverUrl";
 
@@ -399,7 +400,7 @@ const MyBooks: React.FC = () => {
                       >
                         <Gift className="w-4 h-4 text-primary-400" />
                         {giver}
-                        <span className="ml-auto text-xs text-stone-400">
+                        <span className="ml-auto text-xs text-stone-500">
                           {readBooks.filter((b) => b.giftFrom === giver).length}
                         </span>
                       </button>
@@ -719,7 +720,7 @@ const ReadBookCard: React.FC<ReadBookCardProps> = ({
               e.stopPropagation();
               onMoveToWishlist();
             }}
-            className="px-2 py-1.5 text-stone-400 hover:text-primary-500 hover:bg-primary-50 rounded-lg transition-colors"
+            className="px-2 py-1.5 text-stone-500 hover:text-primary-500 hover:bg-primary-50 rounded-lg transition-colors"
             title="Move to Want to Read"
           >
             <ArrowRight className="w-3 h-3" />
@@ -729,7 +730,7 @@ const ReadBookCard: React.FC<ReadBookCardProps> = ({
               e.stopPropagation();
               onRemove();
             }}
-            className="px-2 py-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            className="px-2 py-1.5 text-stone-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
             title="Remove book"
           >
             <Trash2 className="w-4 h-4" />
@@ -820,7 +821,7 @@ const ReadingBookCard: React.FC<ReadingBookCardProps> = ({
               e.stopPropagation();
               onEdit();
             }}
-            className="px-2 py-1.5 text-stone-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+            className="px-2 py-1.5 text-stone-500 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
             title="Edit"
           >
             <Edit3 className="w-3 h-3" />
@@ -830,7 +831,7 @@ const ReadingBookCard: React.FC<ReadingBookCardProps> = ({
               e.stopPropagation();
               onRemove();
             }}
-            className="px-2 py-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            className="px-2 py-1.5 text-stone-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
             title="Remove"
           >
             <Trash2 className="w-3 h-3" />
@@ -919,7 +920,7 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
               e.stopPropagation();
               onRemove();
             }}
-            className="px-2 py-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            className="px-2 py-1.5 text-stone-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
             title="Remove from wishlist"
           >
             <Trash2 className="w-3 h-3" />
@@ -930,34 +931,5 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
   );
 };
 
-// Empty State Component
-interface EmptyStateProps {
-  icon: React.ElementType;
-  title: string;
-  description: string;
-  actionLabel: string;
-  onAction: () => void;
-}
-
-const EmptyState: React.FC<EmptyStateProps> = ({
-  icon: Icon,
-  title,
-  description,
-  actionLabel,
-  onAction,
-}) => {
-  return (
-    <div className="text-center py-16">
-      <div className="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-        <Icon className="w-10 h-10 text-stone-400" />
-      </div>
-      <h3 className="text-xl font-bold text-stone-900 mb-2">{title}</h3>
-      <p className="text-stone-500 mb-6">{description}</p>
-      <Button variant="primary" onClick={onAction}>
-        {actionLabel}
-      </Button>
-    </div>
-  );
-};
 
 export default MyBooks;

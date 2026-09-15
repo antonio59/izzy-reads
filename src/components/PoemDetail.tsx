@@ -258,7 +258,7 @@ const PoemDetail = () => {
               <h1 className="font-accent text-3xl sm:text-4xl md:text-5xl font-semibold text-stone-900 tracking-tight leading-[1.1] mb-4">
                 {poem.title}
               </h1>
-              <div className="flex items-center justify-center gap-3 text-stone-400 text-sm flex-wrap">
+              <div className="flex items-center justify-center gap-3 text-stone-500 text-sm flex-wrap">
                 <span className="flex items-center gap-1.5">
                   <Calendar className="w-3.5 h-3.5" aria-hidden />
                   {new Date(poem.dateCreated).toLocaleDateString("en-US", {
@@ -297,7 +297,7 @@ const PoemDetail = () => {
 
             {/* Reactions */}
             <div className="mt-8 pt-8 border-t border-cream-300">
-              <p className="text-xs font-semibold text-stone-400 text-center mb-3 uppercase tracking-wider">
+              <p className="text-xs font-semibold text-stone-500 text-center mb-3 uppercase tracking-wider">
                 React to this poem
               </p>
               <div className="flex justify-center">
@@ -317,9 +317,9 @@ const PoemDetail = () => {
                       to={`/poetry/${prevPoem.slug || prevPoem.id}`}
                       className="group flex items-center gap-2 flex-1 min-w-0 py-2"
                     >
-                      <ChevronLeft className="w-4 h-4 text-stone-400 group-hover:text-primary-600 flex-shrink-0 transition-colors" />
+                      <ChevronLeft className="w-4 h-4 text-stone-500 group-hover:text-primary-600 flex-shrink-0 transition-colors" />
                       <div className="min-w-0 text-left">
-                        <p className="text-xs uppercase tracking-wider text-stone-400 font-semibold">
+                        <p className="text-xs uppercase tracking-wider text-stone-500 font-semibold">
                           Previous
                         </p>
                         <p className="text-sm font-display font-bold text-stone-700 group-hover:text-primary-700 truncate transition-colors">
@@ -337,14 +337,14 @@ const PoemDetail = () => {
                       className="group flex items-center gap-2 flex-1 min-w-0 py-2 justify-end"
                     >
                       <div className="min-w-0 text-right">
-                        <p className="text-xs uppercase tracking-wider text-stone-400 font-semibold">
+                        <p className="text-xs uppercase tracking-wider text-stone-500 font-semibold">
                           Next
                         </p>
                         <p className="text-sm font-display font-bold text-stone-700 group-hover:text-primary-700 truncate transition-colors">
                           {nextPoem.title}
                         </p>
                       </div>
-                      <ChevronRight className="w-4 h-4 text-stone-400 group-hover:text-primary-600 flex-shrink-0 transition-colors" />
+                      <ChevronRight className="w-4 h-4 text-stone-500 group-hover:text-primary-600 flex-shrink-0 transition-colors" />
                     </Link>
                   ) : (
                     <div className="flex-1" />

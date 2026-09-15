@@ -60,7 +60,7 @@ const PublicBlog = () => {
               Stories from my reading journey – challenges, adventures, and ideas.
             </p>
             {sortedPosts.length > 0 && (
-              <p className="mt-5 text-sm text-stone-400">
+              <p className="mt-5 text-sm text-stone-500">
                 <span className="font-display font-bold text-stone-700 tabular-nums">
                   {sortedPosts.length}
                 </span>{" "}
@@ -100,7 +100,7 @@ const PublicBlog = () => {
                             {post.tags[0]}
                           </span>
                         )}
-                        <span className="flex items-center gap-1 text-xs text-stone-400">
+                        <span className="flex items-center gap-1 text-xs text-stone-500">
                           <Calendar className="w-3 h-3" aria-hidden />
                           {new Date(post.dateCreated).toLocaleDateString(
                             "en-US",

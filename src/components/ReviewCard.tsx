@@ -50,7 +50,7 @@ export function ReviewCard({ book, featured = false, index = 0 }: ReviewCardProp
             </span>
           )}
           {book.dateRead && (
-            <span className="flex items-center gap-1 text-xs text-stone-400">
+            <span className="flex items-center gap-1 text-xs text-stone-500">
               <Calendar className="w-3 h-3" aria-hidden />
               {new Date(book.dateRead).toLocaleDateString("en-US", {
                 month: "short",

@@ -63,7 +63,7 @@ const PublicPoetry = () => {
               Poems I&apos;ve written – imagination, feelings, and a little magic.
             </p>
             {poems.length > 0 && (
-              <p className="mt-5 text-sm text-stone-400">
+              <p className="mt-5 text-sm text-stone-500">
                 <span className="font-display font-bold text-stone-700 tabular-nums">
                   {poems.length}
                 </span>{" "}
@@ -114,7 +114,7 @@ const PublicPoetry = () => {
                           {poem.template}
                         </span>
                       )}
-                      <span className="text-xs text-stone-400">
+                      <span className="text-xs text-stone-500">
                         {new Date(poem.dateCreated).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",

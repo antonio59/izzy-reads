@@ -125,7 +125,7 @@ export function LevelModal({ isOpen, onClose, totalXP }: LevelModalProps) {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span
-                              className={`font-semibold ${isLocked ? "text-stone-400" : "text-stone-900"}`}
+                              className={`font-semibold ${isLocked ? "text-stone-500" : "text-stone-900"}`}
                             >
                               Level {lvl.level}
                             </span>
@@ -140,14 +140,14 @@ export function LevelModal({ isOpen, onClose, totalXP }: LevelModalProps) {
                             )}
                           </div>
                           <p
-                            className={`text-sm ${isLocked ? "text-stone-400" : "text-stone-600"}`}
+                            className={`text-sm ${isLocked ? "text-stone-500" : "text-stone-600"}`}
                           >
                             {lvl.title}
                           </p>
                         </div>
 
                         <span
-                          className={`text-xs ${isLocked ? "text-stone-400" : "text-stone-500"}`}
+                          className={`text-xs ${isLocked ? "text-stone-500" : "text-stone-500"}`}
                         >
                           {formatXP(lvl.minXP)} XP
                         </span>

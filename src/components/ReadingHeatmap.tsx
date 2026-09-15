@@ -127,7 +127,7 @@ export function ReadingHeatmap({
               : `No finishes logged in ${year} yet`}
           </p>
         </div>
-        <div className="flex items-center gap-1 text-[10px] text-stone-400">
+        <div className="flex items-center gap-1 text-xs text-stone-500">
           <span>Less</span>
           {[0, 1, 2, 3].map((n) => (
             <span
@@ -153,7 +153,7 @@ export function ReadingHeatmap({
             return (
               <div
                 key={`m-${wi}`}
-                className="text-[10px] text-stone-400 h-4 leading-none"
+                className="text-xs text-stone-500 h-4 leading-none"
                 style={{ gridColumn: wi + 1, gridRow: 1 }}
               >
                 {label?.month ?? ""}
@@ -192,7 +192,7 @@ export function ReadingHeatmap({
       </div>
 
       {max === 0 && (
-        <p className="text-xs text-stone-400 mt-3">
+        <p className="text-xs text-stone-500 mt-3">
           Finish a book to light up the calendar.
         </p>
       )}

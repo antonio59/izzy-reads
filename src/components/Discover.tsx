@@ -273,7 +273,7 @@ function Discover() {
           Mark at least 3 books as read so we can learn your taste and recommend
           books you'll love.
         </p>
-        <p className="text-sm text-stone-400 mt-2">
+        <p className="text-sm text-stone-500 mt-2">
           You've read {profile.totalRead} book{profile.totalRead !== 1 ? "s" : ""} so far.
         </p>
       </div>
@@ -413,7 +413,7 @@ function Discover() {
               <p className="font-display text-lg font-bold text-stone-800 tabular-nums">
                 {stats.liked}
               </p>
-              <p className="text-[11px] text-stone-500 flex items-center justify-center gap-1">
+              <p className="text-xs text-stone-500 flex items-center justify-center gap-1">
                 <Heart className="w-3 h-3 text-primary-500" /> liked
               </p>
             </div>
@@ -421,15 +421,15 @@ function Discover() {
               <p className="font-display text-lg font-bold text-stone-800 tabular-nums">
                 {stats.passed}
               </p>
-              <p className="text-[11px] text-stone-500 flex items-center justify-center gap-1">
-                <X className="w-3 h-3 text-stone-400" /> passed
+              <p className="text-xs text-stone-500 flex items-center justify-center gap-1">
+                <X className="w-3 h-3 text-stone-500" /> passed
               </p>
             </div>
             <div className="rounded-xl bg-white ring-1 ring-cream-300 px-3 py-2.5 text-center">
               <p className="font-display text-lg font-bold text-accent-700 tabular-nums">
                 {stats.addedToWishlist}
               </p>
-              <p className="text-[11px] text-stone-500 flex items-center justify-center gap-1">
+              <p className="text-xs text-stone-500 flex items-center justify-center gap-1">
                 <Gift className="w-3 h-3 text-accent-600" /> wishlist
               </p>
             </div>
@@ -439,7 +439,7 @@ function Discover() {
         {/* Reading taste pills */}
         {profile && profile.topGenres.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            <span className="text-xs text-stone-400 self-center">Your taste:</span>
+            <span className="text-xs text-stone-500 self-center">Your taste:</span>
             {profile.topGenres.slice(0, 4).map((genre: string) => (
               <span
                 key={genre}
@@ -486,7 +486,7 @@ function Discover() {
             <p className="text-stone-500 font-medium">
               Finding books for you...
             </p>
-            <p className="text-sm text-stone-400 mt-1">
+            <p className="text-sm text-stone-500 mt-1">
               Analysing your reading taste
             </p>
           </div>
@@ -534,7 +534,7 @@ function Discover() {
       {/* Hint */}
       {candidates.length > 0 && (
         <div className="text-center mt-4 space-y-1">
-          <p className="text-xs text-stone-400 flex items-center justify-center gap-3">
+          <p className="text-xs text-stone-500 flex items-center justify-center gap-3">
             <span className="flex items-center gap-1">
               <ArrowLeft className="w-3 h-3" /> Pass
             </span>
@@ -543,7 +543,7 @@ function Discover() {
               Want it <ArrowRight className="w-3 h-3" />
             </span>
           </p>
-          <p className="text-[10px] text-stone-400">
+          <p className="text-xs text-stone-500">
             Books you like go straight to your wishlist
           </p>
         </div>
@@ -586,7 +586,7 @@ function Discover() {
                   />
                 ) : (
                   <div className="h-56 w-40 bg-white/60 rounded flex flex-col items-center justify-center p-4 text-center">
-                    <BookOpen className="w-12 h-12 text-stone-400 mb-2" />
+                    <BookOpen className="w-12 h-12 text-stone-500 mb-2" />
                     <span className="text-sm font-semibold text-stone-500 line-clamp-3">
                       {selectedBook.title}
                     </span>

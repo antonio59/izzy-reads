@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { motion, type HTMLMotionProps } from "framer-motion";
+import { motion, useReducedMotion, type HTMLMotionProps } from "framer-motion";
 
 export type ButtonVariant =
   | "primary"
@@ -21,12 +21,12 @@ interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: "bg-primary-500 text-white hover:bg-primary-600 shadow-primary",
+  primary: "bg-primary-600 text-white hover:bg-primary-700 shadow-primary",
   secondary:
     "bg-white text-primary-600 border border-primary-200 hover:bg-primary-50 hover:border-primary-300",
   ghost: "bg-transparent text-primary-600 hover:bg-primary-50",
-  accent: "bg-accent-500 text-white hover:bg-accent-600 shadow-accent",
-  success: "bg-success-500 text-white hover:bg-success-600 shadow-soft-md",
+  accent: "bg-accent-600 text-white hover:bg-accent-700 shadow-accent",
+  success: "bg-success-600 text-white hover:bg-success-700 shadow-soft-md",
   danger: "bg-error-700 text-white hover:bg-error-800 shadow-soft-md",
 };
 
@@ -53,6 +53,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const isDisabled = disabled || loading;
+    const shouldReduceMotion = useReducedMotion();
 
     return (
       <motion.button
@@ -67,8 +68,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           ${className}
         `}
         disabled={isDisabled}
-        whileHover={isDisabled ? {} : { y: -1, scale: 1.01 }}
-        whileTap={isDisabled ? {} : { scale: 0.98 }}
+        whileHover={
+          isDisabled || shouldReduceMotion ? undefined : { y: -1, scale: 1.01 }
+        }
+        whileTap={
+          isDisabled || shouldReduceMotion ? undefined : { scale: 0.98 }
+        }
         transition={{ duration: 0.15 }}
         {...props}
       >
@@ -139,7 +144,7 @@ interface IconButtonProps extends Omit<
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
   ({ icon, size = "md", className = "", ...props }, ref) => {
     const sizeClasses = {
-      sm: "p-1.5",
+      sm: "p-2.5",
       md: "p-2",
       lg: "p-3",
     };

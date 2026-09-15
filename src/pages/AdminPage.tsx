@@ -24,6 +24,7 @@ import type { Id } from "../../convex/_generated/dataModel";
 import { searchBooks } from "../services/bookApi";
 import type { UnifiedBook } from "../services/bookApi";
 import { CoverRefreshPanel } from "../components/CoverRefreshPanel";
+import { EmptyState } from "../components/ui/EmptyState";
 
 type AdminTab = "overview" | "bookclub" | "covers";
 
@@ -256,7 +257,7 @@ function AdminOverviewCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
             <h3 className="font-display font-bold text-stone-900">{title}</h3>
-            <ChevronRight className="w-4 h-4 text-stone-400 group-hover:text-primary-600 group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+            <ChevronRight className="w-4 h-4 text-stone-500 group-hover:text-primary-600 group-hover:translate-x-0.5 transition-all flex-shrink-0" />
           </div>
           <p className="text-sm text-stone-500 mt-1 leading-snug">
             {description}
@@ -357,7 +358,7 @@ function BookClubAdminPanel() {
             <div className="relative">
               <label className="block text-sm font-medium text-stone-600 mb-1">Search for a book</label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-500" />
                 <input
                   type="text"
                   value={searchQuery}
@@ -387,7 +388,7 @@ function BookClubAdminPanel() {
                         <img src={book.coverUrl} alt={book.title} className="w-10 h-14 object-cover rounded shadow-sm flex-shrink-0" />
                       ) : (
                         <div className="w-10 h-14 bg-cream-200 rounded flex items-center justify-center flex-shrink-0 ring-1 ring-cream-300">
-                          <BookOpen className="w-5 h-5 text-stone-400" />
+                          <BookOpen className="w-5 h-5 text-stone-500" />
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
@@ -406,7 +407,7 @@ function BookClubAdminPanel() {
                   <img src={selectedBook.coverUrl} alt={selectedBook.title} className="w-12 h-16 object-cover rounded shadow-sm" />
                 ) : (
                   <div className="w-12 h-16 bg-cream-200 rounded flex items-center justify-center ring-1 ring-cream-300">
-                    <BookOpen className="w-6 h-6 text-stone-400" />
+                    <BookOpen className="w-6 h-6 text-stone-500" />
                   </div>
                 )}
                 <div className="flex-1">
@@ -414,7 +415,7 @@ function BookClubAdminPanel() {
                   <p className="text-sm text-stone-500">{selectedBook.author}</p>
                 </div>
                 <button onClick={() => { setSelectedBook(null); setSearchQuery(""); }} className="p-1 hover:bg-stone-100 rounded-full">
-                  <X className="w-4 h-4 text-stone-400" />
+                  <X className="w-4 h-4 text-stone-500" />
                 </button>
               </div>
             )}
@@ -478,7 +479,7 @@ function BookClubAdminPanel() {
                 />
               ) : (
                 <div className="w-16 h-24 bg-cream-200 rounded-lg flex items-center justify-center flex-shrink-0 ring-1 ring-cream-300">
-                  <BookOpen className="w-6 h-6 text-stone-400" />
+                  <BookOpen className="w-6 h-6 text-stone-500" />
                 </div>
               )}
               <div className="flex-1 min-w-0">
@@ -487,7 +488,7 @@ function BookClubAdminPanel() {
                     {club.title}
                   </h4>
                   {club.isActive && (
-                    <span className="px-2 py-0.5 bg-emerald-600 text-white text-[10px] font-bold rounded-full uppercase tracking-wide">
+                    <span className="px-2 py-0.5 bg-emerald-600 text-white text-xs font-bold rounded-full uppercase tracking-wide">
                       Live
                     </span>
                   )}
@@ -498,7 +499,7 @@ function BookClubAdminPanel() {
                     {club.description}
                   </p>
                 )}
-                <p className="text-xs text-stone-400 mt-2 flex items-center gap-1">
+                <p className="text-xs text-stone-500 mt-2 flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
                   Ends {new Date(club.endDate).toLocaleDateString()}
                 </p>
@@ -517,7 +518,7 @@ function BookClubAdminPanel() {
                 </button>
                 <button
                   onClick={() => handleDelete(club._id)}
-                  className="p-2 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                  className="p-2 text-stone-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -525,14 +526,12 @@ function BookClubAdminPanel() {
             </div>
           ))
         ) : (
-          <div className="text-center py-14 bg-cream-50 rounded-2xl border border-dashed border-cream-300">
-            <UsersRound className="w-12 h-12 text-stone-300 mx-auto mb-3" />
-            <p className="font-display font-bold text-stone-700">
-              No book clubs yet
-            </p>
-            <p className="text-sm text-stone-500 mt-1">
-              Create a pick so friends can read along with Izzy
-            </p>
+          <div className="bg-cream-50 rounded-2xl border border-dashed border-cream-300">
+            <EmptyState
+              icon={UsersRound}
+              title="No book clubs yet"
+              description="Create a pick so friends can read along with Izzy"
+            />
           </div>
         )}
       </div>

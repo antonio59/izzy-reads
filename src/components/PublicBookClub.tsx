@@ -204,10 +204,10 @@ export default function PublicBookClub() {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
-                          <span>{r.emoji}</span>
+                          <span aria-hidden="true">{r.emoji}</span>
                           <span className="hidden sm:inline">{r.label}</span>
                           {count > 0 && (
-                            <span className={`ml-1 text-xs ${isActive ? "text-white/80" : "text-stone-400"}`}>
+                            <span className={`ml-1 text-xs ${isActive ? "text-white/80" : "text-stone-500"}`}>
                               {count}
                             </span>
                           )}
@@ -231,7 +231,7 @@ export default function PublicBookClub() {
                 ? `${detailedData.totalReactions} reaction${detailedData.totalReactions !== 1 ? "s" : ""} so far – thanks for reading along!`
                 : "Be the first to react to this month's pick!"}
             </p>
-            <p className="text-sm text-stone-400">
+            <p className="text-sm text-stone-500">
               Tap an emoji above to let Izzy know what you think 💛
             </p>
           </div>

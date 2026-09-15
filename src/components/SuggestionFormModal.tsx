@@ -295,7 +295,7 @@ export function SuggestionFormModal({
                   <button
                     type="button"
                     onClick={handleClose}
-                    className="p-2 rounded-full text-stone-400 hover:text-stone-700 hover:bg-white/80 transition-colors"
+                    className="p-2 rounded-full text-stone-500 hover:text-stone-700 hover:bg-white/80 transition-colors"
                     disabled={isSubmitting}
                     aria-label="Close"
                   >
@@ -385,7 +385,7 @@ export function SuggestionFormModal({
                       </motion.div>
                     )}
                   </AnimatePresence>
-                  <p className="text-xs text-stone-400 mt-1.5">
+                  <p className="text-xs text-stone-500 mt-1.5">
                     Pick a result, or fill in the details yourself below.
                   </p>
                 </div>

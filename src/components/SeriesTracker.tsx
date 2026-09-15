@@ -18,6 +18,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Card } from "./ui/Card";
+import { EmptyState } from "./ui/EmptyState";
 import { upgradeCoverUrl } from "../lib/coverUrl";
 import { Badge } from "./ui/Badge";
 import { Modal } from "./ui/Modal";
@@ -356,7 +357,7 @@ const SeriesTracker: React.FC = () => {
                         )}
 
                         <ChevronDown
-                          className={`w-5 h-5 text-stone-400 transition-transform ${
+                          className={`w-5 h-5 text-stone-500 transition-transform ${
                             expandedSeries.includes(s.id) ? "rotate-180" : ""
                           }`}
                         />
@@ -428,7 +429,7 @@ const SeriesTracker: React.FC = () => {
                                     >
                                       <X className="w-3 h-3" />
                                     </button>
-                                    <span className="text-xs text-stone-400">
+                                    <span className="text-xs text-stone-500">
                                       Book {index + 1}
                                     </span>
                                     {book.coverUrl ? (
@@ -440,7 +441,7 @@ const SeriesTracker: React.FC = () => {
                                     ) : (
                                       <div className="w-16 h-24 mx-auto my-2 rounded-lg bg-gradient-to-br from-primary-200 to-accent-200 flex items-center justify-center">
                                         <BookOpen
-                                          className={`w-6 h-6 ${book.isRead ? "text-primary-600" : "text-stone-400"}`}
+                                          className={`w-6 h-6 ${book.isRead ? "text-primary-600" : "text-stone-500"}`}
                                         />
                                       </div>
                                     )}
@@ -456,16 +457,12 @@ const SeriesTracker: React.FC = () => {
                                 ))}
                               </div>
                             ) : (
-                              <div className="text-center py-8">
-                                <BookOpen className="w-12 h-12 text-stone-300 mx-auto mb-3" />
-                                <p className="text-stone-500">
-                                  No books added yet
-                                </p>
-                                <p className="text-sm text-stone-400">
-                                  Add books from your bookshelf to track
-                                  progress
-                                </p>
-                              </div>
+                              <EmptyState
+                                icon={BookOpen}
+                                title="No books added yet"
+                                description="Add books from your bookshelf to track progress"
+                                className="py-8"
+                              />
                             )}
 
                             {/* Actions */}
@@ -601,14 +598,14 @@ const SeriesTracker: React.FC = () => {
               onClick={() => handleAddSeries(s.name)}
               className="w-full p-4 rounded-xl border border-stone-200 hover:border-primary-300 hover:bg-primary-50 transition-all flex items-center gap-4 text-left"
             >
-              <span className="text-3xl">{s.emoji}</span>
+              <span className="text-3xl" aria-hidden="true">{s.emoji}</span>
               <div className="flex-1">
                 <p className="font-bold text-stone-900">{s.name}</p>
                 <p className="text-sm text-stone-500">
                   by {s.author} ({s.totalBooks} books)
                 </p>
               </div>
-              <ChevronRight className="w-5 h-5 text-stone-400" />
+              <ChevronRight className="w-5 h-5 text-stone-500" />
             </button>
           ))}
         </div>
@@ -677,7 +674,7 @@ const SeriesTracker: React.FC = () => {
             <div className="text-center py-8">
               <BookOpen className="w-12 h-12 text-stone-300 mx-auto mb-3" />
               <p className="text-stone-500">No books available</p>
-              <p className="text-sm text-stone-400">
+              <p className="text-sm text-stone-500">
                 Add books to your bookshelf first
               </p>
             </div>

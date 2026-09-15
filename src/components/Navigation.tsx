@@ -133,7 +133,7 @@ const Navigation: React.FC = () => {
               {/* Profile */}
               <Link
                 to="/profile"
-                className="p-2.5 rounded-lg text-stone-400 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                className="p-2.5 rounded-lg text-stone-500 hover:text-primary-600 hover:bg-primary-50 transition-colors"
                 title="Edit profile"
                 aria-label="Edit profile"
               >
@@ -143,7 +143,7 @@ const Navigation: React.FC = () => {
               {/* Admin */}
               <Link
                 to="/admin"
-                className="p-2.5 rounded-lg text-stone-400 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                className="p-2.5 rounded-lg text-stone-500 hover:text-primary-600 hover:bg-primary-50 transition-colors"
                 title="Admin"
                 aria-label="Admin"
               >
@@ -153,7 +153,7 @@ const Navigation: React.FC = () => {
               {/* Logout */}
               <motion.button
                 onClick={handleLogout}
-                className="p-2.5 rounded-lg text-stone-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                className="p-2.5 rounded-lg text-stone-500 hover:text-red-500 hover:bg-red-50 transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 title="Logout"
@@ -185,7 +185,7 @@ const Navigation: React.FC = () => {
                   />
                 )}
                 <item.icon
-                  className={`h-5 w-5 ${isActive ? "text-primary-500" : "text-stone-400"}`}
+                  className={`h-5 w-5 ${isActive ? "text-primary-500" : "text-stone-500"}`}
                 />
                 <span
                   className={`text-xs mt-1 ${
@@ -201,7 +201,7 @@ const Navigation: React.FC = () => {
           {/* Menu button for settings/logout */}
           <button
             onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className="relative flex flex-col items-center py-1 px-3 text-stone-400"
+            className="relative flex flex-col items-center py-1 px-3 text-stone-500"
           >
             <Menu className="h-5 w-5" />
             <span className="text-xs mt-1">Menu</span>

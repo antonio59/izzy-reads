@@ -124,7 +124,7 @@ export function BookCoverImage({
         >
           <div className="flex-1 flex flex-col items-center justify-center w-full">
             <BookOpen
-              className="w-10 h-10 text-stone-400 mb-3"
+              className="w-10 h-10 text-stone-500 mb-3"
               strokeWidth={1.5}
             />
             <p className="text-sm font-semibold text-stone-700 leading-snug line-clamp-3 max-w-full">
@@ -137,7 +137,7 @@ export function BookCoverImage({
             )}
           </div>
           <div className="w-full pt-3 mt-2 border-t border-stone-300/60">
-            <p className="text-[10px] uppercase tracking-wider text-stone-400 font-medium">
+            <p className="text-xs uppercase tracking-wider text-stone-500 font-medium">
               No cover available
             </p>
           </div>

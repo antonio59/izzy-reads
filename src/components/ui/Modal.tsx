@@ -1,5 +1,5 @@
-import { useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useCallback, useRef } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
 
 interface ModalProps {
@@ -45,6 +45,15 @@ const modalVariants = {
   },
 };
 
+const modalVariantsReduced = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+  exit: { opacity: 0 },
+};
+
+const FOCUSABLE_SELECTOR =
+  'a[href],button:not([disabled]),textarea:not([disabled]),input:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])';
+
 export function Modal({
   isOpen,
   onClose,
@@ -56,11 +65,37 @@ export function Modal({
   showCloseButton = true,
   className = "",
 }: ModalProps) {
-  // Handle escape key
-  const handleEscape = useCallback(
+  const shouldReduceMotion = useReducedMotion();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  // Handle escape key + tab trapping
+  const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
+        return;
+      }
+      if (e.key !== "Tab" || !panelRef.current) return;
+      const focusable = Array.from(
+        panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+      );
+      if (focusable.length === 0) {
+        e.preventDefault();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (
+        e.shiftKey &&
+        (document.activeElement === first ||
+          document.activeElement === panelRef.current)
+      ) {
+        last.focus();
+        e.preventDefault();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        first.focus();
+        e.preventDefault();
       }
     },
     [onClose],
@@ -68,15 +103,22 @@ export function Modal({
 
   useEffect(() => {
     if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      document.addEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "hidden";
+      // Move focus into the dialog so keyboard/SR users land inside it.
+      panelRef.current?.focus();
     }
 
     return () => {
-      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "unset";
+      if (previousFocusRef.current) {
+        previousFocusRef.current.focus();
+        previousFocusRef.current = null;
+      }
     };
-  }, [isOpen, handleEscape]);
+  }, [isOpen, handleKeyDown]);
 
   return (
     <AnimatePresence>
@@ -94,15 +136,21 @@ export function Modal({
 
           {/* Modal */}
           <motion.div
+            ref={panelRef}
+            tabIndex={-1}
             className={`
               relative w-full ${sizeStyles[size]} bg-white rounded-2xl shadow-soft-xl
-              overflow-hidden ${className}
+              overflow-hidden outline-none ${className}
             `}
-            variants={modalVariants}
+            variants={shouldReduceMotion ? modalVariantsReduced : modalVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            transition={
+              shouldReduceMotion
+                ? { duration: 0.1 }
+                : { type: "spring", stiffness: 300, damping: 30 }
+            }
             role="dialog"
             aria-modal="true"
             aria-labelledby={title ? "modal-title" : undefined}
@@ -132,7 +180,7 @@ export function Modal({
                 {showCloseButton && (
                   <button
                     onClick={onClose}
-                    className="p-2 rounded-lg text-stone-400 hover:text-stone-600 hover:bg-stone-100 transition-colors"
+                    className="p-2 rounded-lg text-stone-500 hover:text-stone-600 hover:bg-stone-100 transition-colors"
                     aria-label="Close modal"
                   >
                     <X className="w-5 h-5" />

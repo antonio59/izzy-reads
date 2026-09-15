@@ -118,7 +118,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-stone-400 mr-1">
+            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500 mr-1">
               Sort
             </span>
             <button
@@ -189,7 +189,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
               role="group"
               aria-label="Filter by mood tag"
             >
-              <span className="text-xs font-semibold uppercase tracking-wider text-stone-400 self-center mr-1">
+              <span className="text-xs font-semibold uppercase tracking-wider text-stone-500 self-center mr-1">
                 Mood
               </span>
               {allTags.map((tag) => (
@@ -422,7 +422,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                         )}
                       </>
                     ) : (
-                      <p className="text-stone-400 italic">
+                      <p className="text-stone-500 italic">
                         Review coming soon – check back later!
                       </p>
                     )}

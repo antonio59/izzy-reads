@@ -255,7 +255,7 @@ const Login = () => {
               </button>
 
               <div className="pt-2 border-t border-cream-200 space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-wider text-stone-400">
+                <p className="text-xs font-semibold uppercase tracking-wider text-stone-500">
                   After you sign in
                 </p>
                 <ul className="text-sm text-stone-500 space-y-1.5 leading-snug">

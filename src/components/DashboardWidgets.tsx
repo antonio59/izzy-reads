@@ -1,6 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { BookOpen, ChevronRight, Calendar } from "lucide-react";
 import {
   AreaChart,
@@ -14,6 +13,7 @@ import {
   Cell,
 } from "recharts";
 import { Card } from "./ui/Card";
+import { EmptyState } from "./ui/EmptyState";
 import { Badge } from "./ui/Badge";
 
 import type { Book } from "../types";
@@ -286,24 +286,19 @@ export function RecentBooks({
           columns={4}
         />
       ) : (
-        <div className="text-center py-8">
-          <motion.div
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            <BookOpen className="w-12 h-12 text-stone-300 mx-auto mb-3" />
-          </motion.div>
-          <p className="text-stone-500 font-medium">No books read yet!</p>
-          <p className="text-sm text-stone-500">
-            Start your reading journey today
-          </p>
+        <EmptyState
+          icon={BookOpen}
+          title="No books read yet!"
+          description="Start your reading journey today"
+          className="py-8"
+        >
           <Link
             to="/books"
-            className="inline-block mt-4 px-4 py-2 bg-primary-100 text-primary-700 rounded-xl font-medium hover:bg-primary-200 transition-colors"
+            className="inline-block px-4 py-2 bg-primary-100 text-primary-700 rounded-xl font-medium hover:bg-primary-200 transition-colors"
           >
             Add Your First Book
           </Link>
-        </div>
+        </EmptyState>
       )}
     </Card>
   );
@@ -349,7 +344,7 @@ export function QuickActions({ actions }: QuickActionsProps) {
               <span className="font-medium text-stone-700 group-hover:text-stone-900">
                 {action.label}
               </span>
-              <ChevronRight className="w-4 h-4 text-stone-400 ml-auto group-hover:translate-x-1 transition-transform" />
+              <ChevronRight className="w-4 h-4 text-stone-500 ml-auto group-hover:translate-x-1 transition-transform" />
             </>
           );
 
@@ -400,7 +395,7 @@ export function WeeklyQuote({ quote }: WeeklyQuoteProps) {
       className="bg-gradient-to-br from-primary-500 to-accent-500 text-white"
     >
       <div className="text-center">
-        <span className="text-3xl mb-3 block">{quote.emoji}</span>
+        <span className="text-3xl mb-3 block" aria-hidden="true">{quote.emoji}</span>
         <p className="text-white/90 italic mb-3">"{quote.text}"</p>
         <p className="text-sm text-white/70">– {quote.author}</p>
       </div>

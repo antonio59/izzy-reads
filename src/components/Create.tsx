@@ -16,6 +16,7 @@ import PoetryEditor from "./PoetryEditor";
 import type { Poem, BlogPost } from "../types";
 import { Card } from "./ui/Card";
 import { Button } from "./ui/Button";
+import { EmptyState } from "./ui/EmptyState";
 
 type TabType = "poems" | "posts";
 
@@ -284,12 +285,12 @@ const PoemCard: React.FC<PoemCardProps> = ({
           {poem.content}
         </p>
         <div className="flex items-center justify-between mt-4 pt-3 border-t border-stone-100">
-          <span className="text-xs text-stone-400">
+          <span className="text-xs text-stone-500">
             {new Date(poem.dateCreated).toLocaleDateString()}
           </span>
           <button
             onClick={onLike}
-            className="flex items-center gap-1 text-stone-400 hover:text-pink-500 transition-colors"
+            className="flex items-center gap-1 text-stone-500 hover:text-pink-500 transition-colors"
           >
             <Heart
               className={`w-4 h-4 ${poem.likes > 0 ? "fill-pink-500 text-pink-500" : ""}`}
@@ -319,7 +320,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
     >
       <div className="flex justify-between items-start mb-3">
         <div className="flex items-center gap-2">
-          {post.emoji && <span className="text-2xl">{post.emoji}</span>}
+          {post.emoji && <span className="text-2xl" aria-hidden="true">{post.emoji}</span>}
           <span
             className={`text-xs px-2 py-1 rounded-full font-medium ${
               post.status === "published"
@@ -348,7 +349,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
       <h3 className="font-bold text-stone-900 text-lg mb-2">{post.title}</h3>
       <p className="text-stone-500 text-sm line-clamp-3">{post.content}</p>
       <div className="flex items-center gap-2 mt-4 pt-3 border-t border-stone-100">
-        <span className="text-xs text-stone-400">
+        <span className="text-xs text-stone-500">
           {new Date(post.dateModified).toLocaleDateString()}
         </span>
         {post.tags.length > 0 && (
@@ -365,36 +366,6 @@ const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
         )}
       </div>
     </Card>
-  );
-};
-
-// Empty State
-interface EmptyStateProps {
-  icon: React.ElementType;
-  title: string;
-  description: string;
-  actionLabel: string;
-  onAction: () => void;
-}
-
-const EmptyState: React.FC<EmptyStateProps> = ({
-  icon: Icon,
-  title,
-  description,
-  actionLabel,
-  onAction,
-}) => {
-  return (
-    <div className="text-center py-16">
-      <div className="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-        <Icon className="w-10 h-10 text-stone-400" />
-      </div>
-      <h3 className="text-xl font-bold text-stone-900 mb-2">{title}</h3>
-      <p className="text-stone-500 mb-6">{description}</p>
-      <Button variant="primary" onClick={onAction}>
-        {actionLabel}
-      </Button>
-    </div>
   );
 };
 

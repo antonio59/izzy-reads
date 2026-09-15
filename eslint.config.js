@@ -46,6 +46,16 @@ export default tseslint.config(
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
+      // Design system: stone-400 fails WCAG contrast as text – keep it for
+      // borders/decoration only. See DESIGN-AUDIT finding D1.
+      "no-restricted-syntax": [
+        "warn",
+        {
+          selector: "Literal[value=/text-stone-(3|4)00/]",
+          message:
+            "text-stone-300/400 fail WCAG contrast for text; use text-stone-500 (or darker) for copy.",
+        },
+      ],
     },
   },
 );

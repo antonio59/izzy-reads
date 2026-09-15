@@ -215,7 +215,7 @@ export function EditBookModal({
       onClose();
     } catch (error) {
       console.error("Failed to save:", error);
-      toast.error("Failed to save", "Please try again.");
+      toast.error("Couldn't save changes", "Check your connection, then try again.");
     } finally {
       setIsSaving(false);
     }
@@ -414,7 +414,7 @@ export function EditBookModal({
                         className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-stone-100 rounded-lg transition-colors"
                       >
                         <ChevronDown
-                          className={`w-4 h-4 text-stone-400 transition-transform ${showGiftSuggestions ? "rotate-180" : ""}`}
+                          className={`w-4 h-4 text-stone-500 transition-transform ${showGiftSuggestions ? "rotate-180" : ""}`}
                         />
                       </button>
                     </>
@@ -456,7 +456,7 @@ export function EditBookModal({
                         </>
                       )}
                       <div className="p-2 border-t border-stone-100 bg-stone-50">
-                        <p className="text-xs text-stone-400">
+                        <p className="text-xs text-stone-500">
                           Or type a new name above
                         </p>
                       </div>
@@ -635,7 +635,7 @@ export function EditBookModal({
                       )}
                     </AnimatePresence>
                   </div>
-                  <span className="text-xs text-stone-400 ml-auto">
+                  <span className="text-xs text-stone-500 ml-auto">
                     Express yourself with emojis!
                   </span>
                 </div>
@@ -648,7 +648,7 @@ export function EditBookModal({
                   className="rounded-b-xl rounded-t-none"
                   rows={6}
                 />
-                <p className="text-xs text-stone-400 mt-2 text-right">
+                <p className="text-xs text-stone-500 mt-2 text-right">
                   {notes.length} characters
                 </p>
               </div>

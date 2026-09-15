@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { motion, type HTMLMotionProps } from "framer-motion";
+import { motion, useReducedMotion, type HTMLMotionProps } from "framer-motion";
 
 export type CardVariant =
   | "default"
@@ -44,6 +44,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     ref,
   ) => {
     const baseStyles = "rounded-2xl overflow-hidden";
+    const shouldReduceMotion = useReducedMotion();
 
     return (
       <motion.div
@@ -54,7 +55,9 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
           ${paddingStyles[padding]}
           ${className}
         `}
-        whileHover={hoverEffect ? { y: -4, scale: 1.01 } : {}}
+        whileHover={
+          hoverEffect && !shouldReduceMotion ? { y: -4, scale: 1.01 } : undefined
+        }
         transition={{ duration: 0.2 }}
         {...props}
       >

@@ -155,7 +155,7 @@ export function BookReactionButtons({
             whileTap={{ scale: 0.95 }}
             title={isActive ? `Remove ${r.label}` : r.label}
           >
-            {r.emoji}
+            <span aria-hidden="true">{r.emoji}</span>
             {showLabel && <span className="ml-1">{r.label}</span>}
             {count > 0 && (
               <span
@@ -228,7 +228,7 @@ export function ReviewReactionButtons({
               whileTap={{ scale: 0.95 }}
               title={isActive ? `Remove ${r.label}` : r.label}
             >
-              {r.emoji}
+              <span aria-hidden="true">{r.emoji}</span>
               {showLabel && <span className="ml-1">{r.label}</span>}
               {count > 0 && (
                 <span
@@ -241,13 +241,13 @@ export function ReviewReactionButtons({
           );
         })}
         {showMoreButton && hiddenCount > 0 && (
-          <span className="text-xs text-stone-400 self-center">
+          <span className="text-xs text-stone-500 self-center">
             +{hiddenCount} more
           </span>
         )}
       </div>
       {totalReactions > 0 && (
-        <p className="text-xs text-stone-400">
+        <p className="text-xs text-stone-500">
           {totalReactions} reaction{totalReactions !== 1 ? "s" : ""} to this
           review
         </p>
@@ -396,7 +396,7 @@ export function PoemReactionButtons({
             whileTap={{ scale: 0.95 }}
             title={isActive ? `Remove ${r.label}` : r.label}
           >
-            {r.emoji}
+            <span aria-hidden="true">{r.emoji}</span>
             {showLabel && <span className="ml-1">{r.label}</span>}
             {count > 0 && (
               <span
@@ -462,7 +462,7 @@ export function WritingReactionButtons({
             whileTap={{ scale: 0.95 }}
             title={isActive ? `Remove ${r.label}` : r.label}
           >
-            {r.emoji}
+            <span aria-hidden="true">{r.emoji}</span>
             {showLabel && <span className="ml-1">{r.label}</span>}
             {count > 0 && (
               <span

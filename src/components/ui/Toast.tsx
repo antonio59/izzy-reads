@@ -152,7 +152,7 @@ function ToastItem({ toast, onClose }: ToastItemProps) {
       </div>
       <button
         onClick={onClose}
-        className="p-1 rounded-lg text-stone-400 hover:text-stone-600 hover:bg-stone-100 transition-colors"
+        className="p-1 rounded-lg text-stone-500 hover:text-stone-600 hover:bg-stone-100 transition-colors"
       >
         <X className="w-4 h-4" />
       </button>

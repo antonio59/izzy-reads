@@ -194,7 +194,7 @@ function ShareButton({
                     onClick={() => setShowMenu(false)}
                     className="p-1 hover:bg-stone-100 rounded-full transition-colors"
                   >
-                    <X className="w-3 h-3 text-stone-400" />
+                    <X className="w-3 h-3 text-stone-500" />
                   </button>
                 </div>
 

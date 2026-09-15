@@ -43,7 +43,7 @@ export function Progress({
           <span className="text-sm text-stone-600">
             {value.toLocaleString()}
           </span>
-          <span className="text-sm text-stone-400">{max.toLocaleString()}</span>
+          <span className="text-sm text-stone-500">{max.toLocaleString()}</span>
         </div>
       )}
       <div
@@ -118,7 +118,7 @@ export function ChallengeProgress({
           </div>
 
           {dueDate && !isComplete && (
-            <p className="text-xs text-stone-400 mt-2">Due: {dueDate}</p>
+            <p className="text-xs text-stone-500 mt-2">Due: {dueDate}</p>
           )}
         </div>
       </div>

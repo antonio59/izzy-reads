@@ -226,7 +226,7 @@ function PublicReviews() {
               review, but these ones got one.
             </p>
             {booksWithReviews.length > 0 && (
-              <p className="mt-5 text-sm text-stone-400">
+              <p className="mt-5 text-sm text-stone-500">
                 <span className="font-display font-bold text-stone-700 tabular-nums">
                   {booksWithReviews.length}
                 </span>{" "}
@@ -319,7 +319,7 @@ function PublicReviews() {
               className="flex flex-wrap items-center gap-2 justify-center sm:justify-start"
               aria-label="Filter by star rating"
             >
-              <span className="text-xs font-semibold uppercase tracking-wider text-stone-400 mr-1">
+              <span className="text-xs font-semibold uppercase tracking-wider text-stone-500 mr-1">
                 Stars
               </span>
               {RATING_OPTIONS.map(({ value, label }) => (
@@ -344,7 +344,7 @@ function PublicReviews() {
                 className="flex flex-wrap items-center gap-2 justify-center sm:justify-start"
                 aria-label="Filter by mood tag"
               >
-                <span className="text-xs font-semibold uppercase tracking-wider text-stone-400 mr-1">
+                <span className="text-xs font-semibold uppercase tracking-wider text-stone-500 mr-1">
                   Mood
                 </span>
                 {moodTags.map((tag) => (
@@ -531,7 +531,7 @@ function SingleReviewView({
                 )}
 
                 {book.dateRead && (
-                  <p className="flex items-center gap-1.5 text-sm text-stone-400 justify-center sm:justify-start">
+                  <p className="flex items-center gap-1.5 text-sm text-stone-500 justify-center sm:justify-start">
                     <Calendar className="w-4 h-4" aria-hidden />
                     Read{" "}
                     {new Date(book.dateRead).toLocaleDateString("en-US", {
@@ -572,7 +572,7 @@ function SingleReviewView({
                   </p>
                 </div>
               ) : (
-                <p className="text-stone-400 italic mb-10">
+                <p className="text-stone-500 italic mb-10">
                   Review coming soon!
                 </p>
               )}

@@ -155,7 +155,7 @@ const PublicBlogDetail = () => {
                 : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
             }
           >
-            <p className="text-xs text-stone-400 mb-3 flex items-center gap-1.5">
+            <p className="text-xs text-stone-500 mb-3 flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5" aria-hidden />
               {new Date(post.dateCreated).toLocaleDateString("en-US", {
                 weekday: "long",
@@ -222,7 +222,7 @@ const PublicBlogDetail = () => {
                       <h3 className="font-display font-bold text-stone-800 group-hover:text-primary-700 transition-colors">
                         {p.title}
                       </h3>
-                      <p className="text-xs text-stone-400 mt-0.5">
+                      <p className="text-xs text-stone-500 mt-0.5">
                         {new Date(p.dateCreated).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",

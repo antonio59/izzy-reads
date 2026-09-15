@@ -171,7 +171,7 @@ export function BookSearchModal({
       }
     } catch (error) {
       console.error("Search failed:", error);
-      toast.error("Search failed", "Please try again.");
+      toast.error("Couldn't search", "Check your connection, then try again.");
     } finally {
       setLoading(false);
     }
@@ -214,7 +214,7 @@ export function BookSearchModal({
       );
     } catch (error) {
       console.error("Failed to add book:", error);
-      toast.error("Failed to add book", "Please try again.");
+      toast.error("Couldn't add the book", "Check your connection, then try again.");
     } finally {
       setAdding(false);
     }
@@ -275,7 +275,7 @@ export function BookSearchModal({
       );
     } catch (error) {
       console.error("Failed to add book:", error);
-      toast.error("Failed to add book", "Please try again.");
+      toast.error("Couldn't add the book", "Check your connection, then try again.");
     } finally {
       setAdding(false);
     }
@@ -418,11 +418,11 @@ export function BookSearchModal({
                           />
                         ) : (
                           <>
-                            <Upload className="w-10 h-10 text-stone-400 mb-2" />
+                            <Upload className="w-10 h-10 text-stone-500 mb-2" />
                             <p className="text-sm text-stone-500 text-center px-4">
                               Click to upload cover image
                             </p>
-                            <p className="text-xs text-stone-400 mt-1">
+                            <p className="text-xs text-stone-500 mt-1">
                               (Optional)
                             </p>
                           </>
@@ -557,7 +557,7 @@ export function BookSearchModal({
                                 }`}
                               >
                                 <Icon
-                                  className={`w-5 h-5 ${isSelected ? "" : "text-stone-400"}`}
+                                  className={`w-5 h-5 ${isSelected ? "" : "text-stone-500"}`}
                                 />
                                 <span className="text-sm font-medium">
                                   {config.label}
@@ -736,7 +736,7 @@ export function BookSearchModal({
                                 }`}
                               >
                                 <Icon
-                                  className={`w-5 h-5 ${isSelected ? "" : "text-stone-400"}`}
+                                  className={`w-5 h-5 ${isSelected ? "" : "text-stone-500"}`}
                                 />
                                 <span className="text-sm font-medium">
                                   {destConfig.label}
@@ -868,7 +868,7 @@ export function BookSearchModal({
                         ? "No books found"
                         : "Search for books to add to your collection!"}
                   </p>
-                  <p className="text-stone-400 text-sm mt-2">
+                  <p className="text-stone-500 text-sm mt-2">
                     {hasSearched
                       ? "Try a different search term or add it manually"
                       : "Try searching for your favourite book or author"}

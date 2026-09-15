@@ -244,13 +244,13 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
                   ))}
                 </div>
               ) : hasSearched ? (
-                <div className="flex flex-col items-center justify-center h-full text-stone-400">
+                <div className="flex flex-col items-center justify-center h-full text-stone-500">
                   <Image className="w-12 h-12 mb-2 opacity-50" />
                   <p className="text-sm">No GIFs found</p>
                   <p className="text-xs">Try a different search term</p>
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-full text-stone-400">
+                <div className="flex items-center justify-center h-full text-stone-500">
                   <p className="text-sm">Search for GIFs above</p>
                 </div>
               )}
@@ -258,7 +258,7 @@ export function GifPicker({ onSelect, buttonClassName = "" }: GifPickerProps) {
 
             {/* Giphy attribution */}
             <div className="p-2 border-t border-stone-100 bg-stone-50">
-              <p className="text-xs text-stone-400 text-center">
+              <p className="text-xs text-stone-500 text-center">
                 Powered by GIPHY
               </p>
             </div>

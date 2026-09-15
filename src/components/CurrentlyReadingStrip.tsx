@@ -34,7 +34,7 @@ export function CurrentlyReadingStrip({
         <h2 className="font-display font-bold text-stone-800 text-sm sm:text-base">
           Currently reading
         </h2>
-        <span className="text-xs text-stone-400 tabular-nums">
+        <span className="text-xs text-stone-500 tabular-nums">
           {reading.length}
         </span>
       </div>
@@ -51,7 +51,7 @@ export function CurrentlyReadingStrip({
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center p-2 text-center">
-                  <span className="text-[10px] font-semibold text-stone-500 line-clamp-4">
+                  <span className="text-xs font-semibold text-stone-500 line-clamp-4">
                     {book.title}
                   </span>
                 </div>
@@ -60,7 +60,7 @@ export function CurrentlyReadingStrip({
             <p className="mt-1.5 text-xs font-display font-bold text-stone-800 line-clamp-2">
               {book.title}
             </p>
-            <p className="text-[10px] text-stone-400 line-clamp-1">
+            <p className="text-xs text-stone-500 line-clamp-1">
               {book.author}
             </p>
           </li>

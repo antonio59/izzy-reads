@@ -118,7 +118,7 @@ function EmojiPicker({
                 />
               ) : (
                 <div className="w-[352px] h-[435px] flex items-center justify-center bg-white rounded-xl">
-                  <Loader2 className="w-8 h-8 text-stone-400 animate-spin" />
+                  <Loader2 className="w-8 h-8 text-stone-500 animate-spin" />
                 </div>
               )}
             </div>
@@ -220,7 +220,7 @@ export function EmojiButton({
                 />
               ) : (
                 <div className="w-[352px] h-[435px] flex items-center justify-center bg-white rounded-xl">
-                  <Loader2 className="w-8 h-8 text-stone-400 animate-spin" />
+                  <Loader2 className="w-8 h-8 text-stone-500 animate-spin" />
                 </div>
               )}
             </div>

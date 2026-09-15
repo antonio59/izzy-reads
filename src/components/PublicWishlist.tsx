@@ -139,7 +139,7 @@ const PublicWishlist = () => {
             </p>
 
             {wishlist.length > 0 && (
-              <p className="mt-5 text-sm text-stone-400">
+              <p className="mt-5 text-sm text-stone-500">
                 <span className="font-display font-bold text-stone-700 tabular-nums">
                   {wishlist.length}
                 </span>{" "}
@@ -191,7 +191,7 @@ const PublicWishlist = () => {
                   }
                   className="mt-5 mx-auto max-w-md text-left rounded-2xl border border-cream-300 bg-white/90 backdrop-blur-sm p-4 shadow-sm"
                 >
-                  <p className="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-2 flex items-center gap-1.5">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-stone-500 mb-2 flex items-center gap-1.5">
                     <Link2 className="w-3.5 h-3.5" />
                     Wishlist link
                   </p>
@@ -315,7 +315,7 @@ const PublicWishlist = () => {
                         <span className="text-white text-xs font-bold">
                           Bought
                         </span>
-                        <span className="text-white/80 text-[10px] mt-0.5 text-center line-clamp-1">
+                        <span className="text-white/80 text-xs mt-0.5 text-center line-clamp-1">
                           by {book.boughtBy}
                         </span>
                       </div>
@@ -356,7 +356,7 @@ const PublicWishlist = () => {
                 I&apos;m always looking for new books! Have a suggestion? Ask a
                 grown-up to help you send me a book idea.
               </p>
-              <p className="text-sm text-stone-400 max-w-sm mx-auto">
+              <p className="text-sm text-stone-500 max-w-sm mx-auto">
                 Tip: check back soon – I&apos;ll be adding books I&apos;d love to
                 read.
               </p>

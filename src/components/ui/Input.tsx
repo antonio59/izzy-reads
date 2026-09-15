@@ -88,7 +88,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <div className="relative">
           {hasLeftIcon && (
             <span
-              className={`absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 ${styles.icon}`}
+              className={`absolute left-3 top-1/2 -translate-y-1/2 text-stone-500 ${styles.icon}`}
             >
               {icon}
             </span>
@@ -101,7 +101,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               w-full rounded-xl font-body transition-all duration-200
               focus:outline-none focus:ring-2 focus:ring-primary-400/30
               disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-stone-100
-              placeholder:text-stone-400
+              placeholder:text-stone-500
               ${variantStyles[variant]}
               ${styles.input}
               ${hasLeftIcon ? "pl-10" : ""}
@@ -113,7 +113,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           />
           {hasRightIcon && !showClear && (
             <span
-              className={`absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 ${styles.icon}`}
+              className={`absolute right-3 top-1/2 -translate-y-1/2 text-stone-500 ${styles.icon}`}
             >
               {icon}
             </span>
@@ -122,7 +122,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             <button
               type="button"
               onClick={onClear}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-stone-400 hover:text-stone-600 rounded-full hover:bg-stone-100 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-stone-500 hover:text-stone-600 rounded-full hover:bg-stone-100 transition-colors"
             >
               <X className={styles.icon} />
             </button>
@@ -188,7 +188,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-3 top-[38px] p-1 text-stone-400 hover:text-stone-600 rounded-full hover:bg-stone-100 transition-colors"
+          className="absolute right-3 top-[38px] p-1 text-stone-500 hover:text-stone-600 rounded-full hover:bg-stone-100 transition-colors"
           tabIndex={-1}
         >
           {showPassword ? (
@@ -263,7 +263,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             w-full rounded-xl font-body transition-all duration-200 resize-none
             focus:outline-none focus:ring-2 focus:ring-primary-400/30
             disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-stone-100
-            placeholder:text-stone-400
+            placeholder:text-stone-500
             ${variantStyles[variant]}
             ${styles.input}
             ${error ? "border-error-500 focus:border-error-500 focus:ring-error-400/30" : ""}
@@ -281,7 +281,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           )}
           {showCount && (
             <p
-              className={`text-xs text-stone-400 ml-auto ${maxLength && charCount >= maxLength ? "text-error-500" : ""}`}
+              className={`text-xs text-stone-500 ml-auto ${maxLength && charCount >= maxLength ? "text-error-500" : ""}`}
             >
               {charCount}
               {maxLength ? `/${maxLength}` : ""} characters

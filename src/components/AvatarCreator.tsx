@@ -926,7 +926,7 @@ export default function AvatarCreator({
                               : "bg-stone-100 text-stone-700 hover:bg-stone-200"
                           }`}
                         >
-                          <span className="text-lg">{expr.emoji}</span>
+                          <span className="text-lg" aria-hidden="true">{expr.emoji}</span>
                           {expr.name}
                         </button>
                       ))}
@@ -950,7 +950,7 @@ export default function AvatarCreator({
                               : "bg-stone-100 text-stone-700 hover:bg-stone-200"
                           }`}
                         >
-                          {acc.emoji && <span>{acc.emoji}</span>}
+                          {acc.emoji && <span aria-hidden="true">{acc.emoji}</span>}
                           {acc.name}
                         </button>
                       ))}

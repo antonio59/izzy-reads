@@ -129,7 +129,7 @@ function SwipeCard({
           )}
 
           {isTop && (
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-stone-600 text-[11px] font-medium ring-1 ring-cream-300 shadow-sm">
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-stone-600 text-xs font-medium ring-1 ring-cream-300 shadow-sm">
               Tap cover for full details
             </div>
           )}

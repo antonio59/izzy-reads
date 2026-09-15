@@ -67,6 +67,7 @@ export function FinishRitual({
                     scale: [0.5, 1.1, 0.8],
                   }}
                   transition={{ duration: 1.4, delay: s.delay }}
+                  aria-hidden="true"
                 >
                   {s.emoji}
                 </motion.span>

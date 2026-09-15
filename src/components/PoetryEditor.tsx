@@ -274,7 +274,7 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <span className="text-4xl mb-3 block group-hover:scale-110 transition-transform">
+                    <span className="text-4xl mb-3 block group-hover:scale-110 transition-transform" aria-hidden="true">
                       {template.emoji}
                     </span>
                     <h3 className="font-bold text-stone-800 mb-1">

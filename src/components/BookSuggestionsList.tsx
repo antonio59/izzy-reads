@@ -159,14 +159,14 @@ function SuggestionCard({
                 {suggestion.genre}
               </span>
             )}
-            <span className="text-xs text-stone-400">
+            <span className="text-xs text-stone-500">
               Suggested by {suggestion.suggestedBy}
             </span>
           </div>
 
           {suggestion.reason && (
             <div className="mt-3 flex items-start gap-2 bg-stone-50 rounded-lg p-3">
-              <MessageCircle className="w-4 h-4 text-stone-400 mt-0.5 flex-shrink-0" />
+              <MessageCircle className="w-4 h-4 text-stone-500 mt-0.5 flex-shrink-0" />
               <p className="text-sm text-stone-600 italic">
                 "{suggestion.reason}"
               </p>
@@ -214,7 +214,7 @@ function SuggestionCard({
         <div className="mt-3 pt-3 border-t border-stone-100">
           <button
             onClick={() => onDelete(suggestion._id)}
-            className="text-sm text-stone-400 hover:text-red-500 transition-colors"
+            className="text-sm text-stone-500 hover:text-red-500 transition-colors"
           >
             Remove suggestion
           </button>

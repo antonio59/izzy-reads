@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Card } from "./ui/Card";
+import { EmptyState } from "./ui/EmptyState";
 import {
   TrendingUp,
   Award,
@@ -424,13 +425,12 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-8">
-                <MessageSquare className="w-12 h-12 text-stone-300 mx-auto mb-3" />
-                <p className="text-stone-500">No reviews with reactions yet</p>
-                <p className="text-sm text-stone-400">
-                  Share your reviews to get reader feedback!
-                </p>
-              </div>
+              <EmptyState
+                icon={MessageSquare}
+                title="No reviews with reactions yet"
+                description="Share your reviews to get reader feedback!"
+                className="py-8"
+              />
             )}
           </Card>
         </motion.div>
@@ -535,7 +535,7 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                     : 0;
                 return (
                   <div key={reaction.key} className="flex items-center gap-3">
-                    <span className="text-xl w-8">{reaction.emoji}</span>
+                    <span className="text-xl w-8" aria-hidden="true">{reaction.emoji}</span>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm font-medium text-stone-700">
@@ -591,7 +591,7 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                     : 0;
                 return (
                   <div key={reaction.key} className="flex items-center gap-3">
-                    <span className="text-xl w-8">{reaction.emoji}</span>
+                    <span className="text-xl w-8" aria-hidden="true">{reaction.emoji}</span>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm font-medium text-stone-700">

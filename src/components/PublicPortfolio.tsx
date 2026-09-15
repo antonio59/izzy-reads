@@ -10,6 +10,7 @@ import { AvatarPreview, type AvatarConfig } from "./AvatarCreator";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
 import { BookCoverImage } from "./ui/BookCoverImage";
+import { EmptyState } from "./ui/EmptyState";
 import { PageMeta } from "./PageMeta";
 import { CurrentlyReadingStrip } from "./CurrentlyReadingStrip";
 import { pageMeta } from "../lib/seo";
@@ -175,11 +176,11 @@ function HeroCoverShelf({
                       </p>
                     )}
                     {snippet ? (
-                      <p className="text-[11px] text-stone-500 italic leading-snug mt-1.5 line-clamp-3">
+                      <p className="text-xs text-stone-500 italic leading-snug mt-1.5 line-clamp-3">
                         “{snippet}”
                       </p>
                     ) : (
-                      <p className="text-[11px] text-stone-400 mt-1.5">
+                      <p className="text-xs text-stone-500 mt-1.5">
                         On Izzy&apos;s shelf
                       </p>
                     )}
@@ -380,7 +381,7 @@ const PublicPortfolio = () => {
             <EmptyState
               icon="📚"
               title="Shelf coming soon"
-              message="Izzy is reading amazing books and can't wait to share them!"
+              description="Izzy is reading amazing books and can't wait to share them!"
             />
           )}
         </section>
@@ -396,7 +397,7 @@ const PublicPortfolio = () => {
                 <p className="font-display text-3xl font-bold text-stone-800 tabular-nums">
                   {readBooks.length}
                 </p>
-                <p className="text-xs uppercase tracking-wider text-stone-400 mt-1 font-medium">
+                <p className="text-xs uppercase tracking-wider text-stone-500 mt-1 font-medium">
                   Books read
                 </p>
               </div>
@@ -404,7 +405,7 @@ const PublicPortfolio = () => {
                 <p className="font-display text-3xl font-bold text-stone-800 tabular-nums">
                   {pagesRead.toLocaleString()}
                 </p>
-                <p className="text-xs uppercase tracking-wider text-stone-400 mt-1 font-medium">
+                <p className="text-xs uppercase tracking-wider text-stone-500 mt-1 font-medium">
                   Pages
                 </p>
               </div>
@@ -412,7 +413,7 @@ const PublicPortfolio = () => {
                 <p className="font-display text-3xl font-bold text-stone-800 tabular-nums group-hover:text-primary-600 transition-colors">
                   {reviewCount}
                 </p>
-                <p className="text-xs uppercase tracking-wider text-stone-400 mt-1 font-medium">
+                <p className="text-xs uppercase tracking-wider text-stone-500 mt-1 font-medium">
                   Reviews
                 </p>
               </Link>
@@ -536,27 +537,5 @@ const PublicPortfolio = () => {
     </div>
   );
 };
-
-function EmptyState({
-  icon,
-  title,
-  message,
-}: {
-  icon: string;
-  title: string;
-  message: string;
-}) {
-  return (
-    <div className="text-center py-16 px-4">
-      <div className="text-5xl mb-4" aria-hidden>
-        {icon}
-      </div>
-      <h3 className="text-xl font-display font-bold text-stone-700 mb-2">
-        {title}
-      </h3>
-      <p className="text-stone-500 max-w-md mx-auto">{message}</p>
-    </div>
-  );
-}
 
 export default PublicPortfolio;

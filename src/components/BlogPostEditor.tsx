@@ -395,7 +395,7 @@ const BlogPostEditor: React.FC = () => {
 
                   <div className="flex-1" />
 
-                  <div className="flex items-center gap-2 text-sm text-stone-400">
+                  <div className="flex items-center gap-2 text-sm text-stone-500">
                     <Sparkles className="w-4 h-4" />
                     <span>Express yourself!</span>
                   </div>

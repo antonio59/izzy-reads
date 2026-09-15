@@ -209,21 +209,21 @@ export function GoodreadsImportModal({
               <p className="text-xl font-display font-bold text-green-700">
                 {plan.finished.length}
               </p>
-              <p className="text-[11px] text-green-700/80">Finished</p>
+              <p className="text-xs text-green-700/80">Finished</p>
             </div>
             <div className="rounded-xl bg-blue-50 border border-blue-100 p-3 text-center">
               <BookMarked className="w-4 h-4 mx-auto text-blue-600 mb-1" />
               <p className="text-xl font-display font-bold text-blue-700">
                 {plan.reading.length}
               </p>
-              <p className="text-[11px] text-blue-700/80">Reading</p>
+              <p className="text-xs text-blue-700/80">Reading</p>
             </div>
             <div className="rounded-xl bg-primary-50 border border-primary-100 p-3 text-center">
               <Heart className="w-4 h-4 mx-auto text-primary-600 mb-1" />
               <p className="text-xl font-display font-bold text-primary-700">
                 {plan.wishlist.length}
               </p>
-              <p className="text-[11px] text-primary-700/80">Wishlist</p>
+              <p className="text-xs text-primary-700/80">Wishlist</p>
             </div>
           </div>
 
@@ -244,7 +244,7 @@ export function GoodreadsImportModal({
                     </p>
                   </div>
                   <span
-                    className={`text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full flex-shrink-0 ${
+                    className={`text-xs font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full flex-shrink-0 ${
                       dest === "Finished"
                         ? "bg-green-100 text-green-700"
                         : dest === "Reading"

@@ -226,19 +226,19 @@ function CoverStatCard({
           <p className="font-display font-bold text-emerald-700 tabular-nums">
             {convex}
           </p>
-          <p className="text-[10px] text-stone-500 mt-0.5">Saved</p>
+          <p className="text-xs text-stone-500 mt-0.5">Saved</p>
         </div>
         <div className="rounded-lg bg-white px-2 py-2 ring-1 ring-cream-200">
           <p className="font-display font-bold text-amber-700 tabular-nums">
             {external}
           </p>
-          <p className="text-[10px] text-stone-500 mt-0.5">External</p>
+          <p className="text-xs text-stone-500 mt-0.5">External</p>
         </div>
         <div className="rounded-lg bg-white px-2 py-2 ring-1 ring-cream-200">
           <p className="font-display font-bold text-stone-500 tabular-nums">
             {missing}
           </p>
-          <p className="text-[10px] text-stone-500 mt-0.5">Missing</p>
+          <p className="text-xs text-stone-500 mt-0.5">Missing</p>
         </div>
       </div>
     </div>
