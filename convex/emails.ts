@@ -169,6 +169,8 @@ export const sendWeeklySummary = internalAction({
 
     const books = await ctx.runQuery(api.books.getAll);
     const wishlist = await ctx.runQuery(api.wishlist.getAll);
+    const poems = await ctx.runQuery(api.poems.getAll);
+    const blogPosts = await ctx.runQuery(api.blogPosts.getAll);
     const readBooks = books.filter((b) => b.isRead);
     const totalReviews = readBooks.filter((b) => b.notes).length;
 
@@ -182,6 +184,10 @@ export const sendWeeklySummary = internalAction({
     });
     const wishlistAddedThisWeek = wishlist.filter(
       (w) => w._creationTime >= weekAgo,
+    );
+    const poemsThisWeek = poems.filter((p) => p._creationTime >= weekAgo);
+    const postsThisWeek = blogPosts.filter(
+      (p) => p._creationTime >= weekAgo && p.status === "published",
     );
 
     // Calculate milestones
@@ -228,6 +234,17 @@ export const sendWeeklySummary = internalAction({
       ${booksAddedThisWeek.length > 0 ? `<p style="margin:0 0 8px 0;font-size:14px;line-height:1.6;color:${C.body};"><strong style="color:${C.ink};">${booksAddedThisWeek.length}</strong> added to your shelf: ${booksAddedThisWeek.slice(0, 5).map((b) => escapeHtml(b.title)).join(", ")}${booksAddedThisWeek.length > 5 ? ` +${booksAddedThisWeek.length - 5} more` : ""}</p>` : ""}
       ${wishlistAddedThisWeek.length > 0 ? `<p style="margin:0;font-size:14px;line-height:1.6;color:${C.body};"><strong style="color:${C.ink};">${wishlistAddedThisWeek.length}</strong> on your wishlist: ${wishlistAddedThisWeek.slice(0, 5).map((w) => escapeHtml(w.title)).join(", ")}${wishlistAddedThisWeek.length > 5 ? ` +${wishlistAddedThisWeek.length - 5} more` : ""}</p>` : ""}
     </div>` : ""}
+
+    <!-- Share your words -->
+    <div style="${card}border-left:6px solid ${C.gold};">
+      ${sectionTitle("✍️", "Share your words")}
+      ${poemsThisWeek.length + postsThisWeek.length > 0 ? `
+      <p style="margin:0 0 8px 0;font-size:14px;line-height:1.6;color:${C.body};">You shared <strong style="color:${C.ink};">${poemsThisWeek.length + postsThisWeek.length}</strong> this week${poemsThisWeek.length > 0 ? ` — ${poemsThisWeek.slice(0, 4).map((p) => escapeHtml(p.title)).join(", ")}` : ""}${postsThisWeek.length > 0 ? `, plus ${postsThisWeek.slice(0, 4).map((p) => escapeHtml(p.title)).join(", ")}` : ""}. Lovely!</p>
+      <p style="margin:0;font-size:14px;line-height:1.6;color:${C.body};">Got another poem or story brewing? <a href="${SITE_URL}/create" style="color:${C.teal};text-decoration:none;font-weight:600;">Share it</a> — everyone loves reading what you write.</p>
+      ` : `
+      <p style="margin:0;font-size:14px;line-height:1.6;color:${C.body};">Written a poem, story, or book review lately? <a href="${SITE_URL}/create" style="color:${C.teal};text-decoration:none;font-weight:600;">Pop it on your shelf</a> — your readers are waiting!</p>
+      `}
+    </div>
 
     <!-- Reactions -->
     <div style="${card}">
