@@ -36,6 +36,9 @@ updates:
         patterns:
           - "react*"
           - "@types/react*"
+          - "framer-motion"
+          - "react-router*"
+          - "lucide-react"
 
       # Group all Vite-related updates together
       vite:
@@ -48,12 +51,21 @@ updates:
         patterns:
           - "typescript"
           - "@typescript-eslint/*"
+          - "typescript-eslint"
 
       # Group all testing utilities together
       testing:
         patterns:
           - "@testing-library/*"
           - "vitest"
+          - "@vitest/*"
+          - "jsdom"
+
+      # Group all Convex updates together
+      convex:
+        patterns:
+          - "convex"
+          - "@convex-dev/*"
 
       # Group all Tailwind updates together
       tailwind:
