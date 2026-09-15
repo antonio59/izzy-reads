@@ -3,6 +3,8 @@ import { v } from "convex/values";
 import { action, type ActionCtx } from "./_generated/server";
 import { api } from "./_generated/api";
 import { auth } from "./auth";
+import { requireAdminAction } from "./authGuards";
+import { isAllowedCoverUrl } from "./validation";
 import type { Doc, Id } from "./_generated/dataModel";
 
 /** Mirror of src/lib/coverUrl helpers — keep in sync for Convex runtime. */
@@ -80,6 +82,8 @@ function isConvexStorageUrl(url?: string): boolean {
 }
 
 /** Fetch + store a cover; shared so refresh can avoid circular api.covers refs. */
+const MAX_COVER_BYTES = 8 * 1024 * 1024;
+
 async function persistCoverImage(
   ctx: ActionCtx,
   externalUrl: string,
@@ -87,6 +91,12 @@ async function persistCoverImage(
 ): Promise<string | null> {
   try {
     const fetchUrl = upgradeCoverUrl(externalUrl) || externalUrl;
+    // Only fetch from known cover/storage hosts — never arbitrary or
+    // non-https URLs, so this can never proxy into internal networks.
+    if (!isAllowedCoverUrl(fetchUrl) || fetchUrl.startsWith("data:")) {
+      console.log(`Rejected cover URL for "${bookTitle}": ${fetchUrl}`);
+      return null;
+    }
     const response = await fetch(fetchUrl, {
       headers: { Accept: "image/*,*/*" },
       redirect: "follow",
@@ -110,6 +120,11 @@ async function persistCoverImage(
 
     if (blob.size < 2000) {
       console.log(`Image too small for "${bookTitle}": ${blob.size} bytes`);
+      return null;
+    }
+
+    if (blob.size > MAX_COVER_BYTES) {
+      console.log(`Image too large for "${bookTitle}": ${blob.size} bytes`);
       return null;
     }
 
@@ -137,6 +152,7 @@ export const storeCoverImage = action({
   },
   returns: v.union(v.string(), v.null()),
   handler: async (ctx, { externalUrl, bookTitle }) => {
+    await requireAdminAction(ctx);
     return await persistCoverImage(ctx, externalUrl, bookTitle);
   },
 });
@@ -186,7 +202,9 @@ export const refreshLibraryCovers = action({
     const isAdmin = await ctx.runQuery(api.users.isCurrentUserAdmin, {});
     if (!isAdmin) throw new Error("Admin access required");
 
-    const items: Array<Doc<"books"> | Doc<"wishlist">> =
+    const items: Array<
+      Omit<Doc<"books">, "userId"> | Omit<Doc<"wishlist">, "userId">
+    > =
       target === "wishlist"
         ? await ctx.runQuery(api.wishlist.getAll, {})
         : await ctx.runQuery(api.books.getAll, {});

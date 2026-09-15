@@ -1,17 +1,19 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import { requireAdmin } from "./authGuards";
+import { isAllowedCoverUrl } from "./validation";
 
-// Update just the cover URL
+// Update just the cover URL - admin only
 export const updateCover = mutation({
   args: {
     wishlistId: v.id("wishlist"),
     coverUrl: v.string(),
   },
   handler: async (ctx, { wishlistId, coverUrl }) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
+    await requireAdmin(ctx);
+    if (!isAllowedCoverUrl(coverUrl)) {
+      throw new Error("Cover URL host is not allowed");
     }
 
     const item = await ctx.db.get(wishlistId);
@@ -28,11 +30,16 @@ export const updateCover = mutation({
 export const getAll = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("wishlist").collect();
+    const items = await ctx.db.query("wishlist").collect();
+    const userId = await auth.getUserId(ctx);
+    if (userId) return items;
+    // Anonymous callers get the public projection — internal bookkeeping
+    // fields stay server-side.
+    return items.map(({ userId: _u, ...rest }) => ({ ...rest, boughtAt: undefined }));
   },
 });
 
-// Add to wishlist - requires authentication
+// Add to wishlist - admin only (rows are publicly visible)
 export const add = mutation({
   args: {
     title: v.string(),
@@ -46,15 +53,15 @@ export const add = mutation({
     dateAdded: v.string(),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
+    const userId = await requireAdmin(ctx);
+    if (args.coverUrl && !isAllowedCoverUrl(args.coverUrl)) {
+      throw new Error("Cover URL host is not allowed");
     }
     return await ctx.db.insert("wishlist", { ...args, userId });
   },
 });
 
-// Bulk add to wishlist - requires authentication (used by Goodreads import)
+// Bulk add to wishlist - admin only (used by Goodreads import)
 export const bulkAdd = mutation({
   args: {
     items: v.array(
@@ -72,12 +79,12 @@ export const bulkAdd = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
+    const userId = await requireAdmin(ctx);
     const insertedIds = [];
-    for (const item of args.items) {
+    for (let item of args.items) {
+      if (item.coverUrl && !isAllowedCoverUrl(item.coverUrl)) {
+        item = { ...item, coverUrl: undefined };
+      }
       const id = await ctx.db.insert("wishlist", { userId, ...item });
       insertedIds.push(id);
     }
@@ -110,14 +117,25 @@ export const markAsBought = mutation({
   },
 });
 
-// Remove from wishlist - requires authentication (any authenticated user can delete - they're family/parents)
+// Undo a bought mark - admin only (recovery from accidental/abusive marks)
+export const unmarkBought = mutation({
+  args: { id: v.id("wishlist") },
+  handler: async (ctx, args) => {
+    await requireAdmin(ctx);
+    const item = await ctx.db.get(args.id);
+    if (!item) throw new Error("Wishlist item not found");
+    await ctx.db.patch(args.id, {
+      boughtBy: undefined,
+      boughtAt: undefined,
+    });
+  },
+});
+
+// Remove from wishlist - admin only
 export const remove = mutation({
   args: { id: v.id("wishlist") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
+    await requireAdmin(ctx);
 
     const item = await ctx.db.get(args.id);
     if (!item) {
@@ -139,16 +157,22 @@ export const bulkUpdateCovers = mutation({
     ),
   },
   handler: async (ctx, { updates }) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
+    await requireAdmin(ctx);
 
     const results = [];
     for (const update of updates) {
       const item = await ctx.db.get(update.wishlistId);
       if (!item) {
         results.push({ id: update.wishlistId, error: "Not found" });
+        continue;
+      }
+
+      if (!isAllowedCoverUrl(update.coverUrl)) {
+        results.push({
+          id: update.wishlistId,
+          title: item.title,
+          error: "Cover URL host is not allowed",
+        });
         continue;
       }
 

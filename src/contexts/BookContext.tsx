@@ -32,6 +32,7 @@ interface BookContextType {
   deleteBlogPost: (id: string) => Promise<void>;
   addPoem: (poem: Omit<Poem, "id">) => Promise<void>;
   updatePoem: (id: string, updates: Partial<Poem>) => Promise<void>;
+  likePoem: (id: string) => Promise<void>;
   deletePoem: (id: string) => Promise<void>;
 }
 
@@ -109,7 +110,8 @@ function calculateReadingStreak(readBooks: Book[]): number {
 }
 
 // Helper to convert Convex doc to Book type
-function convexBookToBook(doc: Doc<"books">): Book {
+// Accepts the anonymous projection too (userId stripped server-side).
+function convexBookToBook(doc: Omit<Doc<"books">, "userId">): Book {
   return {
     id: doc._id,
     title: doc.title,
@@ -130,7 +132,7 @@ function convexBookToBook(doc: Doc<"books">): Book {
   };
 }
 
-function convexWishlistToBook(doc: Doc<"wishlist">): Book {
+function convexWishlistToBook(doc: Omit<Doc<"wishlist">, "userId">): Book {
   return {
     id: doc._id,
     title: doc.title,
@@ -200,6 +202,7 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
 
   const addPoemMutation = useMutation(api.poems.add);
   const updatePoemMutation = useMutation(api.poems.update);
+  const incrementPoemLikesMutation = useMutation(api.poems.incrementLikes);
   const removePoemMutation = useMutation(api.poems.remove);
 
   const addBlogPostMutation = useMutation(api.blogPosts.add);
@@ -453,7 +456,6 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
       content: poem.content,
       emoji: poem.emoji,
       dateCreated: poem.dateCreated,
-      likes: poem.likes || 0,
       template: poem.template,
     });
   };
@@ -465,9 +467,12 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
       title: rest.title,
       content: rest.content,
       emoji: rest.emoji,
-      likes: rest.likes,
       template: rest.template,
     });
+  };
+
+  const likePoem = async (id: string) => {
+    await incrementPoemLikesMutation({ id: id as Id<"poems"> });
   };
 
   const deletePoem = async (id: string) => {
@@ -495,6 +500,7 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
     deleteBlogPost,
     addPoem,
     updatePoem,
+    likePoem,
     deletePoem,
   };
 

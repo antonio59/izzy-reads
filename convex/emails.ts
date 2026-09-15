@@ -2,6 +2,7 @@ import { internalAction } from "./_generated/server";
 import { v } from "convex/values";
 import { Resend } from "resend";
 import { api, internal } from "./_generated/api";
+import { escapeHtml } from "./validation";
 
 declare const process: { env: Record<string, string | undefined> };
 
@@ -50,22 +51,22 @@ export const sendSuggestionNotification = internalAction({
 
       <!-- Book Info -->
       <div style="margin-bottom: 20px; padding: 16px; background: #fdf2f8; border-radius: 12px;">
-        <h2 style="margin: 0 0 4px 0; font-size: 18px; color: #1e293b;">${args.title}</h2>
-        <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px;">by ${args.author}</p>
-        ${args.genre ? `<span style="display: inline-block; padding: 2px 10px; background: #fce7f3; color: #be3590; border-radius: 100px; font-size: 12px; font-weight: 600;">${args.genre}</span>` : ""}
+        <h2 style="margin: 0 0 4px 0; font-size: 18px; color: #1e293b;">${escapeHtml(args.title)}</h2>
+        <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px;">by ${escapeHtml(args.author)}</p>
+        ${args.genre ? `<span style="display: inline-block; padding: 2px 10px; background: #fce7f3; color: #be3590; border-radius: 100px; font-size: 12px; font-weight: 600;">${escapeHtml(args.genre)}</span>` : ""}
       </div>
 
       <!-- Who Suggested -->
       <div style="margin-bottom: 16px;">
         <p style="margin: 0 0 4px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; font-weight: 600;">Suggested by</p>
-        <p style="margin: 0; font-size: 16px; color: #1e293b; font-weight: 600;">${args.suggestedBy}</p>
+        <p style="margin: 0; font-size: 16px; color: #1e293b; font-weight: 600;">${escapeHtml(args.suggestedBy)}</p>
       </div>
 
       ${args.reason ? `
       <!-- Why -->
       <div style="margin-bottom: 20px;">
         <p style="margin: 0 0 4px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; font-weight: 600;">Why this book?</p>
-        <p style="margin: 0; font-size: 14px; color: #475569; font-style: italic; line-height: 1.5;">"${args.reason}"</p>
+        <p style="margin: 0; font-size: 14px; color: #475569; font-style: italic; line-height: 1.5;">"${escapeHtml(args.reason)}"</p>
       </div>
       ` : ""}
 
@@ -86,7 +87,7 @@ export const sendSuggestionNotification = internalAction({
     await resend.emails.send({
       from: "Izzy's Bookshelf <suggestions@izzysbookshelf.com>",
       to: notificationEmail,
-      subject: `📚 Someone suggested "${args.title}" by ${args.author}!`,
+      subject: `📚 Someone suggested "${args.title.slice(0, 100)}" by ${args.author.slice(0, 100)}!`,
       html,
     });
   },
@@ -117,8 +118,21 @@ export const sendWeeklySummary = internalAction({
     const writingStats = await ctx.runQuery(internal.writingReactions.getAllWritingReactionStats);
 
     const books = await ctx.runQuery(api.books.getAll);
+    const wishlist = await ctx.runQuery(api.wishlist.getAll);
     const readBooks = books.filter((b) => b.isRead);
     const totalReviews = readBooks.filter((b) => b.notes).length;
+
+    // This week's activity (last 7 days, by record creation / dateRead)
+    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    const booksAddedThisWeek = books.filter((b) => b._creationTime >= weekAgo);
+    const booksReadThisWeek = readBooks.filter((b) => {
+      if (!b.dateRead) return false;
+      const t = new Date(b.dateRead).getTime();
+      return !Number.isNaN(t) && t >= weekAgo;
+    });
+    const wishlistAddedThisWeek = wishlist.filter(
+      (w) => w._creationTime >= weekAgo,
+    );
 
     // Calculate milestones
     const milestones: string[] = [];
@@ -169,6 +183,25 @@ export const sendWeeklySummary = internalAction({
         </div>
         ${totalReactions > 0 ? `<p style="margin: 12px 0 0 0; font-size: 14px; color: #475569;"><strong>${totalReactions}</strong> total reactions this week! 🎉</p>` : ""}
       </div>
+
+      <!-- This week's reading activity -->
+      ${booksReadThisWeek.length > 0 ? `
+      <div style="margin-bottom: 24px; padding: 16px; background: #f0f9ff; border-radius: 12px;">
+        <h2 style="margin: 0 0 12px 0; font-size: 16px; color: #1e293b;">📚 Finished This Week</h2>
+        <ul style="margin: 0; padding-left: 20px; color: #475569; font-size: 14px; line-height: 1.6;">
+          ${booksReadThisWeek.map((b) => `<li style="margin-bottom: 4px;"><strong>${escapeHtml(b.title)}</strong> by ${escapeHtml(b.author)}${b.rating ? ` — ${"⭐".repeat(Math.min(5, Math.round(b.rating)))}` : ""}</li>`).join("")}
+        </ul>
+      </div>
+      ` : ""}
+
+      <!-- Newly added books + wishlist -->
+      ${booksAddedThisWeek.length + wishlistAddedThisWeek.length > 0 ? `
+      <div style="margin-bottom: 24px; padding: 16px; background: #fdf2f8; border-radius: 12px;">
+        <h2 style="margin: 0 0 12px 0; font-size: 16px; color: #1e293b;">✨ Added This Week</h2>
+        ${booksAddedThisWeek.length > 0 ? `<p style="margin: 0 0 6px 0; font-size: 14px; color: #475569;"><strong>${booksAddedThisWeek.length}</strong> to the shelf: ${booksAddedThisWeek.slice(0, 5).map((b) => escapeHtml(b.title)).join(", ")}${booksAddedThisWeek.length > 5 ? ` +${booksAddedThisWeek.length - 5} more` : ""}</p>` : ""}
+        ${wishlistAddedThisWeek.length > 0 ? `<p style="margin: 0; font-size: 14px; color: #475569;"><strong>${wishlistAddedThisWeek.length}</strong> to the wishlist: ${wishlistAddedThisWeek.slice(0, 5).map((w) => escapeHtml(w.title)).join(", ")}${wishlistAddedThisWeek.length > 5 ? ` +${wishlistAddedThisWeek.length - 5} more` : ""}</p>` : ""}
+      </div>
+      ` : ""}
 
       <!-- Milestones -->
       ${milestones.length > 0 ? `

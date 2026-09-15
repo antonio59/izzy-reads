@@ -1,6 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import { auth } from "./auth";
+import { requireAdmin } from "./authGuards";
 import type { Id } from "./_generated/dataModel";
 
 // Get all poems (for public pages - read only)
@@ -51,18 +51,15 @@ export const add = mutation({
     content: v.string(),
     emoji: v.optional(v.string()),
     dateCreated: v.string(),
-    likes: v.number(),
     template: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
+    const userId = await requireAdmin(ctx);
     const allPoems = await ctx.db.query("poems").collect();
     const existingSlugs = allPoems.map((p) => p.slug).filter(Boolean) as string[];
     const slug = createSlug(args.title, existingSlugs);
-    return await ctx.db.insert("poems", { ...args, userId, slug });
+    // likes is server-owned — never accepted from the client.
+    return await ctx.db.insert("poems", { ...args, userId, slug, likes: 0 });
   },
 });
 
@@ -72,14 +69,10 @@ export const update = mutation({
     title: v.optional(v.string()),
     content: v.optional(v.string()),
     emoji: v.optional(v.string()),
-    likes: v.optional(v.number()),
     template: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
+    await requireAdmin(ctx);
 
     const poem = await ctx.db.get(args.id);
     if (!poem) {
@@ -94,13 +87,22 @@ export const update = mutation({
   },
 });
 
+// Increment a poem's like counter by one — the only supported way to
+// change likes. Admin-only since it runs inside the authed Create page.
+export const incrementLikes = mutation({
+  args: { id: v.id("poems") },
+  handler: async (ctx, args) => {
+    await requireAdmin(ctx);
+    const poem = await ctx.db.get(args.id);
+    if (!poem) throw new Error("Poem not found");
+    await ctx.db.patch(args.id, { likes: poem.likes + 1 });
+  },
+});
+
 export const remove = mutation({
   args: { id: v.id("poems") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
+    await requireAdmin(ctx);
 
     const poem = await ctx.db.get(args.id);
     if (!poem) {

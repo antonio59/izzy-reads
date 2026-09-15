@@ -1,6 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import { auth } from "./auth";
+import { requireAdmin } from "./authGuards";
+import { hashPasscode } from "./validation";
 
 // Get active book club (public)
 export const getActive = query({
@@ -14,12 +15,11 @@ export const getActive = query({
   },
 });
 
-// Get all book clubs for admin - requires auth
+// Get all book clubs for admin - requires admin
 export const getAll = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) return null;
+    await requireAdmin(ctx);
     return await ctx.db.query("bookClubs").order("desc").collect();
   },
 });
@@ -68,8 +68,7 @@ export const create = mutation({
     endDate: v.string(),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
+    const userId = await requireAdmin(ctx);
 
     // Deactivate any currently active clubs
     const activeClubs = await ctx.db
@@ -102,8 +101,7 @@ export const update = mutation({
     isActive: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
+    await requireAdmin(ctx);
 
     const { id, ...updates } = args;
     const filteredUpdates = Object.fromEntries(
@@ -132,8 +130,7 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("bookClubs") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
+    await requireAdmin(ctx);
 
     // Delete associated comments and reactions
     const comments = await ctx.db
@@ -184,13 +181,16 @@ export const addReaction = mutation({
       throw new Error("Passcode must be exactly 6 digits");
     }
 
+    // Passcodes are stored hashed — the raw digits never hit the table.
+    const passcodeHash = await hashPasscode(args.passcode);
+
     const existing = await ctx.db
       .query("bookClubReactions")
       .withIndex("by_club_visitor", (q) =>
         q
           .eq("clubId", args.clubId)
           .eq("visitorName", args.visitorName.trim())
-          .eq("passcode", args.passcode),
+          .eq("passcode", passcodeHash),
       )
       .first();
 
@@ -208,7 +208,7 @@ export const addReaction = mutation({
     await ctx.db.insert("bookClubReactions", {
       clubId: args.clubId,
       visitorName: args.visitorName.trim(),
-      passcode: args.passcode,
+      passcode: passcodeHash,
       reactionType: args.reactionType,
       createdAt: new Date().toISOString(),
     });
@@ -225,13 +225,14 @@ export const getVisitorReaction = query({
     passcode: v.string(),
   },
   handler: async (ctx, args) => {
+    const passcodeHash = await hashPasscode(args.passcode);
     const reaction = await ctx.db
       .query("bookClubReactions")
       .withIndex("by_club_visitor", (q) =>
         q
           .eq("clubId", args.clubId)
           .eq("visitorName", args.visitorName)
-          .eq("passcode", args.passcode),
+          .eq("passcode", passcodeHash),
       )
       .first();
 

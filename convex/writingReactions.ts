@@ -54,6 +54,8 @@ export const getVisitorReaction = query({
   },
 });
 
+const VISITOR_ID_RE = /^visitor_[A-Za-z0-9_-]{16,64}$/;
+
 // Add or update a reaction (one reaction per visitor per post)
 export const addReaction = mutation({
   args: {
@@ -62,6 +64,9 @@ export const addReaction = mutation({
     reactionType: writingReactionTypes,
   },
   handler: async (ctx, args) => {
+    if (!VISITOR_ID_RE.test(args.visitorId)) {
+      throw new Error("Invalid visitor id");
+    }
     const existing = await ctx.db
       .query("writingReactions")
       .withIndex("by_post_visitor", (q) =>

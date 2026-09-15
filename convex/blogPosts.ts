@@ -1,6 +1,7 @@
 import { query, mutation, type QueryCtx, type MutationCtx } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import { isAdmin, requireAdmin } from "./authGuards";
 import type { Id } from "./_generated/dataModel";
 
 function slugify(title: string): string {
@@ -52,7 +53,11 @@ export const getBySlugOrId = query({
 export const getAll = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("blogPosts").collect();
+    const posts = await ctx.db.query("blogPosts").collect();
+    // Drafts are only visible to admins; everyone else gets published only.
+    const userId = await auth.getUserId(ctx);
+    if (userId && (await isAdmin(ctx, userId))) return posts;
+    return posts.filter((p) => p.status === "published");
   },
 });
 
@@ -69,10 +74,7 @@ export const add = mutation({
     slug: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
+    const userId = await requireAdmin(ctx);
     const slug = args.slug
       ? await uniqueSlug(ctx, slugify(args.slug))
       : await uniqueSlug(ctx, slugify(args.title));
@@ -94,10 +96,7 @@ export const update = mutation({
     slug: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
+    await requireAdmin(ctx);
 
     const post = await ctx.db.get(args.id);
     if (!post) {
@@ -124,10 +123,7 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("blogPosts") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
+    await requireAdmin(ctx);
 
     const post = await ctx.db.get(args.id);
     if (!post) {
@@ -138,22 +134,11 @@ export const remove = mutation({
   },
 });
 
-/** One-shot: assign slugs to any posts missing them (parent/admin only) */
+/** One-shot: assign slugs to any posts missing them (admin only) */
 export const backfillSlugs = mutation({
   args: {},
   handler: async (ctx) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
-
-    const profile = await ctx.db
-      .query("userProfiles")
-      .withIndex("by_userId", (q) => q.eq("userId", userId))
-      .first();
-    if (!profile?.isParent) {
-      throw new Error("Admin access required");
-    }
+    await requireAdmin(ctx);
 
     const all = await ctx.db.query("blogPosts").collect();
     let updated = 0;

@@ -39,8 +39,9 @@ function getVisitorId(): string {
   let visitorId = localStorage.getItem(STORAGE_KEY);
 
   if (!visitorId) {
-    // Generate a unique ID
-    visitorId = `visitor_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+    // Unguessable ID — a visitor who knows another's ID can modify that
+    // visitor's reaction, so IDs must be cryptographically random.
+    visitorId = `visitor_${crypto.randomUUID()}`;
     localStorage.setItem(STORAGE_KEY, visitorId);
   }
 

@@ -1,6 +1,8 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import { requireAdmin } from "./authGuards";
+import { isAllowedCoverUrl } from "./validation";
 
 // Get a book by ID (auth-gated)
 export const getBookById = query({
@@ -14,16 +16,16 @@ export const getBookById = query({
   },
 });
 
-// Update just the cover URL
+// Update just the cover URL - admin only
 export const updateBookCover = mutation({
   args: {
     bookId: v.id("books"),
     coverUrl: v.string(),
   },
   handler: async (ctx, { bookId, coverUrl }) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
+    await requireAdmin(ctx);
+    if (!isAllowedCoverUrl(coverUrl)) {
+      throw new Error("Cover URL host is not allowed");
     }
 
     const book = await ctx.db.get(bookId);
@@ -40,11 +42,16 @@ export const updateBookCover = mutation({
 export const getAll = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("books").collect();
+    const books = await ctx.db.query("books").collect();
+    const userId = await auth.getUserId(ctx);
+    if (userId) return books;
+    // Anonymous callers get the public projection — gift attribution and
+    // internal user ids stay server-side.
+    return books.map(({ userId: _u, ...rest }) => ({ ...rest, giftFrom: undefined }));
   },
 });
 
-// Add a book - requires authentication and uses authenticated user's ID
+// Add a book - admin only (rows are publicly visible)
 export const add = mutation({
   args: {
     title: v.string(),
@@ -64,15 +71,15 @@ export const add = mutation({
     tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
+    const userId = await requireAdmin(ctx);
+    if (args.coverUrl && !isAllowedCoverUrl(args.coverUrl)) {
+      throw new Error("Cover URL host is not allowed");
     }
     return await ctx.db.insert("books", { ...args, userId });
   },
 });
 
-// Update a book - requires authentication (any authenticated user can edit - they're family/parents)
+// Update a book - admin only
 export const update = mutation({
   args: {
     id: v.id("books"),
@@ -92,9 +99,9 @@ export const update = mutation({
     tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
+    await requireAdmin(ctx);
+    if (args.coverUrl !== undefined && !isAllowedCoverUrl(args.coverUrl)) {
+      throw new Error("Cover URL host is not allowed");
     }
 
     const book = await ctx.db.get(args.id);
@@ -110,14 +117,11 @@ export const update = mutation({
   },
 });
 
-// Remove a book - requires authentication (any authenticated user can delete - they're family/parents)
+// Remove a book - admin only
 export const remove = mutation({
   args: { id: v.id("books") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
+    await requireAdmin(ctx);
 
     const book = await ctx.db.get(args.id);
     if (!book) {
@@ -128,7 +132,7 @@ export const remove = mutation({
   },
 });
 
-// Bulk add books - requires authentication
+// Bulk add books - admin only
 export const bulkAdd = mutation({
   args: {
     books: v.array(
@@ -151,13 +155,13 @@ export const bulkAdd = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
+    const userId = await requireAdmin(ctx);
 
     const insertedIds = [];
-    for (const book of args.books) {
+    for (let book of args.books) {
+      if (book.coverUrl && !isAllowedCoverUrl(book.coverUrl)) {
+        book = { ...book, coverUrl: undefined };
+      }
       const id = await ctx.db.insert("books", {
         userId,
         ...book,

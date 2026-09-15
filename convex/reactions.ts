@@ -94,6 +94,9 @@ export const getVisitorReaction = query({
   },
 });
 
+// Visitor IDs are self-asserted but must be well-formed and high-entropy.
+const VISITOR_ID_RE = /^visitor_[A-Za-z0-9_-]{16,64}$/;
+
 // Add or update a reaction (one reaction per visitor per book/review)
 export const addReaction = mutation({
   args: {
@@ -103,6 +106,10 @@ export const addReaction = mutation({
     isReviewReaction: v.boolean(),
   },
   handler: async (ctx, args) => {
+    if (!VISITOR_ID_RE.test(args.visitorId)) {
+      throw new Error("Invalid visitor id");
+    }
+
     // Check for existing reaction from this visitor
     const existing = await ctx.db
       .query("bookReactions")

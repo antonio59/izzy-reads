@@ -1,37 +1,25 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
-import type { MutationCtx } from "./_generated/server";
-import type { Id } from "./_generated/dataModel";
+import { isAdmin, requireAdmin } from "./authGuards";
+import { isAllowedCoverUrl } from "./validation";
 
-// Helper to check if user is admin (has isParent flag)
-async function requireAdmin(ctx: MutationCtx, userId: Id<"users">) {
-  const profile = await ctx.db
-    .query("userProfiles")
-    .withIndex("by_userId", (q) => q.eq("userId", userId))
-    .first();
-
-  if (!profile?.isParent) {
-    throw new Error("Admin access required");
-  }
-}
-
-// Get all suggestions (for admin review) - requires auth
+// Get all suggestions (for admin review) - admin only
 export const getAll = query({
   args: {},
   handler: async (ctx) => {
     const userId = await auth.getUserId(ctx);
-    if (!userId) return null;
+    if (!userId || !(await isAdmin(ctx, userId))) return null;
     return await ctx.db.query("bookSuggestions").order("desc").collect();
   },
 });
 
-// Get pending suggestions count (for admin badge) - requires auth
+// Get pending suggestions count (for admin badge) - admin only
 export const getPendingCount = query({
   args: {},
   handler: async (ctx) => {
     const userId = await auth.getUserId(ctx);
-    if (!userId) return 0;
+    if (!userId || !(await isAdmin(ctx, userId))) return 0;
     const pending = await ctx.db
       .query("bookSuggestions")
       .withIndex("by_status", (q) => q.eq("status", "pending"))
@@ -39,6 +27,10 @@ export const getPendingCount = query({
     return pending.length;
   },
 });
+
+// Cap on un-reviewed submissions — each pending row schedules an email,
+// so this bounds the notification flood from an unauthenticated caller.
+const MAX_PENDING_SUGGESTIONS = 100;
 
 // Submit a new book suggestion (public - no auth required)
 export const submit = mutation({
@@ -62,10 +54,21 @@ export const submit = mutation({
       throw new Error("Your name is required");
     }
 
+    const pending = await ctx.db
+      .query("bookSuggestions")
+      .withIndex("by_status", (q) => q.eq("status", "pending"))
+      .collect();
+    if (pending.length >= MAX_PENDING_SUGGESTIONS) {
+      throw new Error("Suggestion box is full — please try again later");
+    }
+
     const suggestionId = await ctx.db.insert("bookSuggestions", {
       title: args.title.trim(),
       author: args.author.trim(),
-      coverUrl: args.coverUrl,
+      coverUrl:
+        args.coverUrl && isAllowedCoverUrl(args.coverUrl)
+          ? args.coverUrl
+          : undefined,
       suggestedBy: args.suggestedBy.trim(),
       reason: args.reason?.trim() || undefined,
       genre: args.genre || undefined,
@@ -103,12 +106,7 @@ export const updateStatus = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
-
-    await requireAdmin(ctx, userId);
+    await requireAdmin(ctx);
     await ctx.db.patch(args.id, { status: args.status });
   },
 });
@@ -117,12 +115,7 @@ export const updateStatus = mutation({
 export const remove = mutation({
   args: { id: v.id("bookSuggestions") },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
-
-    await requireAdmin(ctx, userId);
+    await requireAdmin(ctx);
     await ctx.db.delete(args.id);
   },
 });
@@ -133,12 +126,7 @@ export const addToWishlist = mutation({
     suggestionId: v.id("bookSuggestions"),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
-
-    await requireAdmin(ctx, userId);
+    const userId = await requireAdmin(ctx);
 
     const suggestion = await ctx.db.get(args.suggestionId);
     if (!suggestion) {
@@ -150,7 +138,10 @@ export const addToWishlist = mutation({
       userId,
       title: suggestion.title,
       author: suggestion.author,
-      coverUrl: suggestion.coverUrl,
+      coverUrl:
+        suggestion.coverUrl && isAllowedCoverUrl(suggestion.coverUrl)
+          ? suggestion.coverUrl
+          : undefined,
       genre: suggestion.genre || "Fiction",
       description: suggestion.reason
         ? `Suggested by ${suggestion.suggestedBy}: "${suggestion.reason}"`

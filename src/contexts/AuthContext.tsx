@@ -46,6 +46,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const createUserProfile = useMutation(api.users.createProfile);
 
+  // The caller's userProfiles row — null once loaded if none exists yet.
+  const myProfile = useQuery(
+    api.users.getMyProfile,
+    isAuthenticated ? {} : "skip",
+  );
+
   // Derive auth user directly from Convex query to avoid setState in effect
   const user: AuthUser | null = useMemo(() => {
     if (currentUser) {
@@ -67,15 +73,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return null;
   }, [currentUser, isAuthenticated, isLoading]);
 
-  // Create profile for new users after signup
+  // Create profile for new users after signup — fires when the profile
+  // query resolves to null (loaded, no row). Idempotent server-side.
   useEffect(() => {
     const createProfileIfNeeded = async () => {
-      if (isAuthenticated && user && !currentUser && !isLoading) {
-        // New user just signed up, create their profile
+      if (isAuthenticated && myProfile === null && user) {
         try {
           await createUserProfile({
             name: user.name || user.email.split("@")[0],
-            isParent: false,
             theme: "colorful",
             readingGoal: 20,
             notifications: true,
@@ -96,7 +101,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     createProfileIfNeeded();
-  }, [isAuthenticated, user, currentUser, isLoading, createUserProfile]);
+  }, [isAuthenticated, myProfile, user, createUserProfile]);
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -109,28 +114,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (error: unknown) {
       console.error("Sign in error:", error);
 
-      // Provide user-friendly error messages
-      const errMessage = error instanceof Error ? error.message : "";
-      const errData = (error as { data?: { code?: string } })?.data;
-
-      if (
-        errMessage.includes("InvalidAccountId") ||
-        errMessage.includes("invalid") ||
-        errData?.code === "InvalidAccountId"
-      ) {
-        throw new Error(
-          "No account found with this email. Please sign up first.",
-          { cause: error },
-        );
-      }
-      if (
-        errMessage.includes("InvalidSecret") ||
-        errMessage.includes("password")
-      ) {
-        throw new Error("Incorrect password. Please try again.", { cause: error });
-      }
-
-      throw new Error("Unable to sign in. Please check your credentials.", { cause: error });
+      // One generic message — distinct errors for unknown-email vs
+      // wrong-password let callers probe which addresses have accounts.
+      throw new Error("Invalid email or password. Please try again.", {
+        cause: error,
+      });
     }
   };
 

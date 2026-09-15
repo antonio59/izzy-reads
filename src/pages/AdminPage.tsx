@@ -29,12 +29,20 @@ type AdminTab = "overview" | "bookclub" | "covers";
 
 function AdminPage() {
   const [activeTab, setActiveTab] = useState<AdminTab>("overview");
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
-  // Simple admin check - in production you'd check for admin role
-  const isAdmin = user?.email?.includes("admin") || user?.email?.includes("parent");
+  // Server-authoritative admin check (ADMIN_EMAILS env / isParent flag)
+  const isAdmin = useQuery(api.users.isCurrentUserAdmin);
 
-  if (!isAdmin) {
+  if (loading || isAdmin === undefined) {
+    return (
+      <div className="min-h-screen bg-cream-100 flex items-center justify-center p-4">
+        <p className="text-stone-500">Checking permissions…</p>
+      </div>
+    );
+  }
+
+  if (!isAdmin || !user) {
     return (
       <div className="min-h-screen bg-cream-100 flex items-center justify-center p-4">
         <motion.div

@@ -29,7 +29,7 @@ const BACKGROUND_PATTERNS = [
 
 const Create: React.FC = () => {
   const navigate = useNavigate();
-  const { poems, blogPosts, addPoem, updatePoem, deletePoem, deleteBlogPost } =
+  const { poems, blogPosts, addPoem, updatePoem, likePoem, deletePoem, deleteBlogPost } =
     useBooks();
   const [activeTab, setActiveTab] = useState<TabType>("poems");
   const [showPoemEditor, setShowPoemEditor] = useState(false);
@@ -64,7 +64,7 @@ const Create: React.FC = () => {
   };
 
   const handleLikePoem = async (poem: Poem) => {
-    await updatePoem(poem.id, { likes: poem.likes + 1 });
+    await likePoem(poem.id);
   };
 
   // Blog post handlers - now uses navigation to full-page editor

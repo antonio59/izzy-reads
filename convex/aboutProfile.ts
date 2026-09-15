@@ -1,6 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import { isAdmin, requireAdmin } from "./authGuards";
 
 // Get the about profile (public - for displaying on public pages)
 export const get = query({
@@ -8,6 +9,12 @@ export const get = query({
   handler: async (ctx) => {
     // Get the first about profile (there should only be one for Izzy)
     const profile = await ctx.db.query("aboutProfile").first();
+    if (!profile) return null;
+    // Unpublished profiles are only visible to admins.
+    if (!profile.isPublished) {
+      const userId = await auth.getUserId(ctx);
+      if (!userId || !(await isAdmin(ctx, userId))) return null;
+    }
     return profile;
   },
 });
@@ -16,14 +23,25 @@ export const get = query({
 export const getByUser = query({
   args: { userId: v.id("users") },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const profile = await ctx.db
       .query("aboutProfile")
       .withIndex("by_user", (q) => q.eq("userId", args.userId))
       .first();
+    if (!profile) return null;
+    if (!profile.isPublished) {
+      const callerId = await auth.getUserId(ctx);
+      if (
+        !callerId ||
+        (callerId !== args.userId && !(await isAdmin(ctx, callerId)))
+      ) {
+        return null;
+      }
+    }
+    return profile;
   },
 });
 
-// Create or update about profile - requires authentication
+// Create or update about profile - admin only (single public profile)
 export const upsert = mutation({
   args: {
     isPublished: v.boolean(),
@@ -39,10 +57,7 @@ export const upsert = mutation({
     heroDescription: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Not authenticated");
-    }
+    const userId = await requireAdmin(ctx);
 
     const existing = await ctx.db
       .query("aboutProfile")
@@ -56,10 +71,6 @@ export const upsert = mutation({
     };
 
     if (existing) {
-      // Verify ownership
-      if (existing.userId !== userId) {
-        throw new Error("Not authorized to update this profile");
-      }
       await ctx.db.patch(existing._id, data);
       return existing._id;
     } else {

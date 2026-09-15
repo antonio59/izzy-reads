@@ -27,6 +27,7 @@ import type * as reactions from "../reactions.js";
 import type * as seed from "../seed.js";
 import type * as series from "../series.js";
 import type * as users from "../users.js";
+import type * as validation from "../validation.js";
 import type * as wishlist from "../wishlist.js";
 import type * as writingReactions from "../writingReactions.js";
 
@@ -56,6 +57,7 @@ declare const fullApi: ApiFromModules<{
   seed: typeof seed;
   series: typeof series;
   users: typeof users;
+  validation: typeof validation;
   wishlist: typeof wishlist;
   writingReactions: typeof writingReactions;
 }>;

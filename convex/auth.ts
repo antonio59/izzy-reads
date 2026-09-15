@@ -12,7 +12,18 @@ const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "")
 const CustomPassword = Password<DataModel>({
   profile(params) {
     const email = (params.email as string).toLowerCase().trim();
-    if (ALLOWED_EMAILS.length > 0 && !ALLOWED_EMAILS.includes(email)) {
+    if (ALLOWED_EMAILS.length === 0) {
+      // Fail closed: when the invite list is not configured, allow existing
+      // accounts to sign in but block all new registrations.
+      if (params.flow === "signUp") {
+        throw new Error(
+          JSON.stringify({
+            error: "Access denied. This site is invite-only.",
+            code: "EMAIL_NOT_ALLOWED",
+          }),
+        );
+      }
+    } else if (!ALLOWED_EMAILS.includes(email)) {
       throw new Error(
         JSON.stringify({
           error: "Access denied. This site is invite-only.",

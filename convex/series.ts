@@ -1,6 +1,18 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import { requireUser } from "./authGuards";
+import { isAdmin, requireUser } from "./authGuards";
+import type { Doc } from "./_generated/dataModel";
+
+async function requireOwnedSeries(
+  ctx: Parameters<typeof requireUser>[0],
+  seriesId: Doc<"bookSeries">["_id"],
+  userId: Doc<"bookSeries">["userId"],
+): Promise<Doc<"bookSeries">> {
+  const series = await ctx.db.get(seriesId);
+  if (!series) throw new Error("Series not found");
+  if (series.userId !== userId) throw new Error("Not your series");
+  return series;
+}
 
 // Get all series for the signed-in user
 export const getByUser = query({
@@ -44,7 +56,8 @@ export const update = mutation({
     completed: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    await requireUser(ctx);
+    const userId = await requireUser(ctx);
+    await requireOwnedSeries(ctx, args.id, userId);
     const { id, ...updates } = args;
     const filteredUpdates = Object.fromEntries(
       Object.entries(updates).filter(([, value]) => value !== undefined),
@@ -60,9 +73,8 @@ export const addBook = mutation({
     bookId: v.id("books"),
   },
   handler: async (ctx, args) => {
-    await requireUser(ctx);
-    const series = await ctx.db.get(args.seriesId);
-    if (!series) throw new Error("Series not found");
+    const userId = await requireUser(ctx);
+    const series = await requireOwnedSeries(ctx, args.seriesId, userId);
 
     // Don't add duplicates
     if (series.bookIds.includes(args.bookId)) {
@@ -82,9 +94,8 @@ export const removeBook = mutation({
     bookId: v.id("books"),
   },
   handler: async (ctx, args) => {
-    await requireUser(ctx);
-    const series = await ctx.db.get(args.seriesId);
-    if (!series) throw new Error("Series not found");
+    const userId = await requireUser(ctx);
+    const series = await requireOwnedSeries(ctx, args.seriesId, userId);
 
     await ctx.db.patch(args.seriesId, {
       bookIds: series.bookIds.filter((id) => id !== args.bookId),
@@ -99,7 +110,8 @@ export const reorderBooks = mutation({
     bookIds: v.array(v.id("books")),
   },
   handler: async (ctx, args) => {
-    await requireUser(ctx);
+    const userId = await requireUser(ctx);
+    await requireOwnedSeries(ctx, args.seriesId, userId);
     await ctx.db.patch(args.seriesId, {
       bookIds: args.bookIds,
     });
@@ -110,7 +122,8 @@ export const reorderBooks = mutation({
 export const remove = mutation({
   args: { id: v.id("bookSeries") },
   handler: async (ctx, args) => {
-    await requireUser(ctx);
+    const userId = await requireUser(ctx);
+    await requireOwnedSeries(ctx, args.id, userId);
     await ctx.db.delete(args.id);
   },
 });
@@ -119,9 +132,12 @@ export const remove = mutation({
 export const syncCompletionForBook = mutation({
   args: { bookId: v.id("books") },
   handler: async (ctx, args) => {
-    await requireUser(ctx);
+    const userId = await requireUser(ctx);
     const book = await ctx.db.get(args.bookId);
     if (!book) return;
+    // Only the book's owner (or an admin managing shared content) may
+    // trigger a sync on the owner's series.
+    if (book.userId !== userId && !(await isAdmin(ctx, userId))) return;
 
     const seriesList = await ctx.db
       .query("bookSeries")

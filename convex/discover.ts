@@ -3,6 +3,8 @@ declare const process: { env: Record<string, string | undefined> };
 import { query, mutation, action } from "./_generated/server";
 import { v } from "convex/values";
 import { auth } from "./auth";
+import { isAdmin, requireUserAction } from "./authGuards";
+import { isAllowedCoverUrl } from "./validation";
 
 // Get user's reading profile for recommendations
 export const getReadingProfile = query({
@@ -239,9 +241,11 @@ export const fetchRecommendations = action({
     searchQuery: v.string(),
     startIndex: v.optional(v.number()),
   },
-  handler: async (_ctx, args) => {
+  handler: async (ctx, args) => {
+    // Auth-required: this action proxies requests through our API key.
+    await requireUserAction(ctx);
     const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
-    const startIndex = args.startIndex ?? 0;
+    const startIndex = Math.min(Math.max(args.startIndex ?? 0, 0), 500);
 
     // Try Google Books first
     let results = await fetchFromGoogleBooks(args.searchQuery, startIndex, apiKey);
@@ -286,7 +290,10 @@ export const recordSwipe = mutation({
       googleBookId: args.googleBookId,
       title: args.title,
       author: args.author,
-      coverUrl: args.coverUrl,
+      coverUrl:
+        args.coverUrl && isAllowedCoverUrl(args.coverUrl)
+          ? args.coverUrl
+          : undefined,
       genre: args.genre,
       pageCount: args.pageCount,
       description: args.description,
@@ -295,8 +302,9 @@ export const recordSwipe = mutation({
       createdAt: Date.now(),
     });
 
-    // If liked, auto-add to wishlist
-    if (args.action === "liked") {
+    // If liked, auto-add to wishlist — wishlist rows are publicly visible,
+    // so only admins may publish to it.
+    if (args.action === "liked" && (await isAdmin(ctx, userId))) {
       // Check if already exists in books or wishlist
       const allBooks = await ctx.db.query("books").collect();
       const allWishlist = await ctx.db.query("wishlist").collect();
