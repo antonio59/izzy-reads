@@ -35,12 +35,13 @@ const card =
   `background:${C.card};border:1px solid ${C.border};border-radius:20px;` +
   `padding:20px 22px;margin:0 0 14px 0;box-shadow:0 3px 0 ${C.border},0 12px 28px rgba(45,41,37,0.07);`;
 
-const sectionTitle = (emoji: string, label: string) =>
-  `<h2 style="margin:0 0 12px 0;font-family:${FONT_DISPLAY};font-size:17px;font-weight:800;color:${C.ink};">${emoji} ${label}</h2>`;
+const sectionTitle = (label: string) =>
+  `<h2 style="margin:0 0 12px 0;font-family:${FONT_DISPLAY};font-size:17px;font-weight:800;color:${C.ink};">${label}</h2>`;
 
 function emailShell(opts: {
   heading: string;
   subheading: string;
+  preheader?: string;
   body: string;
   ctaLabel: string;
   ctaHref: string;
@@ -50,6 +51,7 @@ function emailShell(opts: {
 <html>
 <head>${HEAD}</head>
 <body style="margin:0;padding:0;background-color:${C.cream};font-family:${FONT_BODY};color:${C.body};">
+  ${opts.preheader ? `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">${opts.preheader}</div>` : ""}
   <div style="max-width:560px;margin:0 auto;padding:32px 16px 24px 16px;">
 
     <!-- Wordmark -->
@@ -115,6 +117,7 @@ export const sendSuggestionNotification = internalAction({
       subheading: `A new idea for Izzy&rsquo;s shelf just came in.`,
       ctaLabel: "Review suggestion",
       ctaHref: `${SITE_URL}/admin`,
+      preheader: `${args.suggestedBy.slice(0, 60)} suggested "${args.title.slice(0, 80)}" for Izzy's shelf`,
       body: `
     <!-- Book Info -->
     <div style="${card}border-left:6px solid ${C.berry};">
@@ -125,7 +128,7 @@ export const sendSuggestionNotification = internalAction({
 
     <!-- Who Suggested -->
     <div style="${card}">
-      ${sectionTitle("💌", "Suggested by")}
+      ${sectionTitle("Suggested by")}
       <p style="margin:0;font-size:16px;font-weight:700;color:${C.ink};">${escapeHtml(args.suggestedBy)}</p>
       ${args.reason ? `<p style="margin:10px 0 0 0;font-size:14px;color:${C.body};font-style:italic;line-height:1.6;">&ldquo;${escapeHtml(args.reason)}&rdquo;</p>` : ""}
     </div>`,
@@ -137,6 +140,16 @@ export const sendSuggestionNotification = internalAction({
       to: args.to ?? adminEmail!,
       subject: `📚 Someone suggested "${args.title.slice(0, 100)}" by ${args.author.slice(0, 100)}!`,
       html,
+      text: [
+        `New book suggestion for Izzy's shelf:`,
+        `${args.title} by ${args.author}${args.genre ? ` (${args.genre})` : ""}`,
+        `Suggested by: ${args.suggestedBy}`,
+        args.reason ? `Why: "${args.reason}"` : null,
+        "",
+        `Review it: ${SITE_URL}/admin`,
+      ]
+        .filter((l) => l !== null)
+        .join("\n"),
     });
   },
 });
@@ -190,6 +203,16 @@ export const sendWeeklySummary = internalAction({
       (p) => p._creationTime >= weekAgo && p.status === "published",
     );
 
+    // Most recent review (has notes; prefer dateRead, fall back to creation)
+    const lastReview = readBooks
+      .filter((b) => b.notes)
+      .sort((a, b) => {
+        const ta = a.dateRead ? new Date(a.dateRead).getTime() : a._creationTime;
+        const tb = b.dateRead ? new Date(b.dateRead).getTime() : b._creationTime;
+        return (Number.isNaN(tb) ? b._creationTime : tb) -
+          (Number.isNaN(ta) ? a._creationTime : ta);
+      })[0];
+
     // Calculate milestones
     const milestones: string[] = [];
     if (readBooks.length >= 10 && readBooks.length % 10 === 0) {
@@ -212,16 +235,32 @@ export const sendWeeklySummary = internalAction({
     const statTile = (num: string, label: string, color: string) =>
       `<td style="text-align:center;padding:10px 4px;"><div style="font-family:${FONT_DISPLAY};font-size:26px;font-weight:900;color:${color};line-height:1;">${num}</div><div style="font-size:12px;color:${C.muted};margin-top:5px;">${label}</div></td>`;
 
+    const stars = (rating?: number) =>
+      rating
+        ? `<span style="color:${C.gold};font-size:15px;letter-spacing:1px;">${"★".repeat(Math.min(5, Math.round(rating)))}${"☆".repeat(Math.max(0, 5 - Math.min(5, Math.round(rating))))}</span>`
+        : "";
+
+    const preheader = [
+      booksReadThisWeek.length > 0
+        ? `${booksReadThisWeek.length} book${booksReadThisWeek.length === 1 ? "" : "s"} finished`
+        : null,
+      totalReactions > 0 ? `${totalReactions} reaction${totalReactions === 1 ? "" : "s"}` : null,
+      milestones.length > 0 ? "a milestone hit" : null,
+    ]
+      .filter(Boolean)
+      .join(", ") || "See what happened on your bookshelf this week";
+
     const html = emailShell({
       heading: "Hi Izzy! Here&rsquo;s your week in books",
       subheading: "Everything that happened on your bookshelf this week.",
+      preheader,
       ctaLabel: "Visit your bookshelf",
       ctaHref: SITE_URL,
       body: `
     <!-- Finished this week -->
     ${booksReadThisWeek.length > 0 ? `
     <div style="${card}border-left:6px solid ${C.teal};">
-      ${sectionTitle("📚", "You finished")}
+      ${sectionTitle("You finished")}
       <ul style="margin:0;padding-left:20px;color:${C.body};font-size:14px;line-height:1.7;">
         ${booksReadThisWeek.map((b) => `<li style="margin-bottom:4px;"><strong style="color:${C.ink};">${escapeHtml(b.title)}</strong> by ${escapeHtml(b.author)}${b.rating ? ` — <span style="color:${C.gold};">${"★".repeat(Math.min(5, Math.round(b.rating)))}</span>` : ""}</li>`).join("")}
       </ul>
@@ -230,25 +269,22 @@ export const sendWeeklySummary = internalAction({
     <!-- Newly added books + wishlist -->
     ${booksAddedThisWeek.length + wishlistAddedThisWeek.length > 0 ? `
     <div style="${card}border-left:6px solid ${C.berry};">
-      ${sectionTitle("✨", "New this week")}
+      ${sectionTitle("New this week")}
       ${booksAddedThisWeek.length > 0 ? `<p style="margin:0 0 8px 0;font-size:14px;line-height:1.6;color:${C.body};"><strong style="color:${C.ink};">${booksAddedThisWeek.length}</strong> added to your shelf: ${booksAddedThisWeek.slice(0, 5).map((b) => escapeHtml(b.title)).join(", ")}${booksAddedThisWeek.length > 5 ? ` +${booksAddedThisWeek.length - 5} more` : ""}</p>` : ""}
       ${wishlistAddedThisWeek.length > 0 ? `<p style="margin:0;font-size:14px;line-height:1.6;color:${C.body};"><strong style="color:${C.ink};">${wishlistAddedThisWeek.length}</strong> on your wishlist: ${wishlistAddedThisWeek.slice(0, 5).map((w) => escapeHtml(w.title)).join(", ")}${wishlistAddedThisWeek.length > 5 ? ` +${wishlistAddedThisWeek.length - 5} more` : ""}</p>` : ""}
     </div>` : ""}
 
-    <!-- Share your words -->
+    <!-- Your latest review -->
+    ${lastReview ? `
     <div style="${card}border-left:6px solid ${C.gold};">
-      ${sectionTitle("✍️", "Share your words")}
-      ${poemsThisWeek.length + postsThisWeek.length > 0 ? `
-      <p style="margin:0 0 8px 0;font-size:14px;line-height:1.6;color:${C.body};">You shared <strong style="color:${C.ink};">${poemsThisWeek.length + postsThisWeek.length}</strong> this week${poemsThisWeek.length > 0 ? ` — ${poemsThisWeek.slice(0, 4).map((p) => escapeHtml(p.title)).join(", ")}` : ""}${postsThisWeek.length > 0 ? `, plus ${postsThisWeek.slice(0, 4).map((p) => escapeHtml(p.title)).join(", ")}` : ""}. Lovely!</p>
-      <p style="margin:0;font-size:14px;line-height:1.6;color:${C.body};">Got another poem or story brewing? <a href="${SITE_URL}/create" style="color:${C.teal};text-decoration:none;font-weight:600;">Share it</a> — everyone loves reading what you write.</p>
-      ` : `
-      <p style="margin:0;font-size:14px;line-height:1.6;color:${C.body};">Written a poem, story, or book review lately? <a href="${SITE_URL}/create" style="color:${C.teal};text-decoration:none;font-weight:600;">Pop it on your shelf</a> — your readers are waiting!</p>
-      `}
-    </div>
+      ${sectionTitle("Your latest review")}
+      <p style="margin:0 0 6px 0;font-size:15px;line-height:1.5;color:${C.body};"><strong style="color:${C.ink};font-family:${FONT_DISPLAY};">${escapeHtml(lastReview.title)}</strong> by ${escapeHtml(lastReview.author)} ${stars(lastReview.rating)}</p>
+      <p style="margin:0;font-size:14px;color:${C.body};font-style:italic;line-height:1.6;">&ldquo;${escapeHtml(lastReview.notes!.length > 160 ? lastReview.notes!.slice(0, 160).trimEnd() + "…" : lastReview.notes!)}&rdquo;</p>
+    </div>` : ""}
 
     <!-- Reactions -->
     <div style="${card}">
-      ${sectionTitle("💖", "Reactions to your shelf")}
+      ${sectionTitle("Reactions to your shelf")}
       <div>
         ${pill("📚 Books", bookStats.totalReactions, C.berryLight, C.berryDark)}
         ${pill("📝 Reviews", reviewStats?.totalReactions || 0, C.tealLight, "#0f5e57")}
@@ -261,7 +297,7 @@ export const sendWeeklySummary = internalAction({
     <!-- Milestones -->
     ${milestones.length > 0 ? `
     <div style="${card}background:${C.goldLight};border-left:6px solid ${C.gold};">
-      ${sectionTitle("🏆", "Milestones")}
+      ${sectionTitle("🏆 Milestones")}
       <ul style="margin:0;padding-left:20px;color:${C.body};font-size:14px;line-height:1.7;">
         ${milestones.map((m) => `<li style="margin-bottom:4px;">${m}</li>`).join("")}
       </ul>
@@ -269,7 +305,7 @@ export const sendWeeklySummary = internalAction({
 
     <!-- Stats -->
     <div style="${card}">
-      ${sectionTitle("📊", "Your bookshelf so far")}
+      ${sectionTitle("Your bookshelf so far")}
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
         ${statTile(String(readBooks.length), "books read", C.berry)}
         ${statTile(String(totalReviews), "reviews", C.teal)}
@@ -277,18 +313,56 @@ export const sendWeeklySummary = internalAction({
       </tr></table>
     </div>
 
-    <!-- Reminder -->
+    <!-- Keep it going -->
     <div style="${card}border-left:6px solid ${C.teal};">
-      ${sectionTitle("💡", "Don&rsquo;t forget")}
-      <p style="margin:0;font-size:14px;line-height:1.6;color:${C.body};">Read anything this week? Pop it on your shelf — every book counts, even the ones you don&rsquo;t want to review!</p>
+      ${sectionTitle("Keep it going")}
+      <p style="margin:0 0 8px 0;font-size:14px;line-height:1.6;color:${C.body};">Read anything this week? <a href="${SITE_URL}/books" style="color:${C.teal};text-decoration:none;font-weight:600;">Pop it on your shelf</a> — every book counts, even the ones you don&rsquo;t review.</p>
+      <p style="margin:0;font-size:14px;line-height:1.6;color:${C.body};">${(() => {
+        const parts: string[] = [];
+        if (poemsThisWeek.length > 0) parts.push(`${poemsThisWeek.length} poem${poemsThisWeek.length === 1 ? "" : "s"}`);
+        if (postsThisWeek.length > 0) parts.push(`${postsThisWeek.length} post${postsThisWeek.length === 1 ? "" : "s"}`);
+        return parts.length > 0
+          ? `You shared ${parts.join(" and ")} this week — lovely! Got another brewing? `
+          : "Written a poem, story, or review lately? ";
+      })()}<a href="${SITE_URL}/create" style="color:${C.teal};text-decoration:none;font-weight:600;">Share it</a> — your readers are waiting.</p>
     </div>`,
     });
+
+    const text = [
+      "Hi Izzy! Here's your week in books.",
+      "",
+      booksReadThisWeek.length > 0
+        ? `You finished: ${booksReadThisWeek.map((b) => `${b.title} by ${b.author}`).join("; ")}`
+        : null,
+      booksAddedThisWeek.length > 0
+        ? `Added to your shelf: ${booksAddedThisWeek.map((b) => b.title).join(", ")}`
+        : null,
+      wishlistAddedThisWeek.length > 0
+        ? `On your wishlist: ${wishlistAddedThisWeek.map((w) => w.title).join(", ")}`
+        : null,
+      lastReview
+        ? `Your latest review: ${lastReview.title} — "${lastReview.notes}"`
+        : null,
+      `Reactions this week: ${totalReactions} (books ${bookStats.totalReactions}, reviews ${reviewStats?.totalReactions || 0}, poems ${poemStats.totalReactions}, writing ${writingStats.totalReactions})`,
+      milestones.length > 0 ? `Milestones: ${milestones.join(", ")}` : null,
+      `Bookshelf so far: ${readBooks.length} books read, ${totalReviews} reviews, ${totalPages.toLocaleString()} pages.`,
+      "",
+      "Keep it going — log every book you read, and share poems, stories, and reviews:",
+      `${SITE_URL}/books  |  ${SITE_URL}/create`,
+      "",
+      `Visit your bookshelf: ${SITE_URL}`,
+      "",
+      "Sent with love from izzysbookshelf.com",
+    ]
+      .filter((l) => l !== null)
+      .join("\n");
 
     await resend.emails.send({
       from: "Izzy's Bookshelf <summary@izzysbookshelf.com>",
       to: args.to ?? notificationEmail!,
       subject: `✨ Your week on Izzy's Bookshelf`,
       html,
+      text,
     });
   },
 });
