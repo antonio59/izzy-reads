@@ -154,6 +154,31 @@ export const sendSuggestionNotification = internalAction({
   },
 });
 
+// Cron entry point: the schedule fires at 08:00 UTC, and this sends the
+// summary when it is 09:00 in London – immediately during BST, or after a
+// one-hour delay in winter (GMT), so it always lands at 9am for Izzy.
+export const dispatchWeeklySummary = internalAction({
+  args: {},
+  handler: async (ctx) => {
+    const londonHour = Number(
+      new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Europe/London",
+        hour: "numeric",
+        hour12: false,
+      }).format(new Date()),
+    );
+    if (londonHour < 9) {
+      await ctx.scheduler.runAfter(
+        60 * 60 * 1000,
+        internal.emails.sendWeeklySummary,
+        {},
+      );
+      return;
+    }
+    await ctx.runAction(internal.emails.sendWeeklySummary, {});
+  },
+});
+
 // Send weekly summary email on Saturday mornings
 export const sendWeeklySummary = internalAction({
   args: {
