@@ -102,6 +102,7 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### CI/CD
 
+- Consolidate dependency updates on Dependabot, auto-merge patch/minor
 - Bump actions/setup-node from 6 to 7 (#163)
 - Bump actions/checkout from 6 to 7
 - Make SARIF upload non-blocking when Code Scanning is disabled
@@ -117,6 +118,7 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Remediate audit findings — enforce admin authz, fail-closed signup, input validation
 - Hero cover shelf: review tooltips + fix dead hover
 
 The entrance delay (up to ~0.6s per cover) was baked into the shared
@@ -906,6 +908,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
