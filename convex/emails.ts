@@ -6,6 +6,82 @@ import { escapeHtml } from "./validation";
 
 declare const process: { env: Record<string, string | undefined> };
 
+const SITE_URL = "https://izzysbookshelf.com";
+
+// Design tokens mirroring src/index.css
+const C = {
+  cream: "#f5f1ea",
+  card: "#fdfcfa",
+  border: "#ede7db",
+  ink: "#1a1614",
+  body: "#5c564f",
+  muted: "#736d65",
+  berry: "#d946a8",
+  berryDark: "#9d2d77",
+  berryLight: "#fce7f3",
+  teal: "#0d9488",
+  tealLight: "#ccfbf1",
+  gold: "#f59e0b",
+  goldLight: "#fef3c7",
+};
+const FONT_DISPLAY = "'Nunito','Arial Rounded MT Bold','Trebuchet MS',sans-serif";
+const FONT_BODY = "'Inter','Helvetica Neue',Arial,sans-serif";
+
+const HEAD = `<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Inter:wght@400;500;600&display=swap');</style>`;
+
+const card =
+  `background:${C.card};border:1px solid ${C.border};border-radius:20px;` +
+  `padding:20px 22px;margin:0 0 14px 0;box-shadow:0 3px 0 ${C.border},0 12px 28px rgba(45,41,37,0.07);`;
+
+const sectionTitle = (emoji: string, label: string) =>
+  `<h2 style="margin:0 0 12px 0;font-family:${FONT_DISPLAY};font-size:17px;font-weight:800;color:${C.ink};">${emoji} ${label}</h2>`;
+
+function emailShell(opts: {
+  heading: string;
+  subheading: string;
+  body: string;
+  ctaLabel: string;
+  ctaHref: string;
+  footerNote?: string;
+}) {
+  return `<!DOCTYPE html>
+<html>
+<head>${HEAD}</head>
+<body style="margin:0;padding:0;background-color:${C.cream};font-family:${FONT_BODY};color:${C.body};">
+  <div style="max-width:560px;margin:0 auto;padding:32px 16px 24px 16px;">
+
+    <!-- Wordmark -->
+    <div style="text-align:center;margin-bottom:20px;">
+      <span style="font-family:${FONT_DISPLAY};font-size:15px;font-weight:800;color:${C.berryDark};">📚 Izzy&rsquo;s Bookshelf</span>
+    </div>
+
+    <!-- Heading card -->
+    <div style="${card}text-align:center;padding:32px 24px;">
+      <h1 style="margin:0;font-family:${FONT_DISPLAY};font-size:26px;line-height:1.25;font-weight:900;color:${C.ink};">${opts.heading}</h1>
+      <p style="margin:8px 0 0 0;font-size:15px;line-height:1.5;color:${C.muted};">${opts.subheading}</p>
+    </div>
+
+    ${opts.body}
+
+    <!-- CTA -->
+    <div style="text-align:center;margin:20px 0 6px 0;">
+      <a href="${opts.ctaHref}" style="display:inline-block;padding:14px 34px;background:${C.berry};color:#ffffff;text-decoration:none;border-radius:999px;font-family:${FONT_DISPLAY};font-weight:800;font-size:16px;box-shadow:0 4px 0 ${C.berryDark};">${opts.ctaLabel}</a>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align:center;padding:18px 16px 8px 16px;">
+      <p style="margin:0;font-size:12px;line-height:1.6;color:${C.muted};">${opts.footerNote ?? `Sent with love from <a href="${SITE_URL}" style="color:${C.teal};text-decoration:none;">izzysbookshelf.com</a> ✨`}</p>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+const pill = (label: string, count: number, bg: string, fg: string) =>
+  `<span style="display:inline-block;padding:6px 12px;background:${bg};color:${fg};border-radius:999px;font-size:13px;font-weight:600;">${label}: ${count}</span>`;
+
 // Send notification email when a book is suggested
 export const sendSuggestionNotification = internalAction({
   args: {
@@ -14,6 +90,7 @@ export const sendSuggestionNotification = internalAction({
     suggestedBy: v.string(),
     reason: v.optional(v.string()),
     genre: v.optional(v.string()),
+    to: v.optional(v.string()),
   },
   handler: async (_, args) => {
     const apiKey = process.env.RESEND_API_KEY;
@@ -22,71 +99,42 @@ export const sendSuggestionNotification = internalAction({
       return;
     }
 
-    const notificationEmail = process.env.NOTIFICATION_EMAIL;
-    if (!notificationEmail) {
-      console.warn("NOTIFICATION_EMAIL not set — skipping email notification");
+    // Suggestion notifications are for the parent/admin; fall back to the
+    // general notification address if no dedicated one is configured.
+    const adminEmail =
+      process.env.ADMIN_NOTIFICATION_EMAIL || process.env.NOTIFICATION_EMAIL;
+    if (!adminEmail && !args.to) {
+      console.warn("No notification email configured — skipping email");
       return;
     }
 
     const resend = new Resend(apiKey);
 
-    const html = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
-<body style="margin: 0; padding: 0; background-color: #fdf2f8; font-family: 'Helvetica Neue', Arial, sans-serif;">
-  <div style="max-width: 480px; margin: 40px auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
-
-    <!-- Header -->
-    <div style="background: linear-gradient(135deg, #d946a8, #0d9488); padding: 32px 24px; text-align: center;">
-      <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 700;">📚 New Book Suggestion!</h1>
-      <p style="color: rgba(255,255,255,0.85); margin: 8px 0 0 0; font-size: 14px;">Someone has a book idea for you, Izzy!</p>
+    const html = emailShell({
+      heading: "Someone suggested a book 📖",
+      subheading: `A new idea for Izzy&rsquo;s shelf just came in.`,
+      ctaLabel: "Review suggestion",
+      ctaHref: `${SITE_URL}/admin`,
+      body: `
+    <!-- Book Info -->
+    <div style="${card}border-left:6px solid ${C.berry};">
+      <h2 style="margin:0 0 4px 0;font-family:${FONT_DISPLAY};font-size:19px;font-weight:800;color:${C.ink};">${escapeHtml(args.title)}</h2>
+      <p style="margin:0 0 10px 0;font-size:14px;color:${C.muted};">by ${escapeHtml(args.author)}</p>
+      ${args.genre ? `<span style="display:inline-block;padding:3px 12px;background:${C.berryLight};color:${C.berryDark};border-radius:999px;font-size:12px;font-weight:700;">${escapeHtml(args.genre)}</span>` : ""}
     </div>
 
-    <!-- Content -->
-    <div style="padding: 24px;">
-
-      <!-- Book Info -->
-      <div style="margin-bottom: 20px; padding: 16px; background: #fdf2f8; border-radius: 12px;">
-        <h2 style="margin: 0 0 4px 0; font-size: 18px; color: #1e293b;">${escapeHtml(args.title)}</h2>
-        <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px;">by ${escapeHtml(args.author)}</p>
-        ${args.genre ? `<span style="display: inline-block; padding: 2px 10px; background: #fce7f3; color: #be3590; border-radius: 100px; font-size: 12px; font-weight: 600;">${escapeHtml(args.genre)}</span>` : ""}
-      </div>
-
-      <!-- Who Suggested -->
-      <div style="margin-bottom: 16px;">
-        <p style="margin: 0 0 4px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; font-weight: 600;">Suggested by</p>
-        <p style="margin: 0; font-size: 16px; color: #1e293b; font-weight: 600;">${escapeHtml(args.suggestedBy)}</p>
-      </div>
-
-      ${args.reason ? `
-      <!-- Why -->
-      <div style="margin-bottom: 20px;">
-        <p style="margin: 0 0 4px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; font-weight: 600;">Why this book?</p>
-        <p style="margin: 0; font-size: 14px; color: #475569; font-style: italic; line-height: 1.5;">"${escapeHtml(args.reason)}"</p>
-      </div>
-      ` : ""}
-
-      <!-- CTA -->
-      <a href="https://izzysbookshelf.com/admin" style="display: block; text-align: center; padding: 14px; background: linear-gradient(135deg, #d946a8, #0d9488); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 15px;">
-        View in Dashboard →
-      </a>
-    </div>
-
-    <!-- Footer -->
-    <div style="padding: 16px 24px; text-align: center; border-top: 1px solid #f1f5f9;">
-      <p style="margin: 0; font-size: 12px; color: #94a3b8;">From Izzy's Bookshelf ✨</p>
-    </div>
-  </div>
-</body>
-</html>`;
+    <!-- Who Suggested -->
+    <div style="${card}">
+      ${sectionTitle("💌", "Suggested by")}
+      <p style="margin:0;font-size:16px;font-weight:700;color:${C.ink};">${escapeHtml(args.suggestedBy)}</p>
+      ${args.reason ? `<p style="margin:10px 0 0 0;font-size:14px;color:${C.body};font-style:italic;line-height:1.6;">&ldquo;${escapeHtml(args.reason)}&rdquo;</p>` : ""}
+    </div>`,
+      footerNote: `This one&rsquo;s for the grown-ups — review it in the <a href="${SITE_URL}/admin" style="color:${C.teal};text-decoration:none;">admin dashboard</a>.`,
+    });
 
     await resend.emails.send({
       from: "Izzy's Bookshelf <suggestions@izzysbookshelf.com>",
-      to: notificationEmail,
+      to: args.to ?? adminEmail!,
       subject: `📚 Someone suggested "${args.title.slice(0, 100)}" by ${args.author.slice(0, 100)}!`,
       html,
     });
@@ -95,8 +143,10 @@ export const sendSuggestionNotification = internalAction({
 
 // Send weekly summary email on Saturday mornings
 export const sendWeeklySummary = internalAction({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    to: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
       console.warn("RESEND_API_KEY not set — skipping weekly summary");
@@ -104,7 +154,7 @@ export const sendWeeklySummary = internalAction({
     }
 
     const notificationEmail = process.env.NOTIFICATION_EMAIL;
-    if (!notificationEmail) {
+    if (!notificationEmail && !args.to) {
       console.warn("NOTIFICATION_EMAIL not set — skipping weekly summary");
       return;
     }
@@ -153,98 +203,74 @@ export const sendWeeklySummary = internalAction({
       poemStats.totalReactions +
       writingStats.totalReactions;
 
-    const html = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
-<body style="margin: 0; padding: 0; background-color: #fdf2f8; font-family: 'Helvetica Neue', Arial, sans-serif;">
-  <div style="max-width: 480px; margin: 40px auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+    const statTile = (num: string, label: string, color: string) =>
+      `<td style="text-align:center;padding:10px 4px;"><div style="font-family:${FONT_DISPLAY};font-size:26px;font-weight:900;color:${color};line-height:1;">${num}</div><div style="font-size:12px;color:${C.muted};margin-top:5px;">${label}</div></td>`;
 
-    <!-- Header -->
-    <div style="background: linear-gradient(135deg, #d946a8, #0d9488); padding: 32px 24px; text-align: center;">
-      <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 700;">✨ Weekly Summary</h1>
-      <p style="color: rgba(255,255,255,0.85); margin: 8px 0 0 0; font-size: 14px;">Here's what happened on Izzy's Bookshelf this week</p>
+    const html = emailShell({
+      heading: "Hi Izzy! Here&rsquo;s your week in books",
+      subheading: "Everything that happened on your bookshelf this week.",
+      ctaLabel: "Visit your bookshelf",
+      ctaHref: SITE_URL,
+      body: `
+    <!-- Finished this week -->
+    ${booksReadThisWeek.length > 0 ? `
+    <div style="${card}border-left:6px solid ${C.teal};">
+      ${sectionTitle("📚", "You finished")}
+      <ul style="margin:0;padding-left:20px;color:${C.body};font-size:14px;line-height:1.7;">
+        ${booksReadThisWeek.map((b) => `<li style="margin-bottom:4px;"><strong style="color:${C.ink};">${escapeHtml(b.title)}</strong> by ${escapeHtml(b.author)}${b.rating ? ` — <span style="color:${C.gold};">${"★".repeat(Math.min(5, Math.round(b.rating)))}</span>` : ""}</li>`).join("")}
+      </ul>
+    </div>` : ""}
+
+    <!-- Newly added books + wishlist -->
+    ${booksAddedThisWeek.length + wishlistAddedThisWeek.length > 0 ? `
+    <div style="${card}border-left:6px solid ${C.berry};">
+      ${sectionTitle("✨", "New this week")}
+      ${booksAddedThisWeek.length > 0 ? `<p style="margin:0 0 8px 0;font-size:14px;line-height:1.6;color:${C.body};"><strong style="color:${C.ink};">${booksAddedThisWeek.length}</strong> added to your shelf: ${booksAddedThisWeek.slice(0, 5).map((b) => escapeHtml(b.title)).join(", ")}${booksAddedThisWeek.length > 5 ? ` +${booksAddedThisWeek.length - 5} more` : ""}</p>` : ""}
+      ${wishlistAddedThisWeek.length > 0 ? `<p style="margin:0;font-size:14px;line-height:1.6;color:${C.body};"><strong style="color:${C.ink};">${wishlistAddedThisWeek.length}</strong> on your wishlist: ${wishlistAddedThisWeek.slice(0, 5).map((w) => escapeHtml(w.title)).join(", ")}${wishlistAddedThisWeek.length > 5 ? ` +${wishlistAddedThisWeek.length - 5} more` : ""}</p>` : ""}
+    </div>` : ""}
+
+    <!-- Reactions -->
+    <div style="${card}">
+      ${sectionTitle("💖", "Reactions to your shelf")}
+      <div>
+        ${pill("📚 Books", bookStats.totalReactions, C.berryLight, C.berryDark)}
+        ${pill("📝 Reviews", reviewStats?.totalReactions || 0, C.tealLight, "#0f5e57")}
+        ${pill("✍️ Poems", poemStats.totalReactions, C.goldLight, "#8a5a00")}
+        ${pill("📖 Writing", writingStats.totalReactions, C.berryLight, C.berryDark)}
+      </div>
+      ${totalReactions > 0 ? `<p style="margin:12px 0 0 0;font-size:14px;color:${C.body};"><strong style="color:${C.ink};">${totalReactions}</strong> reactions this week — nice! 🎉</p>` : ""}
     </div>
 
-    <!-- Content -->
-    <div style="padding: 24px;">
+    <!-- Milestones -->
+    ${milestones.length > 0 ? `
+    <div style="${card}background:${C.goldLight};border-left:6px solid ${C.gold};">
+      ${sectionTitle("🏆", "Milestones")}
+      <ul style="margin:0;padding-left:20px;color:${C.body};font-size:14px;line-height:1.7;">
+        ${milestones.map((m) => `<li style="margin-bottom:4px;">${m}</li>`).join("")}
+      </ul>
+    </div>` : ""}
 
-      <!-- Reactions -->
-      <div style="margin-bottom: 24px; padding: 16px; background: #fdf2f8; border-radius: 12px;">
-        <h2 style="margin: 0 0 12px 0; font-size: 16px; color: #1e293b;">💖 New Reactions</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-          <span style="display: inline-block; padding: 6px 12px; background: #fce7f3; color: #be3590; border-radius: 100px; font-size: 13px; font-weight: 600;">📚 Books: ${bookStats.totalReactions}</span>
-          <span style="display: inline-block; padding: 6px 12px; background: #fce7f3; color: #be3590; border-radius: 100px; font-size: 13px; font-weight: 600;">📝 Reviews: ${reviewStats?.totalReactions || 0}</span>
-          <span style="display: inline-block; padding: 6px 12px; background: #fce7f3; color: #be3590; border-radius: 100px; font-size: 13px; font-weight: 600;">✍️ Poems: ${poemStats.totalReactions}</span>
-          <span style="display: inline-block; padding: 6px 12px; background: #fce7f3; color: #be3590; border-radius: 100px; font-size: 13px; font-weight: 600;">📖 Writing: ${writingStats.totalReactions}</span>
-        </div>
-        ${totalReactions > 0 ? `<p style="margin: 12px 0 0 0; font-size: 14px; color: #475569;"><strong>${totalReactions}</strong> total reactions this week! 🎉</p>` : ""}
-      </div>
-
-      <!-- This week's reading activity -->
-      ${booksReadThisWeek.length > 0 ? `
-      <div style="margin-bottom: 24px; padding: 16px; background: #f0f9ff; border-radius: 12px;">
-        <h2 style="margin: 0 0 12px 0; font-size: 16px; color: #1e293b;">📚 Finished This Week</h2>
-        <ul style="margin: 0; padding-left: 20px; color: #475569; font-size: 14px; line-height: 1.6;">
-          ${booksReadThisWeek.map((b) => `<li style="margin-bottom: 4px;"><strong>${escapeHtml(b.title)}</strong> by ${escapeHtml(b.author)}${b.rating ? ` — ${"⭐".repeat(Math.min(5, Math.round(b.rating)))}` : ""}</li>`).join("")}
-        </ul>
-      </div>
-      ` : ""}
-
-      <!-- Newly added books + wishlist -->
-      ${booksAddedThisWeek.length + wishlistAddedThisWeek.length > 0 ? `
-      <div style="margin-bottom: 24px; padding: 16px; background: #fdf2f8; border-radius: 12px;">
-        <h2 style="margin: 0 0 12px 0; font-size: 16px; color: #1e293b;">✨ Added This Week</h2>
-        ${booksAddedThisWeek.length > 0 ? `<p style="margin: 0 0 6px 0; font-size: 14px; color: #475569;"><strong>${booksAddedThisWeek.length}</strong> to the shelf: ${booksAddedThisWeek.slice(0, 5).map((b) => escapeHtml(b.title)).join(", ")}${booksAddedThisWeek.length > 5 ? ` +${booksAddedThisWeek.length - 5} more` : ""}</p>` : ""}
-        ${wishlistAddedThisWeek.length > 0 ? `<p style="margin: 0; font-size: 14px; color: #475569;"><strong>${wishlistAddedThisWeek.length}</strong> to the wishlist: ${wishlistAddedThisWeek.slice(0, 5).map((w) => escapeHtml(w.title)).join(", ")}${wishlistAddedThisWeek.length > 5 ? ` +${wishlistAddedThisWeek.length - 5} more` : ""}</p>` : ""}
-      </div>
-      ` : ""}
-
-      <!-- Milestones -->
-      ${milestones.length > 0 ? `
-      <div style="margin-bottom: 24px; padding: 16px; background: #fef3c7; border-radius: 12px;">
-        <h2 style="margin: 0 0 12px 0; font-size: 16px; color: #1e293b;">🏆 Milestones Hit</h2>
-        <ul style="margin: 0; padding-left: 20px; color: #475569; font-size: 14px; line-height: 1.6;">
-          ${milestones.map((m) => `<li style="margin-bottom: 4px;">${m}</li>`).join("")}
-        </ul>
-      </div>
-      ` : ""}
-
-      <!-- Stats -->
-      <div style="margin-bottom: 24px; padding: 16px; background: #f0fdf4; border-radius: 12px;">
-        <h2 style="margin: 0 0 12px 0; font-size: 16px; color: #1e293b;">📊 Current Stats</h2>
-        <p style="margin: 0 0 4px 0; font-size: 14px; color: #475569;"><strong>${readBooks.length}</strong> books read</p>
-        <p style="margin: 0 0 4px 0; font-size: 14px; color: #475569;"><strong>${totalReviews}</strong> reviews written</p>
-        <p style="margin: 0; font-size: 14px; color: #475569;"><strong>${totalPages.toLocaleString()}</strong> pages read</p>
-      </div>
-
-      <!-- Reminder -->
-      <div style="padding: 16px; background: #eff6ff; border-radius: 12px; border-left: 4px solid #3b82f6;">
-        <p style="margin: 0; font-size: 14px; color: #1e40af; font-weight: 600;">💡 Reminder</p>
-        <p style="margin: 4px 0 0 0; font-size: 14px; color: #475569;">Don't forget to add <em>all</em> the books you've read — not just the ones you want to review!</p>
-      </div>
-
-      <!-- CTA -->
-      <a href="https://izzysbookshelf.com/admin" style="display: block; text-align: center; margin-top: 24px; padding: 14px; background: linear-gradient(135deg, #d946a8, #0d9488); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 15px;">
-        Open Dashboard →
-      </a>
+    <!-- Stats -->
+    <div style="${card}">
+      ${sectionTitle("📊", "Your bookshelf so far")}
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+        ${statTile(String(readBooks.length), "books read", C.berry)}
+        ${statTile(String(totalReviews), "reviews", C.teal)}
+        ${statTile(totalPages.toLocaleString(), "pages", C.gold)}
+      </tr></table>
     </div>
 
-    <!-- Footer -->
-    <div style="padding: 16px 24px; text-align: center; border-top: 1px solid #f1f5f9;">
-      <p style="margin: 0; font-size: 12px; color: #94a3b8;">From Izzy's Bookshelf ✨</p>
-    </div>
-  </div>
-</body>
-</html>`;
+    <!-- Reminder -->
+    <div style="${card}border-left:6px solid ${C.teal};">
+      ${sectionTitle("💡", "Don&rsquo;t forget")}
+      <p style="margin:0;font-size:14px;line-height:1.6;color:${C.body};">Read anything this week? Pop it on your shelf — every book counts, even the ones you don&rsquo;t want to review!</p>
+    </div>`,
+    });
 
     await resend.emails.send({
       from: "Izzy's Bookshelf <summary@izzysbookshelf.com>",
-      to: notificationEmail,
-      subject: `✨ Your Weekly Summary from Izzy's Bookshelf`,
+      to: args.to ?? notificationEmail!,
+      subject: `✨ Your week on Izzy's Bookshelf`,
       html,
     });
   },
