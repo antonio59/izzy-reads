@@ -538,7 +538,7 @@ function Discover() {
             <span className="flex items-center gap-1">
               <ArrowLeft className="w-3 h-3" /> Pass
             </span>
-            <span className="text-stone-300">|</span>
+            <span className="w-px h-3 bg-stone-300" aria-hidden="true" />
             <span className="flex items-center gap-1">
               Want it <ArrowRight className="w-3 h-3" />
             </span>

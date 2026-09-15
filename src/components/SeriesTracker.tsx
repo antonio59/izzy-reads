@@ -671,13 +671,12 @@ const SeriesTracker: React.FC = () => {
               </button>
             ))
           ) : (
-            <div className="text-center py-8">
-              <BookOpen className="w-12 h-12 text-stone-300 mx-auto mb-3" />
-              <p className="text-stone-500">No books available</p>
-              <p className="text-sm text-stone-500">
-                Add books to your bookshelf first
-              </p>
-            </div>
+            <EmptyState
+              icon={BookOpen}
+              title="No books available"
+              description="Add books to your bookshelf first"
+              className="py-8"
+            />
           )}
         </div>
       </Modal>

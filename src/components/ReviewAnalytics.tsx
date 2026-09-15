@@ -493,12 +493,12 @@ export function ReviewAnalytics({ compact = false }: ReviewAnalyticsProps) {
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="text-center py-8">
-                <Star className="w-12 h-12 text-stone-300 mx-auto mb-3" />
-                <p className="text-stone-500">
-                  Rate more books to see genre stats
-                </p>
-              </div>
+              <EmptyState
+                icon={Star}
+                title="No genre stats yet"
+                description="Rate more books to see stats here"
+                className="py-8"
+              />
             )}
           </Card>
         </motion.div>

@@ -327,6 +327,7 @@ export function EditBookModal({
                           className={`w-8 h-8 transition-colors ${
                             star <= displayRating
                               ? "text-amber-400 fill-amber-400"
+                              // eslint-disable-next-line no-restricted-syntax -- unrated star, intentionally faint
                               : "text-stone-300"
                           }`}
                         />

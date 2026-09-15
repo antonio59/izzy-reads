@@ -19,6 +19,7 @@ import {
   type UnifiedBook,
 } from "../../services/bookApi";
 import { useToastActions } from "./Toast";
+import { EmptyState } from "./EmptyState";
 import type { Book } from "../../types";
 import { useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
@@ -860,19 +861,22 @@ export function BookSearchModal({
                   exit={{ opacity: 0 }}
                   className="text-center py-12"
                 >
-                  <BookOpen className="w-16 h-16 text-stone-300 mx-auto mb-4" />
-                  <p className="text-stone-500 text-lg">
-                    {loading
-                      ? "Searching..."
-                      : hasSearched
-                        ? "No books found"
-                        : "Search for books to add to your collection!"}
-                  </p>
-                  <p className="text-stone-500 text-sm mt-2">
-                    {hasSearched
-                      ? "Try a different search term or add it manually"
-                      : "Try searching for your favourite book or author"}
-                  </p>
+                  <EmptyState
+                    icon={BookOpen}
+                    className="py-0"
+                    title={
+                      loading
+                        ? "Searching..."
+                        : hasSearched
+                          ? "No books found"
+                          : "Search for books to add to your collection!"
+                    }
+                    description={
+                      hasSearched
+                        ? "Try a different search term or add it manually"
+                        : "Try searching for your favourite book or author"
+                    }
+                  />
                   {hasSearched && (
                     <button
                       onClick={() => setShowManualEntry(true)}

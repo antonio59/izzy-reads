@@ -170,6 +170,7 @@ function HeroCoverShelf({
                         aria-label={`${book.rating} out of 5 stars`}
                       >
                         {"★".repeat(Math.round(book.rating))}
+                        {/* eslint-disable-next-line no-restricted-syntax -- unrated stars, intentionally faint */}
                         <span className="text-stone-300">
                           {"★".repeat(5 - Math.round(book.rating))}
                         </span>
