@@ -119,6 +119,7 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Clear remaining lint warnings via real fixes
 - Remediate design audit findings D1-D9
 - Weekly summary at 9am UK time year-round
 - British english + no em-dashes across app and emails
@@ -915,6 +916,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
