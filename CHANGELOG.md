@@ -118,6 +118,7 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Weekly summary at 9am UK time year-round
 - British english + no em-dashes across app and emails
 - Refine weekly summary — latest review, preheader, plain-text part
 - Add 'Share your words' prompt to weekly summary
@@ -912,6 +913,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
