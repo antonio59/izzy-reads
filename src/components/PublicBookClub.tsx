@@ -228,7 +228,7 @@ export default function PublicBookClub() {
           <div className="text-center py-10 bg-white/50 rounded-2xl border border-dashed border-cream-300">
             <p className="text-stone-600 font-medium mb-1">
               {detailedData && detailedData.totalReactions > 0
-                ? `${detailedData.totalReactions} reaction${detailedData.totalReactions !== 1 ? "s" : ""} so far — thanks for reading along!`
+                ? `${detailedData.totalReactions} reaction${detailedData.totalReactions !== 1 ? "s" : ""} so far – thanks for reading along!`
                 : "Be the first to react to this month's pick!"}
             </p>
             <p className="text-sm text-stone-400">

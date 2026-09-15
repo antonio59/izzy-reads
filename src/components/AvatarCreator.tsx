@@ -101,7 +101,7 @@ const EYE_COLORS = [
   { id: "blue", color: "#3d85c6", name: "Blue" },
   { id: "green", color: "#3d8b40", name: "Green" },
   { id: "hazel", color: "#8e7618", name: "Hazel" },
-  { id: "gray", color: "#708090", name: "Gray" },
+  { id: "gray", color: "#708090", name: "Grey" },
 ];
 
 const ACCESSORIES = [

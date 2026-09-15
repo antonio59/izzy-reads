@@ -27,7 +27,7 @@ const OG_IMAGE_PATH = "/og-image.jpg";
 const OG_IMAGE_WIDTH = "1200";
 const OG_IMAGE_HEIGHT = "630";
 const OG_IMAGE_ALT =
-  "Izzy's Bookshelf — a young reader with her owl friend, books, reviews, poems, and wishlist";
+  "Izzy's Bookshelf – a young reader with her owl friend, books, reviews, poems, and wishlist";
 
 function isCrawler(request: Request): boolean {
   const userAgent = request.headers.get("user-agent")?.toLowerCase() || "";
@@ -133,7 +133,7 @@ export function socialMetaResponse(request: Request): Response | null {
   if (poemMatch) {
     const slug = poemMatch[1];
     const title = `${slugToTitle(slug)} | Izzy's Poetry`;
-    const description = `Read "${slugToTitle(slug)}" — a poem by Izzy on ${SITE_NAME}.`;
+    const description = `Read "${slugToTitle(slug)}" – a poem by Izzy on ${SITE_NAME}.`;
     return htmlResponse(
       buildMetaHtml({ title, description, url: canonical, image: ogImage }),
     );
@@ -158,7 +158,7 @@ export function socialMetaResponse(request: Request): Response | null {
       buildMetaHtml({
         title: `Writing | ${SITE_NAME}`,
         description:
-          "Longer stories and thoughts from Izzy's reading life — adventures on the page, reflections, and writing she's proud to share.",
+          "Longer stories and thoughts from Izzy's reading life – adventures on the page, reflections, and writing she's proud to share.",
         url: canonical,
         image: ogImage,
         type: "website",
@@ -172,7 +172,7 @@ export function socialMetaResponse(request: Request): Response | null {
       buildMetaHtml({
         title: `Book Reviews | ${SITE_NAME}`,
         description:
-          "Honest book reviews from Izzy — what she loved, what surprised her, and which stories she'd recommend.",
+          "Honest book reviews from Izzy – what she loved, what surprised her, and which stories she'd recommend.",
         url: canonical,
         image: ogImage,
         type: "website",

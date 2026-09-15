@@ -115,7 +115,7 @@ function BookGridItem({
           </div>
         )}
 
-        {/* Favorite Heart */}
+        {/* Favourite Heart */}
         {book.isRead && (
           <motion.div
             className="absolute top-2 right-2"

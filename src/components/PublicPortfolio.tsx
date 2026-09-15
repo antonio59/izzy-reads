@@ -34,7 +34,7 @@ function scrollToShelf() {
     ?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-/** Full-bleed overlapping cover shelf for the hero — hover a cover for the review */
+/** Full-bleed overlapping cover shelf for the hero – hover a cover for the review */
 function HeroCoverShelf({
   books,
   reducedMotion,
@@ -139,7 +139,7 @@ function HeroCoverShelf({
                   <Link
                     to={`/reviews/${book.id}`}
                     className="block w-full h-full rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
-                    aria-label={`${book.title}${snippet ? " — read Izzy's review" : ""}`}
+                    aria-label={`${book.title}${snippet ? " – read Izzy's review" : ""}`}
                   >
                     <BookCoverImage book={book} className="w-full h-full" />
                   </Link>
@@ -280,7 +280,7 @@ const PublicPortfolio = () => {
       />
       <PublicNav />
 
-      {/* ── Hero: one composition — brand, voice, CTA, cover shelf ── */}
+      {/* ── Hero: one composition – brand, voice, CTA, cover shelf ── */}
       <section className="relative overflow-hidden">
         <div className="relative z-10 max-w-3xl mx-auto px-4 pt-10 sm:pt-14 md:pt-16 pb-6 text-center">
           <motion.div
@@ -307,7 +307,7 @@ const PublicPortfolio = () => {
             </h1>
 
             <p className="text-base sm:text-lg text-stone-500 max-w-md leading-relaxed">
-              Every book I finish lives here — plus reviews, poems, and writing I&apos;m proud of.
+              Every book I finish lives here – plus reviews, poems, and writing I&apos;m proud of.
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
@@ -385,7 +385,7 @@ const PublicPortfolio = () => {
           )}
         </section>
 
-        {/* Quiet stats — below the fold, not a dashboard card */}
+        {/* Quiet stats – below the fold, not a dashboard card */}
         {readBooks.length > 0 && (
           <section
             className="mb-16 sm:mb-20 py-8 border-y border-cream-300"

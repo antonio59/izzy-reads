@@ -196,7 +196,7 @@ function PublicReviews() {
 
       <PublicNav />
 
-      {/* Hero — matches home/about language */}
+      {/* Hero – matches home/about language */}
       <section className="relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-80"
@@ -222,7 +222,7 @@ function PublicReviews() {
               Book Reviews
             </h1>
             <p className="text-base text-stone-500 max-w-md mx-auto leading-relaxed">
-              Extra thoughts on books from my shelf — not every book needs a
+              Extra thoughts on books from my shelf – not every book needs a
               review, but these ones got one.
             </p>
             {booksWithReviews.length > 0 && (
@@ -409,7 +409,7 @@ function PublicReviews() {
               <p className="text-stone-500 max-w-md mx-auto mb-6">
                 {hasActiveFilters
                   ? "Try another search or clear the filters."
-                  : "I'm writing my first reviews — peek at my bookshelf while you wait!"}
+                  : "I'm writing my first reviews – peek at my bookshelf while you wait!"}
               </p>
               <div className="flex flex-wrap items-center justify-center gap-3">
                 {hasActiveFilters && (
@@ -493,7 +493,7 @@ function SingleReviewView({
                 : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
             }
           >
-            {/* Book header — open layout, no purple gradient card */}
+            {/* Book header – open layout, no purple gradient card */}
             <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start mb-10">
               <div className="w-36 sm:w-44 aspect-[2/3] rounded-xl overflow-hidden shadow-xl ring-1 ring-cream-300 flex-shrink-0">
                 <BookCoverImage book={book} className="w-full h-full" />

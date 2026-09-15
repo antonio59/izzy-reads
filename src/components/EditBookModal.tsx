@@ -644,7 +644,7 @@ export function EditBookModal({
                   ref={notesRef}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Write your review here... What did you think of the story? Who was your favorite character? Would you recommend it? 📚✨"
+                  placeholder="Write your review here... What did you think of the story? Who was your favourite character? Would you recommend it? 📚✨"
                   className="rounded-b-xl rounded-t-none"
                   rows={6}
                 />

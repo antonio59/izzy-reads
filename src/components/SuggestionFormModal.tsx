@@ -258,7 +258,7 @@ export function SuggestionFormModal({
                 Sent!
               </h3>
               <p className="text-stone-500 leading-relaxed max-w-sm mx-auto">
-                Thanks — {recipientName} will see your suggestion on the
+                Thanks – {recipientName} will see your suggestion on the
                 wishlist soon.
               </p>
             </div>
@@ -483,7 +483,7 @@ export function SuggestionFormModal({
                       })
                     }
                     rows={3}
-                    placeholder="A short note is plenty — funny, exciting, cozy…"
+                    placeholder="A short note is plenty – funny, exciting, cozy…"
                     disabled={isSubmitting}
                     className="bg-white border-cream-300"
                   />

@@ -152,7 +152,7 @@ async function fetchFromGoogleBooks(query: string, startIndex: number, apiKey?: 
               coverUrl = u.toString();
             }
           } else if (item.id) {
-            // Search results often omit large imageLinks — build a zoom-3 cover from volume id
+            // Search results often omit large imageLinks – build a zoom-3 cover from volume id
             coverUrl = `https://books.google.com/books/content?id=${encodeURIComponent(item.id)}&printsec=frontcover&img=1&zoom=3&source=gbs_api`;
           }
         } catch {
@@ -302,7 +302,7 @@ export const recordSwipe = mutation({
       createdAt: Date.now(),
     });
 
-    // If liked, auto-add to wishlist — wishlist rows are publicly visible,
+    // If liked, auto-add to wishlist – wishlist rows are publicly visible,
     // so only admins may publish to it.
     if (args.action === "liked" && (await isAdmin(ctx, userId))) {
       // Check if already exists in books or wishlist

@@ -521,7 +521,7 @@ const SeriesTracker: React.FC = () => {
                   Start tracking your series!
                 </h3>
                 <p className="text-stone-500 mb-6">
-                  Keep track of which books you've read in your favorite series
+                  Keep track of which books you've read in your favourite series
                 </p>
                 <motion.button
                   onClick={() => setShowAddSeries(true)}

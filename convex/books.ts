@@ -45,7 +45,7 @@ export const getAll = query({
     const books = await ctx.db.query("books").collect();
     const userId = await auth.getUserId(ctx);
     if (userId) return books;
-    // Anonymous callers get the public projection — gift attribution and
+    // Anonymous callers get the public projection – gift attribution and
     // internal user ids stay server-side.
     return books.map(({ userId: _u, ...rest }) => ({ ...rest, giftFrom: undefined }));
   },

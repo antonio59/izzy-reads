@@ -65,7 +65,7 @@ const PublicWishlist = () => {
         url: wishlistUrl,
       });
     } catch {
-      // Cancelled or unsupported — open copy panel instead
+      // Cancelled or unsupported – open copy panel instead
       setShowSharePanel(true);
     }
   };
@@ -109,7 +109,7 @@ const PublicWishlist = () => {
 
       <PublicNav />
 
-      {/* Hero — matches home/reviews language */}
+      {/* Hero – matches home/reviews language */}
       <section className="relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-80"
@@ -135,7 +135,7 @@ const PublicWishlist = () => {
               Wishlist
             </h1>
             <p className="text-base text-stone-500 max-w-md mx-auto leading-relaxed">
-              Books I can&apos;t wait to read — know a good one? Suggest it!
+              Books I can&apos;t wait to read – know a good one? Suggest it!
             </p>
 
             {wishlist.length > 0 && (
@@ -357,7 +357,7 @@ const PublicWishlist = () => {
                 grown-up to help you send me a book idea.
               </p>
               <p className="text-sm text-stone-400 max-w-sm mx-auto">
-                Tip: check back soon — I&apos;ll be adding books I&apos;d love to
+                Tip: check back soon – I&apos;ll be adding books I&apos;d love to
                 read.
               </p>
               <button
@@ -480,7 +480,7 @@ const PublicWishlist = () => {
 
                 {!selectedBook.notes && !selectedBook.description && (
                   <p className="text-stone-500 italic text-center mb-6 text-sm">
-                    This book looks amazing — I can&apos;t wait to read it!
+                    This book looks amazing – I can&apos;t wait to read it!
                   </p>
                 )}
 

@@ -114,7 +114,7 @@ function ErrorFallback({
         </h1>
 
         <p className="text-stone-500 mb-8">
-          Don't worry — let's get you back to the shelf.
+          Don't worry – let's get you back to the shelf.
         </p>
 
         {/* Action buttons */}

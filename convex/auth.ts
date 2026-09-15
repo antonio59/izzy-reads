@@ -3,7 +3,7 @@ import { convexAuth } from "@convex-dev/auth/server";
 import { Password } from "@convex-dev/auth/providers/Password";
 import type { DataModel } from "./_generated/dataModel";
 
-// Only these emails can sign up / sign in — stored as Convex env var
+// Only these emails can sign up / sign in – stored as Convex env var
 const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "")
   .split(",")
   .map((e: string) => e.trim().toLowerCase())

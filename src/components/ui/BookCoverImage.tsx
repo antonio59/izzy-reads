@@ -29,7 +29,7 @@ export type BookCoverSize = "thumb" | "card" | "hero";
 interface BookCoverImageProps {
   book: Book;
   className?: string;
-  /** Visual role — affects object-fit and decoding priority */
+  /** Visual role – affects object-fit and decoding priority */
   size?: BookCoverSize;
   /** Prefer full cover visible (Discover / detail) vs cropped grid tiles */
   fit?: "cover" | "contain";

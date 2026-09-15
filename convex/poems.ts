@@ -58,7 +58,7 @@ export const add = mutation({
     const allPoems = await ctx.db.query("poems").collect();
     const existingSlugs = allPoems.map((p) => p.slug).filter(Boolean) as string[];
     const slug = createSlug(args.title, existingSlugs);
-    // likes is server-owned — never accepted from the client.
+    // likes is server-owned – never accepted from the client.
     return await ctx.db.insert("poems", { ...args, userId, slug, likes: 0 });
   },
 });
@@ -87,7 +87,7 @@ export const update = mutation({
   },
 });
 
-// Increment a poem's like counter by one — the only supported way to
+// Increment a poem's like counter by one – the only supported way to
 // change likes. Admin-only since it runs inside the authed Create page.
 export const incrementLikes = mutation({
   args: { id: v.id("poems") },

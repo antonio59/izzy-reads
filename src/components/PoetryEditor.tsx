@@ -469,7 +469,7 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
             </motion.div>
           )}
 
-          {/* Style Customization Step */}
+          {/* Style Customisation Step */}
           {step === "style" && (
             <motion.div
               key="style"
@@ -488,7 +488,7 @@ const PoetryEditor: React.FC<PoetryEditorProps> = ({
                     <X className="w-5 h-5 text-stone-500" />
                   </button>
                   <h2 className="text-xl font-display font-bold text-stone-800">
-                    Customize Style
+                    Customise Style
                   </h2>
                 </div>
                 <Button

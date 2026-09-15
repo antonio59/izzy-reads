@@ -60,7 +60,7 @@ const PublicPoetry = () => {
               Poetry
             </h1>
             <p className="text-base text-stone-500 max-w-md mx-auto leading-relaxed">
-              Poems I&apos;ve written — imagination, feelings, and a little magic.
+              Poems I&apos;ve written – imagination, feelings, and a little magic.
             </p>
             {poems.length > 0 && (
               <p className="mt-5 text-sm text-stone-400">

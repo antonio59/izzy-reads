@@ -63,7 +63,7 @@ export function passcodePepper(): string {
 
 /**
  * Hash a book-club passcode before storage or lookup. Stored values are
- * SHA-256(pepper + ":" + passcode) — never plaintext — so a table read or
+ * SHA-256(pepper + ":" + passcode) – never plaintext – so a table read or
  * index dump does not reveal visitor passcodes.
  */
 export async function hashPasscode(passcode: string): Promise<string> {

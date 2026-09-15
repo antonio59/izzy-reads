@@ -871,7 +871,7 @@ export function BookSearchModal({
                   <p className="text-stone-400 text-sm mt-2">
                     {hasSearched
                       ? "Try a different search term or add it manually"
-                      : "Try searching for your favorite book or author"}
+                      : "Try searching for your favourite book or author"}
                   </p>
                   {hasSearched && (
                     <button

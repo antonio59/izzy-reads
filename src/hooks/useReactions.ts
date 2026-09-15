@@ -39,7 +39,7 @@ function getVisitorId(): string {
   let visitorId = localStorage.getItem(STORAGE_KEY);
 
   if (!visitorId) {
-    // Unguessable ID — a visitor who knows another's ID can modify that
+    // Unguessable ID – a visitor who knows another's ID can modify that
     // visitor's reaction, so IDs must be cryptographically random.
     visitorId = `visitor_${crypto.randomUUID()}`;
     localStorage.setItem(STORAGE_KEY, visitorId);

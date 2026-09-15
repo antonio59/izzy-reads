@@ -82,7 +82,7 @@ const PoemDetail = () => {
 
   const handleCopyText = async () => {
     if (!poem) return;
-    const text = `${poem.title}\n\n${poem.content}\n\n— Izzy`;
+    const text = `${poem.title}\n\n${poem.content}\n\n– Izzy`;
     await navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -205,7 +205,7 @@ const PoemDetail = () => {
         />
 
         <div className="relative z-10 max-w-2xl mx-auto px-4 pt-6 sm:pt-8 pb-12 sm:pb-16">
-          {/* Toolbar — quiet, not a sticky bar */}
+          {/* Toolbar – quiet, not a sticky bar */}
           <div className="flex items-center justify-between gap-3 mb-8 sm:mb-10">
             <button
               type="button"
@@ -275,7 +275,7 @@ const PoemDetail = () => {
               </div>
             </header>
 
-            {/* Poem body — open serif reading */}
+            {/* Poem body – open serif reading */}
             <p className="text-lg sm:text-xl text-stone-700 font-serif leading-relaxed whitespace-pre-wrap text-center px-2 sm:px-4">
               {poem.content}
             </p>

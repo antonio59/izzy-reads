@@ -162,9 +162,9 @@ export const migrateSingleBookCover = action({
 
       const blob = await response.blob();
 
-      // 2 KB threshold — Open Library placeholder images are typically ~807 bytes
+      // 2 KB threshold – Open Library placeholder images are typically ~807 bytes
       if (blob.size < 2000) {
-        const err = `Image too small (${blob.size} bytes) — likely a placeholder`;
+        const err = `Image too small (${blob.size} bytes) – likely a placeholder`;
         await logFailure(err);
         return { success: false, error: err };
       }
@@ -179,7 +179,7 @@ export const migrateSingleBookCover = action({
         return { success: false, error: err };
       }
 
-      // Update DB — if this fails, delete the orphaned storage object to avoid leaks
+      // Update DB – if this fails, delete the orphaned storage object to avoid leaks
       try {
         await ctx.runMutation(api.books.updateBookCover, { bookId, coverUrl: newUrl });
       } catch (mutErr) {
@@ -271,7 +271,7 @@ export const migrateSingleWishlistCover = action({
       const blob = await response.blob();
 
       if (blob.size < 2000) {
-        const err = `Image too small (${blob.size} bytes) — likely a placeholder`;
+        const err = `Image too small (${blob.size} bytes) – likely a placeholder`;
         await logFailure(err);
         return { success: false, error: err };
       }
@@ -322,7 +322,7 @@ export const migrateSingleWishlistCover = action({
 });
 
 /**
- * Get migration status — current counts of covers by URL type.
+ * Get migration status – current counts of covers by URL type.
  */
 export const getMigrationStatus = query({
   args: {},
@@ -383,7 +383,7 @@ export const getMigrationStatus = query({
  * Supports offset-based pagination so you can process all books across
  * multiple calls without hitting action time limits.
  *
- * Example — migrate everything 10 at a time:
+ * Example – migrate everything 10 at a time:
  *   let result = await ctx.runAction(api.migration.bulkMigrateBookCovers, { batchSize: 10 });
  *   while (result.hasMore) {
  *     result = await ctx.runAction(api.migration.bulkMigrateBookCovers, {
@@ -458,7 +458,7 @@ export const bulkMigrateBookCovers = action({
           title: book.title,
           success: true,
           oldUrl: book.coverUrl,
-          error: `DRY RUN — would migrate from: ${book.coverUrl}`,
+          error: `DRY RUN – would migrate from: ${book.coverUrl}`,
         });
         continue;
       }
@@ -580,7 +580,7 @@ export const bulkMigrateWishlistCovers = action({
           title: item.title,
           success: true,
           oldUrl: item.coverUrl,
-          error: `DRY RUN — would migrate from: ${item.coverUrl}`,
+          error: `DRY RUN – would migrate from: ${item.coverUrl}`,
         });
         continue;
       }

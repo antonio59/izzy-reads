@@ -159,7 +159,7 @@ export function CoverRefreshPanel() {
           >
             <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" />
             <span>
-              Done — stored {summary.stored}, sharpened {summary.upgraded},
+              Done – stored {summary.stored}, sharpened {summary.upgraded},
               skipped {summary.skipped}, failed {summary.failed}.
             </span>
           </motion.div>

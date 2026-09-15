@@ -62,7 +62,7 @@ const NotFound: React.FC = () => {
             This page wandered off
           </h1>
           <p className="text-stone-500 leading-relaxed mb-8 max-w-md mx-auto">
-            It isn&apos;t on Izzy&apos;s Bookshelf — or it moved. Try home, or
+            It isn&apos;t on Izzy&apos;s Bookshelf – or it moved. Try home, or
             pick a favourite corner below.
           </p>
 

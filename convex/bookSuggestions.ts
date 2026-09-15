@@ -28,7 +28,7 @@ export const getPendingCount = query({
   },
 });
 
-// Cap on un-reviewed submissions — each pending row schedules an email,
+// Cap on un-reviewed submissions – each pending row schedules an email,
 // so this bounds the notification flood from an unauthenticated caller.
 const MAX_PENDING_SUGGESTIONS = 100;
 
@@ -59,7 +59,7 @@ export const submit = mutation({
       .withIndex("by_status", (q) => q.eq("status", "pending"))
       .collect();
     if (pending.length >= MAX_PENDING_SUGGESTIONS) {
-      throw new Error("Suggestion box is full — please try again later");
+      throw new Error("Suggestion box is full – please try again later");
     }
 
     const suggestionId = await ctx.db.insert("bookSuggestions", {

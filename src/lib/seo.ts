@@ -5,16 +5,16 @@
 
 export const SITE_NAME = "Izzy's Bookshelf";
 export const SITE_URL = "https://izzysbookshelf.com";
-/** Landscape share card — WhatsApp/Facebook prefer ~1200×630 JPEG under ~300KB */
+/** Landscape share card – WhatsApp/Facebook prefer ~1200×630 JPEG under ~300KB */
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
 export const OG_IMAGE_ALT =
-  "Izzy's Bookshelf — a young reader with her owl friend, books, reviews, poems, and wishlist";
+  "Izzy's Bookshelf – a young reader with her owl friend, books, reviews, poems, and wishlist";
 export const THEME_COLOR = "#d946a8";
 
 export const SITE_TAGLINE =
-  "A young reader's shelf — books she's finished, reviews she wrote, poems & stories, and a wishlist for what's next.";
+  "A young reader's shelf – books she's finished, reviews she wrote, poems & stories, and a wishlist for what's next.";
 
 export const SITE_DESCRIPTION =
   "Explore Izzy's Bookshelf: every book she finishes, honest reviews, original poems and writing, plus a wishlist where friends can suggest the next great read.";
@@ -27,32 +27,32 @@ export const pageMeta = {
   reviews: {
     title: `Book Reviews | ${SITE_NAME}`,
     description:
-      "Honest book reviews from Izzy — what she loved, what surprised her, and which stories she'd recommend. Browse by genre, mood, or search.",
+      "Honest book reviews from Izzy – what she loved, what surprised her, and which stories she'd recommend. Browse by genre, mood, or search.",
   },
   poetry: {
     title: `Poems | ${SITE_NAME}`,
     description:
-      "Original poems by Izzy — short pieces from the heart, shared from her bookshelf for anyone who loves words as much as stories.",
+      "Original poems by Izzy – short pieces from the heart, shared from her bookshelf for anyone who loves words as much as stories.",
   },
   writing: {
     title: `Writing | ${SITE_NAME}`,
     description:
-      "Longer stories and thoughts from Izzy's reading life — adventures on the page, reflections, and writing she's proud to share.",
+      "Longer stories and thoughts from Izzy's reading life – adventures on the page, reflections, and writing she's proud to share.",
   },
   wishlist: {
     title: `Wishlist | ${SITE_NAME}`,
     description:
-      "Books Izzy can't wait to read. Browse her wishlist, then suggest a title you think she'd love — family and friends welcome.",
+      "Books Izzy can't wait to read. Browse her wishlist, then suggest a title you think she'd love – family and friends welcome.",
   },
   about: {
     title: `About Izzy | ${SITE_NAME}`,
     description:
-      "Meet Izzy — a young book lover building her shelf one story at a time. Learn what she reads, why she writes, and how to follow along.",
+      "Meet Izzy – a young book lover building her shelf one story at a time. Learn what she reads, why she writes, and how to follow along.",
   },
   bookClub: {
     title: `Book Club | ${SITE_NAME}`,
     description:
-      "Read along with Izzy's book club picks — join the conversation on the latest shared read from her bookshelf.",
+      "Read along with Izzy's book club picks – join the conversation on the latest shared read from her bookshelf.",
   },
 } as const;
 

@@ -46,7 +46,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const createUserProfile = useMutation(api.users.createProfile);
 
-  // The caller's userProfiles row — null once loaded if none exists yet.
+  // The caller's userProfiles row – null once loaded if none exists yet.
   const myProfile = useQuery(
     api.users.getMyProfile,
     isAuthenticated ? {} : "skip",
@@ -73,7 +73,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return null;
   }, [currentUser, isAuthenticated, isLoading]);
 
-  // Create profile for new users after signup — fires when the profile
+  // Create profile for new users after signup – fires when the profile
   // query resolves to null (loaded, no row). Idempotent server-side.
   useEffect(() => {
     const createProfileIfNeeded = async () => {
@@ -114,7 +114,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (error: unknown) {
       console.error("Sign in error:", error);
 
-      // One generic message — distinct errors for unknown-email vs
+      // One generic message – distinct errors for unknown-email vs
       // wrong-password let callers probe which addresses have accounts.
       throw new Error("Invalid email or password. Please try again.", {
         cause: error,

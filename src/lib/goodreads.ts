@@ -71,7 +71,7 @@ function cleanIsbn(raw: string | undefined): string | undefined {
   return cleaned.length >= 10 ? cleaned : undefined;
 }
 
-/** Goodreads dates are YYYY/MM/DD — normalize to YYYY-MM-DD. */
+/** Goodreads dates are YYYY/MM/DD – normalize to YYYY-MM-DD. */
 function cleanDate(raw: string | undefined): string | undefined {
   if (!raw) return undefined;
   const m = raw.trim().match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})/);
@@ -100,7 +100,7 @@ export function parseGoodreadsCsv(text: string): GoodreadsRow[] {
 
   if (idx.title === -1 || idx.author === -1) {
     throw new Error(
-      "This doesn't look like a Goodreads export — no Title/Author columns found.",
+      "This doesn't look like a Goodreads export – no Title/Author columns found.",
     );
   }
 

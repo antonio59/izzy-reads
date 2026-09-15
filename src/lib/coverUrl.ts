@@ -1,5 +1,5 @@
 /**
- * Cover URL helpers — normalize resolution, ISBN covers, and invalid placeholders.
+ * Cover URL helpers – normalize resolution, ISBN covers, and invalid placeholders.
  */
 
 const PLACEHOLDER_COVER = "/placeholder-book-cover.svg";

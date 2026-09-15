@@ -163,7 +163,7 @@ const Create: React.FC = () => {
                 </h3>
                 <p className="text-sm text-stone-600 mt-0.5">
                   Share longer stories and thoughts! Write book reviews, talk
-                  about your favorite characters, or tell stories about your
+                  about your favourite characters, or tell stories about your
                   reading adventures. Your posts will appear on your website!
                 </p>
               </>

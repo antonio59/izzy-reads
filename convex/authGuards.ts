@@ -7,7 +7,7 @@ import type { Id } from "./_generated/dataModel";
 /**
  * Explicit admin allowlist from the Convex deployment environment.
  * Set ADMIN_EMAILS to a comma-separated list of exact email addresses.
- * These are matched exactly (case-insensitive) — never by substring.
+ * These are matched exactly (case-insensitive) – never by substring.
  */
 const ADMIN_EMAILS = new Set(
   (process.env.ADMIN_EMAILS ?? "")
@@ -32,7 +32,7 @@ export async function requireUser(
  * Non-throwing admin check. An admin is either:
  *  - a user whose email is listed exactly in the ADMIN_EMAILS env var, or
  *  - a user whose userProfiles row has isParent === true (set via the
- *    Convex dashboard or an admin-only mutation — never by the client).
+ *    Convex dashboard or an admin-only mutation – never by the client).
  */
 export async function isAdmin(
   ctx: QueryCtx | MutationCtx,

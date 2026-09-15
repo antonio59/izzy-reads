@@ -118,7 +118,7 @@ export function GoodreadsImportModal({
       setPhase("done");
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Import failed — try again.",
+        err instanceof Error ? err.message : "Import failed – try again.",
       );
       setPhase("error");
     }
@@ -153,7 +153,7 @@ export function GoodreadsImportModal({
               choose <strong>Export Library</strong>.
             </li>
             <li>Download the CSV file it gives you.</li>
-            <li>Upload it here — we'll sort everything into place.</li>
+            <li>Upload it here – we'll sort everything into place.</li>
           </ol>
 
           <button

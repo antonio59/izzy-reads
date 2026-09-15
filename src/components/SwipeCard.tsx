@@ -181,7 +181,7 @@ function SwipeCard({
               className={`text-sm text-stone-600 leading-relaxed ${expanded ? "" : "line-clamp-3"}`}
             >
               {cleanDescription ||
-                "No blurb yet — tap the cover to peek, or add it to your wishlist if the title catches your eye."}
+                "No blurb yet – tap the cover to peek, or add it to your wishlist if the title catches your eye."}
             </p>
           </div>
 

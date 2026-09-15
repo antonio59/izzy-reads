@@ -78,7 +78,7 @@ function AboutPage({ aboutData }: AboutPageProps) {
               About Izzy
             </h1>
             <p className="text-stone-500 leading-relaxed">
-              This page is still being written — check back soon!
+              This page is still being written – check back soon!
             </p>
             <Link
               to="/"
@@ -102,7 +102,7 @@ function AboutPage({ aboutData }: AboutPageProps) {
       />
       <PublicNav />
 
-      {/* ── Hero: one composition — avatar, brand, bio, CTA ── */}
+      {/* ── Hero: one composition – avatar, brand, bio, CTA ── */}
       <section className="relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-80"
@@ -159,7 +159,7 @@ function AboutPage({ aboutData }: AboutPageProps) {
           </motion.div>
         </div>
 
-        {/* Soft shelf wash under hero — visual continuity with home */}
+        {/* Soft shelf wash under hero – visual continuity with home */}
         <div className="relative h-16 sm:h-20 overflow-hidden" aria-hidden>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cream-200/40 to-cream-100" />
           <div className="absolute bottom-0 left-0 right-0 h-px bg-cream-300" />
@@ -167,7 +167,7 @@ function AboutPage({ aboutData }: AboutPageProps) {
       </section>
 
       <main className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 w-full pb-16">
-        {/* Why I read — lead story, not a card */}
+        {/* Why I read – lead story, not a card */}
         <section className="pt-4 sm:pt-6 mb-14 sm:mb-16">
           <SectionHeader title="Why I love reading" />
           <p className="text-lg text-stone-600 leading-relaxed font-serif italic">
@@ -193,7 +193,7 @@ function AboutPage({ aboutData }: AboutPageProps) {
           </section>
         )}
 
-        {/* Favourites — open layout, no card grid */}
+        {/* Favourites – open layout, no card grid */}
         <section className="mb-14 sm:mb-16 py-10 border-y border-cream-300">
           <div className="grid sm:grid-cols-2 gap-10 sm:gap-12">
             <div>

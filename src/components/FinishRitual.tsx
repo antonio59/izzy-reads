@@ -14,7 +14,7 @@ interface FinishRitualProps {
 }
 
 /**
- * Celebration when Izzy finishes a book — shareable moment + path to write a review.
+ * Celebration when Izzy finishes a book – shareable moment + path to write a review.
  */
 export function FinishRitual({
   book,

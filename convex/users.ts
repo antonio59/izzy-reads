@@ -68,7 +68,7 @@ export const createProfile = mutation({
       return existing._id;
     }
 
-    // isParent/parentId are never accepted from the client — admin status
+    // isParent/parentId are never accepted from the client – admin status
     // is granted via ADMIN_EMAILS or by editing the row in the dashboard.
     return await ctx.db.insert("userProfiles", {
       userId,

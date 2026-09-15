@@ -35,17 +35,17 @@ const REMINDERS = [
   {
     icon: Library,
     title: "Log it the day you finish",
-    body: "Even without a review — your shelf is the tracker and the brag board.",
+    body: "Even without a review – your shelf is the tracker and the brag board.",
   },
   {
     icon: BookOpen,
     title: "Tiny books still count",
-    body: "Series, rereads, short ones — add them under My Bookshelf.",
+    body: "Series, rereads, short ones – add them under My Bookshelf.",
   },
   {
     icon: Feather,
     title: "Poems & stories live in Create",
-    body: "Capture ideas fast. You can polish later — don’t wait for perfect.",
+    body: "Capture ideas fast. You can polish later – don’t wait for perfect.",
   },
   {
     icon: Compass,
@@ -85,7 +85,7 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-cream-100 flex flex-col">
       <Helmet>
-        <title>Hey Izzy — Sign in | Izzy&apos;s Bookshelf</title>
+        <title>Hey Izzy – Sign in | Izzy&apos;s Bookshelf</title>
         <meta name="robots" content="noindex" />
       </Helmet>
 
@@ -141,11 +141,11 @@ const Login = () => {
               Your private bookshelf
             </p>
             <h1 className="font-accent text-3xl sm:text-4xl lg:text-[2.75rem] font-semibold text-stone-900 tracking-tight leading-[1.1] mb-3">
-              Hey Izzy — welcome back
+              Hey Izzy – welcome back
             </h1>
             <p className="text-stone-500 leading-relaxed max-w-md mx-auto lg:mx-0 mb-8">
               This is your space to log finished books, jot poems, grow your
-              wishlist, and peek at progress — friends only see what you share
+              wishlist, and peek at progress – friends only see what you share
               on the public shelf.
             </p>
 
@@ -205,7 +205,7 @@ const Login = () => {
                       {error}
                     </p>
                     <p className="text-xs text-red-700/80 mt-1 leading-snug">
-                      Double-check spelling — or ask for a password reset if
+                      Double-check spelling – or ask for a password reset if
                       you&apos;re stuck.
                     </p>
                   </div>
@@ -260,17 +260,17 @@ const Login = () => {
                 </p>
                 <ul className="text-sm text-stone-500 space-y-1.5 leading-snug">
                   <li>
-                    <span className="font-medium text-stone-700">Home</span> —
+                    <span className="font-medium text-stone-700">Home</span> –
                     goals, recent books, quick actions
                   </li>
                   <li>
                     <span className="font-medium text-stone-700">
                       My Bookshelf
                     </span>{" "}
-                    — add / finish books &amp; write reviews
+                    – add / finish books &amp; write reviews
                   </li>
                   <li>
-                    <span className="font-medium text-stone-700">Create</span> —
+                    <span className="font-medium text-stone-700">Create</span> –
                     poems, writing, and posts for the site
                   </li>
                 </ul>

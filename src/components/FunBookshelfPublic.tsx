@@ -423,7 +423,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                       </>
                     ) : (
                       <p className="text-stone-400 italic">
-                        Review coming soon — check back later!
+                        Review coming soon – check back later!
                       </p>
                     )}
                   </div>

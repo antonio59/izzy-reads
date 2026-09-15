@@ -10,7 +10,7 @@ interface CurrentlyReadingStripProps {
   className?: string;
 }
 
-/** Quiet “in progress” strip — brags without needing a review. */
+/** Quiet “in progress” strip – brags without needing a review. */
 export function CurrentlyReadingStrip({
   books,
   limit = 6,

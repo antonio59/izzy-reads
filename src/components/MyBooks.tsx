@@ -183,7 +183,7 @@ const MyBooks: React.FC = () => {
               My Bookshelf
             </h1>
             <p className="text-white/90 mt-1">
-              Your reading tracker — log every book, review when you want ·{" "}
+              Your reading tracker – log every book, review when you want ·{" "}
               {readBooks.length} finished · {readingBooks.length} reading ·{" "}
               {wishlist.length} wishlist
             </p>

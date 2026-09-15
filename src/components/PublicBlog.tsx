@@ -57,7 +57,7 @@ const PublicBlog = () => {
               Writing
             </h1>
             <p className="text-base text-stone-500 max-w-md mx-auto leading-relaxed">
-              Stories from my reading journey — challenges, adventures, and ideas.
+              Stories from my reading journey – challenges, adventures, and ideas.
             </p>
             {sortedPosts.length > 0 && (
               <p className="mt-5 text-sm text-stone-400">

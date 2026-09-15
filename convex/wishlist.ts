@@ -33,7 +33,7 @@ export const getAll = query({
     const items = await ctx.db.query("wishlist").collect();
     const userId = await auth.getUserId(ctx);
     if (userId) return items;
-    // Anonymous callers get the public projection — internal bookkeeping
+    // Anonymous callers get the public projection – internal bookkeeping
     // fields stay server-side.
     return items.map(({ userId: _u, ...rest }) => ({ ...rest, boughtAt: undefined }));
   },

@@ -231,7 +231,7 @@ function Discover() {
         setLastSwipeDirection(null);
       }, 1500);
 
-      // Record in background — re-host liked covers so wishlist stays sharp & permanent
+      // Record in background – re-host liked covers so wishlist stays sharp & permanent
       let coverUrl = book.coverUrl || undefined;
       if (action === "liked" && coverUrl) {
         try {

@@ -98,7 +98,7 @@ const Dashboard: React.FC = () => {
   const genreData = generateGenreData(books);
 
   // Quick actions configuration
-  // Kid path first — add, write, discover, series
+  // Kid path first – add, write, discover, series
   const quickActions = [
     {
       to: "/books",
@@ -179,7 +179,7 @@ const Dashboard: React.FC = () => {
                         {unfinishedCount} book
                         {unfinishedCount === 1 ? "" : "s"}
                       </span>{" "}
-                      in progress — finish one and celebrate!
+                      in progress – finish one and celebrate!
                     </>
                   ) : readingStats.booksThisMonth === 0 ? (
                     <>Ready for a new adventure? Add a book and start reading.</>
@@ -211,7 +211,7 @@ const Dashboard: React.FC = () => {
         </Card>
       </motion.div>
 
-      {/* Kid path — primary actions */}
+      {/* Kid path – primary actions */}
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -223,7 +223,7 @@ const Dashboard: React.FC = () => {
           </h2>
           <p className="text-sm text-stone-500 mb-4">
             Log every book you finish, write something, or find your next read.
-            Reviews are a bonus — the shelf is the habit.
+            Reviews are a bonus – the shelf is the habit.
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {quickActions.map((action) => (
@@ -276,7 +276,7 @@ const Dashboard: React.FC = () => {
             value={
               readingStats.averageRating > 0
                 ? readingStats.averageRating.toFixed(1)
-                : "—"
+                : "–"
             }
             icon={<Star className="w-6 h-6" />}
             color="primary"

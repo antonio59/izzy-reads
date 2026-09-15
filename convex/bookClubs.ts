@@ -155,7 +155,7 @@ export const remove = mutation({
   },
 });
 
-// NOTE: Public comments were intentionally removed — visitors can only
+// NOTE: Public comments were intentionally removed – visitors can only
 // react with emoji. The bookClubComments table is retained so existing
 // data can still be cascade-deleted with its club, but nothing can
 // insert or read it from the app anymore.
@@ -181,7 +181,7 @@ export const addReaction = mutation({
       throw new Error("Passcode must be exactly 6 digits");
     }
 
-    // Passcodes are stored hashed — the raw digits never hit the table.
+    // Passcodes are stored hashed – the raw digits never hit the table.
     const passcodeHash = await hashPasscode(args.passcode);
 
     const existing = await ctx.db

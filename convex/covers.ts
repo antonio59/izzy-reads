@@ -7,7 +7,7 @@ import { requireAdminAction } from "./authGuards";
 import { isAllowedCoverUrl } from "./validation";
 import type { Doc, Id } from "./_generated/dataModel";
 
-/** Mirror of src/lib/coverUrl helpers — keep in sync for Convex runtime. */
+/** Mirror of src/lib/coverUrl helpers – keep in sync for Convex runtime. */
 function isGoogleUserContentHost(hostname: string): boolean {
   return (
     hostname === "googleusercontent.com" ||
@@ -91,7 +91,7 @@ async function persistCoverImage(
 ): Promise<string | null> {
   try {
     const fetchUrl = upgradeCoverUrl(externalUrl) || externalUrl;
-    // Only fetch from known cover/storage hosts — never arbitrary or
+    // Only fetch from known cover/storage hosts – never arbitrary or
     // non-https URLs, so this can never proxy into internal networks.
     if (!isAllowedCoverUrl(fetchUrl) || fetchUrl.startsWith("data:")) {
       console.log(`Rejected cover URL for "${bookTitle}": ${fetchUrl}`);

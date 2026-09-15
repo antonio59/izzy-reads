@@ -402,7 +402,7 @@ export function WeeklyQuote({ quote }: WeeklyQuoteProps) {
       <div className="text-center">
         <span className="text-3xl mb-3 block">{quote.emoji}</span>
         <p className="text-white/90 italic mb-3">"{quote.text}"</p>
-        <p className="text-sm text-white/70">— {quote.author}</p>
+        <p className="text-sm text-white/70">– {quote.author}</p>
       </div>
     </Card>
   );

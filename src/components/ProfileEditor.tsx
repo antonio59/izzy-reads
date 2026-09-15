@@ -49,7 +49,7 @@ const defaultProfile: ProfileData = {
     "I read because every book is a new adventure! Reading helps me imagine amazing worlds, understand different people, and learn about things I've never experienced. Plus, it's really fun!",
   funFacts: [
     "I can finish a 300-page book in one weekend!",
-    "My favorite reading spot is curled up on the couch with my dog",
+    "My favourite reading spot is curled up on the couch with my dog",
     "I've read the entire Harry Potter series 3 times",
     "I love recommending books to my friends",
   ],
@@ -188,7 +188,7 @@ const ProfileEditor: React.FC = () => {
               Edit My Profile
             </h1>
             <p className="text-white/90 mt-1">
-              Customize your About Me page and public profile
+              Customise your About Me page and public profile
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -229,7 +229,7 @@ const ProfileEditor: React.FC = () => {
         title="Hero Section"
         icon={Sparkles}
         color="purple"
-        description="Customize what visitors see first on your portfolio"
+        description="Customise what visitors see first on your portfolio"
       >
         <div className="space-y-4">
           <div>
@@ -308,9 +308,9 @@ const ProfileEditor: React.FC = () => {
         />
       </Section>
 
-      {/* Favorite Genres */}
+      {/* Favourite Genres */}
       <Section
-        title="Favorite Genres"
+        title="Favourite Genres"
         icon={Sparkles}
         color="purple"
         description="What types of books do you love?"
@@ -328,9 +328,9 @@ const ProfileEditor: React.FC = () => {
         />
       </Section>
 
-      {/* Favorite Authors */}
+      {/* Favourite Authors */}
       <Section
-        title="Favorite Authors"
+        title="Favourite Authors"
         icon={User}
         color="amber"
         description="Authors whose books you love"

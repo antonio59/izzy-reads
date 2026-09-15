@@ -97,7 +97,7 @@ export const sendSuggestionNotification = internalAction({
   handler: async (_, args) => {
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
-      console.warn("RESEND_API_KEY not set — skipping email notification");
+      console.warn("RESEND_API_KEY not set, skipping email notification");
       return;
     }
 
@@ -106,7 +106,7 @@ export const sendSuggestionNotification = internalAction({
     const adminEmail =
       process.env.ADMIN_NOTIFICATION_EMAIL || process.env.NOTIFICATION_EMAIL;
     if (!adminEmail && !args.to) {
-      console.warn("No notification email configured — skipping email");
+      console.warn("No notification email configured, skipping email");
       return;
     }
 
@@ -132,7 +132,7 @@ export const sendSuggestionNotification = internalAction({
       <p style="margin:0;font-size:16px;font-weight:700;color:${C.ink};">${escapeHtml(args.suggestedBy)}</p>
       ${args.reason ? `<p style="margin:10px 0 0 0;font-size:14px;color:${C.body};font-style:italic;line-height:1.6;">&ldquo;${escapeHtml(args.reason)}&rdquo;</p>` : ""}
     </div>`,
-      footerNote: `This one&rsquo;s for the grown-ups — review it in the <a href="${SITE_URL}/admin" style="color:${C.teal};text-decoration:none;">admin dashboard</a>.`,
+      footerNote: `This one&rsquo;s for the grown-ups: review it in the <a href="${SITE_URL}/admin" style="color:${C.teal};text-decoration:none;">admin dashboard</a>.`,
     });
 
     await resend.emails.send({
@@ -162,13 +162,13 @@ export const sendWeeklySummary = internalAction({
   handler: async (ctx, args) => {
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
-      console.warn("RESEND_API_KEY not set — skipping weekly summary");
+      console.warn("RESEND_API_KEY not set, skipping weekly summary");
       return;
     }
 
     const notificationEmail = process.env.NOTIFICATION_EMAIL;
     if (!notificationEmail && !args.to) {
-      console.warn("NOTIFICATION_EMAIL not set — skipping weekly summary");
+      console.warn("NOTIFICATION_EMAIL not set, skipping weekly summary");
       return;
     }
 
@@ -262,7 +262,7 @@ export const sendWeeklySummary = internalAction({
     <div style="${card}border-left:6px solid ${C.teal};">
       ${sectionTitle("You finished")}
       <ul style="margin:0;padding-left:20px;color:${C.body};font-size:14px;line-height:1.7;">
-        ${booksReadThisWeek.map((b) => `<li style="margin-bottom:4px;"><strong style="color:${C.ink};">${escapeHtml(b.title)}</strong> by ${escapeHtml(b.author)}${b.rating ? ` — <span style="color:${C.gold};">${"★".repeat(Math.min(5, Math.round(b.rating)))}</span>` : ""}</li>`).join("")}
+        ${booksReadThisWeek.map((b) => `<li style="margin-bottom:4px;"><strong style="color:${C.ink};">${escapeHtml(b.title)}</strong> by ${escapeHtml(b.author)}${b.rating ? ` <span style="color:${C.gold};">${"★".repeat(Math.min(5, Math.round(b.rating)))}</span>` : ""}</li>`).join("")}
       </ul>
     </div>` : ""}
 
@@ -291,7 +291,7 @@ export const sendWeeklySummary = internalAction({
         ${pill("✍️ Poems", poemStats.totalReactions, C.goldLight, "#8a5a00")}
         ${pill("📖 Writing", writingStats.totalReactions, C.berryLight, C.berryDark)}
       </div>
-      ${totalReactions > 0 ? `<p style="margin:12px 0 0 0;font-size:14px;color:${C.body};"><strong style="color:${C.ink};">${totalReactions}</strong> reactions this week — nice! 🎉</p>` : ""}
+      ${totalReactions > 0 ? `<p style="margin:12px 0 0 0;font-size:14px;color:${C.body};"><strong style="color:${C.ink};">${totalReactions}</strong> reactions this week, nice! 🎉</p>` : ""}
     </div>
 
     <!-- Milestones -->
@@ -316,15 +316,15 @@ export const sendWeeklySummary = internalAction({
     <!-- Keep it going -->
     <div style="${card}border-left:6px solid ${C.teal};">
       ${sectionTitle("Keep it going")}
-      <p style="margin:0 0 8px 0;font-size:14px;line-height:1.6;color:${C.body};">Read anything this week? <a href="${SITE_URL}/books" style="color:${C.teal};text-decoration:none;font-weight:600;">Pop it on your shelf</a> — every book counts, even the ones you don&rsquo;t review.</p>
+      <p style="margin:0 0 8px 0;font-size:14px;line-height:1.6;color:${C.body};">Read anything this week? <a href="${SITE_URL}/books" style="color:${C.teal};text-decoration:none;font-weight:600;">Pop it on your shelf</a>: every book counts, even the ones you don&rsquo;t review.</p>
       <p style="margin:0;font-size:14px;line-height:1.6;color:${C.body};">${(() => {
         const parts: string[] = [];
         if (poemsThisWeek.length > 0) parts.push(`${poemsThisWeek.length} poem${poemsThisWeek.length === 1 ? "" : "s"}`);
         if (postsThisWeek.length > 0) parts.push(`${postsThisWeek.length} post${postsThisWeek.length === 1 ? "" : "s"}`);
         return parts.length > 0
-          ? `You shared ${parts.join(" and ")} this week — lovely! Got another brewing? `
+          ? `You shared ${parts.join(" and ")} this week, lovely! Got another brewing? `
           : "Written a poem, story, or review lately? ";
-      })()}<a href="${SITE_URL}/create" style="color:${C.teal};text-decoration:none;font-weight:600;">Share it</a> — your readers are waiting.</p>
+      })()}<a href="${SITE_URL}/create" style="color:${C.teal};text-decoration:none;font-weight:600;">Share it</a>, your readers are waiting.</p>
     </div>`,
     });
 
@@ -341,13 +341,13 @@ export const sendWeeklySummary = internalAction({
         ? `On your wishlist: ${wishlistAddedThisWeek.map((w) => w.title).join(", ")}`
         : null,
       lastReview
-        ? `Your latest review: ${lastReview.title} — "${lastReview.notes}"`
+        ? `Your latest review: ${lastReview.title}: "${lastReview.notes}"`
         : null,
       `Reactions this week: ${totalReactions} (books ${bookStats.totalReactions}, reviews ${reviewStats?.totalReactions || 0}, poems ${poemStats.totalReactions}, writing ${writingStats.totalReactions})`,
       milestones.length > 0 ? `Milestones: ${milestones.join(", ")}` : null,
       `Bookshelf so far: ${readBooks.length} books read, ${totalReviews} reviews, ${totalPages.toLocaleString()} pages.`,
       "",
-      "Keep it going — log every book you read, and share poems, stories, and reviews:",
+      "Keep it going: log every book you read, and share poems, stories, and reviews:",
       `${SITE_URL}/books  |  ${SITE_URL}/create`,
       "",
       `Visit your bookshelf: ${SITE_URL}`,
