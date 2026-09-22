@@ -102,6 +102,7 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### CI/CD
 
+- Bump google/osv-scanner-action from 2.5.1 to 2.6.0 (#205)
 - Bump dependabot/fetch-metadata from 2 to 3 (#204)
 - Consolidate dependency updates on Dependabot, auto-merge patch/minor
 - Bump actions/setup-node from 6 to 7 (#163)
@@ -119,6 +120,7 @@ Co-authored-by: Cursor <cursoragent@cursor.com>
 
 ### Changes
 
+- Score reader suggestions against reading history with Jev
 - Clear remaining lint warnings via real fixes
 - Remediate design audit findings D1-D9
 - Weekly summary at 9am UK time year-round
@@ -916,6 +918,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
