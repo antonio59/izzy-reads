@@ -105,7 +105,7 @@ function isAgeAppropriateBackend(categories: string[], title: string): boolean {
   return !ADULT_CONTENT_KEYWORDS.some((kw) => allText.includes(kw.toLowerCase()));
 }
 
-async function fetchFromGoogleBooks(query: string, startIndex: number, apiKey?: string): Promise<any[]> {
+export async function fetchFromGoogleBooks(query: string, startIndex: number, apiKey?: string): Promise<any[]> {
   try {
     const keyParam = apiKey ? `&key=${apiKey}` : "";
     const res = await fetch(

@@ -140,6 +140,15 @@ export default defineSchema({
       v.literal("approved"),
       v.literal("declined"),
     ),
+    // Jev match results – how well the suggestion fits Izzy's reading history
+    description: v.optional(v.string()), // Summary fetched from Google Books
+    matchScore: v.optional(v.number()), // 0–4 taste match, probability-weighted
+    matchConfidence: v.optional(v.number()), // Jev confidence, 0–1
+    alreadyReadProbability: v.optional(v.number()), // likely already on her shelf
+    contentConcernProbability: v.optional(v.number()), // likely too mature
+    similarTo: v.optional(v.string()), // read book it most resembles
+    theme: v.optional(v.string()), // dominant theme judged by Jev
+    matchedAt: v.optional(v.string()), // ISO timestamp of the scoring run
   }).index("by_status", ["status"]),
 
   // Reactions from visitors on books/reviews (public, no auth required)

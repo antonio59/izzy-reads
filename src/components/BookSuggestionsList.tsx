@@ -1,5 +1,13 @@
+import { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lightbulb, Check, X, MessageCircle } from "lucide-react";
+import {
+  Lightbulb,
+  Check,
+  X,
+  MessageCircle,
+  Sparkles,
+  AlertTriangle,
+} from "lucide-react";
 import type { Id } from "../../convex/_generated/dataModel";
 import { BookCoverImage } from "./ui/BookCoverImage";
 import { Button } from "./ui/Button";
@@ -15,6 +23,13 @@ interface BookSuggestion {
   suggestedBy: string;
   reason?: string;
   status: "pending" | "approved" | "declined";
+  description?: string;
+  matchScore?: number;
+  matchConfidence?: number;
+  alreadyReadProbability?: number;
+  contentConcernProbability?: number;
+  similarTo?: string;
+  theme?: string;
 }
 
 interface BookSuggestionsListProps {
@@ -39,6 +54,17 @@ export function BookSuggestionsList({
   variant = "default",
 }: BookSuggestionsListProps) {
   const isCompact = variant === "compact";
+
+  // Pending suggestions first, best Jev match first; decided items keep
+  // their submission order below.
+  const sortedSuggestions = useMemo(() => {
+    if (!suggestions) return suggestions;
+    const pending = suggestions
+      .filter((s) => s.status === "pending")
+      .sort((a, b) => (b.matchScore ?? -1) - (a.matchScore ?? -1));
+    const rest = suggestions.filter((s) => s.status !== "pending");
+    return [...pending, ...rest];
+  }, [suggestions]);
 
   return (
     <div
@@ -77,8 +103,8 @@ export function BookSuggestionsList({
             exit={{ opacity: 0, height: 0 }}
             className="space-y-3 overflow-hidden"
           >
-            {suggestions && suggestions.length > 0 ? (
-              suggestions.map((suggestion) => (
+            {sortedSuggestions && sortedSuggestions.length > 0 ? (
+              sortedSuggestions.map((suggestion) => (
                 <SuggestionCard
                   key={suggestion._id}
                   suggestion={suggestion}
@@ -108,6 +134,21 @@ interface SuggestionCardProps {
   onApprove: (id: Id<"bookSuggestions">) => void;
   onDecline: (id: Id<"bookSuggestions">) => void;
   onDelete: (id: Id<"bookSuggestions">) => void;
+}
+
+// Jev's taste_match is a 0–4 probability-weighted score; map it onto a
+// friendly label for the review queue.
+function matchBadge(score: number): { label: string; className: string } {
+  if (score >= 3.5)
+    return {
+      label: "Excellent match",
+      className: "bg-green-100 text-green-700",
+    };
+  if (score >= 2.5)
+    return { label: "Strong match", className: "bg-teal-100 text-teal-700" };
+  if (score >= 1.5)
+    return { label: "Some match", className: "bg-amber-100 text-amber-700" };
+  return { label: "Long shot", className: "bg-stone-100 text-stone-500" };
 }
 
 function SuggestionCard({
@@ -153,16 +194,48 @@ function SuggestionCard({
           <h4 className="font-bold text-lg">{suggestion.title}</h4>
           <p className="text-stone-600 text-sm">by {suggestion.author}</p>
 
-          <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-center gap-2 mt-2 flex-wrap">
             {suggestion.genre && (
               <span className="text-xs bg-accent-100 text-accent-700 px-2 py-1 rounded-full">
                 {suggestion.genre}
+              </span>
+            )}
+            {suggestion.matchScore !== undefined && (
+              <span
+                className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full ${matchBadge(suggestion.matchScore).className}`}
+              >
+                <Sparkles className="w-3 h-3" />
+                {matchBadge(suggestion.matchScore).label} ·{" "}
+                {suggestion.matchScore.toFixed(1)}
+              </span>
+            )}
+            {suggestion.theme && (
+              <span className="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded-full capitalize">
+                {suggestion.theme}
+              </span>
+            )}
+            {(suggestion.alreadyReadProbability ?? 0) >= 0.6 && (
+              <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full">
+                <AlertTriangle className="w-3 h-3" />
+                May already be on her shelf
+              </span>
+            )}
+            {(suggestion.contentConcernProbability ?? 0) >= 0.5 && (
+              <span className="inline-flex items-center gap-1 text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">
+                <AlertTriangle className="w-3 h-3" />
+                Check age fit
               </span>
             )}
             <span className="text-xs text-stone-500">
               Suggested by {suggestion.suggestedBy}
             </span>
           </div>
+
+          {suggestion.similarTo && (
+            <p className="text-xs text-stone-500 mt-2">
+              Similar to {suggestion.similarTo}
+            </p>
+          )}
 
           {suggestion.reason && (
             <div className="mt-3 flex items-start gap-2 bg-stone-50 rounded-lg p-3">
@@ -171,6 +244,17 @@ function SuggestionCard({
                 "{suggestion.reason}"
               </p>
             </div>
+          )}
+
+          {suggestion.description && (
+            <details className="mt-2 bg-stone-50 rounded-lg p-3">
+              <summary className="text-xs font-semibold uppercase tracking-wider text-stone-500 cursor-pointer select-none">
+                About this book
+              </summary>
+              <p className="text-sm text-stone-600 mt-2 leading-relaxed">
+                {suggestion.description}
+              </p>
+            </details>
           )}
         </div>
 
