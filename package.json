@@ -29,7 +29,7 @@
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
     "@giphy/js-fetch-api": "^5.8.0",
-    "convex": "^1.45.0",
+    "convex": "^1.46.0",
     "framer-motion": "^12.43.0",
     "lucide-react": "^1.47.0",
     "react": "^19.3.0",
