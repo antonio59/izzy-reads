@@ -2,7 +2,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Search } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useBooks } from "../contexts/BookContext";
+import { usePublishedTranslations } from "../hooks/useContentTranslations";
+import { formatDate, poemTemplateLabel } from "../i18n/format";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
@@ -14,8 +17,18 @@ const PublicPoetry = () => {
   const { poems } = useBooks();
   const { prefersReducedMotion } = useMotionPreference();
   const [searchQuery, setSearchQuery] = useState("");
+  const { t, i18n } = useTranslation();
+  const translations = usePublishedTranslations("poem");
 
-  const sortedPoems = [...poems].sort(
+  // Show Izzy's approved Italian where she has published one
+  const shownPoems = poems.map((poem) => {
+    const italian = translations.get(poem.id);
+    return italian
+      ? { ...poem, title: italian.title ?? poem.title, content: italian.body }
+      : poem;
+  });
+
+  const sortedPoems = [...shownPoems].sort(
     (a, b) =>
       new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
   );
@@ -54,20 +67,20 @@ const PublicPoetry = () => {
             }
           >
             <p className="font-accent text-sm sm:text-base text-primary-600 tracking-wide mb-3">
-              Words from the heart
+              {t("poems.eyebrow")}
             </p>
             <h1 className="font-accent text-4xl sm:text-5xl font-semibold text-stone-900 tracking-tight leading-[1.05] mb-3">
-              Poetry
+              {t("poems.title")}
             </h1>
             <p className="text-base text-stone-500 max-w-md mx-auto leading-relaxed">
-              Poems I&apos;ve written – imagination, feelings, and a little magic.
+              {t("poems.intro")}
             </p>
             {poems.length > 0 && (
               <p className="mt-5 text-sm text-stone-500">
                 <span className="font-display font-bold text-stone-700 tabular-nums">
                   {poems.length}
                 </span>{" "}
-                {poems.length === 1 ? "poem" : "poems"}
+                {t("poems.countLabel", { count: poems.length })}
               </p>
             )}
           </motion.div>
@@ -77,12 +90,12 @@ const PublicPoetry = () => {
       {poems.length > 0 && (
         <div className="max-w-3xl mx-auto px-4 w-full pb-2">
           <SearchInput
-            placeholder="Search poems…"
+            placeholder={t("poems.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onClear={() => setSearchQuery("")}
             className="bg-white border-cream-300"
-            aria-label="Search poems"
+            aria-label={t("poems.searchLabel")}
           />
         </div>
       )}
@@ -111,15 +124,11 @@ const PublicPoetry = () => {
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2">
                       {poem.template && (
                         <span className="text-xs font-semibold uppercase tracking-wider text-accent-600">
-                          {poem.template}
+                          {poemTemplateLabel(t, poem.template)}
                         </span>
                       )}
                       <span className="text-xs text-stone-500">
-                        {new Date(poem.dateCreated).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
+                        {formatDate(poem.dateCreated, i18n.language)}
                       </span>
                     </div>
                     <h2 className="text-xl sm:text-2xl font-display font-bold text-stone-900 group-hover:text-primary-700 transition-colors leading-snug mb-3">
@@ -129,7 +138,7 @@ const PublicPoetry = () => {
                       {poem.content}
                     </p>
                     <span className="inline-flex items-center gap-1.5 mt-4 text-primary-600 font-semibold text-sm group-hover:gap-2.5 transition-all">
-                      Read poem <ArrowRight className="w-4 h-4" />
+                      {t("poems.readPoem")} <ArrowRight className="w-4 h-4" />
                     </span>
                   </motion.article>
                 </Link>
@@ -141,23 +150,23 @@ const PublicPoetry = () => {
                 <>
                   <Search className="w-10 h-10 text-primary-300 mx-auto mb-4" />
                   <h3 className="text-xl font-display font-bold text-stone-800 mb-2">
-                    No poems found
+                    {t("poems.noneFound")}
                   </h3>
                   <button
                     type="button"
                     onClick={() => setSearchQuery("")}
                     className="mt-2 text-primary-600 font-semibold text-sm hover:text-primary-700"
                   >
-                    Clear search
+                    {t("common.clearSearch")}
                   </button>
                 </>
               ) : (
                 <>
                   <h3 className="text-2xl font-display font-bold text-stone-800 mb-3">
-                    Poems coming soon
+                    {t("poems.comingSoonTitle")}
                   </h3>
                   <p className="text-stone-500 max-w-md mx-auto">
-                    Izzy is crafting beautiful words. Check back soon!
+                    {t("poems.comingSoonText")}
                   </p>
                 </>
               )}

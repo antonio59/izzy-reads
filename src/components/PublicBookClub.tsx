@@ -3,20 +3,23 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Users, BookOpen, Calendar, Clock } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { useTranslation } from "react-i18next";
+import { formatDate } from "../i18n/format";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
 import { Input } from "./ui/Input";
 import { Card } from "./ui/Card";
 
 const CLUB_REACTIONS = [
-  { key: "excited", emoji: "🤩", label: "Excited!" },
-  { key: "reading", emoji: "📖", label: "Reading it" },
-  { key: "finished", emoji: "✅", label: "Finished!" },
-  { key: "love", emoji: "❤️", label: "Loved it" },
+  { key: "excited", emoji: "🤩" },
+  { key: "reading", emoji: "📖" },
+  { key: "finished", emoji: "✅" },
+  { key: "love", emoji: "❤️" },
 ] as const;
 
 export default function PublicBookClub() {
   const clubData = useQuery(api.bookClubs.getActive);
+  const { t, i18n } = useTranslation();
   const [visitorName, setVisitorName] = useState(() => localStorage.getItem("izzy_bookclub_name") || "");
   const [passcode, setPasscode] = useState("");
   const [showNamePrompt, setShowNamePrompt] = useState(false);
@@ -66,16 +69,16 @@ export default function PublicBookClub() {
         reactionType: reactionKey,
       });
       saveCredentials();
-      setSuccess("Reaction added!");
+      setSuccess(t("bookClub.reactionAdded"));
       setTimeout(() => setSuccess(""), 1500);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to add reaction");
+      setError(e instanceof Error ? e.message : t("bookClub.reactionFailed"));
     }
   };
 
   const handlePromptSubmit = () => {
     if (!visitorName.trim() || passcode.length !== 6) {
-      setError("Please enter your name and a 6-digit passcode");
+      setError(t("bookClub.needNameAndCode"));
       return;
     }
     setError("");
@@ -96,8 +99,8 @@ export default function PublicBookClub() {
             <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg ring-1 ring-cream-300">
               <BookOpen className="w-10 h-10 text-primary-400" />
             </div>
-            <h1 className="text-2xl font-bold text-stone-800 mb-2">No Active Book Club</h1>
-            <p className="text-stone-500">Check back soon for Izzy's next book club pick!</p>
+            <h1 className="text-2xl font-bold text-stone-800 mb-2">{t("bookClub.noneTitle")}</h1>
+            <p className="text-stone-500">{t("bookClub.noneText")}</p>
           </div>
         </div>
         <PublicFooter />
@@ -122,9 +125,9 @@ export default function PublicBookClub() {
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-display font-bold text-stone-800">
-                Izzy's Book Club
+                {t("bookClub.title")}
               </h1>
-              <p className="text-sm text-stone-500">Read along with friends!</p>
+              <p className="text-sm text-stone-500">{t("bookClub.subtitle")}</p>
             </div>
           </motion.div>
 
@@ -157,18 +160,18 @@ export default function PublicBookClub() {
               <div className="flex-1 p-6 md:p-8">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">
-                    Active Pick
+                    {t("bookClub.activePick")}
                   </span>
                   <span className="flex items-center gap-1 text-xs text-stone-500">
                     <Clock className="w-3 h-3" />
-                    {daysLeft > 0 ? `${daysLeft} days left` : "Ending today"}
+                    {daysLeft > 0 ? t("bookClub.daysLeft", { count: daysLeft }) : t("bookClub.endingToday")}
                   </span>
                 </div>
 
                 <h2 className="text-2xl md:text-3xl font-bold text-stone-800 mb-1">
                   {clubData.title}
                 </h2>
-                <p className="text-stone-500 text-lg mb-4">by {clubData.author}</p>
+                <p className="text-stone-500 text-lg mb-4">{t("common.byAuthor", { author: clubData.author })}</p>
 
                 {clubData.description && (
                   <p className="text-stone-600 leading-relaxed mb-6">
@@ -178,11 +181,12 @@ export default function PublicBookClub() {
 
                 <div className="flex items-center gap-2 text-sm text-stone-500 mb-6">
                   <Calendar className="w-4 h-4" />
-                  Reading along until{" "}
-                  {new Date(clubData.endDate).toLocaleDateString("en-US", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
+                  {t("bookClub.readingUntil", {
+                    date: formatDate(clubData.endDate, i18n.language, {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    }),
                   })}
                 </div>
 
@@ -205,7 +209,7 @@ export default function PublicBookClub() {
                           whileTap={{ scale: 0.95 }}
                         >
                           <span aria-hidden="true">{r.emoji}</span>
-                          <span className="hidden sm:inline">{r.label}</span>
+                          <span className="hidden sm:inline">{t(`bookClub.reactions.${r.key}`)}</span>
                           {count > 0 && (
                             <span className={`ml-1 text-xs ${isActive ? "text-white/80" : "text-stone-500"}`}>
                               {count}
@@ -228,11 +232,11 @@ export default function PublicBookClub() {
           <div className="text-center py-10 bg-white/50 rounded-2xl border border-dashed border-cream-300">
             <p className="text-stone-600 font-medium mb-1">
               {detailedData && detailedData.totalReactions > 0
-                ? `${detailedData.totalReactions} reaction${detailedData.totalReactions !== 1 ? "s" : ""} so far – thanks for reading along!`
-                : "Be the first to react to this month's pick!"}
+                ? t("bookClub.reactionsSoFar", { count: detailedData.totalReactions })
+                : t("bookClub.beFirst")}
             </p>
             <p className="text-sm text-stone-500">
-              Tap an emoji above to let Izzy know what you think 💛
+              {t("bookClub.tapEmoji")}
             </p>
           </div>
         </div>
@@ -254,15 +258,15 @@ export default function PublicBookClub() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
             >
-              <h3 className="text-lg font-bold text-stone-800 mb-2">Leave a Reaction</h3>
+              <h3 className="text-lg font-bold text-stone-800 mb-2">{t("bookClub.leaveReaction")}</h3>
               <p className="text-sm text-stone-500 mb-4">
-                Enter a name and create a 6-digit passcode so we know it's you next time.
+                {t("bookClub.passcodePrompt")}
               </p>
               <div className="space-y-3">
                 <Input
                   value={visitorName}
                   onChange={(e) => setVisitorName(e.target.value)}
-                  placeholder="Your name"
+                  placeholder={t("wishlist.yourName")}
                 />
                 <Input
                   type="password"
@@ -271,7 +275,7 @@ export default function PublicBookClub() {
                   maxLength={6}
                   value={passcode}
                   onChange={(e) => setPasscode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  placeholder="6-digit passcode"
+                  placeholder={t("bookClub.passcodePlaceholder")}
                 />
                 {error && <p className="text-red-500 text-sm">{error}</p>}
                 <div className="flex gap-2 pt-2">
@@ -279,13 +283,13 @@ export default function PublicBookClub() {
                     onClick={() => setShowNamePrompt(false)}
                     className="flex-1 px-4 py-2 bg-stone-100 text-stone-600 rounded-xl font-medium hover:bg-stone-200 transition-colors"
                   >
-                    Cancel
+                    {t("common.cancel")}
                   </button>
                   <button
                     onClick={handlePromptSubmit}
                     className="flex-1 px-4 py-2 bg-primary-500 text-white rounded-xl font-medium hover:bg-primary-600 transition-colors"
                   >
-                    Continue
+                    {t("common.continue")}
                   </button>
                 </div>
               </div>

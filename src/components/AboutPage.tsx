@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { genreLabel } from "../i18n/format";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen } from "lucide-react";
 import { PublicNav } from "./PublicNav";
@@ -58,6 +60,7 @@ function SectionHeader({
 function AboutPage({ aboutData }: AboutPageProps) {
   const { user } = useUser();
   const { prefersReducedMotion } = useMotionPreference();
+  const { t } = useTranslation();
   const userAvatar = user?.avatar || DEFAULT_AVATAR;
 
   if (!aboutData.isPublished) {
@@ -75,16 +78,16 @@ function AboutPage({ aboutData }: AboutPageProps) {
               <AvatarPreview config={userAvatar} size="lg" />
             </div>
             <h1 className="font-accent text-3xl sm:text-4xl font-semibold text-stone-900 mb-3">
-              About Izzy
+              {t("footer.aboutIzzy")}
             </h1>
             <p className="text-stone-500 leading-relaxed">
-              This page is still being written – check back soon!
+              {t("about.stillWriting")}
             </p>
             <Link
               to="/"
               className="inline-flex items-center gap-2 mt-8 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors"
             >
-              Back to my bookshelf <ArrowRight className="w-4 h-4" />
+              {t("about.backToShelf")} <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
@@ -128,11 +131,11 @@ function AboutPage({ aboutData }: AboutPageProps) {
             </div>
 
             <p className="font-accent text-sm sm:text-base text-primary-600 tracking-wide">
-              Get to know me
+              {t("about.eyebrow")}
             </p>
 
             <h1 className="font-accent text-4xl sm:text-5xl md:text-6xl font-semibold text-stone-900 tracking-tight leading-[1.05]">
-              About Izzy
+              {t("footer.aboutIzzy")}
             </h1>
 
             <p className="text-base sm:text-lg text-stone-500 max-w-lg leading-relaxed">
@@ -144,7 +147,7 @@ function AboutPage({ aboutData }: AboutPageProps) {
                 to="/"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-display font-bold text-sm shadow-md shadow-primary-600/20 transition-colors"
               >
-                Browse my shelf
+                {t("home.browseShelf")}
                 <ArrowRight className="w-4 h-4" />
               </Link>
               {aboutData.currentlyReading && (
@@ -152,7 +155,7 @@ function AboutPage({ aboutData }: AboutPageProps) {
                   href="#currently-reading"
                   className="inline-flex items-center gap-2 px-5 py-3 text-stone-600 hover:text-primary-700 font-display font-semibold text-sm transition-colors"
                 >
-                  What I&apos;m reading
+                  {t("about.whatImReading")}
                 </a>
               )}
             </div>
@@ -169,7 +172,7 @@ function AboutPage({ aboutData }: AboutPageProps) {
       <main className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 w-full pb-16">
         {/* Why I read – lead story, not a card */}
         <section className="pt-4 sm:pt-6 mb-14 sm:mb-16">
-          <SectionHeader title="Why I love reading" />
+          <SectionHeader title={t("about.whyILoveReading")} />
           <p className="text-lg text-stone-600 leading-relaxed font-serif italic">
             {aboutData.whyIRead}
           </p>
@@ -181,7 +184,7 @@ function AboutPage({ aboutData }: AboutPageProps) {
             id="currently-reading"
             className="mb-14 sm:mb-16 scroll-mt-24"
           >
-            <SectionHeader title="Currently reading" />
+            <SectionHeader title={t("home.currentlyReading")} />
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-accent-100 flex items-center justify-center">
                 <BookOpen className="w-5 h-5 text-accent-600" aria-hidden />
@@ -198,7 +201,7 @@ function AboutPage({ aboutData }: AboutPageProps) {
           <div className="grid sm:grid-cols-2 gap-10 sm:gap-12">
             <div>
               <h2 className="text-xl font-display font-bold text-stone-800 mb-4">
-                Favourite genres
+                {t("about.favouriteGenres")}
               </h2>
               <ul className="flex flex-wrap gap-2">
                 {aboutData.favoriteGenres.map((genre) => (
@@ -206,14 +209,14 @@ function AboutPage({ aboutData }: AboutPageProps) {
                     key={genre}
                     className="px-3 py-1.5 rounded-full text-sm font-medium bg-primary-50 text-primary-700"
                   >
-                    {genre}
+                    {genreLabel(t, genre)}
                   </li>
                 ))}
               </ul>
             </div>
             <div>
               <h2 className="text-xl font-display font-bold text-stone-800 mb-4">
-                Favourite authors
+                {t("about.favouriteAuthors")}
               </h2>
               <ul className="space-y-2.5">
                 {aboutData.favoriteAuthors.map((author) => (
@@ -237,8 +240,8 @@ function AboutPage({ aboutData }: AboutPageProps) {
         {aboutData.funFacts.length > 0 && (
           <section className="mb-14 sm:mb-16">
             <SectionHeader
-              title="Fun facts"
-              subtitle="A few things you might not know"
+              title={t("about.funFacts")}
+              subtitle={t("about.funFactsSubtitle")}
             />
             <ol className="space-y-4">
               {aboutData.funFacts.map((fact, idx) => (
@@ -258,7 +261,7 @@ function AboutPage({ aboutData }: AboutPageProps) {
         {/* Goals */}
         {aboutData.readingGoals.length > 0 && (
           <section className="mb-14 sm:mb-16">
-            <SectionHeader title="Reading goals" />
+            <SectionHeader title={t("about.readingGoals")} />
             <ul className="space-y-3">
               {aboutData.readingGoals.map((goal) => (
                 <li
@@ -279,7 +282,7 @@ function AboutPage({ aboutData }: AboutPageProps) {
         {/* Achievements */}
         {aboutData.achievements.length > 0 && (
           <section className="mb-14 sm:mb-16">
-            <SectionHeader title="Achievements" />
+            <SectionHeader title={t("about.achievements")} />
             <ul className="flex flex-wrap gap-2.5">
               {aboutData.achievements.map((achievement) => (
                 <li
@@ -295,14 +298,14 @@ function AboutPage({ aboutData }: AboutPageProps) {
 
         {/* Closing */}
         <p className="text-center text-stone-500 font-medium pt-4 pb-2">
-          Keep reading, keep dreaming, keep being awesome
+          {t("about.closing")}
         </p>
         <div className="text-center">
           <Link
             to="/"
             className="inline-flex items-center gap-1.5 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors"
           >
-            Back to my bookshelf <ArrowRight className="w-4 h-4" />
+            {t("about.backToShelf")} <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </main>

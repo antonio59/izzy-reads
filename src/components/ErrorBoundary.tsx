@@ -1,15 +1,16 @@
 import { Component, useId, useMemo, type ErrorInfo, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { RefreshCw, Home, AlertTriangle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Card } from "./ui/Card";
 
 const funMessages = [
-  { emoji: "📖", message: "This page got a paper cut" },
-  { emoji: "📚", message: "We lost our place in the book" },
-  { emoji: "🔖", message: "Something slipped off the shelf" },
-  { emoji: "📝", message: "A page didn't load quite right" },
-  { emoji: "📕", message: "That chapter didn't open" },
-];
+  { emoji: "📖", key: "errorScreen.paperCut" },
+  { emoji: "📚", key: "errorScreen.lostPlace" },
+  { emoji: "🔖", key: "errorScreen.slippedOff" },
+  { emoji: "📝", key: "errorScreen.pageDidntLoad" },
+  { emoji: "📕", key: "errorScreen.chapterDidntOpen" },
+] as const;
 
 interface Props {
   children: ReactNode;
@@ -80,6 +81,7 @@ function ErrorFallback({
   onTryAgain: () => void;
 }) {
   const id = useId();
+  const { t } = useTranslation();
   const randomMessage = useMemo(() => {
     let hash = 0;
     for (let i = 0; i < id.length; i++) {
@@ -110,11 +112,11 @@ function ErrorFallback({
         </div>
 
         <h1 className="text-2xl font-display font-bold text-stone-800 mb-2">
-          {randomMessage.message}
+          {t(randomMessage.key)}
         </h1>
 
         <p className="text-stone-500 mb-8">
-          Don't worry – let's get you back to the shelf.
+          {t("errorScreen.dontWorry")}
         </p>
 
         {/* Action buttons */}
@@ -126,7 +128,7 @@ function ErrorFallback({
             whileTap={{ scale: 0.99 }}
           >
             <RefreshCw className="w-5 h-5" />
-            Try Again
+            {t("errorScreen.tryAgain")}
           </motion.button>
 
           <motion.button
@@ -136,7 +138,7 @@ function ErrorFallback({
             whileTap={{ scale: 0.99 }}
           >
             <RefreshCw className="w-5 h-5" />
-            Reload Page
+            {t("errorScreen.reload")}
           </motion.button>
 
           <motion.button
@@ -146,12 +148,12 @@ function ErrorFallback({
             whileTap={{ scale: 0.99 }}
           >
             <Home className="w-5 h-5" />
-            Go Home
+            {t("errorScreen.goHome")}
           </motion.button>
         </div>
 
         <p className="mt-8 text-sm text-stone-500">
-          Tip: a quick reload often clears it up.
+          {t("errorScreen.tip")}
         </p>
       </Card>
     </div>

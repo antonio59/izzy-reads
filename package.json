@@ -31,10 +31,13 @@
     "@giphy/js-fetch-api": "^5.8.0",
     "convex": "^1.46.0",
     "framer-motion": "^12.43.0",
+    "i18next": "^26.4.2",
+    "i18next-browser-languagedetector": "^8.2.1",
     "lucide-react": "^1.47.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-helmet-async": "^3.0.0",
+    "react-i18next": "^17.0.15",
     "react-router-dom": "^7.18.4",
     "recharts": "^3.10.1",
     "resend": "^6.28.1"

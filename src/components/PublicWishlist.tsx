@@ -10,7 +10,9 @@ import {
   Copy,
   Link2,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useBooks } from "../contexts/BookContext";
+import { genreLabel } from "../i18n/format";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -35,6 +37,7 @@ const PublicWishlist = () => {
   const [shareStatus, setShareStatus] = useState<"idle" | "copied">("idle");
   const [showSharePanel, setShowSharePanel] = useState(false);
   const markAsBought = useMutation(api.wishlist.markAsBought);
+  const { t, i18n } = useTranslation();
 
   const wishlistUrl = absoluteUrl("/my-wishlist");
 
@@ -72,7 +75,7 @@ const PublicWishlist = () => {
 
   const handleMarkAsBought = async (bookId: string) => {
     if (!buyerName.trim()) {
-      setBuyError("Please enter your name");
+      setBuyError(t("wishlist.enterNameError"));
       return;
     }
     try {
@@ -86,7 +89,7 @@ const PublicWishlist = () => {
         setBuySuccess(false);
       }, 2000);
     } catch (e) {
-      setBuyError(e instanceof Error ? e.message : "Something went wrong");
+      setBuyError(e instanceof Error ? e.message : t("common.somethingWrong"));
     }
   };
 
@@ -129,13 +132,13 @@ const PublicWishlist = () => {
             }
           >
             <p className="font-accent text-sm sm:text-base text-primary-600 tracking-wide mb-3">
-              Books I&apos;d love
+              {t("wishlist.eyebrow")}
             </p>
             <h1 className="font-accent text-4xl sm:text-5xl font-semibold text-stone-900 tracking-tight leading-[1.05] mb-3">
-              Wishlist
+              {t("nav.wishlist")}
             </h1>
             <p className="text-base text-stone-500 max-w-md mx-auto leading-relaxed">
-              Books I can&apos;t wait to read – know a good one? Suggest it!
+              {t("wishlist.intro")}
             </p>
 
             {wishlist.length > 0 && (
@@ -143,14 +146,14 @@ const PublicWishlist = () => {
                 <span className="font-display font-bold text-stone-700 tabular-nums">
                   {wishlist.length}
                 </span>{" "}
-                {wishlist.length === 1 ? "book" : "books"}
+                {t("wishlist.booksLabel", { count: wishlist.length })}
                 {totalPages > 0 && (
                   <>
                     {" · "}
                     <span className="font-display font-bold text-stone-700 tabular-nums">
-                      {totalPages.toLocaleString()}
+                      {totalPages.toLocaleString(i18n.language)}
                     </span>{" "}
-                    pages
+                    {t("wishlist.pagesLabel", { count: totalPages })}
                   </>
                 )}
               </p>
@@ -165,7 +168,7 @@ const PublicWishlist = () => {
                 className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-display font-bold text-sm shadow-md shadow-primary-600/20 transition-colors"
               >
                 <Gift className="w-4 h-4" />
-                Suggest a book
+                {t("wishlist.suggestBook")}
               </motion.button>
               <button
                 type="button"
@@ -174,7 +177,7 @@ const PublicWishlist = () => {
                 aria-expanded={showSharePanel}
               >
                 <Share2 className="w-4 h-4" />
-                Share wishlist
+                {t("wishlist.share")}
               </button>
             </div>
 
@@ -193,7 +196,7 @@ const PublicWishlist = () => {
                 >
                   <p className="text-xs font-semibold uppercase tracking-wider text-stone-500 mb-2 flex items-center gap-1.5">
                     <Link2 className="w-3.5 h-3.5" />
-                    Wishlist link
+                    {t("wishlist.link")}
                   </p>
                   <div className="flex gap-2">
                     <input
@@ -202,7 +205,7 @@ const PublicWishlist = () => {
                       value={wishlistUrl}
                       onFocus={(e) => e.currentTarget.select()}
                       className="flex-1 min-w-0 px-3 py-2.5 rounded-xl border border-cream-300 bg-cream-50 text-sm text-stone-700 font-mono truncate"
-                      aria-label="Wishlist URL"
+                      aria-label={t("wishlist.linkLabel")}
                     />
                     <button
                       type="button"
@@ -212,12 +215,12 @@ const PublicWishlist = () => {
                       {shareStatus === "copied" ? (
                         <>
                           <Check className="w-4 h-4" />
-                          Copied
+                          {t("common.copied")}
                         </>
                       ) : (
                         <>
                           <Copy className="w-4 h-4" />
-                          Copy
+                          {t("common.copy")}
                         </>
                       )}
                     </button>
@@ -229,7 +232,7 @@ const PublicWishlist = () => {
                       className="mt-3 w-full inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border border-cream-300 text-stone-600 hover:text-primary-700 hover:border-primary-200 text-sm font-display font-semibold transition-colors"
                     >
                       <Share2 className="w-4 h-4" />
-                      Share via device…
+                      {t("wishlist.shareDevice")}
                     </button>
                   )}
                 </motion.div>
@@ -293,7 +296,7 @@ const PublicWishlist = () => {
                     },
                   }}
                   onClick={() => setSelectedBook(book)}
-                  aria-label={`${book.title} by ${book.author}${book.boughtBy ? ", already bought" : ""}`}
+                  aria-label={book.boughtBy ? t("wishlist.bookBought", { title: book.title, author: book.author }) : t("shelf.book", { title: book.title, author: book.author })}
                 >
                   <motion.div
                     className="relative aspect-[2/3] overflow-hidden rounded-xl shadow-md ring-1 ring-cream-300 group-hover:ring-primary-400 group-focus-visible:ring-primary-400 transition-shadow"
@@ -313,10 +316,10 @@ const PublicWishlist = () => {
                           <Check className="w-4 h-4 text-white" />
                         </div>
                         <span className="text-white text-xs font-bold">
-                          Bought
+                          {t("wishlist.bought")}
                         </span>
                         <span className="text-white/80 text-xs mt-0.5 text-center line-clamp-1">
-                          by {book.boughtBy}
+                          {t("wishlist.byBuyer", { name: book.boughtBy })}
                         </span>
                       </div>
                     ) : (
@@ -350,15 +353,13 @@ const PublicWishlist = () => {
             >
               <Gift className="w-12 h-12 text-primary-300 mx-auto mb-4" aria-hidden />
               <h3 className="text-2xl font-display font-bold text-stone-800 mb-3">
-                Wishlist is empty
+                {t("wishlist.emptyTitle")}
               </h3>
               <p className="text-stone-500 max-w-md mx-auto mb-6 leading-relaxed">
-                I&apos;m always looking for new books! Have a suggestion? Ask a
-                grown-up to help you send me a book idea.
+                {t("wishlist.emptyText")}
               </p>
               <p className="text-sm text-stone-500 max-w-sm mx-auto">
-                Tip: check back soon – I&apos;ll be adding books I&apos;d love to
-                read.
+                {t("wishlist.emptyTip")}
               </p>
               <button
                 type="button"
@@ -366,7 +367,7 @@ const PublicWishlist = () => {
                 className="inline-flex items-center gap-2 mt-8 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-display font-bold text-sm shadow-md shadow-primary-600/20 transition-colors"
               >
                 <Gift className="w-4 h-4" />
-                Suggest a book
+                {t("wishlist.suggestBook")}
               </button>
             </motion.div>
           )}
@@ -423,14 +424,14 @@ const PublicWishlist = () => {
 
                 <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 bg-primary-600 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm">
                   <Gift className="w-3.5 h-3.5" aria-hidden />
-                  On my wishlist
+                  {t("wishlist.onWishlist")}
                 </span>
 
                 <button
                   type="button"
                   onClick={() => setSelectedBook(null)}
                   className="absolute top-4 right-4 w-10 h-10 bg-white hover:bg-cream-100 rounded-full flex items-center justify-center shadow-md transition-colors"
-                  aria-label="Close"
+                  aria-label={t("common.close")}
                 >
                   <X className="w-5 h-5 text-stone-600" />
                 </button>
@@ -443,19 +444,19 @@ const PublicWishlist = () => {
                 >
                   {selectedBook.title}
                 </h2>
-                <p className="text-stone-500 mb-4">By {selectedBook.author}</p>
+                <p className="text-stone-500 mb-4">{t("common.byAuthor", { author: selectedBook.author })}</p>
 
                 <div className="flex flex-wrap gap-2 mb-6 text-sm text-stone-500">
                   {selectedBook.genre && (
                     <span className="px-3 py-1 rounded-full bg-accent-50 text-accent-700 font-medium">
-                      {selectedBook.genre}
+                      {genreLabel(t, selectedBook.genre)}
                     </span>
                   )}
                   {selectedBook.pageCount != null &&
                     selectedBook.pageCount > 0 && (
                       <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-cream-200 text-stone-600 font-medium">
                         <BookOpen className="w-3.5 h-3.5" aria-hidden />
-                        {selectedBook.pageCount} pages
+                        {t("shelf.pages", { count: selectedBook.pageCount })}
                       </span>
                     )}
                   {selectedBook.ageRating && (
@@ -468,7 +469,7 @@ const PublicWishlist = () => {
                 {(selectedBook.notes || selectedBook.description) && (
                   <div className="mb-6">
                     <h3 className="font-display font-bold text-stone-800 mb-2 text-sm">
-                      Why I want to read this
+                      {t("wishlist.whyRead")}
                     </h3>
                     <p className="text-stone-600 leading-relaxed italic font-serif">
                       &ldquo;
@@ -480,7 +481,7 @@ const PublicWishlist = () => {
 
                 {!selectedBook.notes && !selectedBook.description && (
                   <p className="text-stone-500 italic text-center mb-6 text-sm">
-                    This book looks amazing – I can&apos;t wait to read it!
+                    {t("wishlist.looksAmazing")}
                   </p>
                 )}
 
@@ -492,10 +493,10 @@ const PublicWishlist = () => {
                       </div>
                       <div>
                         <p className="text-green-700 font-semibold text-sm">
-                          Someone got this!
+                          {t("wishlist.someoneGotIt")}
                         </p>
                         <p className="text-green-600 text-xs">
-                          Bought by {selectedBook.boughtBy}
+                          {t("wishlist.boughtBy", { name: selectedBook.boughtBy })}
                         </p>
                       </div>
                     </div>
@@ -505,14 +506,13 @@ const PublicWishlist = () => {
                         <div className="flex items-center gap-2 justify-center bg-green-50 rounded-xl p-4">
                           <Check className="w-5 h-5 text-green-500" />
                           <span className="text-green-700 font-semibold">
-                            Thank you!
+                            {t("wishlist.thankYou")}
                           </span>
                         </div>
                       ) : (
                         <>
                           <p className="text-sm text-stone-500 text-center">
-                            Enter your name so we know who&apos;s getting this
-                            book!
+                            {t("wishlist.enterNamePrompt")}
                           </p>
                           <Input
                             type="text"
@@ -521,7 +521,7 @@ const PublicWishlist = () => {
                               setBuyerName(e.target.value);
                               setBuyError("");
                             }}
-                            placeholder="Your name"
+                            placeholder={t("wishlist.yourName")}
                             size="sm"
                             className="rounded-lg"
                             autoFocus
@@ -538,7 +538,7 @@ const PublicWishlist = () => {
                               className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors text-sm"
                             >
                               <Check className="w-4 h-4" />
-                              Confirm
+                              {t("common.confirm")}
                             </button>
                             <button
                               type="button"
@@ -549,7 +549,7 @@ const PublicWishlist = () => {
                               }}
                               className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-lg transition-colors text-sm"
                             >
-                              Cancel
+                              {t("common.cancel")}
                             </button>
                           </div>
                         </>
@@ -562,7 +562,7 @@ const PublicWishlist = () => {
                       className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white font-display font-bold rounded-xl shadow-md shadow-primary-600/20 transition-colors text-sm"
                     >
                       <ShoppingBag className="w-4 h-4" />
-                      I bought this!
+                      {t("wishlist.iBoughtThis")}
                     </button>
                   )}
                 </div>

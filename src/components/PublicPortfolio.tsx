@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { PenTool, Gift, ArrowRight, BookOpen } from "lucide-react";
 import { useBooks } from "../contexts/BookContext";
 import { useUser } from "../contexts/UserContext";
@@ -13,6 +14,7 @@ import { BookCoverImage } from "./ui/BookCoverImage";
 import { EmptyState } from "./ui/EmptyState";
 import { PageMeta } from "./PageMeta";
 import { CurrentlyReadingStrip } from "./CurrentlyReadingStrip";
+import { usePublishedTranslations } from "../hooks/useContentTranslations";
 import { PublishedPoemFeature, PUBLISHED_POEM_TITLE } from "./PublishedPoemFeature";
 import { pageMeta } from "../lib/seo";
 import type { Book } from "../types";
@@ -45,6 +47,7 @@ function HeroCoverShelf({
   reducedMotion: boolean;
 }) {
   const [hovered, setHovered] = useState<number | null>(null);
+  const { t } = useTranslation();
 
   if (books.length === 0) {
     return (
@@ -141,7 +144,7 @@ function HeroCoverShelf({
                   <Link
                     to={`/reviews/${book.id}`}
                     className="block w-full h-full rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
-                    aria-label={`${book.title}${snippet ? " – read Izzy's review" : ""}`}
+                    aria-label={snippet ? t("home.coverWithReview", { title: book.title }) : book.title}
                   >
                     <BookCoverImage book={book} className="w-full h-full" />
                   </Link>
@@ -168,7 +171,7 @@ function HeroCoverShelf({
                     {book.rating != null && book.rating > 0 && (
                       <p
                         className="text-amber-400 text-xs mt-1 tracking-tight"
-                        aria-label={`${book.rating} out of 5 stars`}
+                        aria-label={t("common.starsOutOf5", { count: book.rating })}
                       >
                         {"★".repeat(Math.round(book.rating))}
                         {/* eslint-disable-next-line no-restricted-syntax -- unrated stars, intentionally faint */}
@@ -183,7 +186,7 @@ function HeroCoverShelf({
                       </p>
                     ) : (
                       <p className="text-xs text-stone-500 mt-1.5">
-                        On Izzy&apos;s shelf
+                        {t("home.onShelf")}
                       </p>
                     )}
                   </div>
@@ -202,6 +205,8 @@ const PublicPortfolio = () => {
   const { books, poems, wishlist, isLoading } = useBooks();
   const { user } = useUser();
   const { prefersReducedMotion } = useMotionPreference();
+  const { t, i18n } = useTranslation();
+  const poemTranslations = usePublishedTranslations("poem");
 
   const userAvatar = user?.avatar || DEFAULT_AVATAR;
 
@@ -250,6 +255,12 @@ const PublicPortfolio = () => {
         new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
     )[0];
   }, [poems]);
+
+  const latestPoemItalian = latestPoem
+    ? poemTranslations.get(latestPoem.id)
+    : undefined;
+  const latestPoemTitle = latestPoemItalian?.title ?? latestPoem?.title ?? "";
+  const latestPoemText = latestPoemItalian?.body ?? latestPoem?.content ?? "";
 
   const reviewCount = useMemo(
     () => books.filter((b) => b.isRead && (b.notes || b.review)).length,
@@ -314,16 +325,16 @@ const PublicPortfolio = () => {
                 <AvatarPreview config={userAvatar} size="sm" />
               </div>
               <p className="font-accent text-sm sm:text-base text-primary-600 tracking-wide">
-                Hi, I&apos;m Izzy
+                {t("home.hi")}
               </p>
             </div>
 
             <h1 className="font-accent text-4xl sm:text-5xl md:text-6xl font-semibold text-stone-900 tracking-tight leading-[1.05]">
-              Izzy&apos;s Bookshelf
+              {t("site.name")}
             </h1>
 
             <p className="text-base sm:text-lg text-stone-500 max-w-md leading-relaxed">
-              Every book I finish lives here – plus reviews, poems, and writing I&apos;m proud of.
+              {t("home.intro")}
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
@@ -334,14 +345,14 @@ const PublicPortfolio = () => {
                 whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-display font-bold text-sm shadow-md shadow-primary-600/20 transition-colors"
               >
-                Browse my shelf
+                {t("home.browseShelf")}
                 <ArrowRight className="w-4 h-4" />
               </motion.button>
               <Link
                 to="/about"
                 className="inline-flex items-center gap-2 px-5 py-3 text-stone-600 hover:text-primary-700 font-display font-semibold text-sm transition-colors"
               >
-                About me
+                {t("home.aboutMe")}
               </Link>
             </div>
           </motion.div>
@@ -363,10 +374,10 @@ const PublicPortfolio = () => {
           <section className="pt-14 sm:pt-20 mb-16 sm:mb-20">
             <header className="mb-8 sm:mb-10">
               <h2 className="text-2xl sm:text-3xl font-display font-bold text-stone-800">
-                Izzy&apos;s Picks
+                {t("home.picksTitle")}
               </h2>
               <p className="text-sm text-stone-500 mt-1">
-                My absolute favourites right now
+                {t("home.picksSubtitle")}
               </p>
             </header>
             <FunBookshelfPublic
@@ -381,17 +392,17 @@ const PublicPortfolio = () => {
           <header className="mb-8 sm:mb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
             <div>
               <h2 className="text-2xl sm:text-3xl font-display font-bold text-stone-800">
-                On my shelf
+                {t("home.shelfTitle")}
               </h2>
               <p className="text-sm text-stone-500 mt-1">
-                {readBooks.length} books logged · Tap a cover to peek inside
+                {t("home.shelfSubtitle", { count: readBooks.length })}
               </p>
             </div>
             <Link
               to="/reviews"
               className="inline-flex items-center gap-1.5 py-3 -my-3 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors"
             >
-              Reviews <ArrowRight className="w-4 h-4" />
+              {t("nav.reviews")} <ArrowRight className="w-4 h-4" />
             </Link>
           </header>
 
@@ -400,8 +411,8 @@ const PublicPortfolio = () => {
           ) : (
             <EmptyState
               icon="📚"
-              title="Shelf coming soon"
-              description="Izzy is reading amazing books and can't wait to share them!"
+              title={t("home.emptyShelfTitle")}
+              description={t("home.emptyShelfText")}
             />
           )}
         </section>
@@ -410,7 +421,7 @@ const PublicPortfolio = () => {
         {readBooks.length > 0 && (
           <section
             className="mb-16 sm:mb-20 py-8 border-y border-cream-300"
-            aria-label="Reading stats"
+            aria-label={t("home.statsLabel")}
           >
             <div className="flex flex-wrap justify-center gap-x-10 gap-y-6 sm:gap-x-16 text-center">
               <div>
@@ -418,15 +429,15 @@ const PublicPortfolio = () => {
                   {readBooks.length}
                 </p>
                 <p className="text-xs uppercase tracking-wider text-stone-500 mt-1 font-medium">
-                  Books read
+                  {t("home.statBooks")}
                 </p>
               </div>
               <div>
                 <p className="font-display text-3xl font-bold text-stone-800 tabular-nums">
-                  {pagesRead.toLocaleString()}
+                  {pagesRead.toLocaleString(i18n.language)}
                 </p>
                 <p className="text-xs uppercase tracking-wider text-stone-500 mt-1 font-medium">
-                  Pages
+                  {t("home.statPages")}
                 </p>
               </div>
               <Link to="/reviews" className="group">
@@ -434,7 +445,7 @@ const PublicPortfolio = () => {
                   {reviewCount}
                 </p>
                 <p className="text-xs uppercase tracking-wider text-stone-500 mt-1 font-medium">
-                  Reviews
+                  {t("home.statReviews")}
                 </p>
               </Link>
             </div>
@@ -447,17 +458,17 @@ const PublicPortfolio = () => {
             <header className="mb-8 flex items-end justify-between gap-4">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-display font-bold text-stone-800">
-                  Latest Poem
+                  {t("home.latestPoemTitle")}
                 </h2>
                 <p className="text-sm text-stone-500 mt-1">
-                  Writing from my heart
+                  {t("home.latestPoemSubtitle")}
                 </p>
               </div>
               <Link
                 to="/poetry"
                 className="inline-flex items-center gap-1.5 py-3 -my-3 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors shrink-0"
               >
-                All poems <ArrowRight className="w-4 h-4" />
+                {t("home.allPoems")} <ArrowRight className="w-4 h-4" />
               </Link>
             </header>
 
@@ -469,15 +480,15 @@ const PublicPortfolio = () => {
                 <PenTool className="w-6 h-6" aria-hidden />
               </div>
               <h3 className="text-xl sm:text-2xl font-display font-bold text-stone-800 group-hover:text-primary-600 transition-colors mb-4">
-                {latestPoem.title}
+                {latestPoemTitle}
               </h3>
               <p className="text-stone-500 whitespace-pre-line leading-relaxed font-serif italic text-lg">
-                {latestPoem.content.length > 220
-                  ? `${latestPoem.content.slice(0, 220)}…`
-                  : latestPoem.content}
+                {latestPoemText.length > 220
+                  ? `${latestPoemText.slice(0, 220)}…`
+                  : latestPoemText}
               </p>
               <span className="inline-flex items-center gap-1.5 mt-6 text-primary-600 font-semibold text-sm group-hover:gap-2.5 transition-all">
-                Read full poem <ArrowRight className="w-4 h-4" />
+                {t("home.readFullPoem")} <ArrowRight className="w-4 h-4" />
               </span>
             </Link>
           </section>
@@ -489,17 +500,17 @@ const PublicPortfolio = () => {
             <header className="mb-8 flex items-end justify-between gap-4">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-display font-bold text-stone-800">
-                  Wishlist
+                  {t("nav.wishlist")}
                 </h2>
                 <p className="text-sm text-stone-500 mt-1">
-                  Books I can&apos;t wait to read
+                  {t("home.wishlistSubtitle")}
                 </p>
               </div>
               <Link
                 to="/my-wishlist"
                 className="inline-flex items-center gap-1.5 py-3 -my-3 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors shrink-0"
               >
-                See all {wishlist.length}{" "}
+                {t("home.seeAll", { count: wishlist.length })}{" "}
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </header>

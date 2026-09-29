@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
+import { Trans, useTranslation } from "react-i18next";
 import { Sparkles } from "lucide-react";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 import { PoemReactionButtons } from "./ReactionButtons";
+import { usePublishedTranslations } from "../hooks/useContentTranslations";
+import { OriginalLanguageToggle } from "./ui/OriginalLanguageToggle";
 
 export const PUBLISHED_POEM_TITLE = "The Volcano";
 
@@ -33,7 +37,15 @@ export function PublishedPoemFeature({
   poemId,
 }: PublishedPoemFeatureProps) {
   const { prefersReducedMotion } = useMotionPreference();
+  const { t } = useTranslation();
   const poem = PUBLISHED_POEM;
+  const italian = usePublishedTranslations("poem").get(poemId ?? "");
+  const [showOriginal, setShowOriginal] = useState(false);
+  const useItalian = Boolean(italian) && !showOriginal;
+  const title = useItalian ? (italian?.title ?? poem.title) : poem.title;
+  const stanzas: readonly string[] = useItalian
+    ? (italian?.body ?? "").split(/\n\s*\n/).map((st) => st.trim()).filter(Boolean)
+    : poem.stanzas;
 
   return (
     <section
@@ -60,36 +72,40 @@ export function PublishedPoemFeature({
         >
           <img
             src={poem.coverSrc}
-            alt={`Cover of ${poem.anthology}`}
+            alt={t("wonderverse.coverAlt", { anthology: poem.anthology })}
             width={580}
             height={895}
             loading="lazy"
             className="w-full rounded-lg shadow-2xl ring-1 ring-white/20"
           />
           <figcaption className="mt-3 text-center text-xs text-purple-200">
-            Published by {poem.publisher} · page {poem.page}
+            {t("wonderverse.publishedBy", { publisher: poem.publisher, page: poem.page })}
           </figcaption>
         </motion.figure>
 
         <div>
           <p className="inline-flex items-center gap-2 rounded-full bg-amber-300/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-amber-200 ring-1 ring-amber-200/30">
             <Sparkles className="w-3.5 h-3.5" aria-hidden />
-            Published poet
+            {t("wonderverse.badge")}
           </p>
           <h2
             id="published-poem-heading"
             className="mt-4 text-3xl sm:text-4xl font-display font-bold leading-tight !text-white"
           >
-            I&apos;m in a real book!
+            {t("wonderverse.heading")}
           </h2>
           <p className="mt-2 text-purple-100 max-w-lg">
-            My poem was chosen for <em>{poem.anthology}</em>.
+            <Trans
+              i18nKey="wonderverse.chosenFor"
+              values={{ anthology: poem.anthology }}
+              components={{ em: <em /> }}
+            />
           </p>
 
           <article className="mt-8 rounded-2xl bg-white/5 p-5 sm:p-7 ring-1 ring-white/10">
-            <h3 className="text-2xl font-serif font-semibold !text-amber-100">{poem.title}</h3>
+            <h3 className="text-2xl font-serif font-semibold !text-amber-100">{title}</h3>
             <div className="mt-4 space-y-4 font-serif text-lg leading-relaxed text-purple-50">
-              {poem.stanzas.map((stanza) => (
+              {stanzas.map((stanza) => (
                 <p key={stanza} className="whitespace-pre-line">
                   {stanza}
                 </p>
@@ -98,6 +114,14 @@ export function PublishedPoemFeature({
             <p className="mt-6 font-display font-bold text-amber-200">
               – {poem.author}
             </p>
+            {italian && (
+              <OriginalLanguageToggle
+                tone="dark"
+                className="mt-4"
+                showingOriginal={showOriginal}
+                onToggle={() => setShowOriginal((v) => !v)}
+              />
+            )}
             {poemId && (
               <div className="mt-6 pt-5 border-t border-white/10">
                 <PoemReactionButtons poemId={poemId} />

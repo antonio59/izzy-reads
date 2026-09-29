@@ -1,4 +1,5 @@
 import { BookMarked } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { Book } from "../types";
 import { BookCoverImage } from "./ui/BookCoverImage";
 import { isLikelyInvalidCover } from "../lib/coverUrl";
@@ -16,6 +17,7 @@ export function CurrentlyReadingStrip({
   limit = 6,
   className = "",
 }: CurrentlyReadingStripProps) {
+  const { t } = useTranslation();
   const reading = books
     .filter((b) => !b.isRead)
     .sort((a, b) => b.dateAdded.localeCompare(a.dateAdded))
@@ -27,12 +29,12 @@ export function CurrentlyReadingStrip({
     <section
       id="currently-reading"
       className={`rounded-2xl border border-cream-300 bg-white/70 px-4 py-4 sm:px-5 sm:py-5 scroll-mt-24 ${className}`}
-      aria-label="Currently reading"
+      aria-label={t("home.currentlyReading")}
     >
       <div className="flex items-center gap-2 mb-3">
         <BookMarked className="w-4 h-4 text-accent-600" aria-hidden />
         <h2 className="font-display font-bold text-stone-800 text-sm sm:text-base">
-          Currently reading
+          {t("home.currentlyReading")}
         </h2>
         <span className="text-xs text-stone-500 tabular-nums">
           {reading.length}

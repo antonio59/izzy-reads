@@ -1,5 +1,6 @@
 import { forwardRef, useId, useState } from "react";
 import { Eye, EyeOff, Search, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export type InputSize = "sm" | "md" | "lg";
 export type InputVariant = "default" | "filled" | "outlined";
@@ -74,6 +75,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const hasLeftIcon = icon && iconPosition === "left";
     const hasRightIcon = icon && iconPosition === "right";
     const showClear = clearable && props.value && !disabled;
+    const { t } = useTranslation();
 
     return (
       <div className={`${fullWidth ? "w-full" : ""}`}>
@@ -122,6 +124,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             <button
               type="button"
               onClick={onClear}
+              aria-label={t("common.clearSearch")}
               className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-stone-500 hover:text-stone-600 rounded-full hover:bg-stone-100 transition-colors"
             >
               <X className={styles.icon} />

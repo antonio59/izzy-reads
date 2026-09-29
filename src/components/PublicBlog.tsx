@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useBooks } from "../contexts/BookContext";
+import { usePublishedTranslations } from "../hooks/useContentTranslations";
+import { formatDate } from "../i18n/format";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 import { PublicNav } from "./PublicNav";
 import { PublicFooter } from "./PublicFooter";
@@ -11,6 +14,8 @@ import { pageMeta } from "../lib/seo";
 const PublicBlog = () => {
   const { blogPosts } = useBooks();
   const { prefersReducedMotion } = useMotionPreference();
+  const { t, i18n } = useTranslation();
+  const translations = usePublishedTranslations("blogPost");
 
   const sortedPosts = [...blogPosts]
     .filter((post) => post.status === "published")
@@ -51,20 +56,20 @@ const PublicBlog = () => {
             }
           >
             <p className="font-accent text-sm sm:text-base text-primary-600 tracking-wide mb-3">
-              Thoughts &amp; adventures
+              {t("writing.eyebrow")}
             </p>
             <h1 className="font-accent text-4xl sm:text-5xl font-semibold text-stone-900 tracking-tight leading-[1.05] mb-3">
-              Writing
+              {t("writing.title")}
             </h1>
             <p className="text-base text-stone-500 max-w-md mx-auto leading-relaxed">
-              Stories from my reading journey – challenges, adventures, and ideas.
+              {t("writing.intro")}
             </p>
             {sortedPosts.length > 0 && (
               <p className="mt-5 text-sm text-stone-500">
                 <span className="font-display font-bold text-stone-700 tabular-nums">
                   {sortedPosts.length}
                 </span>{" "}
-                {sortedPosts.length === 1 ? "post" : "posts"}
+                {t("writing.countLabel", { count: sortedPosts.length })}
               </p>
             )}
           </motion.div>
@@ -76,7 +81,8 @@ const PublicBlog = () => {
           {sortedPosts.length > 0 ? (
             <div className="space-y-10 sm:space-y-12 divide-y divide-cream-300">
               {sortedPosts.map((post, index) => {
-                const previewText = getPreviewText(post.content);
+                const italian = translations.get(post.id);
+                const previewText = getPreviewText(italian?.body ?? post.content);
                 return (
                   <Link
                     key={post.id}
@@ -102,24 +108,17 @@ const PublicBlog = () => {
                         )}
                         <span className="flex items-center gap-1 text-xs text-stone-500">
                           <Calendar className="w-3 h-3" aria-hidden />
-                          {new Date(post.dateCreated).toLocaleDateString(
-                            "en-US",
-                            {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            },
-                          )}
+                          {formatDate(post.dateCreated, i18n.language)}
                         </span>
                       </div>
                       <h2 className="text-xl sm:text-2xl font-display font-bold text-stone-900 group-hover:text-primary-700 transition-colors leading-snug mb-3">
-                        {post.title}
+                        {italian?.title ?? post.title}
                       </h2>
                       <p className="text-stone-600 leading-relaxed line-clamp-3">
-                        {previewText || "Open to read more…"}
+                        {previewText || t("writing.openToRead")}
                       </p>
                       <span className="inline-flex items-center gap-1.5 mt-4 text-primary-600 font-semibold text-sm group-hover:gap-2.5 transition-all">
-                        Read post <ArrowRight className="w-4 h-4" />
+                        {t("writing.readPost")} <ArrowRight className="w-4 h-4" />
                       </span>
                     </motion.article>
                   </Link>
@@ -129,11 +128,10 @@ const PublicBlog = () => {
           ) : (
             <div className="text-center py-16">
               <h3 className="text-2xl font-display font-bold text-stone-800 mb-3">
-                Writing coming soon
+                {t("writing.comingSoonTitle")}
               </h3>
               <p className="text-stone-500 max-w-md mx-auto">
-                Soon I&apos;ll share reading challenges, book adventures, and
-                stories here.
+                {t("writing.comingSoonText")}
               </p>
             </div>
           )}

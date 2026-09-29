@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { ArrowLeft, BookOpen, Feather, Star } from "lucide-react";
 import { Helmet } from "react-helmet-async";
@@ -8,6 +9,7 @@ import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 
 const NotFound: React.FC = () => {
   const { prefersReducedMotion } = useMotionPreference();
+  const { t } = useTranslation();
 
   return (
     <div className="min-h-screen bg-cream-100 flex flex-col">
@@ -48,7 +50,7 @@ const NotFound: React.FC = () => {
           </div>
 
           <p className="font-accent text-sm sm:text-base text-primary-600 tracking-wide mb-3">
-            Lost on the shelf
+            {t("notFound.eyebrow")}
           </p>
 
           <p
@@ -59,11 +61,10 @@ const NotFound: React.FC = () => {
           </p>
 
           <h1 className="font-accent text-3xl sm:text-4xl font-semibold text-stone-900 tracking-tight leading-tight mb-3">
-            This page wandered off
+            {t("notFound.title")}
           </h1>
           <p className="text-stone-500 leading-relaxed mb-8 max-w-md mx-auto">
-            It isn&apos;t on Izzy&apos;s Bookshelf – or it moved. Try home, or
-            pick a favourite corner below.
+            {t("notFound.text")}
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
@@ -72,7 +73,7 @@ const NotFound: React.FC = () => {
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-display font-bold text-sm shadow-md shadow-primary-600/20 transition-colors"
             >
               <BookOpen className="w-4 h-4" />
-              Back to Bookshelf
+              {t("notFound.backToShelf")}
             </Link>
             <button
               type="button"
@@ -80,7 +81,7 @@ const NotFound: React.FC = () => {
               className="inline-flex items-center gap-2 px-5 py-3 text-stone-600 hover:text-primary-700 font-display font-semibold text-sm transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              Go back
+              {t("notFound.goBack")}
             </button>
           </div>
 
@@ -90,26 +91,26 @@ const NotFound: React.FC = () => {
               className="inline-flex items-center gap-1.5 text-stone-500 hover:text-primary-700 font-medium transition-colors"
             >
               <Star className="w-3.5 h-3.5" />
-              Reviews
+              {t("nav.reviews")}
             </Link>
             <Link
               to="/poetry"
               className="inline-flex items-center gap-1.5 text-stone-500 hover:text-primary-700 font-medium transition-colors"
             >
               <Feather className="w-3.5 h-3.5" />
-              Poems
+              {t("nav.poems")}
             </Link>
             <Link
               to="/my-wishlist"
               className="inline-flex items-center gap-1.5 text-stone-500 hover:text-primary-700 font-medium transition-colors"
             >
-              Wishlist
+              {t("nav.wishlist")}
             </Link>
             <Link
               to="/about"
               className="inline-flex items-center gap-1.5 text-stone-500 hover:text-primary-700 font-medium transition-colors"
             >
-              About
+              {t("nav.about")}
             </Link>
           </div>
         </motion.div>

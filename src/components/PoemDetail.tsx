@@ -14,6 +14,10 @@ import {
 } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { useQuery } from "convex/react";
+import { useTranslation } from "react-i18next";
+import { usePublishedTranslations } from "../hooks/useContentTranslations";
+import { formatDate, poemTemplateLabel } from "../i18n/format";
+import { OriginalLanguageToggle } from "./ui/OriginalLanguageToggle";
 import { api } from "../../convex/_generated/api";
 import { useBooks } from "../contexts/BookContext";
 import { useUser } from "../contexts/UserContext";
@@ -42,6 +46,13 @@ const PoemDetail = () => {
   const { user } = useUser();
   const { prefersReducedMotion } = useMotionPreference();
   const [copied, setCopied] = useState(false);
+  // Remember "show English" per poem, so it resets when you open another
+  const [originalFor, setOriginalFor] = useState<string | null>(null);
+  const showOriginal = originalFor === poemId;
+  const toggleOriginal = () =>
+    setOriginalFor((current) => (current === poemId ? null : (poemId ?? null)));
+  const { t, i18n } = useTranslation();
+  const translations = usePublishedTranslations("poem");
   const remotePoem = useQuery(
     api.poems.getBySlug,
     poemId ? { slug: poemId } : "skip",
@@ -60,6 +71,15 @@ const PoemDetail = () => {
         template: remotePoem.template,
       }
     : contextPoem;
+
+  const italian = poem ? translations.get(poem.id) : undefined;
+  const useItalian = Boolean(italian) && !showOriginal;
+  const shownTitle = useItalian ? (italian?.title ?? poem?.title ?? "") : (poem?.title ?? "");
+  const shownContent = useItalian ? (italian?.body ?? "") : (poem?.content ?? "");
+  const titleOf = (p: { id: string; title: string }) =>
+    translations.get(p.id)?.title ?? p.title;
+  const contentOf = (p: { id: string; content: string }) =>
+    translations.get(p.id)?.body ?? p.content;
 
   const poemIndex = poems.findIndex(
     (p) => p.slug === poemId || p.id === poemId || p.id === poem?.id,
@@ -82,7 +102,7 @@ const PoemDetail = () => {
 
   const handleCopyText = async () => {
     if (!poem) return;
-    const text = `${poem.title}\n\n${poem.content}\n\n– Izzy`;
+    const text = `${shownTitle}\n\n${shownContent}\n\n– Izzy`;
     await navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -138,17 +158,17 @@ const PoemDetail = () => {
               <Feather className="w-8 h-8 text-primary-400" aria-hidden />
             </div>
             <h1 className="font-accent text-3xl sm:text-4xl font-semibold text-stone-900 mb-3">
-              Poem not found
+              {t("poems.notFoundTitle")}
             </h1>
             <p className="text-stone-500 mb-8 leading-relaxed">
-              This poem seems to have wandered off…
+              {t("poems.notFoundText")}
             </p>
             <Link
               to="/poetry"
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-display font-bold text-sm shadow-md shadow-primary-600/20 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              Back to Poetry
+              {t("poems.backToPoetry")}
             </Link>
           </motion.div>
         </div>
@@ -213,7 +233,7 @@ const PoemDetail = () => {
               className="inline-flex items-center gap-2 text-stone-500 hover:text-primary-700 text-sm font-medium transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              Poetry
+              {t("poems.title")}
             </button>
 
             <div className="flex items-center gap-2">
@@ -221,11 +241,11 @@ const PoemDetail = () => {
                 type="button"
                 onClick={handleCopyText}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-stone-600 hover:text-stone-800 text-sm font-medium transition-colors"
-                title="Copy poem text"
+                title={t("poems.copyText")}
               >
                 <Copy className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">
-                  {copied ? "Copied!" : "Copy"}
+                  {copied ? t("common.copied") : t("common.copy")}
                 </span>
               </button>
               <button
@@ -234,7 +254,7 @@ const PoemDetail = () => {
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-primary-600 hover:text-primary-700 text-sm font-semibold transition-colors"
               >
                 <Share2 className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Share</span>
+                <span className="hidden sm:inline">{t("common.share")}</span>
               </button>
             </div>
           </div>
@@ -252,16 +272,16 @@ const PoemDetail = () => {
             <header className="text-center mb-8 sm:mb-10">
               {poem.template && (
                 <p className="text-xs font-semibold uppercase tracking-wider text-accent-600 mb-3">
-                  {poem.template}
+                  {poemTemplateLabel(t, poem.template)}
                 </p>
               )}
               <h1 className="font-accent text-3xl sm:text-4xl md:text-5xl font-semibold text-stone-900 tracking-tight leading-[1.1] mb-4">
-                {poem.title}
+                {shownTitle}
               </h1>
               <div className="flex items-center justify-center gap-3 text-stone-500 text-sm flex-wrap">
                 <span className="flex items-center gap-1.5">
                   <Calendar className="w-3.5 h-3.5" aria-hidden />
-                  {new Date(poem.dateCreated).toLocaleDateString("en-US", {
+                  {formatDate(poem.dateCreated, i18n.language, {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -270,14 +290,21 @@ const PoemDetail = () => {
                 <span className="w-1 h-1 rounded-full bg-stone-300" aria-hidden />
                 <span className="flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5" aria-hidden />
-                  {readTime} min read
+                  {t("common.minRead", { count: readTime })}
                 </span>
               </div>
+              {italian && (
+                <OriginalLanguageToggle
+                  className="mt-5"
+                  showingOriginal={showOriginal}
+                  onToggle={toggleOriginal}
+                />
+              )}
             </header>
 
             {/* Poem body – open serif reading */}
             <p className="text-lg sm:text-xl text-stone-700 font-serif leading-relaxed whitespace-pre-wrap text-center px-2 sm:px-4">
-              {poem.content}
+              {shownContent}
             </p>
 
             {/* Attribution */}
@@ -288,9 +315,9 @@ const PoemDetail = () => {
                 </div>
                 <div className="text-left">
                   <p className="font-display font-bold text-stone-800 text-sm">
-                    Written by Izzy
+                    {t("poems.writtenBy")}
                   </p>
-                  <p className="text-stone-500 text-xs">Young poet & dreamer</p>
+                  <p className="text-stone-500 text-xs">{t("poems.authorTagline")}</p>
                 </div>
               </div>
             </div>
@@ -298,7 +325,7 @@ const PoemDetail = () => {
             {/* Reactions */}
             <div className="mt-8 pt-8 border-t border-cream-300">
               <p className="text-xs font-semibold text-stone-500 text-center mb-3 uppercase tracking-wider">
-                React to this poem
+                {t("poems.reactPrompt")}
               </p>
               <div className="flex justify-center">
                 <PoemReactionButtons poemId={poem.id} size="sm" />
@@ -309,7 +336,7 @@ const PoemDetail = () => {
             {(prevPoem || nextPoem) && (
               <nav
                 className="mt-8 pt-8 border-t border-cream-300"
-                aria-label="Poem navigation"
+                aria-label={t("poems.navLabel")}
               >
                 <div className="flex items-stretch justify-between gap-4">
                   {prevPoem ? (
@@ -320,10 +347,10 @@ const PoemDetail = () => {
                       <ChevronLeft className="w-4 h-4 text-stone-500 group-hover:text-primary-600 flex-shrink-0 transition-colors" />
                       <div className="min-w-0 text-left">
                         <p className="text-xs uppercase tracking-wider text-stone-500 font-semibold">
-                          Previous
+                          {t("common.previous")}
                         </p>
                         <p className="text-sm font-display font-bold text-stone-700 group-hover:text-primary-700 truncate transition-colors">
-                          {prevPoem.title}
+                          {titleOf(prevPoem)}
                         </p>
                       </div>
                     </Link>
@@ -338,10 +365,10 @@ const PoemDetail = () => {
                     >
                       <div className="min-w-0 text-right">
                         <p className="text-xs uppercase tracking-wider text-stone-500 font-semibold">
-                          Next
+                          {t("common.next")}
                         </p>
                         <p className="text-sm font-display font-bold text-stone-700 group-hover:text-primary-700 truncate transition-colors">
-                          {nextPoem.title}
+                          {titleOf(nextPoem)}
                         </p>
                       </div>
                       <ChevronRight className="w-4 h-4 text-stone-500 group-hover:text-primary-600 flex-shrink-0 transition-colors" />
@@ -361,7 +388,7 @@ const PoemDetail = () => {
         <section className="py-10 sm:py-12 px-4 border-t border-cream-300">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-lg font-display font-bold text-stone-800 text-center mb-6">
-              More poems
+              {t("poems.morePoems")}
             </h2>
             <div className="flex gap-6 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide -mx-2 px-2">
               {poems
@@ -374,11 +401,11 @@ const PoemDetail = () => {
                     className="group flex-shrink-0 w-56 snap-start"
                   >
                     <h3 className="font-display font-bold text-stone-800 text-sm mb-1.5 group-hover:text-primary-700 transition-colors line-clamp-1">
-                      {otherPoem.title}
+                      {titleOf(otherPoem)}
                     </h3>
                     <p className="text-stone-500 text-xs line-clamp-3 font-serif italic leading-relaxed">
-                      {otherPoem.content.substring(0, 100)}
-                      {otherPoem.content.length > 100 ? "…" : ""}
+                      {contentOf(otherPoem).substring(0, 100)}
+                      {contentOf(otherPoem).length > 100 ? "…" : ""}
                     </p>
                   </Link>
                 ))}
@@ -388,7 +415,7 @@ const PoemDetail = () => {
                 to="/poetry"
                 className="inline-flex items-center gap-1.5 text-primary-600 font-semibold hover:text-primary-700 transition-colors text-sm"
               >
-                View all {poems.length} poems
+                {t("poems.viewAll", { count: poems.length })}
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -409,7 +436,7 @@ const PoemDetail = () => {
             transition={prefersReducedMotion ? { duration: 0 } : undefined}
             className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-stone-800 text-white text-sm font-medium rounded-full shadow-lg"
           >
-            Poem copied to clipboard
+            {t("poems.copiedToast")}
           </motion.div>
         )}
       </AnimatePresence>

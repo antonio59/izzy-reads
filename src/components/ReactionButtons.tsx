@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import {
   useBookReactions,
   useReviewReactions,
@@ -117,6 +118,7 @@ export function BookReactionButtons({
 }: BookReactionButtonsProps) {
   const { counts, visitorReaction, addReaction, isLoading } =
     useBookReactions(bookId);
+  const { t } = useTranslation();
 
   const handleReaction = async (key: BookReactionType) => {
     await addReaction(key);
@@ -143,6 +145,7 @@ export function BookReactionButtons({
       {BOOK_REACTIONS.slice(0, maxVisible).map((r) => {
         const count = counts[r.key] || 0;
         const isActive = visitorReaction === r.key;
+        const label = t(`reactions.book.${r.key}`);
 
         return (
           <motion.button
@@ -153,10 +156,10 @@ export function BookReactionButtons({
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            title={isActive ? `Remove ${r.label}` : r.label}
+            title={isActive ? t("reactions.remove", { label }) : label}
           >
             <span aria-hidden="true">{r.emoji}</span>
-            {showLabel && <span className="ml-1">{r.label}</span>}
+            {showLabel && <span className="ml-1">{label}</span>}
             {count > 0 && (
               <span
                 className={`ml-1.5 ${isActive ? "bg-white/30" : "bg-white/50"} px-1.5 py-0.5 rounded-full text-xs`}
@@ -188,6 +191,7 @@ export function ReviewReactionButtons({
 }: ReviewReactionButtonsProps) {
   const { counts, visitorReaction, totalReactions, addReaction, isLoading } =
     useReviewReactions(bookId);
+  const { t } = useTranslation();
 
   const handleReaction = async (key: ReviewReactionType) => {
     await addReaction(key);
@@ -216,6 +220,7 @@ export function ReviewReactionButtons({
         {visibleReactions.map((r) => {
           const count = counts[r.key] || 0;
           const isActive = visitorReaction === r.key;
+          const label = t(`reactions.review.${r.key}`);
 
           return (
             <motion.button
@@ -226,10 +231,10 @@ export function ReviewReactionButtons({
               }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              title={isActive ? `Remove ${r.label}` : r.label}
+              title={isActive ? t("reactions.remove", { label }) : label}
             >
               <span aria-hidden="true">{r.emoji}</span>
-              {showLabel && <span className="ml-1">{r.label}</span>}
+              {showLabel && <span className="ml-1">{label}</span>}
               {count > 0 && (
                 <span
                   className={`ml-1.5 ${isActive ? "bg-white/30" : "bg-white/50"} px-1.5 py-0.5 rounded-full text-xs`}
@@ -242,14 +247,13 @@ export function ReviewReactionButtons({
         })}
         {showMoreButton && hiddenCount > 0 && (
           <span className="text-xs text-stone-500 self-center">
-            +{hiddenCount} more
+            {t("reactions.more", { count: hiddenCount })}
           </span>
         )}
       </div>
       {totalReactions > 0 && (
         <p className="text-xs text-stone-500">
-          {totalReactions} reaction{totalReactions !== 1 ? "s" : ""} to this
-          review
+          {t("reactions.reviewTotal", { count: totalReactions })}
         </p>
       )}
     </div>
@@ -359,6 +363,7 @@ export function PoemReactionButtons({
 }: PoemReactionButtonsProps) {
   const { counts, visitorReaction, addReaction, isLoading } =
     usePoemReactions(poemId);
+  const { t } = useTranslation();
 
   const handleReaction = async (key: PoemReactionType) => {
     await addReaction(key);
@@ -384,6 +389,7 @@ export function PoemReactionButtons({
       {POEM_REACTIONS.map((r) => {
         const count = counts[r.key] || 0;
         const isActive = visitorReaction === r.key;
+        const label = t(`reactions.poem.${r.key}`);
 
         return (
           <motion.button
@@ -394,10 +400,10 @@ export function PoemReactionButtons({
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            title={isActive ? `Remove ${r.label}` : r.label}
+            title={isActive ? t("reactions.remove", { label }) : label}
           >
             <span aria-hidden="true">{r.emoji}</span>
-            {showLabel && <span className="ml-1">{r.label}</span>}
+            {showLabel && <span className="ml-1">{label}</span>}
             {count > 0 && (
               <span
                 className={`ml-1.5 ${isActive ? "bg-white/30" : "bg-white/50"} px-1.5 py-0.5 rounded-full text-xs`}
@@ -425,6 +431,7 @@ export function WritingReactionButtons({
 }: WritingReactionButtonsProps) {
   const { counts, visitorReaction, addReaction, isLoading } =
     useWritingReactions(postId);
+  const { t } = useTranslation();
 
   const handleReaction = async (key: WritingReactionType) => {
     await addReaction(key);
@@ -450,6 +457,7 @@ export function WritingReactionButtons({
       {WRITING_REACTIONS.map((r) => {
         const count = counts[r.key] || 0;
         const isActive = visitorReaction === r.key;
+        const label = t(`reactions.writing.${r.key}`);
 
         return (
           <motion.button
@@ -460,10 +468,10 @@ export function WritingReactionButtons({
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            title={isActive ? `Remove ${r.label}` : r.label}
+            title={isActive ? t("reactions.remove", { label }) : label}
           >
             <span aria-hidden="true">{r.emoji}</span>
-            {showLabel && <span className="ml-1">{r.label}</span>}
+            {showLabel && <span className="ml-1">{label}</span>}
             {count > 0 && (
               <span
                 className={`ml-1.5 ${isActive ? "bg-white/30" : "bg-white/50"} px-1.5 py-0.5 rounded-full text-xs`}

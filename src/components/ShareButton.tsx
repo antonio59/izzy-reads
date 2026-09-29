@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Share2, X, Check, Copy, Mail } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 // Brand icons removed from lucide-react v1; using inline SVGs instead
 function TwitterIcon({ className }: { className?: string }) {
@@ -29,6 +30,7 @@ interface ShareButtonProps {
 }
 
 interface ShareOption {
+  id: "twitter" | "facebook" | "email" | "copy";
   name: string;
   icon: React.ReactNode;
   color: string;
@@ -45,11 +47,13 @@ function ShareButton({
 }: ShareButtonProps) {
   const [showMenu, setShowMenu] = useState(false);
   const [copied, setCopied] = useState(false);
+  const { t } = useTranslation();
 
   const shareUrl = url || window.location.href;
 
   const shareOptions: ShareOption[] = [
     {
+      id: "twitter",
       name: "Twitter",
       icon: <TwitterIcon className="w-4 h-4" />,
       color: "hover:bg-sky-100 text-sky-500",
@@ -63,6 +67,7 @@ function ShareButton({
       },
     },
     {
+      id: "facebook",
       name: "Facebook",
       icon: <FacebookIcon className="w-4 h-4" />,
       color: "hover:bg-blue-100 text-blue-600",
@@ -75,7 +80,8 @@ function ShareButton({
       },
     },
     {
-      name: "Email",
+      id: "email",
+      name: t("share.email"),
       icon: <Mail className="w-4 h-4" />,
       color: "hover:bg-stone-100 text-stone-600",
       action: (title, text, url) => {
@@ -83,7 +89,8 @@ function ShareButton({
       },
     },
     {
-      name: "Copy Link",
+      id: "copy",
+      name: t("share.copyLink"),
       icon: copied ? (
         <Check className="w-4 h-4" />
       ) : (
@@ -151,12 +158,13 @@ function ShareButton({
           whileTap={{ scale: 0.98 }}
         >
           <Share2 className={iconSizes[size]} />
-          Share
+          {t("common.share")}
         </motion.button>
       ) : (
         <motion.button
           onClick={handleNativeShare}
           className={`p-2 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-full transition-colors ${className}`}
+          aria-label={t("common.share")}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
@@ -188,10 +196,11 @@ function ShareButton({
               <div className="p-2">
                 <div className="flex items-center justify-between px-3 py-2 border-b border-stone-100 mb-1">
                   <span className="text-sm font-medium text-stone-700">
-                    Share
+                    {t("common.share")}
                   </span>
                   <button
                     onClick={() => setShowMenu(false)}
+                    aria-label={t("common.close")}
                     className="p-1 hover:bg-stone-100 rounded-full transition-colors"
                   >
                     <X className="w-3 h-3 text-stone-500" />
@@ -200,10 +209,10 @@ function ShareButton({
 
                 {shareOptions.map((option) => (
                   <button
-                    key={option.name}
+                    key={option.id}
                     onClick={() => {
                       option.action(title, text, shareUrl);
-                      if (option.name !== "Copy Link") {
+                      if (option.id !== "copy") {
                         setShowMenu(false);
                       }
                     }}
@@ -211,8 +220,8 @@ function ShareButton({
                   >
                     {option.icon}
                     <span className="text-sm font-medium">
-                      {option.name === "Copy Link" && copied
-                        ? "Copied!"
+                      {option.id === "copy" && copied
+                        ? t("common.copied")
                         : option.name}
                     </span>
                   </button>
@@ -244,14 +253,15 @@ export function ShareBookButton({
   size = "md",
   className = "",
 }: ShareBookButtonProps) {
+  const { t } = useTranslation();
   const url = book.id
     ? `${window.location.origin}/reviews/${book.id}`
     : window.location.href;
 
   return (
     <ShareButton
-      title={`${book.title} by ${book.author}`}
-      text={`Check out "${book.title}" by ${book.author} on Izzy's Bookshelf!`}
+      title={t("shelf.book", { title: book.title, author: book.author })}
+      text={t("share.bookText", { title: book.title, author: book.author })}
       url={url}
       variant={variant}
       size={size}
@@ -278,12 +288,13 @@ export function ShareReviewButton({
   size = "md",
   className = "",
 }: ShareReviewButtonProps) {
+  const { t } = useTranslation();
   const url = `${window.location.origin}/reviews/${book.id}`;
 
   return (
     <ShareButton
-      title={`Izzy's Review: ${book.title}`}
-      text={`Check out Izzy's review of "${book.title}" by ${book.author}!`}
+      title={t("share.reviewTitle", { title: book.title })}
+      text={t("share.reviewText", { title: book.title, author: book.author })}
       url={url}
       variant={variant}
       size={size}

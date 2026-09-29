@@ -8,6 +8,9 @@ import { ShareBookButton } from "./ShareButton";
 import { Button, SearchInput } from "./ui";
 import { BookCoverImage } from "./ui/BookCoverImage";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
+import { useTranslation } from "react-i18next";
+import { usePublishedTranslations } from "../hooks/useContentTranslations";
+import { genreLabel } from "../i18n/format";
 
 function StarRating({
   rating,
@@ -46,6 +49,8 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
   showFilters = true,
 }) => {
   const { prefersReducedMotion } = useMotionPreference();
+  const { t } = useTranslation();
+  const reviewTranslations = usePublishedTranslations("review");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -59,7 +64,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
 
   const allTags = useMemo(() => {
     const tagSet = new Set<string>();
-    books.forEach((b) => b.tags?.forEach((t) => tagSet.add(t)));
+    books.forEach((b) => b.tags?.forEach((tag) => tagSet.add(tag)));
     return Array.from(tagSet).sort();
   }, [books]);
 
@@ -99,7 +104,9 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
     };
   }, [selectedBook, closeModal]);
 
-  const reviewText = selectedBook ? getReviewText(selectedBook) : undefined;
+  const reviewText = selectedBook
+    ? (reviewTranslations.get(selectedBook.id)?.body ?? getReviewText(selectedBook))
+    : undefined;
   const hasFullReview = Boolean(reviewText);
 
   return (
@@ -108,18 +115,18 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
         <div className="mb-8 sm:mb-10 space-y-4">
           <div className="max-w-md">
             <SearchInput
-              placeholder="Search by title or author…"
+              placeholder={t("shelf.searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onClear={() => setSearchQuery("")}
               className="bg-white border-cream-300 focus:bg-white"
-              aria-label="Search books"
+              aria-label={t("shelf.searchLabel")}
             />
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-stone-500 mr-1">
-              Sort
+              {t("shelf.sort")}
             </span>
             <button
               type="button"
@@ -130,7 +137,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                   : "bg-cream-200 text-stone-600 hover:bg-cream-300"
               }`}
             >
-              A–Z
+              {t("shelf.sortAZ")}
             </button>
             <button
               type="button"
@@ -141,7 +148,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                   : "bg-cream-200 text-stone-600 hover:bg-cream-300"
               }`}
             >
-              Highest rated
+              {t("reviews.sortRating")}
             </button>
           </div>
 
@@ -149,7 +156,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
             <div
               className="flex flex-wrap gap-2"
               role="group"
-              aria-label="Filter by genre"
+              aria-label={t("shelf.filterGenre")}
             >
               <button
                 type="button"
@@ -161,7 +168,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                     : "bg-white text-stone-600 border border-cream-300 hover:border-primary-300 hover:text-primary-700"
                 }`}
               >
-                All
+                {t("common.all")}
               </button>
               {genres.map((genre) => (
                 <button
@@ -177,7 +184,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                       : "bg-white text-stone-600 border border-cream-300 hover:border-primary-300 hover:text-primary-700"
                   }`}
                 >
-                  {genre}
+                  {genreLabel(t, genre)}
                 </button>
               ))}
             </div>
@@ -187,10 +194,10 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
             <div
               className="flex flex-wrap gap-2"
               role="group"
-              aria-label="Filter by mood tag"
+              aria-label={t("reviews.filterMood")}
             >
               <span className="text-xs font-semibold uppercase tracking-wider text-stone-500 self-center mr-1">
-                Mood
+                {t("reviews.mood")}
               </span>
               {allTags.map((tag) => (
                 <button
@@ -252,7 +259,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                   },
                 }}
                 onClick={() => setSelectedBook(book)}
-                aria-label={`${book.title} by ${book.author}${hasReview ? ", has a review" : ""}`}
+                aria-label={hasReview ? t("shelf.bookWithReview", { title: book.title, author: book.author }) : t("shelf.book", { title: book.title, author: book.author })}
               >
                 <motion.div
                   className="relative aspect-[2/3] overflow-hidden rounded-xl shadow-md ring-1 ring-cream-300 group-hover:ring-primary-400 group-focus-visible:ring-primary-400 transition-shadow"
@@ -268,7 +275,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                   {hasReview && (
                     <span
                       className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/95 text-primary-600 shadow-sm ring-1 ring-cream-300 flex items-center justify-center"
-                      title="Has a review"
+                      title={t("shelf.hasReview")}
                       aria-hidden
                     >
                       <Star className="w-3.5 h-3.5 fill-primary-500 text-primary-500" />
@@ -296,10 +303,10 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
       ) : (
         <div className="text-center py-12">
           <h3 className="text-lg font-display font-bold text-stone-700 mb-1">
-            No books found
+            {t("shelf.noneFound")}
           </h3>
           <p className="text-stone-500 text-sm mb-4">
-            Try a different search or filter
+            {t("shelf.noneFoundText")}
           </p>
           <Button
             onClick={() => {
@@ -309,7 +316,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
             }}
             size="sm"
           >
-            Show all
+            {t("shelf.showAll")}
           </Button>
         </div>
       )}
@@ -329,7 +336,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
             <motion.button
               type="button"
               className="absolute inset-0 bg-stone-900/45 backdrop-blur-[2px]"
-              aria-label="Close"
+              aria-label={t("common.close")}
               onClick={closeModal}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -355,7 +362,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                 type="button"
                 onClick={closeModal}
                 className="absolute top-3 right-3 z-10 w-10 h-10 bg-white/95 hover:bg-cream-100 rounded-full flex items-center justify-center shadow-md border border-cream-200 transition-colors"
-                aria-label="Close book details"
+                aria-label={t("shelf.closeDetails")}
               >
                 <X className="w-5 h-5 text-stone-600" />
               </button>
@@ -375,9 +382,9 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                 <div className="flex-1 p-6 sm:p-8 sm:pt-10">
                   {selectedBook.genre && (
                     <p className="text-xs font-semibold uppercase tracking-wider text-accent-600 mb-2">
-                      {selectedBook.genre}
+                      {genreLabel(t, selectedBook.genre)}
                       {selectedBook.pageCount
-                        ? ` · ${selectedBook.pageCount} pages`
+                        ? ` · ${t("shelf.pages", { count: selectedBook.pageCount })}`
                         : ""}
                     </p>
                   )}
@@ -389,7 +396,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                     {selectedBook.title}
                   </h2>
                   <p className="text-stone-500 mb-4">
-                    by {selectedBook.author}
+                    {t("common.byAuthor", { author: selectedBook.author })}
                   </p>
 
                   {selectedBook.rating && selectedBook.rating > 0 && (
@@ -403,7 +410,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
 
                   <div className="mb-6">
                     <h3 className="font-display font-bold text-stone-800 mb-2">
-                      Izzy&apos;s take
+                      {t("shelf.izzysTake")}
                     </h3>
                     {reviewText ? (
                       <>
@@ -416,14 +423,14 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                             onClick={closeModal}
                             className="inline-flex items-center gap-1.5 mt-3 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors"
                           >
-                            Read full review
+                            {t("reviews.readFull")}
                             <ArrowRight className="w-4 h-4" />
                           </Link>
                         )}
                       </>
                     ) : (
                       <p className="text-stone-500 italic">
-                        Review coming soon – check back later!
+                        {t("shelf.reviewComingSoon")}
                       </p>
                     )}
                   </div>
@@ -434,7 +441,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                       onClick={closeModal}
                       className="flex items-center justify-center gap-2 w-full px-5 py-3 mb-5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-display font-bold text-sm shadow-md shadow-primary-600/20 transition-colors"
                     >
-                      Open full review
+                      {t("shelf.openFullReview")}
                       <ArrowRight className="w-4 h-4" />
                     </Link>
                   )}
@@ -442,7 +449,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                   <div className="pt-5 border-t border-cream-200 space-y-4">
                     <div>
                       <p className="text-center text-sm font-medium text-stone-500 mb-2">
-                        Like this book?
+                        {t("shelf.likeThisBook")}
                       </p>
                       <div className="flex justify-center">
                         <BookReactionButtons

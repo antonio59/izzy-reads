@@ -17,6 +17,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { useTranslation } from "react-i18next";
+import { LanguageToggle } from "./LanguageToggle";
 
 // Custom book logo SVG component
 export function BookLogo({ className }: { className?: string }) {
@@ -86,33 +88,34 @@ export function PublicNav() {
   const { prefersReducedMotion } = useMotionPreference();
 
   const activeClub = useQuery(api.bookClubs.getActive);
+  const { t } = useTranslation();
 
   const navItems: NavItem[] = [
-    { id: "home", label: "Bookshelf", icon: Book, path: "/", show: true },
+    { id: "home", label: t("nav.bookshelf"), icon: Book, path: "/", show: true },
     {
       id: "reviews",
-      label: "Reviews",
+      label: t("nav.reviews"),
       icon: Star,
       path: "/reviews",
       show: true,
     },
-    { id: "poems", label: "Poems", icon: PenTool, path: "/poetry", show: true },
-    { id: "blog", label: "Writing", icon: FileText, path: "/blog", show: true },
+    { id: "poems", label: t("nav.poems"), icon: PenTool, path: "/poetry", show: true },
+    { id: "blog", label: t("nav.writing"), icon: FileText, path: "/blog", show: true },
     {
       id: "bookclub",
-      label: "Book Club",
+      label: t("nav.bookClub"),
       icon: Users,
       path: "/book-club",
       show: !!activeClub,
     },
     {
       id: "wishlist",
-      label: "Wishlist",
+      label: t("nav.wishlist"),
       icon: Gift,
       path: "/my-wishlist",
       show: true,
     },
-    { id: "about", label: "About", icon: User, path: "/about", show: true },
+    { id: "about", label: t("nav.about"), icon: User, path: "/about", show: true },
   ];
 
   const visibleItems = navItems.filter((item) => item.show);
@@ -127,7 +130,7 @@ export function PublicNav() {
           <Link to="/" className="flex items-center gap-2 group">
             <BookLogo className="w-8 h-8 text-primary-500 group-hover:scale-110 transition-transform" />
             <span className="font-display font-bold text-stone-700">
-              Izzy's Bookshelf
+              {t("site.name")}
             </span>
           </Link>
 
@@ -155,6 +158,8 @@ export function PublicNav() {
               );
             })}
 
+            <LanguageToggle className="ml-2" />
+
             {/* Dashboard link for logged-in users */}
             {isAuthenticated && (
               <Link
@@ -162,16 +167,18 @@ export function PublicNav() {
                 className="ml-2 px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2 bg-primary-500 text-white hover:bg-primary-600 transition-all"
               >
                 <LayoutDashboard className="w-4 h-4" />
-                <span>Dashboard</span>
+                <span>{t("nav.dashboard")}</span>
               </Link>
             )}
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile: language + menu */}
+          <div className="md:hidden flex items-center gap-2">
+          <LanguageToggle />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-stone-600 hover:bg-cream-200 transition-colors"
-            aria-label="Toggle menu"
+            className="p-2 rounded-lg text-stone-600 hover:bg-cream-200 transition-colors"
+            aria-label={t("nav.toggleMenu")}
           >
             {mobileMenuOpen ? (
               <X className="w-6 h-6" />
@@ -179,6 +186,7 @@ export function PublicNav() {
               <Menu className="w-6 h-6" />
             )}
           </button>
+          </div>
         </div>
       </div>
 
@@ -224,7 +232,7 @@ export function PublicNav() {
                   className="px-4 py-3 rounded-lg text-base font-medium flex items-center gap-3 bg-primary-500 text-white hover:bg-primary-600 transition-all"
                 >
                   <LayoutDashboard className="w-5 h-5" />
-                  <span>Dashboard</span>
+                  <span>{t("nav.dashboard")}</span>
                 </Link>
               )}
             </div>

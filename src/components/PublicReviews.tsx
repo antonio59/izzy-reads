@@ -8,7 +8,11 @@ import {
   Calendar,
   BookOpen,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useBooks } from "../contexts/BookContext";
+import { usePublishedTranslations } from "../hooks/useContentTranslations";
+import { formatDate, genreLabel } from "../i18n/format";
+import { OriginalLanguageToggle } from "./ui/OriginalLanguageToggle";
 import { useUser } from "../contexts/UserContext";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 import { PublicNav } from "./PublicNav";
@@ -30,7 +34,7 @@ type FilterGenre = string | "all";
 type MinRating = 3 | 4 | 5 | null;
 
 const RATING_OPTIONS: { value: MinRating; label: string }[] = [
-  { value: null, label: "Any ★" },
+  { value: null, label: "any" },
   { value: 5, label: "5★" },
   { value: 4, label: "4★+" },
   { value: 3, label: "3★+" },
@@ -63,6 +67,8 @@ function PublicReviews() {
   const { books } = useBooks();
   const { user } = useUser();
   const { prefersReducedMotion } = useMotionPreference();
+  const { t } = useTranslation();
+  const reviewTranslations = usePublishedTranslations("review");
 
   const [sortBy, setSortBy] = useState<SortOption>(() =>
     parseSort(searchParams.get("sort")),
@@ -177,7 +183,13 @@ function PublicReviews() {
   }, []);
 
   if (selectedBook) {
-    return <SingleReviewView book={selectedBook} userAvatar={userAvatar} />;
+    return (
+      <SingleReviewView
+        key={selectedBook.id}
+        book={selectedBook}
+        userAvatar={userAvatar}
+      />
+    );
   }
 
   const avgRating =
@@ -216,21 +228,20 @@ function PublicReviews() {
             }
           >
             <p className="font-accent text-sm sm:text-base text-primary-600 tracking-wide mb-3">
-              Honest thoughts
+              {t("reviews.eyebrow")}
             </p>
             <h1 className="font-accent text-4xl sm:text-5xl font-semibold text-stone-900 tracking-tight leading-[1.05] mb-3">
-              Book Reviews
+              {t("reviews.title")}
             </h1>
             <p className="text-base text-stone-500 max-w-md mx-auto leading-relaxed">
-              Extra thoughts on books from my shelf – not every book needs a
-              review, but these ones got one.
+              {t("reviews.intro")}
             </p>
             {booksWithReviews.length > 0 && (
               <p className="mt-5 text-sm text-stone-500">
                 <span className="font-display font-bold text-stone-700 tabular-nums">
                   {booksWithReviews.length}
                 </span>{" "}
-                reviews
+                {t("reviews.countLabel", { count: booksWithReviews.length })}
                 {avgRating > 0 && (
                   <>
                     {" · "}
@@ -239,7 +250,7 @@ function PublicReviews() {
                       <span className="font-display font-bold text-stone-700 tabular-nums">
                         {avgRating.toFixed(1)}
                       </span>{" "}
-                      avg
+                      {t("reviews.avg")}
                     </span>
                   </>
                 )}
@@ -248,7 +259,7 @@ function PublicReviews() {
                   to="/#bookshelf"
                   className="text-primary-600 hover:text-primary-700 font-medium"
                 >
-                  Full shelf
+                  {t("reviews.fullShelf")}
                 </Link>
               </p>
             )}
@@ -264,12 +275,12 @@ function PublicReviews() {
           <>
             <div className="max-w-md mx-auto sm:mx-0">
               <SearchInput
-                placeholder="Search title, author, or review…"
+                placeholder={t("reviews.searchPlaceholder")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onClear={() => setSearchQuery("")}
                 className="bg-white border-cream-300 focus:bg-white"
-                aria-label="Search reviews"
+                aria-label={t("reviews.searchLabel")}
               />
             </div>
 
@@ -284,7 +295,7 @@ function PublicReviews() {
                     : "bg-white text-stone-600 border border-cream-300 hover:border-primary-300"
                 }`}
               >
-                All
+                {t("common.all")}
               </button>
               {genres.map((genre) => (
                 <button
@@ -300,7 +311,7 @@ function PublicReviews() {
                       : "bg-white text-stone-600 border border-cream-300 hover:border-primary-300"
                   }`}
                 >
-                  {genre}
+                  {genreLabel(t, genre)}
                 </button>
               ))}
               <div className="w-px h-6 bg-cream-300 mx-1 hidden sm:block" />
@@ -308,19 +319,19 @@ function PublicReviews() {
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
                 className="px-3 py-1.5 rounded-lg border border-cream-300 bg-white text-sm text-stone-600 focus:ring-2 focus:ring-primary-400 focus:border-transparent"
-                aria-label="Sort reviews"
+                aria-label={t("reviews.sortLabel")}
               >
-                <option value="recent">Most recent</option>
-                <option value="rating">Highest rated</option>
+                <option value="recent">{t("reviews.sortRecent")}</option>
+                <option value="rating">{t("reviews.sortRating")}</option>
               </select>
             </div>
 
             <div
               className="flex flex-wrap items-center gap-2 justify-center sm:justify-start"
-              aria-label="Filter by star rating"
+              aria-label={t("reviews.filterStars")}
             >
               <span className="text-xs font-semibold uppercase tracking-wider text-stone-500 mr-1">
-                Stars
+                {t("reviews.stars")}
               </span>
               {RATING_OPTIONS.map(({ value, label }) => (
                 <button
@@ -334,7 +345,7 @@ function PublicReviews() {
                       : "bg-white text-stone-600 border border-cream-300 hover:border-amber-300"
                   }`}
                 >
-                  {label}
+                  {label === "any" ? t("reviews.anyStars") : label}
                 </button>
               ))}
             </div>
@@ -342,10 +353,10 @@ function PublicReviews() {
             {moodTags.length > 0 && (
               <div
                 className="flex flex-wrap items-center gap-2 justify-center sm:justify-start"
-                aria-label="Filter by mood tag"
+                aria-label={t("reviews.filterMood")}
               >
                 <span className="text-xs font-semibold uppercase tracking-wider text-stone-500 mr-1">
-                  Mood
+                  {t("reviews.mood")}
                 </span>
                 {moodTags.map((tag) => (
                   <button
@@ -367,14 +378,14 @@ function PublicReviews() {
 
             {hasActiveFilters && (
               <p className="text-sm text-stone-500 text-center sm:text-left">
-                Showing {filteredReviews.length} of {booksWithReviews.length}
+                {t("reviews.showing", { shown: filteredReviews.length, total: booksWithReviews.length })}
                 {" · "}
                 <button
                   type="button"
                   onClick={clearFilters}
                   className="text-primary-600 hover:text-primary-700 font-medium"
                 >
-                  Clear filters
+                  {t("reviews.clearFilters")}
                 </button>
               </p>
             )}
@@ -394,6 +405,7 @@ function PublicReviews() {
                       index === 0 && sortBy === "recent" && !hasActiveFilters
                     }
                     index={index}
+                    italianReview={reviewTranslations.get(book.id)?.body}
                   />
                 </div>
               ))}
@@ -403,13 +415,13 @@ function PublicReviews() {
               <BookOpen className="w-12 h-12 text-primary-300 mx-auto mb-4" />
               <h3 className="text-2xl font-display font-bold text-stone-700 mb-3">
                 {hasActiveFilters
-                  ? "No matching reviews"
-                  : "Reviews coming soon"}
+                  ? t("reviews.noMatchTitle")
+                  : t("reviews.comingSoonTitle")}
               </h3>
               <p className="text-stone-500 max-w-md mx-auto mb-6">
                 {hasActiveFilters
-                  ? "Try another search or clear the filters."
-                  : "I'm writing my first reviews – peek at my bookshelf while you wait!"}
+                  ? t("reviews.noMatchText")
+                  : t("reviews.comingSoonText")}
               </p>
               <div className="flex flex-wrap items-center justify-center gap-3">
                 {hasActiveFilters && (
@@ -418,14 +430,14 @@ function PublicReviews() {
                     onClick={clearFilters}
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-cream-300 bg-white text-stone-700 font-display font-semibold text-sm hover:bg-cream-50 transition-colors"
                   >
-                    Clear filters
+                    {t("reviews.clearFilters")}
                   </button>
                 )}
                 <Link
                   to="/"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-display font-bold text-sm shadow-md transition-colors"
                 >
-                  Browse my shelf
+                  {t("home.browseShelf")}
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -448,7 +460,13 @@ function SingleReviewView({
 }) {
   const { prefersReducedMotion } = useMotionPreference();
   const { books } = useBooks();
-  const reviewText = book.notes || book.review;
+  const { t, i18n } = useTranslation();
+  const reviewTranslations = usePublishedTranslations("review");
+  const italianReview = reviewTranslations.get(book.id)?.body;
+  const [showOriginal, setShowOriginal] = useState(false);
+  const englishReview = book.notes || book.review;
+  const reviewText =
+    italianReview && !showOriginal ? italianReview : englishReview;
 
   const moreReviews = useMemo(() => {
     return books
@@ -478,7 +496,7 @@ function SingleReviewView({
           className="inline-flex items-center gap-2 text-stone-500 hover:text-primary-700 transition-colors text-sm font-medium"
         >
           <ArrowLeft className="w-4 h-4" />
-          All reviews
+          {t("reviews.allReviews")}
         </Link>
       </div>
 
@@ -502,13 +520,13 @@ function SingleReviewView({
               <div className="text-center sm:text-left flex-1 pt-1">
                 {book.genre && (
                   <p className="text-xs font-semibold uppercase tracking-wider text-accent-600 mb-2">
-                    {book.genre}
+                    {genreLabel(t, book.genre)}
                   </p>
                 )}
                 <h1 className="text-3xl sm:text-4xl font-display font-bold text-stone-900 leading-tight mb-2">
                   {book.title}
                 </h1>
-                <p className="text-lg text-stone-500 mb-4">by {book.author}</p>
+                <p className="text-lg text-stone-500 mb-4">{t("common.byAuthor", { author: book.author })}</p>
 
                 {book.rating && book.rating > 0 && (
                   <div className="flex items-center gap-2 justify-center sm:justify-start mb-4">
@@ -533,10 +551,11 @@ function SingleReviewView({
                 {book.dateRead && (
                   <p className="flex items-center gap-1.5 text-sm text-stone-500 justify-center sm:justify-start">
                     <Calendar className="w-4 h-4" aria-hidden />
-                    Read{" "}
-                    {new Date(book.dateRead).toLocaleDateString("en-US", {
-                      month: "long",
-                      year: "numeric",
+                    {t("reviews.readOn", {
+                      date: formatDate(book.dateRead, i18n.language, {
+                        month: "long",
+                        year: "numeric",
+                      }),
                     })}
                   </p>
                 )}
@@ -559,9 +578,9 @@ function SingleReviewView({
                 </div>
                 <div>
                   <p className="font-display font-bold text-stone-800">
-                    Izzy&apos;s review
+                    {t("reviews.izzysReview")}
                   </p>
-                  <p className="text-sm text-stone-500">Young book enthusiast</p>
+                  <p className="text-sm text-stone-500">{t("reviews.authorTagline")}</p>
                 </div>
               </div>
 
@@ -570,16 +589,23 @@ function SingleReviewView({
                   <p className="text-stone-700 leading-relaxed text-lg whitespace-pre-wrap">
                     {reviewText}
                   </p>
+                  {italianReview && (
+                    <OriginalLanguageToggle
+                      className="mt-4 not-prose"
+                      showingOriginal={showOriginal}
+                      onToggle={() => setShowOriginal((v) => !v)}
+                    />
+                  )}
                 </div>
               ) : (
                 <p className="text-stone-500 italic mb-10">
-                  Review coming soon!
+                  {t("reviews.reviewComingSoon")}
                 </p>
               )}
 
               <div className="py-6 border-y border-cream-300 mb-10">
                 <p className="text-sm font-medium text-stone-500 mb-3 text-center sm:text-left">
-                  What do you think of this review?
+                  {t("reviews.reactPrompt")}
                 </p>
                 <ReviewReactionButtons
                   bookId={book.id}
@@ -594,7 +620,7 @@ function SingleReviewView({
           {moreReviews.length > 0 && (
             <section className="mb-8">
               <h2 className="text-xl font-display font-bold text-stone-800 mb-6">
-                More reviews
+                {t("reviews.moreReviews")}
               </h2>
               <div className="grid grid-cols-3 gap-4 sm:gap-6">
                 {moreReviews.map((b) => (
@@ -621,7 +647,7 @@ function SingleReviewView({
               className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold text-sm"
             >
               <ArrowLeft className="w-4 h-4" />
-              See all reviews
+              {t("reviews.seeAll")}
             </Link>
           </div>
         </article>

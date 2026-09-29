@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 interface SkipToContentProps {
   targetId?: string;
@@ -13,6 +14,7 @@ const SkipToContent: React.FC<SkipToContentProps> = ({
   targetId = "main-content",
   className = "",
 }) => {
+  const { t } = useTranslation();
   const handleClick = () => {
     const target = document.getElementById(targetId);
     if (target) {
@@ -41,7 +43,7 @@ const SkipToContent: React.FC<SkipToContentProps> = ({
       initial={{ y: "-100%" }}
       whileFocus={{ y: 0 }}
     >
-      Skip to main content
+      {t("common.skipToContent")}
     </motion.a>
   );
 };

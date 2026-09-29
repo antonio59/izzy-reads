@@ -5,16 +5,26 @@ import type { Book } from "../types";
 import { BookCoverImage } from "./ui/BookCoverImage";
 import { ReviewReactionButtons } from "./ReactionButtons";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
+import { useTranslation } from "react-i18next";
+import { formatDate, genreLabel } from "../i18n/format";
 
 interface ReviewCardProps {
   book: Book;
+  /** Izzy's approved Italian review, shown instead of the English */
+  italianReview?: string;
   featured?: boolean;
   index?: number;
 }
 
-export function ReviewCard({ book, featured = false, index = 0 }: ReviewCardProps) {
+export function ReviewCard({
+  book,
+  featured = false,
+  index = 0,
+  italianReview,
+}: ReviewCardProps) {
   const { prefersReducedMotion } = useMotionPreference();
-  const reviewText = book.notes || book.review;
+  const { t, i18n } = useTranslation();
+  const reviewText = italianReview || book.notes || book.review;
   if (!reviewText) return null;
 
   return (
@@ -34,7 +44,7 @@ export function ReviewCard({ book, featured = false, index = 0 }: ReviewCardProp
       <Link
         to={`/reviews/${book.id}`}
         className="flex-shrink-0 w-24 sm:w-28 md:w-32"
-        aria-label={`Read review of ${book.title}`}
+        aria-label={t("reviews.readReviewOf", { title: book.title })}
       >
         <div className="aspect-[2/3] rounded-xl overflow-hidden shadow-md ring-1 ring-cream-300 group-hover:ring-primary-400 transition-all group-hover:-translate-y-1">
           <BookCoverImage book={book} className="w-full h-full" />
@@ -46,20 +56,20 @@ export function ReviewCard({ book, featured = false, index = 0 }: ReviewCardProp
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1.5">
           {book.genre && (
             <span className="text-xs font-semibold uppercase tracking-wider text-accent-600">
-              {book.genre}
+              {genreLabel(t, book.genre)}
             </span>
           )}
           {book.dateRead && (
             <span className="flex items-center gap-1 text-xs text-stone-500">
               <Calendar className="w-3 h-3" aria-hidden />
-              {new Date(book.dateRead).toLocaleDateString("en-US", {
+              {formatDate(book.dateRead, i18n.language, {
                 month: "short",
                 year: "numeric",
               })}
             </span>
           )}
           {featured && (
-            <span className="text-xs font-bold text-primary-600">Latest</span>
+            <span className="text-xs font-bold text-primary-600">{t("reviews.latest")}</span>
           )}
         </div>
 
@@ -70,13 +80,13 @@ export function ReviewCard({ book, featured = false, index = 0 }: ReviewCardProp
           <h2 className="text-lg sm:text-xl font-display font-bold text-stone-900 group-hover:text-primary-700 transition-colors leading-snug line-clamp-2">
             {book.title}
           </h2>
-          <p className="text-sm text-stone-500 mt-0.5">by {book.author}</p>
+          <p className="text-sm text-stone-500 mt-0.5">{t("common.byAuthor", { author: book.author })}</p>
         </Link>
 
         {book.rating && book.rating > 0 && (
           <div
             className="flex items-center gap-1 mt-2"
-            aria-label={`${book.rating} out of 5 stars`}
+            aria-label={t("common.starsOutOf5", { count: book.rating })}
           >
             {[...Array(5)].map((_, i) => (
               <Star
@@ -100,7 +110,7 @@ export function ReviewCard({ book, featured = false, index = 0 }: ReviewCardProp
             to={`/reviews/${book.id}`}
             className="inline-flex items-center gap-1.5 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors group/link"
           >
-            Read full review
+            {t("reviews.readFull")}
             <ArrowRight className="w-4 h-4 group-hover/link:translate-x-0.5 transition-transform" />
           </Link>
 

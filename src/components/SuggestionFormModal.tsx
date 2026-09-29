@@ -1,5 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
+import { genreLabel } from "../i18n/format";
 import {
   BookOpen,
   X,
@@ -72,6 +74,7 @@ export function SuggestionFormModal({
   recipientName = "Izzy",
 }: SuggestionFormModalProps) {
   const { prefersReducedMotion } = useMotionPreference();
+  const { t } = useTranslation();
   const [suggestionSubmitted, setSuggestionSubmitted] = useState(false);
   const [suggestionForm, setSuggestionForm] = useState({
     title: "",
@@ -212,7 +215,7 @@ export function SuggestionFormModal({
       >
         <button
           type="button"
-          aria-label="Close suggest a book"
+          aria-label={t("suggest.close")}
           className="absolute inset-0 bg-stone-900/45 backdrop-blur-sm"
           onClick={handleClose}
         />
@@ -255,11 +258,10 @@ export function SuggestionFormModal({
                 id="suggest-book-title"
                 className="font-accent text-3xl font-semibold text-stone-900 mb-2"
               >
-                Sent!
+                {t("suggest.sent")}
               </h3>
               <p className="text-stone-500 leading-relaxed max-w-sm mx-auto">
-                Thanks – {recipientName} will see your suggestion on the
-                wishlist soon.
+                {t("suggest.sentText", { name: recipientName })}
               </p>
             </div>
           ) : (
@@ -279,16 +281,16 @@ export function SuggestionFormModal({
                     </div>
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wider text-primary-600 mb-1">
-                        Wishlist
+                        {t("nav.wishlist")}
                       </p>
                       <h3
                         id="suggest-book-title"
                         className="font-accent text-2xl sm:text-3xl font-semibold text-stone-900 leading-tight"
                       >
-                        Suggest a book
+                        {t("wishlist.suggestBook")}
                       </h3>
                       <p className="text-sm text-stone-500 mt-1 leading-relaxed">
-                        Help {recipientName} find the next great read.
+                        {t("suggest.subtitle", { name: recipientName })}
                       </p>
                     </div>
                   </div>
@@ -297,7 +299,7 @@ export function SuggestionFormModal({
                     onClick={handleClose}
                     className="p-2 rounded-full text-stone-500 hover:text-stone-700 hover:bg-white/80 transition-colors"
                     disabled={isSubmitting}
-                    aria-label="Close"
+                    aria-label={t("common.close")}
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -318,7 +320,7 @@ export function SuggestionFormModal({
                     />
                     <div className="min-w-0">
                       <p className="text-xs font-semibold uppercase tracking-wider text-accent-600 mb-1">
-                        Selected
+                        {t("suggest.selected")}
                       </p>
                       <p className="font-display font-bold text-stone-900 truncate">
                         {suggestionForm.title}
@@ -332,7 +334,7 @@ export function SuggestionFormModal({
 
                 <div className="relative">
                   <label className="block text-sm font-display font-bold text-stone-800 mb-1.5">
-                    Find a book
+                    {t("suggest.findBook")}
                   </label>
                   <div className="relative">
                     <Input
@@ -341,7 +343,7 @@ export function SuggestionFormModal({
                       onFocus={() =>
                         searchResults.length > 0 && setShowSearchResults(true)
                       }
-                      placeholder="Search by title or author…"
+                      placeholder={t("shelf.searchPlaceholder")}
                       disabled={isSubmitting}
                       icon={<Search className="w-4 h-4" />}
                       className="bg-white border-cream-300 pr-10"
@@ -386,14 +388,14 @@ export function SuggestionFormModal({
                     )}
                   </AnimatePresence>
                   <p className="text-xs text-stone-500 mt-1.5">
-                    Pick a result, or fill in the details yourself below.
+                    {t("suggest.pickResult")}
                   </p>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2">
                     <label className="block text-sm font-display font-bold text-stone-800 mb-1.5">
-                      Title <span className="text-primary-500">*</span>
+                      {t("suggest.title")} <span className="text-primary-500">*</span>
                     </label>
                     <Input
                       value={suggestionForm.title}
@@ -403,7 +405,7 @@ export function SuggestionFormModal({
                           title: e.target.value,
                         })
                       }
-                      placeholder="e.g. Percy Jackson"
+                      placeholder={t("suggest.titlePlaceholder")}
                       required
                       disabled={isSubmitting}
                       className="bg-white border-cream-300"
@@ -412,7 +414,7 @@ export function SuggestionFormModal({
 
                   <div>
                     <label className="block text-sm font-display font-bold text-stone-800 mb-1.5">
-                      Author <span className="text-primary-500">*</span>
+                      {t("suggest.author")} <span className="text-primary-500">*</span>
                     </label>
                     <Input
                       value={suggestionForm.author}
@@ -422,7 +424,7 @@ export function SuggestionFormModal({
                           author: e.target.value,
                         })
                       }
-                      placeholder="e.g. Rick Riordan"
+                      placeholder={t("suggest.authorPlaceholder")}
                       required
                       disabled={isSubmitting}
                       className="bg-white border-cream-300"
@@ -431,7 +433,7 @@ export function SuggestionFormModal({
 
                   <div>
                     <label className="block text-sm font-display font-bold text-stone-800 mb-1.5">
-                      Genre
+                      {t("suggest.genre")}
                     </label>
                     <Select
                       value={suggestionForm.genre}
@@ -445,7 +447,7 @@ export function SuggestionFormModal({
                       className="bg-white border-cream-300"
                       options={GENRES.map((genre) => ({
                         value: genre,
-                        label: genre,
+                        label: genreLabel(t, genre),
                       }))}
                     />
                   </div>
@@ -453,7 +455,7 @@ export function SuggestionFormModal({
 
                 <div>
                   <label className="block text-sm font-display font-bold text-stone-800 mb-1.5">
-                    Your name <span className="text-primary-500">*</span>
+                    {t("wishlist.yourName")} <span className="text-primary-500">*</span>
                   </label>
                   <Input
                     value={suggestionForm.suggestedBy}
@@ -463,7 +465,7 @@ export function SuggestionFormModal({
                         suggestedBy: e.target.value,
                       })
                     }
-                    placeholder="First name is perfect"
+                    placeholder={t("suggest.namePlaceholder")}
                     required
                     disabled={isSubmitting}
                     className="bg-white border-cream-300"
@@ -472,7 +474,7 @@ export function SuggestionFormModal({
 
                 <div>
                   <label className="block text-sm font-display font-bold text-stone-800 mb-1.5">
-                    Why would {recipientName} love this?
+                    {t("suggest.why", { name: recipientName })}
                   </label>
                   <Textarea
                     value={suggestionForm.reason}
@@ -483,7 +485,7 @@ export function SuggestionFormModal({
                       })
                     }
                     rows={3}
-                    placeholder="A short note is plenty – funny, exciting, cozy…"
+                    placeholder={t("suggest.whyPlaceholder")}
                     disabled={isSubmitting}
                     className="bg-white border-cream-300"
                   />
@@ -502,12 +504,12 @@ export function SuggestionFormModal({
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      Sending…
+                      {t("suggest.sending")}
                     </>
                   ) : (
                     <>
                       <Send className="w-5 h-5" />
-                      Send suggestion
+                      {t("suggest.send")}
                     </>
                   )}
                 </button>

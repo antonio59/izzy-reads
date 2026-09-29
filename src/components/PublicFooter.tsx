@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { BookLogo } from "./PublicNav";
 
 export function PublicFooter() {
+  const { t } = useTranslation();
   return (
     <footer className="bg-white border-t border-cream-300 py-6">
       <div className="max-w-5xl mx-auto px-4">
@@ -9,42 +11,42 @@ export function PublicFooter() {
           <div className="flex items-center gap-2">
             <BookLogo className="w-6 h-6 text-primary-500" />
             <span className="font-display font-bold text-stone-700">
-              Izzy's Bookshelf
+              {t("site.name")}
             </span>
           </div>
           <p className="text-stone-500 text-sm">
-            Built one book at a time
+            {t("footer.tagline")}
           </p>
           <div className="flex items-center gap-4">
             <Link
               to="/"
               className="text-stone-500 hover:text-primary-600 text-sm font-medium transition-colors"
             >
-              Books
+              {t("footer.books")}
             </Link>
             <Link
               to="/reviews"
               className="text-stone-500 hover:text-primary-600 text-sm font-medium transition-colors"
             >
-              Reviews
+              {t("nav.reviews")}
             </Link>
             <Link
               to="/poetry"
               className="text-stone-500 hover:text-primary-600 text-sm font-medium transition-colors"
             >
-              Poems
+              {t("nav.poems")}
             </Link>
             <Link
               to="/my-wishlist"
               className="text-stone-500 hover:text-primary-600 text-sm font-medium transition-colors"
             >
-              Wishlist
+              {t("nav.wishlist")}
             </Link>
             <Link
               to="/about"
               className="text-primary-500 hover:text-primary-600 text-sm font-medium transition-colors"
             >
-              About Izzy
+              {t("footer.aboutIzzy")}
             </Link>
           </div>
         </div>
