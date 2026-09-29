@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Weekly email counts this week's reactions, plus an all-time total
 - Fix changelog workflow rebase conflicts on concurrent main pushes.
 
 Keep the regenerated CHANGELOG during rebase retries so the bot does not fail when another docs commit lands first.
@@ -941,6 +942,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 - Clean stale README references; delete feat/discover-swipe branch
 - Update changelog [skip ci]
 - Update changelog [skip ci]
@@ -1068,6 +1070,9 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Features
 
+- Italian translations page in Izzy's dashboard
+- Italian version of the public site
+- Store Italian translations with DeepSeek suggestions
 - Add reactions to the published poem section
 - Celebrate Izzy's Wonderverse poem on home page
 - **book-club**: Reactions only — remove public comments
