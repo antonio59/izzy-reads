@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
+import { PoemReactionButtons } from "./ReactionButtons";
 
 export const PUBLISHED_POEM_TITLE = "The Volcano";
 
@@ -21,7 +22,16 @@ const PUBLISHED_POEM = {
   ],
 } as const;
 
-export function PublishedPoemFeature({ className = "" }: { className?: string }) {
+interface PublishedPoemFeatureProps {
+  className?: string;
+  /** The saved poem's id, so reactions are shared with its poem page */
+  poemId?: string;
+}
+
+export function PublishedPoemFeature({
+  className = "",
+  poemId,
+}: PublishedPoemFeatureProps) {
   const { prefersReducedMotion } = useMotionPreference();
   const poem = PUBLISHED_POEM;
 
@@ -88,6 +98,11 @@ export function PublishedPoemFeature({ className = "" }: { className?: string })
             <p className="mt-6 font-display font-bold text-amber-200">
               – {poem.author}
             </p>
+            {poemId && (
+              <div className="mt-6 pt-5 border-t border-white/10">
+                <PoemReactionButtons poemId={poemId} />
+              </div>
+            )}
           </article>
         </div>
       </div>

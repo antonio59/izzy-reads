@@ -230,6 +230,15 @@ const PublicPortfolio = () => {
     return picks.slice(0, 7);
   }, [featuredBooks, booksWithCovers]);
 
+  const publishedPoemId = useMemo(
+    () =>
+      poems.find(
+        (p) =>
+          p.title.trim().toLowerCase() === PUBLISHED_POEM_TITLE.toLowerCase(),
+      )?.id,
+    [poems],
+  );
+
   const latestPoem = useMemo(() => {
     // The published poem already has its own feature above – don't repeat it
     const others = poems.filter(
@@ -342,7 +351,10 @@ const PublicPortfolio = () => {
       </section>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pb-16">
-        <PublishedPoemFeature className="mt-10 sm:mt-12" />
+        <PublishedPoemFeature
+          className="mt-10 sm:mt-12"
+          poemId={publishedPoemId}
+        />
 
         <CurrentlyReadingStrip books={books} className="mt-10 sm:mt-12 mb-2" />
 
