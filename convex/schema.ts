@@ -287,4 +287,25 @@ export default defineSchema({
     heroDescription: v.optional(v.string()),
     updatedAt: v.string(),
   }).index("by_user", ["userId"]),
+  // Italian versions of Izzy's writing. Drafts are private; only the
+  // published copy is ever shown to visitors.
+  translations: defineTable({
+    contentType: v.union(
+      v.literal("poem"),
+      v.literal("review"),
+      v.literal("blogPost"),
+    ),
+    contentId: v.string(),
+    lang: v.literal("it"),
+    draftTitle: v.optional(v.string()),
+    draftBody: v.string(),
+    publishedTitle: v.optional(v.string()),
+    publishedBody: v.optional(v.string()),
+    // Hash of the English at publish time, to flag outdated translations
+    publishedSourceHash: v.optional(v.string()),
+    suggestedAt: v.optional(v.number()),
+    updatedAt: v.number(),
+  })
+    .index("by_content", ["contentType", "contentId", "lang"])
+    .index("by_type_lang", ["contentType", "lang"]),
 });
