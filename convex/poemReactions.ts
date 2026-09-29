@@ -118,11 +118,14 @@ async function computePoemReactionStats(ctx: QueryCtx) {
 
     const poemReactions: Record<string, number> = {};
     let totalReactions = 0;
+    let weekReactions = 0;
+    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
     for (const r of allReactions) {
       const poemId = r.poemId as string;
       poemReactions[poemId] = (poemReactions[poemId] || 0) + 1;
       totalReactions++;
+      if (r._creationTime >= weekAgo) weekReactions++;
     }
 
     const topPoems = Object.entries(poemReactions)
@@ -131,6 +134,7 @@ async function computePoemReactionStats(ctx: QueryCtx) {
 
     return {
       totalReactions,
+      weekReactions,
       topPoems,
       reactionsByPoem: poemReactions,
     };

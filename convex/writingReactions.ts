@@ -104,11 +104,14 @@ export const getAllWritingReactionStats = internalQuery({
 
     const postReactions: Record<string, number> = {};
     let totalReactions = 0;
+    let weekReactions = 0;
+    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
     for (const r of allReactions) {
       const postId = r.postId as string;
       postReactions[postId] = (postReactions[postId] || 0) + 1;
       totalReactions++;
+      if (r._creationTime >= weekAgo) weekReactions++;
     }
 
     const topPosts = Object.entries(postReactions)
@@ -117,6 +120,7 @@ export const getAllWritingReactionStats = internalQuery({
 
     return {
       totalReactions,
+      weekReactions,
       topPosts,
       reactionsByPost: postReactions,
     };

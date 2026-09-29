@@ -251,11 +251,17 @@ export const sendWeeklySummary = internalAction({
       milestones.push(`📖 ${totalPages.toLocaleString()} pages read!`);
     }
 
-    const totalReactions =
+    const allTimeReactions =
       bookStats.totalReactions +
       (reviewStats?.totalReactions || 0) +
       poemStats.totalReactions +
       writingStats.totalReactions;
+    // Reactions left in the last 7 days (the "this week" numbers)
+    const weekBook = bookStats.weekReactions;
+    const weekReview = reviewStats?.weekReactions || 0;
+    const weekPoem = poemStats.weekReactions;
+    const weekWriting = writingStats.weekReactions;
+    const totalReactions = weekBook + weekReview + weekPoem + weekWriting;
 
     const statTile = (num: string, label: string, color: string) =>
       `<td style="text-align:center;padding:10px 4px;"><div style="font-family:${FONT_DISPLAY};font-size:26px;font-weight:900;color:${color};line-height:1;">${num}</div><div style="font-size:12px;color:${C.muted};margin-top:5px;">${label}</div></td>`;
@@ -311,12 +317,12 @@ export const sendWeeklySummary = internalAction({
     <div style="${card}">
       ${sectionTitle("Reactions to your shelf")}
       <div>
-        ${pill("📚 Books", bookStats.totalReactions, C.berryLight, C.berryDark)}
-        ${pill("📝 Reviews", reviewStats?.totalReactions || 0, C.tealLight, "#0f5e57")}
-        ${pill("✍️ Poems", poemStats.totalReactions, C.goldLight, "#8a5a00")}
-        ${pill("📖 Writing", writingStats.totalReactions, C.berryLight, C.berryDark)}
+        ${pill("📚 Books", weekBook, C.berryLight, C.berryDark)}
+        ${pill("📝 Reviews", weekReview, C.tealLight, "#0f5e57")}
+        ${pill("✍️ Poems", weekPoem, C.goldLight, "#8a5a00")}
+        ${pill("📖 Writing", weekWriting, C.berryLight, C.berryDark)}
       </div>
-      ${totalReactions > 0 ? `<p style="margin:12px 0 0 0;font-size:14px;color:${C.body};"><strong style="color:${C.ink};">${totalReactions}</strong> reactions this week, nice! 🎉</p>` : ""}
+      <p style="margin:12px 0 0 0;font-size:14px;color:${C.body};">${totalReactions > 0 ? `<strong style="color:${C.ink};">${totalReactions}</strong> new reaction${totalReactions === 1 ? "" : "s"} this week, nice! 🎉` : "No new reactions this week."}${allTimeReactions > 0 ? ` <strong style="color:${C.ink};">${allTimeReactions.toLocaleString()}</strong> reaction${allTimeReactions === 1 ? "" : "s"} all time 💛` : ""}</p>
     </div>
 
     <!-- Milestones -->
@@ -368,7 +374,7 @@ export const sendWeeklySummary = internalAction({
       lastReview
         ? `Your latest review: ${lastReview.title}: "${lastReview.notes}"`
         : null,
-      `Reactions this week: ${totalReactions} (books ${bookStats.totalReactions}, reviews ${reviewStats?.totalReactions || 0}, poems ${poemStats.totalReactions}, writing ${writingStats.totalReactions})`,
+      `Reactions this week: ${totalReactions} (books ${weekBook}, reviews ${weekReview}, poems ${weekPoem}, writing ${weekWriting}). All time: ${allTimeReactions}`,
       milestones.length > 0 ? `Milestones: ${milestones.join(", ")}` : null,
       `Bookshelf so far: ${readBooks.length} books read, ${totalReviews} reviews, ${totalPages.toLocaleString()} pages.`,
       "",

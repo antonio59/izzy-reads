@@ -187,11 +187,14 @@ async function computeBookReactionStats(ctx: QueryCtx) {
   // Aggregate by book
   const bookReactions: Record<string, number> = {};
   let totalReactions = 0;
+  let weekReactions = 0;
+  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
   for (const r of allReactions) {
     const bookId = r.bookId as string;
     bookReactions[bookId] = (bookReactions[bookId] || 0) + 1;
     totalReactions++;
+    if (r._creationTime >= weekAgo) weekReactions++;
   }
 
   // Convert to array sorted by count
@@ -201,6 +204,7 @@ async function computeBookReactionStats(ctx: QueryCtx) {
 
   return {
     totalReactions,
+    weekReactions,
     topBooks,
     reactionsByBook: bookReactions,
   };
@@ -214,11 +218,14 @@ async function computeReviewReactionStats(ctx: QueryCtx) {
 
   const reviewReactions: Record<string, number> = {};
   let totalReactions = 0;
+  let weekReactions = 0;
+  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
   for (const r of allReactions) {
     const bookId = r.bookId as string;
     reviewReactions[bookId] = (reviewReactions[bookId] || 0) + 1;
     totalReactions++;
+    if (r._creationTime >= weekAgo) weekReactions++;
   }
 
   const topReviews = Object.entries(reviewReactions)
@@ -227,6 +234,7 @@ async function computeReviewReactionStats(ctx: QueryCtx) {
 
   return {
     totalReactions,
+    weekReactions,
     topReviews,
     reactionsByReview: reviewReactions,
   };
