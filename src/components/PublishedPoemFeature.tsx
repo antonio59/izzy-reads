@@ -1,0 +1,94 @@
+import { motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
+import { useMotionPreference } from "../contexts/MotionPreferenceContext";
+
+/** Izzy's poem as printed in Wonderverse – school name intentionally omitted. */
+const PUBLISHED_POEM = {
+  title: "The Volcano",
+  author: "Izzy",
+  anthology: "Wonderverse: Dreamscapes and Daydreams",
+  publisher: "Young Writers",
+  page: 99,
+  coverSrc: "/images/wonderverse-cover.jpg",
+  stanzas: [
+    "The volcano is a grumbler,\nHe reaches out high,\nHe stretches and belches,\nAs he touches the sky.",
+    "The volcano is an artist,\nHe paints the whole sky,\nHe splishes and splashes,\nLike tears from a cry.",
+    "The volcano is a baby,\nHe rumbles and cries,\nHe bosses his temper,\nAnd launches tears at the skies.",
+    "The volcano is a country singer,\nHe yodels for a sound,\nGiving music to ears,\nHe goes round and round.",
+    "The volcano is a grabber,\nEverything in his sight,\nHe gobbles it up,\nWith all of his might.",
+  ],
+} as const;
+
+export function PublishedPoemFeature({ className = "" }: { className?: string }) {
+  const { prefersReducedMotion } = useMotionPreference();
+  const poem = PUBLISHED_POEM;
+
+  return (
+    <section
+      aria-labelledby="published-poem-heading"
+      className={`relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-purple-900 to-fuchsia-900 text-white shadow-xl ${className}`}
+    >
+      <div
+        className="absolute inset-0 opacity-40 pointer-events-none"
+        aria-hidden
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 15% 20%, rgba(255,255,255,0.25) 0 1px, transparent 2px), radial-gradient(circle at 70% 60%, rgba(255,255,255,0.2) 0 1px, transparent 2px), radial-gradient(circle at 40% 85%, rgba(255,255,255,0.2) 0 1px, transparent 2px)",
+          backgroundSize: "120px 120px, 90px 90px, 150px 150px",
+        }}
+      />
+
+      <div className="relative grid gap-8 md:grid-cols-[minmax(0,15rem)_1fr] lg:grid-cols-[minmax(0,17rem)_1fr] items-start p-6 sm:p-10">
+        <motion.figure
+          className="mx-auto w-44 sm:w-56 md:w-full"
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 20, rotate: -4 }}
+          whileInView={{ opacity: 1, y: 0, rotate: -2 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={prefersReducedMotion ? { duration: 0 } : { type: "spring", stiffness: 160, damping: 18 }}
+        >
+          <img
+            src={poem.coverSrc}
+            alt={`Cover of ${poem.anthology}`}
+            width={580}
+            height={895}
+            loading="lazy"
+            className="w-full rounded-lg shadow-2xl ring-1 ring-white/20"
+          />
+          <figcaption className="mt-3 text-center text-xs text-purple-200">
+            Published by {poem.publisher} · page {poem.page}
+          </figcaption>
+        </motion.figure>
+
+        <div>
+          <p className="inline-flex items-center gap-2 rounded-full bg-amber-300/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-amber-200 ring-1 ring-amber-200/30">
+            <Sparkles className="w-3.5 h-3.5" aria-hidden />
+            Published poet
+          </p>
+          <h2
+            id="published-poem-heading"
+            className="mt-4 text-3xl sm:text-4xl font-display font-bold leading-tight !text-white"
+          >
+            I&apos;m in a real book!
+          </h2>
+          <p className="mt-2 text-purple-100 max-w-lg">
+            My poem was chosen for <em>{poem.anthology}</em>.
+          </p>
+
+          <article className="mt-8 rounded-2xl bg-white/5 p-5 sm:p-7 ring-1 ring-white/10">
+            <h3 className="text-2xl font-serif font-semibold !text-amber-100">{poem.title}</h3>
+            <div className="mt-4 space-y-4 font-serif text-lg leading-relaxed text-purple-50">
+              {poem.stanzas.map((stanza) => (
+                <p key={stanza} className="whitespace-pre-line">
+                  {stanza}
+                </p>
+              ))}
+            </div>
+            <p className="mt-6 font-display font-bold text-amber-200">
+              – {poem.author}
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -13,6 +13,7 @@ import { BookCoverImage } from "./ui/BookCoverImage";
 import { EmptyState } from "./ui/EmptyState";
 import { PageMeta } from "./PageMeta";
 import { CurrentlyReadingStrip } from "./CurrentlyReadingStrip";
+import { PublishedPoemFeature } from "./PublishedPoemFeature";
 import { pageMeta } from "../lib/seo";
 import type { Book } from "../types";
 import { isLikelyInvalidCover } from "../lib/coverUrl";
@@ -337,6 +338,8 @@ const PublicPortfolio = () => {
       </section>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pb-16">
+        <PublishedPoemFeature className="mt-10 sm:mt-12" />
+
         <CurrentlyReadingStrip books={books} className="mt-10 sm:mt-12 mb-2" />
 
         {/* Izzy's Picks */}
