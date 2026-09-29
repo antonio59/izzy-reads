@@ -199,7 +199,7 @@ const PoemDetail = () => {
         <meta property="og:url" content={poemUrl} />
         <meta
           property="og:image"
-          content={`${window.location.origin}/og-image.jpg`}
+          content={`${window.location.origin}/og-card.jpg`}
         />
         <meta name="twitter:card" content="summary_large_image" />
         <meta

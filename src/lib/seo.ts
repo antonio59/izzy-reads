@@ -6,11 +6,11 @@
 export const SITE_NAME = "Izzy's Bookshelf";
 export const SITE_URL = "https://izzysbookshelf.com";
 /** Landscape share card – WhatsApp/Facebook prefer ~1200×630 JPEG under ~300KB */
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-card.jpg`;
 export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
 export const OG_IMAGE_ALT =
-  "Izzy's Bookshelf – a young reader with her owl friend, books, reviews, poems, and wishlist";
+  "Izzy's Bookshelf – the book logo with Books, Reviews, Poems, Writing and Wishlist";
 export const THEME_COLOR = "#d946a8";
 
 export const SITE_TAGLINE =

@@ -12,11 +12,11 @@
   Cache-Control: no-cache, no-store, must-revalidate
 
 # Cache social / brand images (WhatsApp scrapers need a stable public URL)
-/og-image.jpg
+/og-card.jpg
   Cache-Control: public, max-age=86400
   Content-Type: image/jpeg
 
-/og-image.png
+/og-card.png
   Cache-Control: public, max-age=86400
 
 /icons/*

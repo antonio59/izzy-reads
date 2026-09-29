@@ -23,11 +23,11 @@ const CRAWLER_AGENTS = [
 ];
 
 const SITE_NAME = "Izzy's Bookshelf";
-const OG_IMAGE_PATH = "/og-image.jpg";
+const OG_IMAGE_PATH = "/og-card.jpg";
 const OG_IMAGE_WIDTH = "1200";
 const OG_IMAGE_HEIGHT = "630";
 const OG_IMAGE_ALT =
-  "Izzy's Bookshelf – a young reader with her owl friend, books, reviews, poems, and wishlist";
+  "Izzy's Bookshelf – the book logo with Books, Reviews, Poems, Writing and Wishlist";
 
 function isCrawler(request: Request): boolean {
   const userAgent = request.headers.get("user-agent")?.toLowerCase() || "";
