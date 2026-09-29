@@ -848,6 +848,14 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Chores
 
+- **deps-dev**: Bump eslint-plugin-react-refresh from 0.5.6 to 0.5.7 (#213)
+- **deps-dev**: Bump wrangler from 4.131.2 to 4.135.0 (#212)
+- **deps-dev**: Bump @types/node from 25.9.6 to 25.9.8 (#211)
+- **deps**: Bump resend from 6.28.0 to 6.28.1 (#210)
+- **deps-dev**: Bump eslint from 10.10.0 to 10.11.0 (#209)
+- **deps**: Bump convex from 1.45.0 to 1.46.0 in the convex group (#208)
+- **deps-dev**: Bump vitest from 5.0.0 to 5.0.1 in the testing group (#207)
+- **deps**: Bump the react group with 2 updates (#206)
 - Update dependencies (#203)
 - **deps-dev**: Bump vitest from 4.1.11 to 5.0.0 in the testing group (#202)
 - Update dependencies
@@ -918,6 +926,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
@@ -1058,6 +1067,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Features
 
+- Celebrate Izzy's Wonderverse poem on home page
 - **book-club**: Reactions only — remove public comments
 - Personalize private pages for Izzy, remove generic onboarding
 - Discover page UX overhaul - age filtering, onboarding, swipe fixes
@@ -1098,5 +1108,11 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 - Rename project from isabella-reads to izzy-reads
 - Move navigation to header and remove admin login
 - Unify navigation with integrated count badges
+
+### Styling
+
+- **design**: FINDING-003 — larger tap targets for filter chips and section links on phones
+- **design**: FINDING-002 — show wishlist titles on phones, not only on hover
+- **design**: FINDING-001 — don't repeat The Volcano under Latest Poem
 
 
