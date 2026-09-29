@@ -533,6 +533,9 @@ const PublicPortfolio = () => {
                         </p>
                       </div>
                     </motion.div>
+                    <p className="sm:hidden mt-2 text-xs font-semibold text-stone-700 leading-tight line-clamp-2">
+                      {book.title}
+                    </p>
                   </Link>
                 </motion.div>
               ))}
