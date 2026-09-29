@@ -943,6 +943,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 - Clean stale README references; delete feat/discover-swipe branch
 - Update changelog [skip ci]
 - Update changelog [skip ci]
@@ -1070,6 +1071,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Features
 
+- Share card that matches the site
 - Italian translations page in Izzy's dashboard
 - Italian version of the public site
 - Store Italian translations with DeepSeek suggestions
