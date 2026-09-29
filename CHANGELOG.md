@@ -940,6 +940,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 - Clean stale README references; delete feat/discover-swipe branch
 - Update changelog [skip ci]
 - Update changelog [skip ci]
@@ -1067,6 +1068,7 @@ Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-producti
 
 ### Features
 
+- Add reactions to the published poem section
 - Celebrate Izzy's Wonderverse poem on home page
 - **book-club**: Reactions only — remove public comments
 - Personalize private pages for Izzy, remove generic onboarding
