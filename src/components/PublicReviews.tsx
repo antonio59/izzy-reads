@@ -278,7 +278,7 @@ function PublicReviews() {
                 type="button"
                 onClick={() => setFilterGenre("all")}
                 aria-pressed={filterGenre === "all"}
-                className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                className={`inline-flex items-center min-h-11 sm:min-h-0 px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
                   filterGenre === "all"
                     ? "bg-primary-600 text-white"
                     : "bg-white text-stone-600 border border-cream-300 hover:border-primary-300"
@@ -294,7 +294,7 @@ function PublicReviews() {
                     setFilterGenre(filterGenre === genre ? "all" : genre)
                   }
                   aria-pressed={filterGenre === genre}
-                  className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  className={`inline-flex items-center min-h-11 sm:min-h-0 px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
                     filterGenre === genre
                       ? "bg-primary-600 text-white"
                       : "bg-white text-stone-600 border border-cream-300 hover:border-primary-300"
@@ -328,7 +328,7 @@ function PublicReviews() {
                   key={label}
                   onClick={() => setMinRating(value)}
                   aria-pressed={minRating === value}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  className={`inline-flex items-center min-h-11 sm:min-h-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                     minRating === value
                       ? "bg-star/20 text-amber-800 border border-amber-300"
                       : "bg-white text-stone-600 border border-cream-300 hover:border-amber-300"
@@ -353,7 +353,7 @@ function PublicReviews() {
                     key={tag}
                     onClick={() => setFilterTag(filterTag === tag ? null : tag)}
                     aria-pressed={filterTag === tag}
-                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                    className={`inline-flex items-center min-h-11 sm:min-h-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                       filterTag === tag
                         ? "bg-accent-600 text-white"
                         : "bg-white text-stone-600 border border-cream-300 hover:border-accent-300"

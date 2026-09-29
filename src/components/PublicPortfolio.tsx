@@ -377,7 +377,7 @@ const PublicPortfolio = () => {
             </div>
             <Link
               to="/reviews"
-              className="inline-flex items-center gap-1.5 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors"
+              className="inline-flex items-center gap-1.5 py-3 -my-3 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors"
             >
               Reviews <ArrowRight className="w-4 h-4" />
             </Link>
@@ -443,7 +443,7 @@ const PublicPortfolio = () => {
               </div>
               <Link
                 to="/poetry"
-                className="inline-flex items-center gap-1.5 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors shrink-0"
+                className="inline-flex items-center gap-1.5 py-3 -my-3 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors shrink-0"
               >
                 All poems <ArrowRight className="w-4 h-4" />
               </Link>
@@ -485,7 +485,7 @@ const PublicPortfolio = () => {
               </div>
               <Link
                 to="/my-wishlist"
-                className="inline-flex items-center gap-1.5 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors shrink-0"
+                className="inline-flex items-center gap-1.5 py-3 -my-3 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors shrink-0"
               >
                 See all {wishlist.length}{" "}
                 <ArrowRight className="w-4 h-4" />

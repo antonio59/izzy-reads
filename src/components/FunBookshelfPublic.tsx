@@ -155,7 +155,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                 type="button"
                 onClick={() => setSelectedGenre(null)}
                 aria-pressed={!selectedGenre}
-                className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                className={`inline-flex items-center min-h-11 sm:min-h-0 px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
                   !selectedGenre
                     ? "bg-primary-600 text-white"
                     : "bg-white text-stone-600 border border-cream-300 hover:border-primary-300 hover:text-primary-700"
@@ -171,7 +171,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                     setSelectedGenre(selectedGenre === genre ? null : genre)
                   }
                   aria-pressed={selectedGenre === genre}
-                  className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  className={`inline-flex items-center min-h-11 sm:min-h-0 px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
                     selectedGenre === genre
                       ? "bg-primary-600 text-white"
                       : "bg-white text-stone-600 border border-cream-300 hover:border-primary-300 hover:text-primary-700"
@@ -200,7 +200,7 @@ const FunBookshelfPublic: React.FC<FunBookshelfPublicProps> = ({
                     setSelectedTag(selectedTag === tag ? null : tag)
                   }
                   aria-pressed={selectedTag === tag}
-                  className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                  className={`inline-flex items-center min-h-11 sm:min-h-0 px-3 py-1 rounded-full text-sm font-medium transition-colors ${
                     selectedTag === tag
                       ? "bg-accent-600 text-white"
                       : "bg-accent-50 text-accent-700 border border-accent-100 hover:border-accent-300"
