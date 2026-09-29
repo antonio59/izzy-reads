@@ -100,33 +100,6 @@ export const listPublished = query({
 
 // ── Admin: editing ──────────────────────────────────────────────────────
 
-export const getForEditing = query({
-  args: { contentType: contentTypeV, contentId: v.string() },
-  handler: async (ctx, args) => {
-    await requireAdmin(ctx);
-    const [row, source] = await Promise.all([
-      findTranslation(ctx, args.contentType, args.contentId),
-      loadSource(ctx, args.contentType, args.contentId),
-    ]);
-    return {
-      draftTitle: row?.draftTitle,
-      draftBody: row?.draftBody ?? "",
-      isPublished: Boolean(row?.publishedBody),
-      hasUnpublishedChanges: Boolean(
-        row &&
-          (row.draftBody !== row.publishedBody ||
-            (row.draftTitle ?? "") !== (row.publishedTitle ?? "")),
-      ),
-      englishChangedSincePublish: Boolean(
-        row?.publishedSourceHash &&
-          source &&
-          row.publishedSourceHash !== sourceHash(source),
-      ),
-      suggestionsEnabled: Boolean(process.env.DEEPSEEK_API_KEY),
-    };
-  },
-});
-
 export const saveDraft = mutation({
   args: {
     contentType: contentTypeV,
@@ -292,5 +265,94 @@ export const suggest = action({
       title: source.title ? result.title : undefined,
       body: result.body,
     });
+  },
+});
+
+/** Everything Izzy can translate, with its Italian status, for her dashboard. */
+export const listForAdmin = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireAdmin(ctx);
+    const [poems, books, posts, rows] = await Promise.all([
+      ctx.db.query("poems").collect(),
+      ctx.db.query("books").collect(),
+      ctx.db.query("blogPosts").collect(),
+      ctx.db.query("translations").collect(),
+    ]);
+    const byKey = new Map(rows.map((r) => [`${r.contentType}:${r.contentId}`, r]));
+
+    const items: {
+      contentType: ContentType;
+      contentId: string;
+      label: string;
+      englishTitle?: string;
+      englishBody: string;
+      sortTime: number;
+    }[] = [
+      ...poems.map((p) => ({
+        contentType: "poem" as const,
+        contentId: p._id as string,
+        label: p.title,
+        englishTitle: p.title,
+        englishBody: p.content,
+        sortTime: p._creationTime,
+      })),
+      ...books
+        .filter((b) => b.notes?.trim())
+        .map((b) => ({
+          contentType: "review" as const,
+          contentId: b._id as string,
+          label: `${b.title} – ${b.author}`,
+          englishBody: b.notes as string,
+          sortTime: b._creationTime,
+        })),
+      ...posts.map((p) => ({
+        contentType: "blogPost" as const,
+        contentId: p._id as string,
+        label: p.title,
+        englishTitle: p.title,
+        englishBody: p.content,
+        sortTime: p._creationTime,
+      })),
+    ];
+
+    return items
+      .sort((a, b) => b.sortTime - a.sortTime)
+      .map(({ sortTime: _sortTime, ...item }) => {
+        const row = byKey.get(`${item.contentType}:${item.contentId}`);
+        const isPublished = Boolean(row?.publishedBody);
+        const englishChanged = Boolean(
+          row?.publishedSourceHash &&
+            row.publishedSourceHash !==
+              sourceHash({ title: item.englishTitle, body: item.englishBody }),
+        );
+        return {
+          ...item,
+          draftTitle: row?.draftTitle,
+          draftBody: row?.draftBody ?? "",
+          isPublished,
+          hasUnpublishedChanges: Boolean(
+            row &&
+              (row.draftBody !== row.publishedBody ||
+                (row.draftTitle ?? "") !== (row.publishedTitle ?? "")),
+          ),
+          englishChanged,
+          status: englishChanged
+            ? ("outdated" as const)
+            : isPublished
+              ? ("published" as const)
+              : row?.draftBody
+                ? ("draft" as const)
+                : ("none" as const),
+        };
+      });
+  },
+});
+
+export const suggestionsEnabled = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireAdmin(ctx);
+    return Boolean(process.env.DEEPSEEK_API_KEY);
   },
 });

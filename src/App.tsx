@@ -42,6 +42,7 @@ const BlogPostEditor = lazy(() => import("./components/BlogPostEditor"));
 const Progress = lazy(() => import("./components/Progress"));
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 const AdminPage = lazy(() => import("./pages/AdminPage"));
+const TranslationsPage = lazy(() => import("./pages/TranslationsPage"));
 
 // Legacy routes kept for direct access
 const SeriesTracker = lazy(() => import("./components/SeriesTracker"));
@@ -254,6 +255,18 @@ function App() {
                       }
                     />
                     {/* Admin Routes */}
+                    <Route
+                      path="/italian"
+                      element={
+                        <Suspense fallback={<PageLoader />}>
+                          <ProtectedRoute>
+                            <Layout>
+                              <TranslationsPage />
+                            </Layout>
+                          </ProtectedRoute>
+                        </Suspense>
+                      }
+                    />
                     <Route
                       path="/admin"
                       element={

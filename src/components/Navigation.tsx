@@ -15,6 +15,7 @@ import {
   Library,
   User,
   Shield,
+  Languages,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useGamification } from "../contexts/GamificationContext";
@@ -138,6 +139,16 @@ const Navigation: React.FC = () => {
                 aria-label="Edit profile"
               >
                 <User className="h-5 w-5" />
+              </Link>
+
+              {/* Italian translations */}
+              <Link
+                to="/italian"
+                className="p-2.5 rounded-lg text-stone-500 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                title="Italian translations"
+                aria-label="Italian translations"
+              >
+                <Languages className="h-5 w-5" />
               </Link>
 
               {/* Admin */}
@@ -267,6 +278,17 @@ const Navigation: React.FC = () => {
                     <User className="h-5 w-5 text-sage-500" />
                     <span className="font-medium text-stone-700">
                       Edit Profile
+                    </span>
+                  </Link>
+
+                  <Link
+                    to="/italian"
+                    onClick={() => setShowMobileMenu(false)}
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-stone-50 transition-colors"
+                  >
+                    <Languages className="h-5 w-5 text-primary-500" />
+                    <span className="font-medium text-stone-700">
+                      Italian translations 🇮🇹
                     </span>
                   </Link>
 
