@@ -13,7 +13,7 @@ import { BookCoverImage } from "./ui/BookCoverImage";
 import { EmptyState } from "./ui/EmptyState";
 import { PageMeta } from "./PageMeta";
 import { CurrentlyReadingStrip } from "./CurrentlyReadingStrip";
-import { PublishedPoemFeature } from "./PublishedPoemFeature";
+import { PublishedPoemFeature, PUBLISHED_POEM_TITLE } from "./PublishedPoemFeature";
 import { pageMeta } from "../lib/seo";
 import type { Book } from "../types";
 import { isLikelyInvalidCover } from "../lib/coverUrl";
@@ -231,8 +231,12 @@ const PublicPortfolio = () => {
   }, [featuredBooks, booksWithCovers]);
 
   const latestPoem = useMemo(() => {
-    if (poems.length === 0) return null;
-    return [...poems].sort(
+    // The published poem already has its own feature above – don't repeat it
+    const others = poems.filter(
+      (p) => p.title.trim().toLowerCase() !== PUBLISHED_POEM_TITLE.toLowerCase(),
+    );
+    if (others.length === 0) return null;
+    return [...others].sort(
       (a, b) =>
         new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
     )[0];

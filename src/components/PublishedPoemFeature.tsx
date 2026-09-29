@@ -2,9 +2,11 @@ import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { useMotionPreference } from "../contexts/MotionPreferenceContext";
 
+export const PUBLISHED_POEM_TITLE = "The Volcano";
+
 /** Izzy's poem as printed in Wonderverse – school name intentionally omitted. */
 const PUBLISHED_POEM = {
-  title: "The Volcano",
+  title: PUBLISHED_POEM_TITLE,
   author: "Izzy",
   anthology: "Wonderverse: Dreamscapes and Daydreams",
   publisher: "Young Writers",
