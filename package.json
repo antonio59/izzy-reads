@@ -91,7 +91,7 @@
     "typescript-eslint": "^8.71.2",
     "vite": "^8.3.4",
     "vitest": "^5.0.5",
-    "wrangler": "^4.147.0"
+    "wrangler": "^4.151.1"
   },
   "patchedDependencies": {
     "minimatch@8.0.7": "patches/minimatch@8.0.7.patch"
