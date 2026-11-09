@@ -40,7 +40,7 @@
     "react-i18next": "^17.1.11",
     "react-router-dom": "^7.18.5",
     "recharts": "^3.10.1",
-    "resend": "^6.34.1"
+    "resend": "^6.37.0"
   },
   "overrides": {
     "esbuild": "0.27.2",
